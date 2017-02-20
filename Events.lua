@@ -488,17 +488,20 @@ AC:RegisterForEvent(
         function (...)
           SpellID = select(12, ...);
 
-          -- Shadow Dance
-          if SpellID == Spell.Rogue.Subtlety.ShadowDance:ID() then
-            Spell.Rogue.Subtlety.ShadowDance.LastCastTime = AC.GetTime();
-          -- Shadowmeld
-          elseif SpellID == Spell.Rogue.Subtlety.Shadowmeld:ID() then
-            Spell.Rogue.Outlaw.Shadowmeld.LastCastTime = AC.GetTime();
-            Spell.Rogue.Subtlety.Shadowmeld.LastCastTime = AC.GetTime();
-          -- Vanish
-          elseif SpellID == Spell.Rogue.Subtlety.Vanish:ID() then
-            Spell.Rogue.Outlaw.Vanish.LastCastTime = AC.GetTime();
-            Spell.Rogue.Subtlety.Vanish.LastCastTime = AC.GetTime();
+          -- TODO: Remove Spell.Rogue check when Events will be in Class Module
+          if Spell.Rogue then
+            -- Shadow Dance
+            if SpellID == Spell.Rogue.Subtlety.ShadowDance:ID() then
+              Spell.Rogue.Subtlety.ShadowDance.LastCastTime = AC.GetTime();
+            -- Shadowmeld
+            elseif SpellID == Spell.Rogue.Subtlety.Shadowmeld:ID() then
+              Spell.Rogue.Outlaw.Shadowmeld.LastCastTime = AC.GetTime();
+              Spell.Rogue.Subtlety.Shadowmeld.LastCastTime = AC.GetTime();
+            -- Vanish
+            elseif SpellID == Spell.Rogue.Subtlety.Vanish:ID() then
+              Spell.Rogue.Outlaw.Vanish.LastCastTime = AC.GetTime();
+              Spell.Rogue.Subtlety.Vanish.LastCastTime = AC.GetTime();
+            end
           end
         end
         , "SPELL_CAST_SUCCESS"
