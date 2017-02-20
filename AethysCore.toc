@@ -1,0 +1,16 @@
+## Interface: 70100
+
+## Title: |cFFFFF569Aethys|r Core
+## Author: Aethys
+## Version: 7.1.5001
+## Notes: Core Library used by AethysRotation and AethysTool, can also be used by others 3rd-Party Addons.
+
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: AethysCoreDB
+
+# API
+Settings.lua
+Core.lua
+Events.lua
+Main.lua
