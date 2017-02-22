@@ -1,157 +1,153 @@
 --- Localize Vars
--- Addon
-local addonName, AC = ...;
--- AethysCore
-local Cache = AethysCore_Cache;
-local Unit = AC.Unit;
-local Player = Unit.Player;
-local Target = Unit.Target;
-local Spell = AC.Spell;
-local Item = AC.Item;
--- Lua
-local pairs = pairs;
-local select = select;
-local stringsub = string.sub;
-local stringfind = string.find;
-local tableinsert = table.insert;
-local tableremove = table.remove;
-local tonumber = tonumber;
-local wipe = table.wipe;
+  -- Addon
+  local addonName, AC = ...;
+  -- AethysCore
+  local Cache = AethysCore_Cache;
+  local Unit = AC.Unit;
+  local Player = Unit.Player;
+  local Target = Unit.Target;
+  local Spell = AC.Spell;
+  local Item = AC.Item;
+  -- Lua
+  local pairs = pairs;
+  local select = select;
+  local stringsub = string.sub;
+  local stringfind = string.find;
+  local tableinsert = table.insert;
+  local tableremove = table.remove;
+  local tonumber = tonumber;
+  local wipe = table.wipe;
+  -- Events Locals
+  AC.EventFrame = CreateFrame("Frame", "AethysCore_EventFrame", UIParent);
+  AC.Events = {}; -- All Events
+  AC.CombatEvents = {}; -- Combat Log Unfiltered
+  AC.SelfCombatEvents = {}; -- Combat Log Unfiltered with SourceGUID == PlayerGUID filter
 
 
--- Used for every Events
-AC.Events = {};
-AC.EventFrame = CreateFrame("Frame", "EasyRaid_EventFrame", UIParent);
-
--- Used for Combat Log Events
--- To be used with Combat Log Unfiltered
-AC.CombatEvents = {};
--- To be used with Combat Log Unfiltered with SourceGUID == PlayerGUID filter
-AC.SelfCombatEvents = {};
-
---- Register a handler for an event.
--- @param Event The event name.
--- @param Handler The handler function.
-function AC:RegisterForEvent (Handler, ...)
-  local EventsTable = {...};
-  local Event;
-  for i = 1, #EventsTable do
-    Event = EventsTable[i];
-    if not AC.Events[Event] then
-      AC.Events[Event] = {Handler};
-      AC.EventFrame:RegisterEvent(Event);
-    else
-      tableinsert(AC.Events[Event], Handler);
+--- Events Main
+  -- Register a handler for an event.
+  -- @param Event The event name.
+  -- @param Handler The handler function.
+  function AC:RegisterForEvent (Handler, ...)
+    local EventsTable = {...};
+    local Event;
+    for i = 1, #EventsTable do
+      Event = EventsTable[i];
+      if not AC.Events[Event] then
+        AC.Events[Event] = {Handler};
+        AC.EventFrame:RegisterEvent(Event);
+      else
+        tableinsert(AC.Events[Event], Handler);
+      end
     end
   end
-end
 
---- Register a handler for a combat event.
--- @param Event The combat event name.
--- @param Handler The handler function.
-function AC:RegisterForCombatEvent (Handler, ...)
-  local EventsTable = {...};
-  local Event;
-  for i = 1, #EventsTable do
-    Event = EventsTable[i];
-    if not AC.CombatEvents[Event] then
-      AC.CombatEvents[Event] = {Handler};
-    else
-      tableinsert(AC.CombatEvents[Event], Handler);
+  -- Register a handler for a combat event.
+  -- @param Event The combat event name.
+  -- @param Handler The handler function.
+  function AC:RegisterForCombatEvent (Handler, ...)
+    local EventsTable = {...};
+    local Event;
+    for i = 1, #EventsTable do
+      Event = EventsTable[i];
+      if not AC.CombatEvents[Event] then
+        AC.CombatEvents[Event] = {Handler};
+      else
+        tableinsert(AC.CombatEvents[Event], Handler);
+      end
     end
   end
-end
 
---- Register a handler for a self combat event.
--- @param Event The combat event name.
--- @param Handler The handler function.
-function AC:RegisterForSelfCombatEvent (Handler, ...)
-  local EventsTable = {...};
-  local Event;
-  for i = 1, #EventsTable do
-    Event = EventsTable[i];
-    if not AC.SelfCombatEvents[Event] then
-      AC.SelfCombatEvents[Event] = {Handler};
-    else
-      tableinsert(AC.SelfCombatEvents[Event], Handler);
+  -- Register a handler for a self combat event.
+  -- @param Event The combat event name.
+  -- @param Handler The handler function.
+  function AC:RegisterForSelfCombatEvent (Handler, ...)
+    local EventsTable = {...};
+    local Event;
+    for i = 1, #EventsTable do
+      Event = EventsTable[i];
+      if not AC.SelfCombatEvents[Event] then
+        AC.SelfCombatEvents[Event] = {Handler};
+      else
+        tableinsert(AC.SelfCombatEvents[Event], Handler);
+      end
     end
   end
-end
 
---- Unregister a handler from an event.
--- @param Event The event name.
--- @param Handler The handler function.
-function AC:UnregisterForEvent (Handler, Event)
-  if AC.Events[Event] then
-    for Index, Function in pairs(AC.Events[Event]) do
-      if Function == Handler then
-        tableremove(AC.Events[Event], Index);
-        if #AC.Events[Event] == 0 then
-          AC.EventFrame:UnregisterEvent(Event);
+  -- Unregister a handler from an event.
+  -- @param Event The event name.
+  -- @param Handler The handler function.
+  function AC:UnregisterForEvent (Handler, Event)
+    if AC.Events[Event] then
+      for Index, Function in pairs(AC.Events[Event]) do
+        if Function == Handler then
+          tableremove(AC.Events[Event], Index);
+          if #AC.Events[Event] == 0 then
+            AC.EventFrame:UnregisterEvent(Event);
+          end
+          return;
         end
-        return;
       end
     end
   end
-end
 
---- Unregister a handler from a combat event.
--- @param Event The combat event name.
--- @param Handler The handler function.
-function AC:UnregisterForCombatEvent (Handler, Event)
-  if AC.CombatEvents[Event] then
-    for Index, Function in pairs(AC.CombatEvents[Event]) do
-      if Function == Handler then
-        tableremove(AC.CombatEvents[Event], Index);
-        return;
+  -- Unregister a handler from a combat event.
+  -- @param Event The combat event name.
+  -- @param Handler The handler function.
+  function AC:UnregisterForCombatEvent (Handler, Event)
+    if AC.CombatEvents[Event] then
+      for Index, Function in pairs(AC.CombatEvents[Event]) do
+        if Function == Handler then
+          tableremove(AC.CombatEvents[Event], Index);
+          return;
+        end
       end
     end
   end
-end
 
---- Unregister a handler from a combat event.
--- @param Event The combat event name.
--- @param Handler The handler function.
-function AC:UnregisterForSelfCombatEvent (Handler, Event)
-  if AC.SelfCombatEvents[Event] then
-    for Index, Function in pairs(AC.SelfCombatEvents[Event]) do
-      if Function == Handler then
-        tableremove(AC.SelfCombatEvents[Event], Index);
-        return;
+  -- Unregister a handler from a combat event.
+  -- @param Event The combat event name.
+  -- @param Handler The handler function.
+  function AC:UnregisterForSelfCombatEvent (Handler, Event)
+    if AC.SelfCombatEvents[Event] then
+      for Index, Function in pairs(AC.SelfCombatEvents[Event]) do
+        if Function == Handler then
+          tableremove(AC.SelfCombatEvents[Event], Index);
+          return;
+        end
       end
     end
   end
-end
 
--- OnEvent Frame
-AC.EventFrame:SetScript("OnEvent", 
-  function (self, Event, ...)
-    for Index, Handler in pairs(AC.Events[Event]) do
-      Handler(Event, ...);
-    end
-  end
-);
-
--- Combat Log Event Unfiltered
-AC:RegisterForEvent(
-  function (Event, TimeStamp, SubEvent, ...)
-    if AC.CombatEvents[SubEvent] then
-      -- Unfiltered Combat Log
-      for Index, Handler in pairs(AC.CombatEvents[SubEvent]) do
-        Handler(TimeStamp, SubEvent, ...);
+  -- OnEvent Frame Listener
+  AC.EventFrame:SetScript("OnEvent", 
+    function (self, Event, ...)
+      for Index, Handler in pairs(AC.Events[Event]) do
+        Handler(Event, ...);
       end
     end
-    if AC.SelfCombatEvents[SubEvent] then
-      -- Unfiltered Combat Log with SourceGUID == PlayerGUID filter
-      if select(2, ...) == Player:GUID() then
-        for Index, Handler in pairs(AC.SelfCombatEvents[SubEvent]) do
+  );
+
+  -- Combat Log Event Unfiltered Listener
+  AC:RegisterForEvent(
+    function (Event, TimeStamp, SubEvent, ...)
+      if AC.CombatEvents[SubEvent] then
+        -- Unfiltered Combat Log
+        for Index, Handler in pairs(AC.CombatEvents[SubEvent]) do
           Handler(TimeStamp, SubEvent, ...);
         end
       end
+      if AC.SelfCombatEvents[SubEvent] then
+        -- Unfiltered Combat Log with SourceGUID == PlayerGUID filter
+        if select(2, ...) == Player:GUID() then
+          for Index, Handler in pairs(AC.SelfCombatEvents[SubEvent]) do
+            Handler(TimeStamp, SubEvent, ...);
+          end
+        end
+      end
     end
-  end
-  , "COMBAT_LOG_EVENT_UNFILTERED"
-);
+    , "COMBAT_LOG_EVENT_UNFILTERED"
+  );
 
 --- ============== NON-COMBATLOG ==============
 
@@ -251,7 +247,6 @@ AC:RegisterForEvent(
 --- ============== COMBATLOG ==============
 
   --- Combat Log Arguments
-
 
     ------- Base -------
       --    1      2      3        4        5        6          7        8      9      10        11
