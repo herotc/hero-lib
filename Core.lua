@@ -1201,6 +1201,42 @@ end
     function Unit:ComboPointsDeficit ()
       return self:ComboPointsMax() - self:ComboPoints();
     end
+	
+	--------------------------------
+    ------- 8 | Astral Power -------
+    --------------------------------
+	-- AstralPower.Max
+	function Unit:AstralPowerMax ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].AstralPowerMax then
+          Cache.UnitInfo[self:GUID()].AstralPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_LUNAR_POWER);
+        end
+        return Cache.UnitInfo[self:GUID()].AstralPowerMax;
+      end
+    end
+    -- astral_power
+    function Unit:AstralPower ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].AstralPower then
+          Cache.UnitInfo[self:GUID()].AstralPower = UnitPower(self.UnitID, SPELL_POWER_LUNAR_POWER);
+        end
+        return Cache.UnitInfo[self:GUID()].AstralPower;
+      end
+    end
+    -- astral_power.pct
+    function Unit:AstralPowerPercentage ()
+      return (self:AstralPower() / self:AstralPowerMax()) * 100;
+    end
+    -- astral_power.deficit
+    function Unit:AstralPowerDeficit ()
+      return self:AstralPowerMax() - self:AstralPower();
+    end
+    -- "astral_power.deficit.pct"
+    function Unit:AstralPowerDeficitPercentage ()
+      return (self:AstralPowerDeficit() / self:AstralPowerMax()) * 100;
+    end
 
     --------------------------------
     --- 9 | Holy Power Functions ---
@@ -1236,6 +1272,83 @@ end
     -- "holy_power.deficit.pct"
     function Unit:HolyPowerDeficitPercentage ()
       return (self:HolyPowerDeficit() / self:HolyPowerMax()) * 100;
+    end
+	
+	---------------------------
+    -- 11 | Maelstrom Functions --
+    ---------------------------
+    -- Maelstrom.max
+    function Unit:MaelstromMax ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
+          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
+        end
+        return Cache.UnitInfo[self:GUID()].MaelstromMax;
+      end
+    end
+    -- Maelstrom
+    function Unit:Maelstrom ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
+          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
+        end
+        return Cache.UnitInfo[self:GUID()].MaelstromMax;
+      end
+    end
+    -- Maelstrom.pct
+    function Unit:MaelstromPercentage ()
+      return (self:Maelstrom() / self:MaelstromMax()) * 100;
+    end
+    -- Maelstrom.deficit
+    function Unit:MaelstromDeficit ()
+      return self:MaelstromMax() - self:Maelstrom();
+    end
+    -- "Maelstrom.deficit.pct"
+    function Unit:MaelstromDeficitPercentage ()
+      return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
+    end
+
+	------------------------------
+    -- 13 | Insanity Functions ---
+    ------------------------------
+	-- insanity.max
+    function Unit:InsanityMax ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].InsanityMax then
+          Cache.UnitInfo[self:GUID()].InsanityMax = UnitPowerMax(self.UnitID, SPELL_POWER_INSANITY);
+        end
+        return Cache.UnitInfo[self:GUID()].InsanityMax;
+      end
+    end
+    -- insanity
+    function Unit:Insanity ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].Insanity then
+          Cache.UnitInfo[self:GUID()].Insanity = UnitPower(self.UnitID, SPELL_POWER_INSANITY);
+        end
+        return Cache.UnitInfo[self:GUID()].Insanity;
+      end
+    end
+	-- insanity.pct
+    function Unit:InsanityPercentage ()
+      return (self:Insanity() / self:InsanityMax()) * 100;
+    end
+    -- insanity.deficit
+    function Unit:InsanityDeficit ()
+      return self:InsanityMax() - self:Insanity();
+    end
+    -- "insanity.deficit.pct"
+    function Unit:InsanityDeficitPercentage ()
+      return (self:InsanityDeficit() / self:InsanityMax()) * 100;
+    end
+	-- Insanity Drain
+	function Unit:Insanityrain ()
+		--TODO : calculate insanitydrain
+      return 1;
     end
 
     --------------------------------
