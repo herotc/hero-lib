@@ -1985,7 +1985,7 @@ end
 -- Retrieve the Recovery Timer based on Settings.
 -- TODO: Optimize, to see how we'll implement it in the GUI.
 function AC.RecoveryTimer ()
-  return AC.GUISettings.General.RecoveryMode == "GCD" and Player:GCD()*1000 or AC.GUISettings.General.RecoveryTimer;
+  return AC.GUISettings.General.RecoveryMode == "GCD" and Player:GCDRemains()*1000 or AC.GUISettings.General.RecoveryTimer;
 end
 
 -- Compute the Recovery Offset with Lag Compensation.
