@@ -971,6 +971,12 @@ end
         return Cache.UnitInfo[self:GUID()].GCD;
       end
     end
+    
+    -- gcd.remains
+    local GCDSpell = Spell(61304);
+    function Unit:GCDRemains ()
+      return GCDSpell:Cooldown(true);
+    end
 
     -- attack_power
     -- TODO : Use Cache
