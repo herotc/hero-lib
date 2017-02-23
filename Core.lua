@@ -1038,6 +1038,71 @@ end
       return (self:RageDeficit() / self:RageMax()) * 100;
     end
 
+    ---------------------------
+    --- 2 | Focus Functions ---
+    ---------------------------
+    -- focus.max
+    function Unit:FocusMax ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].FocusMax then
+          Cache.UnitInfo[self:GUID()].FocusMax = UnitPowerMax(self.UnitID, SPELL_POWER_FOCUS);
+        end
+        return Cache.UnitInfo[self:GUID()].FocusMax;
+      end
+    end
+    -- focus
+    function Unit:Focus ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].Focus then
+          Cache.UnitInfo[self:GUID()].Focus = UnitPower(self.UnitID, SPELL_POWER_FOCUS);
+        end
+        return Cache.UnitInfo[self:GUID()].Focus;
+      end
+    end
+    -- focus.regen
+    function Unit:FocusRegen ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].FocusRegen then
+          Cache.UnitInfo[self:GUID()].FocusRegen = select(2, GetPowerRegen(self.UnitID));
+        end
+        return Cache.UnitInfo[self:GUID()].FocusRegen;
+      end
+    end
+    -- focus.pct
+    function Unit:FocusPercentage ()
+      return (self:Focus() / self:FocusMax()) * 100;
+    end
+    -- focus.deficit
+    function Unit:FocusDeficit ()
+      return self:FocusMax() - self:Focus();
+    end
+    -- "focus.deficit.pct"
+    function Unit:FocusDeficitPercentage ()
+      return (self:FocusDeficit() / self:FocusMax()) * 100;
+    end
+    -- "focus.regen.pct"
+    function Unit:FocusRegenPercentage ()
+      return (self:FocusRegen() / self:FocusMax()) * 100;
+    end
+    -- focus.time_to_max
+    function Unit:FocusTimeToMax ()
+      if self:FocusRegen() == 0 then return -1; end
+      return self:FocusDeficit() * (1 / self:FocusRegen());
+    end
+    -- "focus.time_to_x"
+    function Unit:FocusTimeToX (Amount)
+      if self:FocusRegen() == 0 then return -1; end
+      return Amount > self:Focus() and (Amount - self:Focus()) * (1 / self:FocusRegen()) or 0;
+    end
+    -- "focus.time_to_x.pct"
+    function Unit:FocusTimeToXPercentage (Amount)
+      if self:FocusRegen() == 0 then return -1; end
+      return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) * (1 / self:FocusRegenPercentage()) or 0;
+    end
+
     ----------------------------
     --- 3 | Energy Functions ---
     ----------------------------
@@ -1046,7 +1111,7 @@ end
       if self:GUID() then
         if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
         if not Cache.UnitInfo[self:GUID()].EnergyMax then
-          Cache.UnitInfo[self:GUID()].EnergyMax = UnitPowerMax(self.UnitID, SPELL_POWER_ENACGY);
+          Cache.UnitInfo[self:GUID()].EnergyMax = UnitPowerMax(self.UnitID, SPELL_POWER_ENERGY);
         end
         return Cache.UnitInfo[self:GUID()].EnergyMax;
       end
@@ -1056,7 +1121,7 @@ end
       if self:GUID() then
         if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
         if not Cache.UnitInfo[self:GUID()].Energy then
-          Cache.UnitInfo[self:GUID()].Energy = UnitPower(self.UnitID, SPELL_POWER_ENACGY);
+          Cache.UnitInfo[self:GUID()].Energy = UnitPower(self.UnitID, SPELL_POWER_ENERGY);
         end
         return Cache.UnitInfo[self:GUID()].Energy;
       end
@@ -1167,6 +1232,42 @@ end
       return (self:HolyPowerDeficit() / self:HolyPowerMax()) * 100;
     end
 
+    --------------------------------
+    --- 11 | Maelstrom Functions ---
+    --------------------------------
+    -- maelstrom.max
+    function Unit:MaelstromMax ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
+          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
+        end
+        return Cache.UnitInfo[self:GUID()].MaelstromMax;
+      end
+    end
+    -- maelstrom
+    function Unit:Maelstrom ()
+      if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
+          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
+        end
+        return Cache.UnitInfo[self:GUID()].MaelstromMax;
+      end
+    end
+    -- maelstrom.pct
+    function Unit:MaelstromPercentage ()
+      return (self:Maelstrom() / self:MaelstromMax()) * 100;
+    end
+    -- maelstrom.deficit
+    function Unit:MaelstromDeficit ()
+      return self:MaelstromMax() - self:Maelstrom();
+    end
+    -- "maelstrom.deficit.pct"
+    function Unit:MaelstromDeficitPercentage ()
+      return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
+    end
+
     ---------------------------
     --- 17 | Fury Functions ---
     ---------------------------
@@ -1237,42 +1338,6 @@ end
     -- "pain.deficit.pct"
     function Unit:PainDeficitPercentage ()
       return (self:PainDeficit() / self:PainMax()) * 100;
-    end
-
-        ---------------------------
-    --- 19 | Maelstrom Functions ---
-    ---------------------------
-    -- Maelstrom.max
-    function Unit:MaelstromMax ()
-      if self:GUID() then
-        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
-          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
-        end
-        return Cache.UnitInfo[self:GUID()].MaelstromMax;
-      end
-    end
-    -- Maelstrom
-    function Unit:Maelstrom ()
-      if self:GUID() then
-        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-        if not Cache.UnitInfo[self:GUID()].MaelstromMax then
-          Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
-        end
-        return Cache.UnitInfo[self:GUID()].MaelstromMax;
-      end
-    end
-    -- Maelstrom.pct
-    function Unit:MaelstromPercentage ()
-      return (self:Maelstrom() / self:MaelstromMax()) * 100;
-    end
-    -- Maelstrom.deficit
-    function Unit:MaelstromDeficit ()
-      return self:MaelstromMax() - self:Maelstrom();
-    end
-    -- "Maelstrom.deficit.pct"
-    function Unit:MaelstromDeficitPercentage ()
-      return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
     end
 
     -- Get if the player is stealthed or not
