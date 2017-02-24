@@ -1015,6 +1015,18 @@ end
     function Unit:VersatilityDmgPct ()
       return GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
     end
+	
+	-- Get the level of the unit
+	function Unit:Level()
+	  if self:GUID() then
+        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+        if Cache.UnitInfo[self:GUID()].UnitLevel == nil then
+          Cache.UnitInfo[self:GUID()].UnitLevel = UnitLevel(self.UnitID);
+        end
+        return Cache.UnitInfo[self:GUID()].UnitLevel;
+      end
+      return nil;
+	end
 
     --------------------------
     --- 1 | Rage Functions ---
