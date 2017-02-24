@@ -133,6 +133,7 @@ end
   end
   -- Defines Unit Objects.
   Unit.Player = Unit("Player");
+  Unit.Pet = Unit("Pet");
   Unit.Target = Unit("Target");
   for i = 1, AC.MAXIMUM do
     Unit["Nameplate"..tostring(i)] = Unit("Nameplate"..tostring(i));
@@ -1529,6 +1530,12 @@ end
         Cache.MiscInfo.IsStealthed[IsStealthedKey] = self:IterateStealthBuffs(Abilities, Special);
       end
       return Cache.MiscInfo.IsStealthed[IsStealthedKey];
+    end
+
+    -- buff.bloodlust.up
+    function Unit:HasHeroism ()
+      -- TODO: Make a table with all the bloodlust spells then do a for loop checking them (with AnyCaster as true in buff)
+      return false;
     end
 
     -- Save the current player's equipment.
