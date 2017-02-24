@@ -135,6 +135,10 @@ end
   Unit.Player = Unit("Player");
   Unit.Pet = Unit("Pet");
   Unit.Target = Unit("Target");
+  Unit.Focus = Unit("Focus");
+  Unit.Vehicle = Unit("Vehicle");
+  -- TODO: Make a map containing all UnitId that have multiple possiblites + the possibilites then a master for loop checking this
+  -- Something like { {"Nameplate", 40}, {"Boss", 4}, {"Arena", 5}, ....}
   for i = 1, AC.MAXIMUM do
     Unit["Nameplate"..tostring(i)] = Unit("Nameplate"..tostring(i));
   end
@@ -143,7 +147,10 @@ end
   end
   -- Locals
   local Player = Unit.Player;
+  local Pet = Unit.Pet;
   local Target = Unit.Target;
+  local Focus = Unit.Focus;
+  local Vehicle = Unit.Vehicle;
 
   -- Defines the Spell Class.
   AC.Spell = Class();
