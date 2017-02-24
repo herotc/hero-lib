@@ -2021,6 +2021,7 @@ end
     end
 
     -- cooldown.foo.remains
+    -- TODO: Swap Cooldown() to CooldownRemains() and then make a Cooldown() for cooldown.foo.up (and keep IsOnCooldown() for !cooldown.foo.up)
     function Spell:Cooldown (BypassRecovery)
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Cooldown) or (BypassRecovery and not Cache.SpellInfo[self.SpellID].CooldownNoRecovery) then
