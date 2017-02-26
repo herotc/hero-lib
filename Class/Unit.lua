@@ -319,11 +319,11 @@
   -- Get the full duration of the current cast.
   function Unit:CastDuration ()
     if self:IsCasting() then
-      _T.Start, _T.End = select(6, self:CastingInfo());
+      _T.Start, _T.End = select(5, self:CastingInfo());
       return (_T.End - _T.Start)/1000;
     end
     if self:IsChanneling() then
-      _T.Start, _T.End = select(6, self:ChannelingInfo());
+      _T.Start, _T.End = select(5, self:ChannelingInfo());
       return (_T.End - _T.Start)/1000;
     end
     return -1;
@@ -332,11 +332,11 @@
   -- Get the remaining cast time.
   function Unit:CastRemains ()
     if self:IsCasting() then
-      _T.Start, _T.End = select(6, self:CastingInfo());
+      _T.End = select(6, self:CastingInfo());
       return (_T.End - AC.GetTime()*1000)/1000;
     end
     if self:IsChanneling() then
-      _T.Start, _T.End = select(6, self:ChannelingInfo());
+      _T.End = select(6, self:ChannelingInfo());
       return (_T.End - AC.GetTime()*1000)/1000;
     end
     return -1;
