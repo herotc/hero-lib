@@ -12,5 +12,19 @@
 # API
 Settings.lua
 Core.lua
-Events.lua
+
+# Classes
+Class\Main.lua
+Class\Unit.lua
+Class\Player.lua
+Class\Spell.lua
+Class\Item.lua
+
+# Misc
+Misc\ToSort.lua
+Misc\Enemies.lua
+
+# Events
+Events\Main.lua
+
 Main.lua
