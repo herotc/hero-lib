@@ -326,7 +326,7 @@
       _T.Start, _T.End = select(5, self:ChannelingInfo());
       return (_T.End - _T.Start)/1000;
     end
-    return -1;
+    return 0;
   end
 
   -- Get the remaining cast time.
@@ -339,7 +339,7 @@
       _T.End = select(6, self:ChannelingInfo());
       return (_T.End - AC.GetTime()*1000)/1000;
     end
-    return -1;
+    return 0;
   end
 
   -- Get the progression of the cast in percentage if there is any.
@@ -353,7 +353,7 @@
       _T.Start, _T.End = select(5, self:ChannelingInfo());
       return ReverseChannel and (AC.GetTime()*1000 - _T.Start)/(_T.End - _T.Start)*100 or 100-(AC.GetTime()*1000 - _T.Start)/(_T.End - _T.Start)*100;
     end
-    return -1;
+    return 0;
   end
 
   --- Get all the buffs from an unit and put it into the Cache.
