@@ -443,6 +443,14 @@ end
     return (self:CastingInfo(9) == false or self:ChannelingInfo(8) == false) and true or false;
   end
 
+  -- 
+  function Unit:RemainingCastTime ()
+    if self:IsCasting() then
+      _T.Start, _T.End = select(5, self:CastingInfo());
+      return (_T.End - AC.GetTime()*1000)/1000;
+    end
+  end
+
   -- Get the progression of the cast in percentage if there is any.
   -- By default for channeling, it returns total - progress, if ReverseChannel is true it'll return only progress.
   function Unit:CastPercentage (ReverseChannel)
@@ -1127,6 +1135,27 @@ end
     function Unit:FocusTimeToXPercentage (Amount)
       if self:FocusRegen() == 0 then return -1; end
       return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) * (1 / self:FocusRegenPercentage()) or 0;
+    end
+    -- cast_regen
+    function Unit:FocusCastRegen (CastTime)
+      if self:FocusRegen() == 0 then return -1; end
+      return self:FocusRegen() * CastTime;
+    end
+    -- "remaining_cast_regen"
+    function Unit:FocusRemainingCastRegen (CastTime)
+      if self:FocusRegen() == 0 then return -1; end
+      -- If we are casting, we check what we will regen until the end of the cast
+      if self:IsCasting() then
+        return self:FocusRegen() * self:RemainingCastTime();
+      -- Else we'll use the remaining GCD as "CastTime"
+      else
+        return self:FocusRegen() * self:GCDRemains();
+      end
+    end
+    -- Custom function to predict our Focus at the end of the Cast/GCD.
+    function Unit:FocusPredicted ()
+      if self:FocusRegen() == 0 then return -1; end
+      return self:Focus() + self:FocusRemainingCastRegen()
     end
 
     ----------------------------
