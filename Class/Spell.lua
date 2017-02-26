@@ -249,7 +249,7 @@
 
     -- Get the CostInfo (from GetSpellPowerCost) and cache it.
     function Spell:CostInfo (Key)
-      if not Key or type(Key) ~= "string" then error("Invalid Key.");
+      if not Key or type(Key) ~= "string" then error("Invalid Key."); end
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if not Cache.SpellInfo[self.SpellID].CostInfo then
         Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID)[1];
