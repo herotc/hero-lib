@@ -1,9 +1,9 @@
 ## Interface: 70100
 
-## Title: |cFFFFF569Aethys|r Core
+## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
 ## Version: 7.1.5001
-## Notes: Core Library used by AethysRotation and AethysTool, can also be used by others 3rd-Party Addons.
+## Notes: Core Library used by AethysRotation and AethysTools, can also be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
