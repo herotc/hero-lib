@@ -23,7 +23,6 @@
   local _T = {                  -- Temporary Vars
     Parts,                        -- NPCID
     ThisUnit,                     -- TTDRefresh
-    Start, End,                   -- CastPercentage
     Infos,                        -- GetBuffs / GetDebuffs
     ExpirationTime                -- BuffRemains / DebuffRemains
   };
@@ -316,28 +315,29 @@
     return (self:CastingInfo(9) == false or self:ChannelingInfo(8) == false) and true or false;
   end
 
-  -- Get the full duration of the current cast.
-  function Unit:CastDuration ()
-    if self:IsCasting() then
-      _T.Start, _T.End = select(5, self:CastingInfo());
-      return (_T.End - _T.Start)/1000;
-    end
-    if self:IsChanneling() then
-      _T.Start, _T.End = select(5, self:ChannelingInfo());
-      return (_T.End - _T.Start)/1000;
-    end
+  -- Get when the cast, if there is any, started (in seconds).
+  function Unit:CastStart ()
+    if self:IsCasting() then return self:CastingInfo(5)/1000; end
+    if self:IsChanneling() then return self:ChannelingInfo(5)/1000; end
     return 0;
   end
 
-  -- Get the remaining cast time.
+  -- Get when the cast, if there is any, will end (in seconds).
+  function Unit:CastEnd ()
+    if self:IsCasting() then return self:CastingInfo(6)/1000; end
+    if self:IsChanneling() then return self:ChannelingInfo(6)/1000; end
+    return 0;
+  end
+
+  -- Get the full duration, in seconds, of the current cast, if there is any.
+  function Unit:CastDuration ()
+      return self:CastEnd() - self:CastStart();
+  end
+
+  -- Get the remaining cast time, if there is any.
   function Unit:CastRemains ()
-    if self:IsCasting() then
-      _T.End = select(6, self:CastingInfo());
-      return (_T.End - AC.GetTime()*1000)/1000;
-    end
-    if self:IsChanneling() then
-      _T.End = select(6, self:ChannelingInfo());
-      return (_T.End - AC.GetTime()*1000)/1000;
+    if self:IsCasting() or self:IsChanneling() then
+      return self:CastEnd() - AC.GetTime();
     end
     return 0;
   end
@@ -346,12 +346,10 @@
   -- By default for channeling, it returns total - progress, if ReverseChannel is true it'll return only progress.
   function Unit:CastPercentage (ReverseChannel)
     if self:IsCasting() then
-      _T.Start, _T.End = select(5, self:CastingInfo());
-      return (AC.GetTime()*1000 - _T.Start)/(_T.End - _T.Start)*100;
+      return (AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
     end
     if self:IsChanneling() then
-      _T.Start, _T.End = select(5, self:ChannelingInfo());
-      return ReverseChannel and (AC.GetTime()*1000 - _T.Start)/(_T.End - _T.Start)*100 or 100-(AC.GetTime()*1000 - _T.Start)/(_T.End - _T.Start)*100;
+      return ReverseChannel and (AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100 or 100-(AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
     end
     return 0;
   end
