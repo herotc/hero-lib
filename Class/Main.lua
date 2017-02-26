@@ -4,6 +4,7 @@
   -- AethysCore
   local Cache = AethysCore_Cache;
   -- Lua
+  local error = error;
   local setmetatable = setmetatable;
   -- File Locals
   local Table, MetaTable;
@@ -31,6 +32,7 @@
     local Unit = AC.Unit;
     -- Unit Constructor
     function Unit:Constructor (UnitID)
+      if type(UnitID) ~= "string" then error("Invalid UnitID."); end
       self.UnitID = UnitID;
     end
     -- Defines Unit Objects.
@@ -53,9 +55,11 @@
     AC.Spell = AC.Class();
     local Spell = AC.Spell;
     -- Spell Constructor
-    function Spell:Constructor (ID, Type)
-      self.SpellID = ID;
-      self.SpellType = Type or "Player"; -- For Pet, put "Pet". Default is "Player".
+    function Spell:Constructor (SpellID, SpellType)
+      if type(SpellID) ~= "number" then error("Invalid SpellID."); end
+      if SpellType and type(SpellType) ~= "string" then error("Invalid Spell Type."); end
+      self.SpellID = SpellID;
+      self.SpellType = SpellType or "Player"; -- For Pet, put "Pet". Default is "Player".
       self.LastCastTime = 0;
       self.LastDisplayTime = 0;
     end
@@ -65,7 +69,8 @@
     AC.Item = AC.Class();
     local Item = AC.Item;
     -- Item Constructor
-    function Item:Constructor (ID)
-      self.ItemID = ID;
+    function Item:Constructor (ItemID)
+      if type(ItemID) ~= "number" then error("Invalid ItemID."); end
+      self.ItemID = ItemID;
       self.LastCastTime = 0;
     end
