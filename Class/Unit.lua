@@ -246,6 +246,7 @@
   --- Get all the casting infos from an unit and put it into the Cache.
   function Unit:GetCastingInfo ()
     if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+    -- name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID
     Cache.UnitInfo[self:GUID()].Casting = {UnitCastingInfo(self.UnitID)};
   end
 
@@ -272,6 +273,11 @@
   -- Get the unit cast's name if there is any.
   function Unit:CastName ()
     return self:IsCasting() and self:CastingInfo(1) or "";
+  end
+
+  -- Get the unit cast's id if there is any.
+  function Unit:CastID ()
+    return self:IsCasting() and self:CastingInfo(10) or -1;
   end
 
   --- Get all the Channeling Infos from an unit and put it into the Cache.
