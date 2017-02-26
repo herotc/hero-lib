@@ -238,6 +238,25 @@
       return self:IsLearned() and not self:IsOnCooldown();
     end
 
+    -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
+    function Spell:CooldownInfo ()
+      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
+      if not Cache.SpellInfo[self.SpellID].CooldownInfo then
+        Cache.SpellInfo[self.SpellID].CooldownInfo = {GetSpellCooldown(self.SpellID)};
+      end
+      return unpack(Cache.SpellInfo[self.SpellID].CooldownInfo);
+    end
+
+    -- Get the CostInfo (from GetSpellPowerCost) and cache it.
+    function Spell:CostInfo (Key)
+      if not Key or type(Key) ~= "string" then error("Invalid Key.");
+      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
+      if not Cache.SpellInfo[self.SpellID].CostInfo then
+        Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID)[1];
+      end
+      return Cache.SpellInfo[self.SpellID].CostInfo[Key];
+    end
+
     --- Artifact Traits Scan
     -- Fills the PowerTable with every traits informations.
     local ArtifactUI, HasArtifactEquipped  = _G.C_ArtifactUI, _G.HasArtifactEquipped;
@@ -274,6 +293,11 @@
       else
         return self:InfoID(4)/1000;
       end
+    end
+
+    -- action.foo.cost
+    function Spell:Cost ()
+      return self:CostInfo("cost");
     end
 
     -- action.foo.charges or cooldown.foo.charges
@@ -316,15 +340,6 @@
         end
       end
       return Cache.SpellInfo[self.SpellID].ChargesFractional;
-    end
-
-    -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
-    function Spell:CooldownInfo ()
-      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-      if not Cache.SpellInfo[self.SpellID].CooldownInfo then
-        Cache.SpellInfo[self.SpellID].CooldownInfo = {GetSpellCooldown(self.SpellID)};
-      end
-      return unpack(Cache.SpellInfo[self.SpellID].CooldownInfo);
     end
 
     -- cooldown.foo.remains
