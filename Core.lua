@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- Lua
@@ -32,12 +33,14 @@
       Texture = {Spell = {}, Item = {}, Custom = {}}
     }
   };
-  -- Globalize Vars
+
+--- ======= GLOBALIZE =======
+  -- Addon
   AethysCore = AC;
   AethysCore_Cache = Cache;
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Wipe a table while keeping the structure
   -- i.e. wipe every sub-table as long it doesn't contain a table
   function AC.WipeTableRecursively (Table)

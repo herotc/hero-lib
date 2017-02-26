@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -19,7 +20,7 @@
   };
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Fill the Enemies Cache table.
   function AC.GetEnemies (Distance)
     -- Prevent building the same table if it's already cached.

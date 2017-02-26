@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -14,7 +15,7 @@
   
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Get the Latency (it's updated every 30s).
   -- TODO: Cache it in Persistent Cache and update it only when it changes
   function AC.Latency ()

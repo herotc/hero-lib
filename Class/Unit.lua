@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -28,7 +29,7 @@
   };
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Get the unit GUID.
   function Unit:GUID ()
     if not Cache.GUIDInfo[self.UnitID] then

@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -12,9 +13,10 @@
   local mathmax = math.max;
   local mathmin = math.min;
   -- File Locals
+  
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Create the MainFrame
   AC.MainFrame = CreateFrame("Frame", "AethysCore_MainFrame", UIParent);
 

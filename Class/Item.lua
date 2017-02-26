@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -14,9 +15,9 @@
   
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Check if a given item is currently equipped in the given slot.
-  --- Inventory slots
+  -- Inventory slots
     -- INVSLOT_HEAD       = 1;
     -- INVSLOT_NECK       = 2;
     -- INVSLOT_SHOULDAC   = 3;

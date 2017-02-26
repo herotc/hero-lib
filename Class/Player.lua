@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -16,7 +17,7 @@
   
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Get if the player is mounted on a non-combat mount.
   function Unit:IsMounted ()
     return IsMounted() and not self:IsOnCombatMount();

@@ -1,4 +1,5 @@
---- ============== HEADER ==============
+--- ============================ HEADER ============================
+--- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
@@ -24,7 +25,7 @@
   };
 
 
---- ============== CONTENT ==============
+--- ============================ CONTENT ============================
   -- Get the spell ID.
   function Spell:ID ()
     return self.SpellID;
