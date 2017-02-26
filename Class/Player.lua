@@ -229,14 +229,14 @@
     return self:FocusRegen() * CastTime;
   end
   -- "remaining_cast_regen"
-  function Unit:FocusRemainingCastRegen ()
+  function Unit:FocusRemainingCastRegen (Offset)
     if self:FocusRegen() == 0 then return -1; end
     -- If we are casting, we check what we will regen until the end of the cast
     if self:IsCasting() then
-      return self:FocusRegen() * self:CastRemains();
+      return self:FocusRegen() * (self:CastRemains() + (Offset or 0));
     -- Else we'll use the remaining GCD as "CastTime"
     else
-      return self:FocusRegen() * self:GCDRemains();
+      return self:FocusRegen() * (self:GCDRemains() + (Offset or 0));
     end
   end
   -- Get the Focus we will loose when our cast will end, if we cast.
@@ -244,9 +244,9 @@
     return self:IsCasting() and Spell(self:CastID()):Cost() or 0;
   end
   -- Predict the expected Focus at the end of the Cast/GCD.
-  function Unit:FocusPredicted ()
+  function Unit:FocusPredicted (Offset)
     if self:FocusRegen() == 0 then return -1; end
-    return self:Focus() + self:FocusRemainingCastRegen() - self:FocusLossOnCastEnd();
+    return self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd();
   end
 
   ----------------------------
