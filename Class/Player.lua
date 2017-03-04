@@ -6,6 +6,7 @@
   local Cache = AethysCore_Cache;
   local Unit = AC.Unit;
   local Player = Unit.Player;
+  local Pet = Unit.Pet;
   local Target = Unit.Target;
   local Spell = AC.Spell;
   local Item = AC.Item;
@@ -58,6 +59,50 @@
     for i = 1, #CombatMountBuff do
       if self:Buff(CombatMountBuff[i], nil, true) then
         return true;
+      end
+    end
+    return false;
+  end
+
+  -- Get if the player is in a valid vehicle.
+  function Unit:IsInVehicle ()
+    return UnitInVehicle(self.UnitID) and not self:IsInWhitelistedVehicle();
+  end
+
+  -- Get if the player is in a vhehicle that is not really a vehicle.
+  local InVehicleWhitelist = {
+    Spell = {
+      --- Warlord of Draenor (WoD)
+        -- Hellfire Citadel (T18 - 6.2 Patch)
+        Spell(187819),  -- Crush (Kormrok's Hands)
+        Spell(181345),  -- Foul Crush (Kormrok's Tank Hand)
+        -- Blackrock Foundry (T17 - 6.0 Patch)
+        Spell(157059)   -- Rune of Grasping Earth (Kromog's Hand)
+    },
+    PetMount = {
+      --- Warlord of Draenor (WoD)
+        -- Garrison Stables Quest (6.0 Patch)
+        87082,  -- Silverperlt
+        87078,  -- Icehoof
+        87081,  -- Rocktusk
+        87080,  -- Riverwallow
+        87079,  -- Meadowstomper
+        87076   -- Snarler
+    }
+  };
+  function Unit:IsInWhitelistedVehicle ()
+    -- Spell
+    for i = 1, #InVehicleWhitelist.Spell do
+      if self:Debuff(InVehicleWhitelist.Spell[i], nil, true) then
+        return true;
+      end
+    end
+    -- PetMount
+    if Pet:IsActive() then
+      for i = 1, #InVehicleWhitelist.PetMount do
+        if Pet:CreatureID() == InVehicleWhitelist.PetMount[i] then
+          return true;
+        end
       end
     end
     return false;
@@ -699,7 +744,7 @@
       [12] = {[13] = 139630, [14] = 139630}                                                           -- Demon Hunter: Etching of Sargeras
     },
     ["T19"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end                                        -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
       [1]  = {[5] = 138351, [15] = 138374, [10] = 138354, [1] = 138357, [7] = 138360, [3] = 138363},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 138350, [15] = 138369, [10] = 138353, [1] = 138356, [7] = 138359, [3] = 138362},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 138339, [15] = 138368, [10] = 138340, [1] = 138342, [7] = 138344, [3] = 138347},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
@@ -714,7 +759,7 @@
       [12] = {[5] = 138376, [15] = 138375, [10] = 138377, [1] = 138378, [7] = 138379, [3] = 138380}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     },
     ["T20"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end                                        -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
       [1]  = {[5] = 147187, [15] = 147188, [10] = 147189, [1] = 147190, [7] = 147191, [3] = 147192},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 147157, [15] = 147158, [10] = 147159, [1] = 147160, [7] = 147161, [3] = 147162},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 147139, [15] = 147140, [10] = 147141, [1] = 147142, [7] = 147143, [3] = 147144},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
