@@ -638,6 +638,11 @@
 
   -- buff.bloodlust.up
   local HeroismBuff = {
+    Spell(90355),   -- Ancient Hysteria
+    Spell(2825),    -- Bloodlust
+    Spell(32182),   -- Heroism
+    Spell(160452),  -- Netherwinds
+    Spell(80353),   -- Time Warp
   };
   function Unit:HasHeroism (Duration)
      for i = 1, #HeroismBuff do
