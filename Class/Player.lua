@@ -647,7 +647,7 @@
   function Unit:HasHeroism (Duration)
      for i = 1, #HeroismBuff do
        if self:Buff(HeroismBuff[i], nil, true) then
-         return Duration and self:BuffRemains(HeroismBuff[i]) or true;
+         return Duration and self:BuffRemains(HeroismBuff[i], true) or true;
        end
      end
      return false;
