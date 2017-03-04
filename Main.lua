@@ -29,7 +29,7 @@
   function AC.Pulse ()
     if AC.GetTime(true) > AC.Timer.Pulse then
       -- Put a 10ms min and 50ms max limiter to save FPS (depending on World Latency).
-      AC.Timer.PulseOffset = mathmax(10, mathmin(50, AC.Latency()))/1000;
+      AC.Timer.PulseOffset = mathmax(10, mathmin(50, AC.Latency()))/1000+0.05;
       AC.Timer.Pulse = AC.GetTime() + AC.Timer.PulseOffset;
 
       AC.CacheHasBeenReset = false;
