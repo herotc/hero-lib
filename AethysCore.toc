@@ -17,6 +17,7 @@ Core.lua
 Class\Main.lua
 Class\Unit.lua
 Class\Player.lua
+Class\Pet.lua
 Class\Spell.lua
 Class\Item.lua
 
