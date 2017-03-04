@@ -1,0 +1,5 @@
+package-as: AethysCore
+
+enable-nolib-creation: no
+
+license-output: LICENSE
