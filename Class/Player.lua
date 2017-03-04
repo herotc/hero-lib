@@ -100,7 +100,7 @@
     -- PetMount
     if Pet:IsActive() then
       for i = 1, #InVehicleWhitelist.PetMount do
-        if Pet:CreatureID() == InVehicleWhitelist.PetMount[i] then
+        if Pet:NPCID() == InVehicleWhitelist.PetMount[i] then
           return true;
         end
       end
