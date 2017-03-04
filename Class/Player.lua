@@ -26,33 +26,33 @@
   -- Get if the player is on a combat mount or not.
   local CombatMountBuff = {
     --- Classes
-      Spell(131347), -- Demon Hunter Glide
-      Spell(783), -- Druid Travel Form
-      Spell(165962), -- Druid Flight Form
-      Spell(220509), -- Paladin Divine Steed
-      Spell(221883), -- Paladin Divine Steed
-      Spell(221884), -- Paladin Divine Steed
-      Spell(221886), -- Paladin Divine Steed
-      Spell(221887), -- Paladin Divine Steed
+      Spell(131347),  -- Demon Hunter Glide
+      Spell(783),     -- Druid Travel Form
+      Spell(165962),  -- Druid Flight Form
+      Spell(220509),  -- Paladin Divine Steed
+      Spell(221883),  -- Paladin Divine Steed
+      Spell(221884),  -- Paladin Divine Steed
+      Spell(221886),  -- Paladin Divine Steed
+      Spell(221887),  -- Paladin Divine Steed
     --- Legion
       -- Class Order Hall
-      Spell(220480), -- Death Knight Ebon Blade Deathcharger
-      Spell(220484), -- Death Knight Nazgrim's Deathcharger
-      Spell(220488), -- Death Knight Trollbane's Deathcharger
-      Spell(220489), -- Death Knight Whitemane's Deathcharger
-      Spell(220491), -- Death Knight Mograine's Deathcharger
-      Spell(220504), -- Paladin Silver Hand Charger
-      Spell(220507), -- Paladin Silver Hand Charger
+      Spell(220480),  -- Death Knight Ebon Blade Deathcharger
+      Spell(220484),  -- Death Knight Nazgrim's Deathcharger
+      Spell(220488),  -- Death Knight Trollbane's Deathcharger
+      Spell(220489),  -- Death Knight Whitemane's Deathcharger
+      Spell(220491),  -- Death Knight Mograine's Deathcharger
+      Spell(220504),  -- Paladin Silver Hand Charger
+      Spell(220507),  -- Paladin Silver Hand Charger
       -- Stormheim PVP Quest (Bareback Brawl)
-      Spell(221595), -- Storm's Reach Cliffwalker
-      Spell(221671), -- Storm's Reach Warbear
-      Spell(221672), -- Storm's Reach Greatstag
-      Spell(221673), -- Storm's Reach Worg
-      Spell(218964), -- Stormtalon
+      Spell(221595),  -- Storm's Reach Cliffwalker
+      Spell(221671),  -- Storm's Reach Warbear
+      Spell(221672),  -- Storm's Reach Greatstag
+      Spell(221673),  -- Storm's Reach Worg
+      Spell(218964),  -- Stormtalon
     --- Warlord of Draenor (WoD)
       -- Nagrand
-      Spell(164222), -- Frostwolf War Wolf
-      Spell(165803) -- Telaari Talbuk
+      Spell(164222),  -- Frostwolf War Wolf
+      Spell(165803)   -- Telaari Talbuk
   };
   function Unit:IsOnCombatMount ()
     for i = 1, #CombatMountBuff do
@@ -65,12 +65,12 @@
 
   -- gcd
   local GCD_OneSecond = {
-    [103] = true, -- Feral
-    [259] = true, -- Assassination
-    [260] = true, -- Outlaw
-    [261] = true, -- Subtlety
-    [268] = true, -- Brewmaster
-    [269] = true  -- Windwalker
+    [103] = true,   -- Feral
+    [259] = true,   -- Assassination
+    [260] = true,   -- Outlaw
+    [261] = true,   -- Subtlety
+    [268] = true,   -- Brewmaster
+    [269] = true    -- Windwalker
   };
   local GCD_Value = 1.5;
   function Unit:GCD ()
@@ -569,23 +569,23 @@
     -- Normal Stealth
     {
       -- Rogue
-      Spell(1784), -- Stealth
-      Spell(115191), -- Stealth w/ Subterfuge Talent
+      Spell(1784),    -- Stealth
+      Spell(115191),  -- Stealth w/ Subterfuge Talent
       -- Feral
-      Spell(5215), -- Prowl
+      Spell(5215)     -- Prowl
     },
     -- Combat Stealth
     {
       -- Rogue
-      Spell(11327), -- Vanish
-      Spell(115193), -- Vanish w/ Subterfuge Talent
-      Spell(115192), -- Subterfuge Buff
-      Spell(185422), -- Stealth from Shadow Dance
+      Spell(11327),   -- Vanish
+      Spell(115193),  -- Vanish w/ Subterfuge Talent
+      Spell(115192),  -- Subterfuge Buff
+      Spell(185422)   -- Stealth from Shadow Dance
     },
     -- Special Stealth
     {
       -- Night Elf
-      Spell(58984) -- Shadowmeld
+      Spell(58984)    -- Shadowmeld
     }
   };
   function Unit:IterateStealthBuffs (Abilities, Special, Duration)
@@ -669,49 +669,49 @@
   -- Check player set bonuses (call AC.GetEquipment before to refresh the current gear)
   HasTierSets = {
     ["T18"] = {
-      [0]     =  function (Count) return Count > 1, Count > 3; end,                -- Return Function
-      [1]     =  {[5] = 124319, [10] = 124329, [1] = 124334, [7] = 124340, [3] = 124346},    -- Warrior: Chest, Hands, Head, Legs, Shoulder
-      [2]     =  {[5] = 124318, [10] = 124328, [1] = 124333, [7] = 124339, [3] = 124345},    -- Paladin: Chest, Hands, Head, Legs, Shoulder
-      [3]     =  {[5] = 124284, [10] = 124292, [1] = 124296, [7] = 124301, [3] = 124307},    -- Hunter: Chest, Hands, Head, Legs, Shoulder
-      [4]     =  {[5] = 124248, [10] = 124257, [1] = 124263, [7] = 124269, [3] = 124274},    -- Rogue: Chest, Hands, Head, Legs, Shoulder
-      [5]     =  {[5] = 124172, [10] = 124155, [1] = 124161, [7] = 124166, [3] = 124178},    -- Priest: Chest, Hands, Head, Legs, Shoulder
-      [6]     =  {[5] = 124317, [10] = 124327, [1] = 124332, [7] = 124338, [3] = 124344},    -- Death Knight: Chest, Hands, Head, Legs, Shoulder
-      [7]     =  {[5] = 124303, [10] = 124293, [1] = 124297, [7] = 124302, [3] = 124308},    -- Shaman: Chest, Hands, Head, Legs, Shoulder
-      [8]     =  {[5] = 124171, [10] = 124154, [1] = 124160, [7] = 124165, [3] = 124177},    -- Mage: Chest, Hands, Head, Legs, Shoulder
-      [9]     =  {[5] = 124173, [10] = 124156, [1] = 124162, [7] = 124167, [3] = 124179},    -- Warlock: Chest, Hands, Head, Legs, Shoulder
-      [10]    =  {[5] = 124247, [10] = 124256, [1] = 124262, [7] = 124268, [3] = 124273},    -- Monk: Chest, Hands, Head, Legs, Shoulder
-      [11]    =  {[5] = 124246, [10] = 124255, [1] = 124261, [7] = 124267, [3] = 124272},    -- Druid: Chest, Hands, Head, Legs, Shoulder
-      [12]    =  nil                                        -- Demon Hunter: Chest, Hands, Head, Legs, Shoulder
+      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [1]  = {[5] = 124319, [10] = 124329, [1] = 124334, [7] = 124340, [3] = 124346},                 -- Warrior: Chest, Hands, Head, Legs, Shoulder
+      [2]  = {[5] = 124318, [10] = 124328, [1] = 124333, [7] = 124339, [3] = 124345},                 -- Paladin: Chest, Hands, Head, Legs, Shoulder
+      [3]  = {[5] = 124284, [10] = 124292, [1] = 124296, [7] = 124301, [3] = 124307},                 -- Hunter: Chest, Hands, Head, Legs, Shoulder
+      [4]  = {[5] = 124248, [10] = 124257, [1] = 124263, [7] = 124269, [3] = 124274},                 -- Rogue: Chest, Hands, Head, Legs, Shoulder
+      [5]  = {[5] = 124172, [10] = 124155, [1] = 124161, [7] = 124166, [3] = 124178},                 -- Priest: Chest, Hands, Head, Legs, Shoulder
+      [6]  = {[5] = 124317, [10] = 124327, [1] = 124332, [7] = 124338, [3] = 124344},                 -- Death Knight: Chest, Hands, Head, Legs, Shoulder
+      [7]  = {[5] = 124303, [10] = 124293, [1] = 124297, [7] = 124302, [3] = 124308},                 -- Shaman: Chest, Hands, Head, Legs, Shoulder
+      [8]  = {[5] = 124171, [10] = 124154, [1] = 124160, [7] = 124165, [3] = 124177},                 -- Mage: Chest, Hands, Head, Legs, Shoulder
+      [9]  = {[5] = 124173, [10] = 124156, [1] = 124162, [7] = 124167, [3] = 124179},                 -- Warlock: Chest, Hands, Head, Legs, Shoulder
+      [10] = {[5] = 124247, [10] = 124256, [1] = 124262, [7] = 124268, [3] = 124273},                 -- Monk: Chest, Hands, Head, Legs, Shoulder
+      [11] = {[5] = 124246, [10] = 124255, [1] = 124261, [7] = 124267, [3] = 124272},                 -- Druid: Chest, Hands, Head, Legs, Shoulder
+      [12] = nil                                                                                      -- Demon Hunter: Chest, Hands, Head, Legs, Shoulder
     },
     ["T18_ClassTrinket"] = {
-      [0]     =  function (Count) return Count > 0; end,    -- Return Function
-      [1]     =  {[13] = 124523, [14] = 124523},        -- Warrior : Worldbreaker's Resolve
-      [2]     =  {[13] = 124518, [14] = 124518},        -- Paladin : Libram of Vindication
-      [3]     =  {[13] = 124515, [14] = 124515},        -- Hunter : Talisman of the Master Tracker
-      [4]     =  {[13] = 124520, [14] = 124520},        -- Rogue : Bleeding Hollow Toxin Vessel
-      [5]     =  {[13] = 124519, [14] = 124519},        -- Priest : Repudiation of War
-      [6]     =  {[13] = 124513, [14] = 124513},        -- Death Knight : Reaper's Harvest
-      [7]     =  {[13] = 124521, [14] = 124521},        -- Shaman : Core of the Primal Elements
-      [8]     =  {[13] = 124516, [14] = 124516},        -- Mage : Tome of Shifting Words
-      [9]     =  {[13] = 124522, [14] = 124522},        -- Warlock : Fragment of the Dark Star
-      [10]    =  {[13] = 124517, [14] = 124517},        -- Monk : Sacred Draenic Incense
-      [11]    =  {[13] = 124514, [14] = 124514},        -- Druid : Seed of Creation
-      [12]    =  {[13] = 139630, [14] = 139630}        -- Demon Hunter : Etching of Sargeras
+      [0]  = function (Count) return Count > 0; end,                                                  -- Return Function
+      [1]  = {[13] = 124523, [14] = 124523},                                                          -- Warrior:      Worldbreaker's Resolve
+      [2]  = {[13] = 124518, [14] = 124518},                                                          -- Paladin:      Libram of Vindication
+      [3]  = {[13] = 124515, [14] = 124515},                                                          -- Hunter:       Talisman of the Master Tracker
+      [4]  = {[13] = 124520, [14] = 124520},                                                          -- Rogue:        Bleeding Hollow Toxin Vessel
+      [5]  = {[13] = 124519, [14] = 124519},                                                          -- Priest:       Repudiation of War
+      [6]  = {[13] = 124513, [14] = 124513},                                                          -- Death Knight: Reaper's Harvest
+      [7]  = {[13] = 124521, [14] = 124521},                                                          -- Shaman:       Core of the Primal Elements
+      [8]  = {[13] = 124516, [14] = 124516},                                                          -- Mage:         Tome of Shifting Words
+      [9]  = {[13] = 124522, [14] = 124522},                                                          -- Warlock:      Fragment of the Dark Star
+      [10] = {[13] = 124517, [14] = 124517},                                                          -- Monk:         Sacred Draenic Incense
+      [11] = {[13] = 124514, [14] = 124514},                                                          -- Druid:        Seed of Creation
+      [12] = {[13] = 139630, [14] = 139630}                                                           -- Demon Hunter: Etching of Sargeras
     },
     ["T19"] = {
-      [0]     =  function (Count) return Count > 1, Count > 3; end,                      -- Return Function
-      [1]     =  {[5] = 138351, [10] = 138354, [1] = 138357, [7] = 138360, [3] = 138363, [15] = 138374},    -- Warrior: Chest, Hands, Head, Legs, Shoulder, Back
-      [2]     =  {[5] = 138350, [10] = 138353, [1] = 138356, [7] = 138359, [3] = 138362, [15] = 138369},    -- Paladin: Chest, Hands, Head, Legs, Shoulder, Back
-      [3]     =  {[5] = 138339, [10] = 138340, [1] = 138342, [7] = 138344, [3] = 138347, [15] = 138368},    -- Hunter: Chest, Hands, Head, Legs, Shoulder, Back
-      [4]     =  {[5] = 138326, [10] = 138329, [1] = 138332, [7] = 138335, [3] = 138338, [15] = 138371},    -- Rogue: Chest, Hands, Head, Legs, Shoulder, Back
-      [5]     =  {[5] = 138319, [10] = 138310, [1] = 138313, [7] = 138316, [3] = 138322, [15] = 138370},    -- Priest: Chest, Hands, Head, Legs, Shoulder, Back
-      [6]     =  {[5] = 138349, [10] = 138352, [1] = 138355, [7] = 138358, [3] = 138361, [15] = 138364},    -- Death Knight: Chest, Hands, Head, Legs, Shoulder, Back
-      [7]     =  {[5] = 138346, [10] = 138341, [1] = 138343, [7] = 138345, [3] = 138348, [15] = 138372},    -- Shaman: Chest, Hands, Head, Legs, Shoulder, Back
-      [8]     =  {[5] = 138318, [10] = 138309, [1] = 138312, [7] = 138315, [3] = 138321, [15] = 138365},    -- Mage: Chest, Hands, Head, Legs, Shoulder, Back
-      [9]     =  {[5] = 138320, [10] = 138311, [1] = 138314, [7] = 138317, [3] = 138323, [15] = 138373},    -- Warlock: Chest, Hands, Head, Legs, Shoulder, Back
-      [10]    =  {[5] = 138325, [10] = 138328, [1] = 138331, [7] = 138334, [3] = 138337, [15] = 138367},    -- Monk: Chest, Hands, Head, Legs, Shoulder, Back
-      [11]    =  {[5] = 138324, [10] = 138327, [1] = 138330, [7] = 138333, [3] = 138336, [15] = 138366},    -- Druid: Chest, Hands, Head, Legs, Shoulder, Back
-      [12]    =  {[5] = 138376, [10] = 138377, [1] = 138378, [7] = 138379, [3] = 138380, [15] = 138375}     -- Demon Hunter: Chest, Hands, Head, Legs, Shoulder, Back
+      [0]  = function (Count) return Count > 1, Count > 3; end                                        -- Return Function
+      [1]  = {[5] = 138351, [10] = 138354, [1] = 138357, [7] = 138360, [3] = 138363, [15] = 138374},  -- Warrior:      Chest, Hands, Head, Legs, Shoulder, Back
+      [2]  = {[5] = 138350, [10] = 138353, [1] = 138356, [7] = 138359, [3] = 138362, [15] = 138369},  -- Paladin:      Chest, Hands, Head, Legs, Shoulder, Back
+      [3]  = {[5] = 138339, [10] = 138340, [1] = 138342, [7] = 138344, [3] = 138347, [15] = 138368},  -- Hunter:       Chest, Hands, Head, Legs, Shoulder, Back
+      [4]  = {[5] = 138326, [10] = 138329, [1] = 138332, [7] = 138335, [3] = 138338, [15] = 138371},  -- Rogue:        Chest, Hands, Head, Legs, Shoulder, Back
+      [5]  = {[5] = 138319, [10] = 138310, [1] = 138313, [7] = 138316, [3] = 138322, [15] = 138370},  -- Priest:       Chest, Hands, Head, Legs, Shoulder, Back
+      [6]  = {[5] = 138349, [10] = 138352, [1] = 138355, [7] = 138358, [3] = 138361, [15] = 138364},  -- Death Knight: Chest, Hands, Head, Legs, Shoulder, Back
+      [7]  = {[5] = 138346, [10] = 138341, [1] = 138343, [7] = 138345, [3] = 138348, [15] = 138372},  -- Shaman:       Chest, Hands, Head, Legs, Shoulder, Back
+      [8]  = {[5] = 138318, [10] = 138309, [1] = 138312, [7] = 138315, [3] = 138321, [15] = 138365},  -- Mage:         Chest, Hands, Head, Legs, Shoulder, Back
+      [9]  = {[5] = 138320, [10] = 138311, [1] = 138314, [7] = 138317, [3] = 138323, [15] = 138373},  -- Warlock:      Chest, Hands, Head, Legs, Shoulder, Back
+      [10] = {[5] = 138325, [10] = 138328, [1] = 138331, [7] = 138334, [3] = 138337, [15] = 138367},  -- Monk:         Chest, Hands, Head, Legs, Shoulder, Back
+      [11] = {[5] = 138324, [10] = 138327, [1] = 138330, [7] = 138333, [3] = 138336, [15] = 138366},  -- Druid:        Chest, Hands, Head, Legs, Shoulder, Back
+      [12] = {[5] = 138376, [10] = 138377, [1] = 138378, [7] = 138379, [3] = 138380, [15] = 138375}   -- Demon Hunter: Chest, Hands, Head, Legs, Shoulder, Back
     }
   };
   function AC.HasTier (Tier)
