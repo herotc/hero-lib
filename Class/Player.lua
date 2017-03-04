@@ -637,9 +637,15 @@
   end
 
   -- buff.bloodlust.up
-  function Unit:HasHeroism ()
-    -- TODO: Make a table with all the bloodlust spells then do a for loop checking them (with AnyCaster as true in buff)
-    return false;
+  local HeroismBuff = {
+  };
+  function Unit:HasHeroism (Duration)
+     for i = 1, #HeroismBuff do
+       if self:Buff(HeroismBuff[i]) then
+         return Duration and self:BuffRemains(HeroismBuff[i]) or true;
+       end
+     end
+     return false;
   end
 
   -- Save the current player's equipment.
