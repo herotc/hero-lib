@@ -9,8 +9,11 @@
   AC.GUISettings = {
     General = {
       -- Recovery Timer
-      RecoveryMode = "GCD"; -- "GCD" to always display the next ability, "Custom" for Custom RecoveryTimer
-      RecoveryTimer = 950;
+      RecoveryMode = "GCD", -- "GCD" to always display the next ability, "Custom" for Custom RecoveryTimer
+      RecoveryTimer = 950,
+      -- Reduce CPU Usage (decrease a little bit Rotation potential performance but saves FPS)
+      ReduceCPULoad = false,
+      ReduceCPULoadOffset = 0.05, -- 50ms
       -- Blacklist Settings
       Blacklist = {
         -- During how many times the GCD time you want to blacklist an unit from Cycling
@@ -22,7 +25,7 @@
           -- [123456] = true;
           -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false; end
           -- Tito Pet Cows
-          [71444] = true;
+          [71444] = true
         },
         -- Custom Cycle List (User Defined), must be a valid Lua Boolean or Function as Value and have the NPCID as Key
         CycleUserDefined = {
