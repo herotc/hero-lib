@@ -193,19 +193,22 @@
     AC:RegisterForEvent(
       function ()
         -- Refresh Player
-        Cache.Persistent.Player.Class = {UnitClass("player")};
-        Cache.Persistent.Player.Spec = {GetSpecializationInfo(GetSpecialization())};
+          Cache.Persistent.Player.Class = {UnitClass("player")};
+          Cache.Persistent.Player.Spec = {GetSpecializationInfo(GetSpecialization())};
+
         -- Wipe the texture from Persistent Cache
-        wipe(Cache.Persistent.Texture.Spell);
-        wipe(Cache.Persistent.Texture.Item);
+          wipe(Cache.Persistent.Texture.Spell);
+          wipe(Cache.Persistent.Texture.Item);
+
         -- Refresh Gear
-        AC.GetEquipment();
-        -- WoD
-        AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
-        AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
+          AC.GetEquipment();
+        -- WoD (They are working but not used, so I'll comment them)
+          --AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
+          --AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
         -- Legion
-        Spell:ArtifactScan();
-        AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
+          Spell:ArtifactScan();
+          AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
+          AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
       end
       , "ZONE_CHANGED_NEW_AREA"
       , "PLAYER_SPECIALIZATION_CHANGED"
