@@ -42,6 +42,7 @@
   Unit.Pet = Unit("Pet");
   Unit.Target = Unit("Target");
   Unit.Focus = Unit("Focus");
+  Unit.MouseOver = Unit("MouseOver");
   Unit.Vehicle = Unit("Vehicle");
   -- TODO: Make a map containing all UnitId that have multiple possiblites + the possibilites then a master for loop checking this
   -- Something like { {"Nameplate", 40}, {"Boss", 4}, {"Arena", 5}, ....}
