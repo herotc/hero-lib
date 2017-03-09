@@ -16,6 +16,53 @@
 
 
 --- ============================ CONTENT ============================
+  -- Get the Instance Informations
+  -- TODO: Cache it in Persistent Cache and update it only when it changes
+  -- @returns name, type, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize
+    -- name - Name of the instance or world area (string)
+    -- type - Type of the instance (string)
+    -- difficulty - Difficulty setting of the instance (number)
+    -- difficultyName - String representing the difficulty of the instance. E.g. "10 Player" (string)
+    -- maxPlayers - Maximum number of players allowed in the instance (number)
+    -- playerDifficulty - Unknown (number)
+    -- isDynamicInstance - True for raid instances that can support multiple maxPlayers values (10 and 25) - eg. ToC, DS, ICC, etc (boolean)
+    -- mapID - (number)
+    -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
+  function AC.GetInstanceInfo (Index)
+    return Index and ({GetInstanceInfo()})[Index] or GetInstanceInfo();
+  end
+
+  -- Get the Instance Difficulty Infos
+  -- @returns difficulty - Difficulty setting of the instance (number)
+    -- 0 - None; not in an Instance.
+    -- 1 - 5-player Instance.
+    -- 2 - 5-player Heroic Instance.
+    -- 3 - 10-player Raid Instance.
+    -- 4 - 25-player Raid Instance.
+    -- 5 - 10-player Heroic Raid Instance.
+    -- 6 - 25-player Heroic Raid Instance.
+    -- 7 - 25-player Raid Finder Instance.
+    -- 8 - Challenge Mode Instance.
+    -- 9 - 40-player Raid Instance.
+    -- 10 - Not used.
+    -- 11 - Heroic Scenario Instance.
+    -- 12 - Scenario Instance.
+    -- 13 - Not used.
+    -- 14 - 10-30-player Normal Raid Instance.
+    -- 15 - 10-30-player Heroic Raid Instance.
+    -- 16 - 20-player Mythic Raid Instance .
+    -- 17 - 10-30-player Raid Finder Instance.
+    -- 18 - 40-player Event raid (Used by the level 100 version of Molten Core for WoW's 10th anniversary).
+    -- 19 - 5-player Event instance (Used by the level 90 version of UBRS at WoD launch).
+    -- 20 - 25-player Event scenario (unknown usage).
+    -- 21 - Not used.
+    -- 22 - Not used.
+    -- 23 - Mythic 5-player Instance.
+    -- 24 - Timewalker 5-player Instance.
+  function AC.GetInstanceDifficulty ()
+    return AC.GetInstanceInfo(3);
+  end
+
   -- Get the Latency (it's updated every 30s).
   -- TODO: Cache it in Persistent Cache and update it only when it changes
   function AC.Latency ()
