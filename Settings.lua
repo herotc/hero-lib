@@ -24,8 +24,6 @@
           -- Example with fake NPCID:
           -- [123456] = true;
           -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false; end
-          -- Tito Pet Cows
-          [71444] = true
         },
         -- Custom Cycle List (User Defined), must be a valid Lua Boolean or Function as Value and have the NPCID as Key
         CycleUserDefined = {
@@ -33,16 +31,29 @@
           -- [123456] = true;
           -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false; end
 
-          -- Bilewater Slime (Helya ToV)
-          [114553] = function (self) return self:HealthPercentage() >= 65 and true or false; end,
-          -- Decaying Minion
-          [114568] = true,
-          -- Helarjar Mistwatcher
-          [116335] = true,
-          -- Scrubber
-          [104596] = true,
-          -- Fel Soul (Aluriel)
-          [115905] = true
+          --- Legion
+            ----- Trial of Valor (T19 - 7.1 Patch) -----
+            --- Helya
+              -- Bilewater Slime
+              [114553] = function (self) return self:HealthPercentage() >= 65 and true or false; end,
+              -- Decaying Minion
+              [114568] = true,
+              -- Helarjar Mistwatcher
+              [116335] = true,
+            ----- Nighthold (T19 - 7.1.5 Patch) -----
+              --- Trilliax
+                -- Scrubber
+                [104596] = true,
+              --- Spellblade Aluriel
+                -- Fel Soul
+                [115905] = true,
+              --- Botanist Tel'Arn (Mythic Only)
+                -- Naturalist Tel'Arn
+                [109041] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+                -- Arcanist Tel'Arn
+                [109040] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+                -- Solarist Tel'Arn
+                [109038] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end
         }
       }
     }
