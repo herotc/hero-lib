@@ -107,6 +107,12 @@
 
   local DummyUnits = {
     [31146] = true,
+    -- WoD Alliance Garrison
+    [87317] = true, -- Mage Tower Damage Training Dummy
+    [87318] = true, -- Alliance & Mage Tower Damage Dungeoneer's Training Dummy
+    [87320] = true, -- Mage Tower Damage Raider's Training Dummy
+    [88314] = true, -- Alliance Tanking Dungeoneer's Training Dummy
+    [88316] = true, -- Alliance Healing Training Dummy ----> FRIENDLY
     -- Rogue Class Order Hall
     [92164] = true, -- Training Dummy
     [92165] = true, -- Dungeoneer's Training Dummy
