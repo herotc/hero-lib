@@ -350,9 +350,9 @@
     return self:EnergyDeficit() * (1 / self:EnergyRegen());
   end
   -- "energy.time_to_x"
-  function Unit:EnergyTimeToX (Amount)
+  function Unit:EnergyTimeToX (Amount, Offset)
     if self:EnergyRegen() == 0 then return -1; end
-    return Amount > self:Energy() and (Amount - self:Energy()) * (1 / self:EnergyRegen()) or 0;
+    return Amount > self:Energy() and (Amount - self:Energy()) * (1 / (self:EnergyRegen() * (1 - (Offset or 0)))) or 0;
   end
   -- "energy.time_to_x.pct"
   function Unit:EnergyTimeToXPercentage (Amount)
@@ -649,14 +649,14 @@
     -- Normal Stealth
     for i = 1, #IsStealthedBuff[1] do
       if self:Buff(IsStealthedBuff[1][i]) then
-        return Duration and self:BuffRemains(IsStealthedBuff[1][i]) or true;
+        return Duration and (self:BuffRemains(IsStealthedBuff[1][i]) >= 0 and self:BuffRemains(IsStealthedBuff[1][i]) or 60) or true;
       end
     end
     -- Combat Stealth
     if Abilities then
       for i = 1, #IsStealthedBuff[2] do
         if self:Buff(IsStealthedBuff[2][i]) then
-          return Duration and self:BuffRemains(IsStealthedBuff[2][i]) or true;
+          return Duration and (self:BuffRemains(IsStealthedBuff[2][i]) >= 0 and self:BuffRemains(IsStealthedBuff[2][i]) or 60) or true;
         end
       end
     end
@@ -664,21 +664,24 @@
     if Special then
       for i = 1, #IsStealthedBuff[3] do
         if self:Buff(IsStealthedBuff[3][i]) then
-          return Duration and self:BuffRemains(IsStealthedBuff[3][i]) or true;
+          return Duration and (self:BuffRemains(IsStealthedBuff[3][i]) >= 0 and self:BuffRemains(IsStealthedBuff[3][i]) or 60) or true;
         end
       end
     end
     return false;
   end
   local IsStealthedKey;
-  function Unit:IsStealthed (Abilities, Special)
-    IsStealthedKey = tostring(Abilites).."-"..tostring(Special);
+  function Unit:IsStealthed (Abilities, Special, Duration)
+    IsStealthedKey = tostring(Abilites).."-"..tostring(Special).."-"..tostring(Duration);
     if not Cache.MiscInfo then Cache.MiscInfo = {}; end
     if not Cache.MiscInfo.IsStealthed then Cache.MiscInfo.IsStealthed = {}; end
     if Cache.MiscInfo.IsStealthed[IsStealthedKey] == nil then
-      Cache.MiscInfo.IsStealthed[IsStealthedKey] = self:IterateStealthBuffs(Abilities, Special);
+      Cache.MiscInfo.IsStealthed[IsStealthedKey] = self:IterateStealthBuffs(Abilities, Special, Duration);
     end
     return Cache.MiscInfo.IsStealthed[IsStealthedKey];
+  end
+  function Unit:IsStealthedRemains (Abilities, Special)
+    return self:IsStealthed(Abilities, Special, true);
   end
 
   -- buff.bloodlust.up
