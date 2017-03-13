@@ -116,7 +116,10 @@
     -- Rogue Class Order Hall
     [92164] = true, -- Training Dummy
     [92165] = true, -- Dungeoneer's Training Dummy
-    [92166] = true  -- Raider's Training Dummy
+    [92166] = true,  -- Raider's Training Dummy
+	-- Priest Class Order Hall
+	[107555] = true, -- Bound void Wraith
+    [107556] = true -- Bound void Walker
   };
   function Unit:IsDummy ()
     return self:NPCID() >= 0 and DummyUnits[self:NPCID()] == true;
