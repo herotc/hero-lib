@@ -53,7 +53,10 @@
                 -- Arcanist Tel'Arn
                 [109040] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
                 -- Solarist Tel'Arn
-                [109038] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end
+                [109038] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+              --- Star Augur Etraeus
+                -- Voidling
+                [104688] = true
         }
       }
     }
