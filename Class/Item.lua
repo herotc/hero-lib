@@ -38,9 +38,23 @@
     -- INVSLOT_RANGED     = 18;
     -- INVSLOT_TABARD     = 19;
   function Item:IsEquipped (Slot)
+    -- TODO: Remove Slot argument and "and not Slot" check.
+    if self.ItemSlotID[0] == 0 and not Slot then error("Invalid ItemSlotID specified."); end
     if not Cache.ItemInfo[self.ItemID] then Cache.ItemInfo[self.ItemID] = {}; end
     if Cache.ItemInfo[self.ItemID].IsEquipped == nil then
-      Cache.ItemInfo[self.ItemID].IsEquipped = AC.Equipment[Slot] == self.ItemID and true or false;
+      -- TODO: Plus this compatibility part.
+      if Slot then
+        Cache.ItemInfo[self.ItemID].IsEquipped = AC.Equipment[Slot] == self.ItemID and true or false;
+      else
+        local ItemIsEquipped = false;
+        for i=0, #self.ItemSlotID do
+          if AC.Equipment[self.ItemSlotID[i]] == self.ItemID then
+            ItemIsEquipped = true;
+            break;
+          end
+        end
+        Cache.ItemInfo[self.ItemID].IsEquipped = ItemIsEquipped;
+      end
     end
     return Cache.ItemInfo[self.ItemID].IsEquipped;  
   end
