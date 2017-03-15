@@ -72,8 +72,10 @@
   AC.Item = AC.Class();
   local Item = AC.Item;
   -- Item Constructor
-  function Item:Constructor (ItemID)
+  function Item:Constructor (ItemID, ItemSlotID)
     if type(ItemID) ~= "number" then error("Invalid ItemID."); end
+    if ItemSlotID and type(ItemSlotID) ~= "table" then error("Invalid ItemSlotID."); end
     self.ItemID = ItemID;
+    self.ItemSlotID = ItemSlotID or {0};
     self.LastCastTime = 0;
   end
