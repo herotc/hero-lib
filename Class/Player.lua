@@ -432,7 +432,7 @@
     if self:GUID() then
       if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
       if not Cache.UnitInfo[self:GUID()].HolyPowerMax then
-        Cache.UnitInfo[self:GUID()].HolyPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_HOLY_POWAC);
+        Cache.UnitInfo[self:GUID()].HolyPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_HOLY_POWER);
       end
       return Cache.UnitInfo[self:GUID()].HolyPowerMax;
     end
@@ -442,7 +442,7 @@
     if self:GUID() then
       if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
       if not Cache.UnitInfo[self:GUID()].HolyPower then
-        Cache.UnitInfo[self:GUID()].HolyPower = UnitPower(self.UnitID, SPELL_POWER_HOLY_POWAC);
+        Cache.UnitInfo[self:GUID()].HolyPower = UnitPower(self.UnitID, SPELL_POWER_HOLY_POWER);
       end
       return Cache.UnitInfo[self:GUID()].HolyPower;
     end
@@ -686,11 +686,11 @@
 
   -- buff.bloodlust.up
   local HeroismBuff = {
-    Spell(90355),   -- Ancient Hysteria
-    Spell(2825),    -- Bloodlust
-    Spell(32182),   -- Heroism
-    Spell(160452),  -- Netherwinds
-    Spell(80353),   -- Time Warp
+    Spell(90355),  -- Ancient Hysteria
+    Spell(2825),   -- Bloodlust
+    Spell(32182),  -- Heroism
+    Spell(160452), -- Netherwinds
+    Spell(80353)   -- Time Warp
   };
   function Unit:HasHeroism (Duration)
      for i = 1, #HeroismBuff do
