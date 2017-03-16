@@ -3,10 +3,11 @@
 ## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
 ## Version: 7.1.5001
-## Notes: Core Library used by AethysRotation and AethysTools, can also be used by others 3rd-Party Addons.
+## Notes: Core Library used by AethysRotation and AethysTools. Can be used by others 3rd-Party Addons (like WeakAuras).
 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
+## Dependencies: AethysCache
 ## SavedVariables: AethysCoreDB
 
 # API

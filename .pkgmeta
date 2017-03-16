@@ -1,5 +1,9 @@
 package-as: AethysCore
 
+move-folders:
+ AethysCore/AethysCache: AethysCache
+ AethysCore/AethysCore: AethysCore
+
 enable-nolib-creation: no
 
 license-output: LICENSE

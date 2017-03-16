@@ -13,7 +13,7 @@
       RecoveryTimer = 950,
       -- Reduce CPU Usage (decrease a little bit Rotation potential performance but saves FPS)
       ReduceCPULoad = false,
-      ReduceCPULoadOffset = 0.05, -- 50ms
+      ReduceCPULoadOffset = 0.034, -- Default:34ms | It'll be added to the default 66ms, can be positive or negative
       -- Blacklist Settings
       Blacklist = {
         -- During how many times the GCD time you want to blacklist an unit from Cycling

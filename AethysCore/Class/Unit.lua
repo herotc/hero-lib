@@ -3,7 +3,7 @@
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
-  local Cache = AethysCore_Cache;
+  local Cache = AethysCache;
   local Unit = AC.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
@@ -647,9 +647,12 @@
   --- TimeToDie
     AC.TTD = {
       Settings = {
-        Refresh = 0.1, -- Refresh time (seconds) : min=0.1, max=2, default = 0.2, Aethys = 0.1
-        HistoryTime = 10+0.4, -- History time (seconds) : min=5, max=120, default = 20, Aethys = 10
-        HistoryCount = 100 -- Max history count : min=20, max=500, default = 120, Aethys = 100
+        -- Refresh time (seconds) : min=0.1,  max=2,    default = 0.2,  Aethys = 0.1
+        Refresh = 0.2,
+        -- History time (seconds) : min=5,    max=120,  default = 20,   Aethys = 10+0.4
+        HistoryTime = 10+0.4,
+        -- Max history count :      min=20,   max=500,  default = 120,  Aethys = 100
+        HistoryCount = 55 
       },
       _T = {
         -- Both
