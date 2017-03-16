@@ -38,20 +38,27 @@
     self.UnitID = UnitID;
   end
   -- Defines Unit Objects.
+  -- Unique Units
   Unit.Player = Unit("Player");
   Unit.Pet = Unit("Pet");
   Unit.Target = Unit("Target");
   Unit.Focus = Unit("Focus");
   Unit.MouseOver = Unit("MouseOver");
   Unit.Vehicle = Unit("Vehicle");
-  -- TODO: Make a map containing all UnitId that have multiple possiblites + the possibilites then a master for loop checking this
-  -- Something like { {"Nameplate", 40}, {"Boss", 4}, {"Arena", 5}, ....}
-  for i = 1, AC.MAXIMUM do
-    Unit["Nameplate"..tostring(i)] = Unit("Nameplate"..tostring(i));
+  -- Iterable Units
+  local UnitIDMap = {
+    {"Nameplate", AC.MAXIMUM},
+    {"Boss", 4},
+    {"Arena", 5}
+  };
+  local TempUnitID;
+  for Key, Value in pairs(UnitIDMap) do
+    for i = 1, Value[2] do
+      TempUnitID = Value[1]..tostring(i);
+      Unit[TempUnitID] = Unit(TempUnitID);
+    end
   end
-  for i = 1, 4 do
-    Unit["Boss"..tostring(i)] = Unit("Boss"..tostring(i));
-  end
+  UnitIDMap,TempUnitID = nil, nil;
 
 --- ======= SPELL =======
   -- Defines the Spell Class.
