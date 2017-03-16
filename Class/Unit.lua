@@ -707,7 +707,11 @@
     -- Get the estimated time to reach a Percentage
     -- TODO : Cache the result, not done yet since we mostly use TimeToDie that cache for TimeToX 0%.
     -- Returns Codes :
-    --  11111 : No GUID    9999 : Negative TTD    8888 : Not Enough Samples or No Health Change    7777 : No DPS    6666 : Dummy
+      -- 11111 : No GUID
+      --  9999 : Negative TTD
+      --  8888 : Not Enough Samples or No Health Change
+      --  7777 : No DPS
+      --  6666 : Dummy
     function Unit:TimeToX (Percentage, MinSamples) -- TODO : See with Skasch how accuracy & prediction can be improved.
       if self:IsDummy() then return 6666; end
       TTD._T.Seconds = 8888;
@@ -777,6 +781,11 @@
           [114361] = function (self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90; end,
           -- Odyn leaves the fight at 10%.
           [114263] = 10,
+        ----- Nighthold (T19 - 7.1.5 Patch) -----
+        --- Elisande
+          -- She leaves the fight two times at 10% then she normally dies.
+          -- TODO: Add check for Stage 1 & 2 only.
+          [106643] = 10,
 
       --- Warlord of Draenor (WoD)
         ----- HellFire Citadel (T18 - 6.2 Patch) -----
