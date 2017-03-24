@@ -121,16 +121,16 @@
   function Unit:GCD ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].GCD then
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.GCD then
         if GCD_OneSecond[Cache.Persistent.Player.Spec[1]] then
-          Cache.UnitInfo[guid].GCD = 1;
+          unitInfo.GCD = 1;
         else
           GCD_Value = 1.5/(1+self:HastePct()/100);
-          Cache.UnitInfo[guid].GCD = GCD_Value > 0.75 and GCD_Value or 0.75;
+          unitInfo.GCD = GCD_Value > 0.75 and GCD_Value or 0.75;
         end
       end
-      return Cache.UnitInfo[guid].GCD;
+      return unitInfo.GCD;
     end
   end
   
@@ -177,22 +177,22 @@
   function Unit:RageMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].RageMax then
-        Cache.UnitInfo[guid].RageMax = UnitPowerMax(self.UnitID, SPELL_POWER_RAGE);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.RageMax then
+        unitInfo.RageMax = UnitPowerMax(self.UnitID, SPELL_POWER_RAGE);
       end
-      return Cache.UnitInfo[guid].RageMax;
+      return unitInfo.RageMax;
     end
   end
   -- rage
   function Unit:Rage ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Rage then
-        Cache.UnitInfo[guid].Rage = UnitPower(self.UnitID, SPELL_POWER_RAGE);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Rage then
+        unitInfo.Rage = UnitPower(self.UnitID, SPELL_POWER_RAGE);
       end
-      return Cache.UnitInfo[guid].Rage;
+      return unitInfo.Rage;
     end
   end
   -- rage.pct
@@ -215,33 +215,33 @@
   function Unit:FocusMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].FocusMax then
-        Cache.UnitInfo[guid].FocusMax = UnitPowerMax(self.UnitID, SPELL_POWER_FOCUS);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.FocusMax then
+        unitInfo.FocusMax = UnitPowerMax(self.UnitID, SPELL_POWER_FOCUS);
       end
-      return Cache.UnitInfo[guid].FocusMax;
+      return unitInfo.FocusMax;
     end
   end
   -- focus
   function Unit:Focus ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Focus then
-        Cache.UnitInfo[guid].Focus = UnitPower(self.UnitID, SPELL_POWER_FOCUS);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Focus then
+        unitInfo.Focus = UnitPower(self.UnitID, SPELL_POWER_FOCUS);
       end
-      return Cache.UnitInfo[guid].Focus;
+      return unitInfo.Focus;
     end
   end
   -- focus.regen
   function Unit:FocusRegen ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].FocusRegen then
-        Cache.UnitInfo[guid].FocusRegen = select(2, GetPowerRegen(self.UnitID));
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.FocusRegen then
+        unitInfo.FocusRegen = select(2, GetPowerRegen(self.UnitID));
       end
-      return Cache.UnitInfo[guid].FocusRegen;
+      return unitInfo.FocusRegen;
     end
   end
   -- focus.pct
@@ -308,33 +308,33 @@
   function Unit:EnergyMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].EnergyMax then
-        Cache.UnitInfo[guid].EnergyMax = UnitPowerMax(self.UnitID, SPELL_POWER_ENERGY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.EnergyMax then
+        unitInfo.EnergyMax = UnitPowerMax(self.UnitID, SPELL_POWER_ENERGY);
       end
-      return Cache.UnitInfo[guid].EnergyMax;
+      return unitInfo.EnergyMax;
     end
   end
   -- energy
   function Unit:Energy ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Energy then
-        Cache.UnitInfo[guid].Energy = UnitPower(self.UnitID, SPELL_POWER_ENERGY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Energy then
+        unitInfo.Energy = UnitPower(self.UnitID, SPELL_POWER_ENERGY);
       end
-      return Cache.UnitInfo[guid].Energy;
+      return unitInfo.Energy;
     end
   end
   -- energy.regen
   function Unit:EnergyRegen ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].EnergyRegen then
-        Cache.UnitInfo[guid].EnergyRegen = select(2, GetPowerRegen(self.UnitID));
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.EnergyRegen then
+        unitInfo.EnergyRegen = select(2, GetPowerRegen(self.UnitID));
       end
-      return Cache.UnitInfo[guid].EnergyRegen;
+      return unitInfo.EnergyRegen;
     end
   end
   -- energy.pct
@@ -376,22 +376,22 @@
   function Unit:ComboPointsMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].ComboPointsMax then
-        Cache.UnitInfo[guid].ComboPointsMax = UnitPowerMax(self.UnitID, SPELL_POWER_COMBO_POINTS);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.ComboPointsMax then
+        unitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, SPELL_POWER_COMBO_POINTS);
       end
-      return Cache.UnitInfo[guid].ComboPointsMax;
+      return unitInfo.ComboPointsMax;
     end
   end
   -- combo_points
   function Unit:ComboPoints ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].ComboPoints then
-        Cache.UnitInfo[guid].ComboPoints = UnitPower(self.UnitID, SPELL_POWER_COMBO_POINTS);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.ComboPoints then
+        unitInfo.ComboPoints = UnitPower(self.UnitID, SPELL_POWER_COMBO_POINTS);
       end
-      return Cache.UnitInfo[guid].ComboPoints;
+      return unitInfo.ComboPoints;
     end
   end
   -- combo_points.deficit
@@ -406,22 +406,22 @@
   function Unit:AstralPowerMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].AstralPowerMax then
-        Cache.UnitInfo[guid].AstralPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_LUNAR_POWER);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.AstralPowerMax then
+        unitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_LUNAR_POWER);
       end
-      return Cache.UnitInfo[guid].AstralPowerMax;
+      return unitInfo.AstralPowerMax;
     end
   end
   -- astral_power
   function Unit:AstralPower ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].AstralPower then
-        Cache.UnitInfo[guid].AstralPower = UnitPower(self.UnitID, SPELL_POWER_LUNAR_POWER);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.AstralPower then
+        unitInfo.AstralPower = UnitPower(self.UnitID, SPELL_POWER_LUNAR_POWER);
       end
-      return Cache.UnitInfo[guid].AstralPower;
+      return unitInfo.AstralPower;
     end
   end
   -- astral_power.pct
@@ -444,22 +444,22 @@
   function Unit:HolyPowerMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].HolyPowerMax then
-        Cache.UnitInfo[guid].HolyPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_HOLY_POWER);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.HolyPowerMax then
+        unitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_HOLY_POWER);
       end
-      return Cache.UnitInfo[guid].HolyPowerMax;
+      return unitInfo.HolyPowerMax;
     end
   end
   -- holy_power
   function Unit:HolyPower ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].HolyPower then
-        Cache.UnitInfo[guid].HolyPower = UnitPower(self.UnitID, SPELL_POWER_HOLY_POWER);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.HolyPower then
+        unitInfo.HolyPower = UnitPower(self.UnitID, SPELL_POWER_HOLY_POWER);
       end
-      return Cache.UnitInfo[guid].HolyPower;
+      return unitInfo.HolyPower;
     end
   end
   -- holy_power.pct
@@ -482,22 +482,22 @@
   function Unit:MaelstromMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].MaelstromMax then
-        Cache.UnitInfo[guid].MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.MaelstromMax then
+        unitInfo.MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
       end
-      return Cache.UnitInfo[guid].MaelstromMax;
+      return unitInfo.MaelstromMax;
     end
   end
   -- maelstrom
   function Unit:Maelstrom ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Maelstrom then
-        Cache.UnitInfo[guid].Maelstrom = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Maelstrom then
+        unitInfo.Maelstrom = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
       end
-      return Cache.UnitInfo[guid].Maelstrom;
+      return unitInfo.Maelstrom;
     end
   end
   -- maelstrom.pct
@@ -520,22 +520,22 @@
   function Unit:InsanityMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].InsanityMax then
-        Cache.UnitInfo[guid].InsanityMax = UnitPowerMax(self.UnitID, SPELL_POWER_INSANITY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.InsanityMax then
+        unitInfo.InsanityMax = UnitPowerMax(self.UnitID, SPELL_POWER_INSANITY);
       end
-      return Cache.UnitInfo[guid].InsanityMax;
+      return unitInfo.InsanityMax;
     end
   end
   -- insanity
   function Unit:Insanity ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Insanity then
-        Cache.UnitInfo[guid].Insanity = UnitPower(self.UnitID, SPELL_POWER_INSANITY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Insanity then
+        unitInfo.Insanity = UnitPower(self.UnitID, SPELL_POWER_INSANITY);
       end
-      return Cache.UnitInfo[guid].Insanity;
+      return unitInfo.Insanity;
     end
   end
   -- insanity.pct
@@ -563,22 +563,22 @@
   function Unit:FuryMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].FuryMax then
-        Cache.UnitInfo[guid].FuryMax = UnitPowerMax(self.UnitID, SPELL_POWER_FURY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.FuryMax then
+        unitInfo.FuryMax = UnitPowerMax(self.UnitID, SPELL_POWER_FURY);
       end
-      return Cache.UnitInfo[guid].FuryMax;
+      return unitInfo.FuryMax;
     end
   end
   -- fury
   function Unit:Fury ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].Fury then
-        Cache.UnitInfo[guid].Fury = UnitPower(self.UnitID, SPELL_POWER_FURY);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Fury then
+        unitInfo.Fury = UnitPower(self.UnitID, SPELL_POWER_FURY);
       end
-      return Cache.UnitInfo[guid].Fury;
+      return unitInfo.Fury;
     end
   end
   -- fury.pct
@@ -601,22 +601,22 @@
   function Unit:PainMax ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].PainMax then
-        Cache.UnitInfo[guid].PainMax = UnitPowerMax(self.UnitID, SPELL_POWER_PAIN);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.PainMax then
+        unitInfo.PainMax = UnitPowerMax(self.UnitID, SPELL_POWER_PAIN);
       end
-      return Cache.UnitInfo[guid].PainMax;
+      return unitInfo.PainMax;
     end
   end
   -- pain
   function Unit:Pain ()
     local guid = self:GUID()
     if guid then
-      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
-      if not Cache.UnitInfo[guid].PainMax then
-        Cache.UnitInfo[guid].PainMax = UnitPower(self.UnitID, SPELL_POWER_PAIN);
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.PainMax then
+        unitInfo.PainMax = UnitPower(self.UnitID, SPELL_POWER_PAIN);
       end
-      return Cache.UnitInfo[guid].PainMax;
+      return unitInfo.PainMax;
     end
   end
   -- pain.pct
