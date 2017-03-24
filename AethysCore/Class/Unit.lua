@@ -25,7 +25,6 @@
   local _T = {                  -- Temporary Vars
     Parts,                        -- NPCID
     ThisUnit,                     -- TTDRefresh
-    Infos,                        -- GetBuffs / GetDebuffs
     ExpirationTime                -- BuffRemains / DebuffRemains
   };
   local BossUnits = Unit["Boss"];
@@ -398,9 +397,9 @@
     for i = 1, AC.MAXIMUM do
       --     1      2    3       4         5         6             7           8           9                   10              11         12            13             14               15           16       17      18      19
       -- buffName, rank, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-      _T.Infos = {UnitBuff(self.UnitID, i)};
-      if not _T.Infos[11] then break; end
-      tableinsert(unitInfo.Buffs, _T.Infos);
+      local Infos = {UnitBuff(self.UnitID, i)};
+      if not Infos[11] then break; end
+      unitInfo.Buffs[i] = Infos;
     end
   end
 
@@ -455,9 +454,9 @@
     local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
     unitInfo.Debuffs = {};
     for i = 1, AC.MAXIMUM do
-      _T.Infos = {UnitDebuff(self.UnitID, i)};
-      if not _T.Infos[11] then break; end
-      tableinsert(unitInfo.Debuffs, _T.Infos);
+      local Infos = {UnitDebuff(self.UnitID, i)};
+      if not Infos[11] then break; end
+      unitInfo.Debuffs[i] = Infos;
     end
   end
 
