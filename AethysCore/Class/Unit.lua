@@ -25,7 +25,6 @@
   local _T = {                  -- Temporary Vars
     Parts,                        -- NPCID
     ThisUnit,                     -- TTDRefresh
-    ExpirationTime                -- BuffRemains / DebuffRemains
   };
   local BossUnits = Unit["Boss"];
   local NameplateUnits = Unit["Nameplate"];
@@ -428,8 +427,8 @@
 
   -- buff.foo.remains
   function Unit:BuffRemains (Spell, AnyCaster)
-    _T.ExpirationTime = self:Buff(Spell, 7, AnyCaster);
-    return _T.ExpirationTime and _T.ExpirationTime - AC.GetTime() or 0;
+    local ExpirationTime = self:Buff(Spell, 7, AnyCaster);
+    return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
 
   -- buff.foo.duration
@@ -485,8 +484,8 @@
 
   -- debuff.foo.remains or dot.foo.remains
   function Unit:DebuffRemains (Spell, AnyCaster)
-    _T.ExpirationTime = self:Debuff(Spell, 7, AnyCaster);
-    return _T.ExpirationTime and _T.ExpirationTime - AC.GetTime() or 0;
+    local ExpirationTime = self:Debuff(Spell, 7, AnyCaster);
+    return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
 
   -- debuff.foo.duration or dot.foo.duration
