@@ -24,7 +24,6 @@
   -- File Locals
   local _T = {                  -- Temporary Vars
     Parts,                        -- NPCID
-    ThisUnit,                     -- TTDRefresh
   };
   local BossUnits = Unit["Boss"];
   local NameplateUnits = Unit["Nameplate"];
