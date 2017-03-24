@@ -34,8 +34,8 @@
 
   -- Get the unit GUID.
   function Unit:GUID ()
-    return Cache.Get("GUIDInfo."..self.UnitID)
-        or Cache.Set("GUIDInfo."..self.UnitID, UnitGUID(self.UnitID));
+    return Cache.Get("GUIDInfo", self.UnitID,
+                     function() return UnitGUID(self.UnitID) end);
   end
 
   -- Get if the unit Exists and is visible.
@@ -97,8 +97,8 @@
   -- Get if the unit CanAttack the other one.
   function Unit:CanAttack (Other)
     if self:GUID() and Other:GUID() then
-      return Cache.Get("UnitInfo."..self:GUID()..".CanAttack."..Other:GUID())
-        or Cache.Set("UnitInfo."..self:GUID()..".CanAttack."..Other:GUID(), UnitCanAttack(self.UnitID, Other.UnitID));
+      return Cache.Get("UnitInfo", self:GUID(), "CanAttack", Other:GUID(),
+                       function() return UnitCanAttack(self.UnitID, Other.UnitID) end);
     end
     return nil;
   end
