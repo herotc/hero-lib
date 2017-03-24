@@ -21,10 +21,7 @@
   local type = type;
   local unpack = unpack;
   local wipe = table.wipe;
-  -- File Locals
-  local _T = {                  -- Temporary Vars
-    Parts,                        -- NPCID
-  };
+
   local BossUnits = Unit["Boss"];
   local NameplateUnits = Unit["Nameplate"];
 
@@ -60,12 +57,9 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.NPCID then
-        _T.Parts = {};
-        for Part in string.gmatch(guid, "([^-]+)") do
-          tableinsert(_T.Parts, Part);
-        end
-        if _T.Parts[1] == "Creature" or _T.Parts[1] == "Pet" or _T.Parts[1] == "Vehicle" then
-          unitInfo.NPCID = tonumber(_T.Parts[6]);
+        local type, _, _, _, _, npcid = strsplit('-', guid);
+        if type == "Creature" or type == "Pet" or type == "Vehicle" then
+          unitInfo.NPCID = tonumber(npcid);
         else
           unitInfo.NPCID = -2;
         end
