@@ -46,44 +46,47 @@
 
   -- Get if the unit Exists and is visible.
   function Unit:Exists ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].Exists == nil then
-        Cache.UnitInfo[self:GUID()].Exists = UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].Exists == nil then
+        Cache.UnitInfo[guid].Exists = UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].Exists;
+      return Cache.UnitInfo[guid].Exists;
     end
     return nil;
   end
 
   -- Get the unit NPC ID.
   function Unit:NPCID ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].NPCID then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if not Cache.UnitInfo[guid].NPCID then
         _T.Parts = {};
-        for Part in string.gmatch(self:GUID(), "([^-]+)") do
+        for Part in string.gmatch(guid, "([^-]+)") do
           tableinsert(_T.Parts, Part);
         end
         if _T.Parts[1] == "Creature" or _T.Parts[1] == "Pet" or _T.Parts[1] == "Vehicle" then
-          Cache.UnitInfo[self:GUID()].NPCID = tonumber(_T.Parts[6]);
+          Cache.UnitInfo[guid].NPCID = tonumber(_T.Parts[6]);
         else
-          Cache.UnitInfo[self:GUID()].NPCID = -2;
+          Cache.UnitInfo[guid].NPCID = -2;
         end
       end
-      return Cache.UnitInfo[self:GUID()].NPCID;
+      return Cache.UnitInfo[guid].NPCID;
     end
     return -1;
   end
 
   -- Get the level of the unit
   function Unit:Level()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].UnitLevel == nil then
-        Cache.UnitInfo[self:GUID()].UnitLevel = UnitLevel(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].UnitLevel == nil then
+        Cache.UnitInfo[guid].UnitLevel = UnitLevel(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].UnitLevel;
+      return Cache.UnitInfo[guid].UnitLevel;
     end
     return nil;
   end
@@ -134,24 +137,26 @@
 
   -- Get the unit Health.
   function Unit:Health ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].Health then
-        Cache.UnitInfo[self:GUID()].Health = UnitHealth(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if not Cache.UnitInfo[guid].Health then
+        Cache.UnitInfo[guid].Health = UnitHealth(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].Health;
+      return Cache.UnitInfo[guid].Health;
     end
     return -1;
   end
 
   -- Get the unit MaxHealth.
   function Unit:MaxHealth ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].MaxHealth then
-        Cache.UnitInfo[self:GUID()].MaxHealth = UnitHealthMax(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if not Cache.UnitInfo[guid].MaxHealth then
+        Cache.UnitInfo[guid].MaxHealth = UnitHealthMax(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].MaxHealth;
+      return Cache.UnitInfo[guid].MaxHealth;
     end
     return -1;
   end
@@ -163,49 +168,54 @@
 
   -- Get if the unit Is Dead Or Ghost.
   function Unit:IsDeadOrGhost ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].IsDeadOrGhost == nil then
-        Cache.UnitInfo[self:GUID()].IsDeadOrGhost = UnitIsDeadOrGhost(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].IsDeadOrGhost == nil then
+        Cache.UnitInfo[guid].IsDeadOrGhost = UnitIsDeadOrGhost(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].IsDeadOrGhost;
+      return Cache.UnitInfo[guid].IsDeadOrGhost;
     end
     return nil;
   end
 
   -- Get if the unit Affecting Combat.
   function Unit:AffectingCombat ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].AffectingCombat == nil then
-        Cache.UnitInfo[self:GUID()].AffectingCombat = UnitAffectingCombat(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].AffectingCombat == nil then
+        Cache.UnitInfo[guid].AffectingCombat = UnitAffectingCombat(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].AffectingCombat;
+      return Cache.UnitInfo[guid].AffectingCombat;
     end
     return nil;
   end
 
   -- Get if two unit are the same.
   function Unit:IsUnit (Other)
-    if self:GUID() and Other:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].IsUnit then Cache.UnitInfo[self:GUID()].IsUnit = {}; end
-      if Cache.UnitInfo[self:GUID()].IsUnit[Other:GUID()] == nil then
-        Cache.UnitInfo[self:GUID()].IsUnit[Other:GUID()] = UnitIsUnit(self.UnitID, Other.UnitID);
+    local guid = self:GUID()
+    local oguid = Other:GUID()
+    if guid and oguid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if not Cache.UnitInfo[guid].IsUnit then Cache.UnitInfo[guid].IsUnit = {}; end
+      if Cache.UnitInfo[guid].IsUnit[oguid] == nil then
+        Cache.UnitInfo[guid].IsUnit[oguid] = UnitIsUnit(self.UnitID, Other.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].IsUnit[Other:GUID()];
+      return Cache.UnitInfo[guid].IsUnit[oguid];
     end
     return nil;
   end
 
   -- Get unit classification
   function Unit:Classification ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].Classification == nil then
-        Cache.UnitInfo[self:GUID()].Classification = UnitClassification(self.UnitID);
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].Classification == nil then
+        Cache.UnitInfo[guid].Classification = UnitClassification(self.UnitID);
       end
-      return Cache.UnitInfo[self:GUID()].Classification;
+      return Cache.UnitInfo[guid].Classification;
     end
     return "";
   end
@@ -231,17 +241,18 @@
   };
   -- Get if the unit is in range, you can use a number or a spell as argument.
   function Unit:IsInRange (Distance)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].IsInRange then Cache.UnitInfo[self:GUID()].IsInRange = {}; end
-      if Cache.UnitInfo[self:GUID()].IsInRange[Distance] == nil then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if not Cache.UnitInfo[guid].IsInRange then Cache.UnitInfo[guid].IsInRange = {}; end
+      if Cache.UnitInfo[guid].IsInRange[Distance] == nil then
         if type(Distance) == "number" then
-          Cache.UnitInfo[self:GUID()].IsInRange[Distance] = IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID) or false;
+          Cache.UnitInfo[guid].IsInRange[Distance] = IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID) or false;
         else
-          Cache.UnitInfo[self:GUID()].IsInRange[Distance] = IsSpellInRange(Distance:Name(), self.UnitID) or false;
+          Cache.UnitInfo[guid].IsInRange[Distance] = IsSpellInRange(Distance:Name(), self.UnitID) or false;
         end
       end
-      return Cache.UnitInfo[self:GUID()].IsInRange[Distance];
+      return Cache.UnitInfo[guid].IsInRange[Distance];
     end
     return nil;
   end
@@ -249,33 +260,36 @@
   -- Get if we are Tanking or not the Unit.
   -- TODO: Use both GUID like CanAttack / IsUnit for better management.
   function Unit:IsTanking (Other)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].Tanked == nil then
-        Cache.UnitInfo[self:GUID()].Tanked = UnitThreatSituation(self.UnitID, Other.UnitID) and UnitThreatSituation(self.UnitID, Other.UnitID) >= 2 and true or false;
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].Tanked == nil then
+        Cache.UnitInfo[guid].Tanked = UnitThreatSituation(self.UnitID, Other.UnitID) and UnitThreatSituation(self.UnitID, Other.UnitID) >= 2 and true or false;
       end
-      return Cache.UnitInfo[self:GUID()].Tanked;
+      return Cache.UnitInfo[guid].Tanked;
     end
     return nil;
   end
 
   -- Get all the casting infos from an unit and put it into the Cache.
   function Unit:GetCastingInfo ()
-    if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
+    local guid = self:GUID()
+    if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
     -- name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID
-    Cache.UnitInfo[self:GUID()].Casting = {UnitCastingInfo(self.UnitID)};
+    Cache.UnitInfo[guid].Casting = {UnitCastingInfo(self.UnitID)};
   end
 
   -- Get the Casting Infos from the Cache.
   function Unit:CastingInfo (Index)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] or not Cache.UnitInfo[self:GUID()].Casting then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] or not Cache.UnitInfo[guid].Casting then
         self:GetCastingInfo();
       end
       if Index then
-        return Cache.UnitInfo[self:GUID()].Casting[Index];
+        return Cache.UnitInfo[guid].Casting[Index];
       else
-        return unpack(Cache.UnitInfo[self:GUID()].Casting);
+        return unpack(Cache.UnitInfo[guid].Casting);
       end
     end
     return nil;
@@ -298,20 +312,22 @@
 
   --- Get all the Channeling Infos from an unit and put it into the Cache.
   function Unit:GetChannelingInfo ()
-    if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-    Cache.UnitInfo[self:GUID()].Channeling = {UnitChannelInfo(self.UnitID)};
+    local guid = self:GUID()
+    if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+    Cache.UnitInfo[guid].Channeling = {UnitChannelInfo(self.UnitID)};
   end
 
   -- Get the Channeling Infos from the Cache.
   function Unit:ChannelingInfo (Index)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] or not Cache.UnitInfo[self:GUID()].Channeling then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] or not Cache.UnitInfo[guid].Channeling then
         self:GetChannelingInfo();
       end
       if Index then
-        return Cache.UnitInfo[self:GUID()].Channeling[Index];
+        return Cache.UnitInfo[guid].Channeling[Index];
       else
-        return unpack(Cache.UnitInfo[self:GUID()].Channeling);
+        return unpack(Cache.UnitInfo[guid].Channeling);
       end
     end
     return nil;
@@ -373,30 +389,32 @@
 
   --- Get all the buffs from an unit and put it into the Cache.
   function Unit:GetBuffs ()
-    if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-    Cache.UnitInfo[self:GUID()].Buffs = {};
+    local guid = self:GUID()
+    if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+    Cache.UnitInfo[guid].Buffs = {};
     for i = 1, AC.MAXIMUM do
       --     1      2    3       4         5         6             7           8           9                   10              11         12            13             14               15           16       17      18      19
       -- buffName, rank, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
       _T.Infos = {UnitBuff(self.UnitID, i)};
       if not _T.Infos[11] then break; end
-      tableinsert(Cache.UnitInfo[self:GUID()].Buffs, _T.Infos);
+      tableinsert(Cache.UnitInfo[guid].Buffs, _T.Infos);
     end
   end
 
   -- buff.foo.up (does return the buff table and not only true/false)
   function Unit:Buff (Spell, Index, AnyCaster)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] or not Cache.UnitInfo[self:GUID()].Buffs then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] or not Cache.UnitInfo[guid].Buffs then
         self:GetBuffs();
       end
-      for i = 1, #Cache.UnitInfo[self:GUID()].Buffs do
-        if Spell:ID() == Cache.UnitInfo[self:GUID()].Buffs[i][11] then
-          if AnyCaster or (Cache.UnitInfo[self:GUID()].Buffs[i][8] and Player:IsUnit(Unit(Cache.UnitInfo[self:GUID()].Buffs[i][8]))) then
+      for i = 1, #Cache.UnitInfo[guid].Buffs do
+        if Spell:ID() == Cache.UnitInfo[guid].Buffs[i][11] then
+          if AnyCaster or (Cache.UnitInfo[guid].Buffs[i][8] and Player:IsUnit(Unit(Cache.UnitInfo[guid].Buffs[i][8]))) then
             if Index then
-              return Cache.UnitInfo[self:GUID()].Buffs[i][Index];
+              return Cache.UnitInfo[guid].Buffs[i][Index];
             else
-              return unpack(Cache.UnitInfo[self:GUID()].Buffs[i]);
+              return unpack(Cache.UnitInfo[guid].Buffs[i]);
             end
           end
         end
@@ -429,28 +447,30 @@
 
   --- Get all the debuffs from an unit and put it into the Cache.
   function Unit:GetDebuffs ()
-    if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-    Cache.UnitInfo[self:GUID()].Debuffs = {};
+    local guid = self:GUID()
+    if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+    Cache.UnitInfo[guid].Debuffs = {};
     for i = 1, AC.MAXIMUM do
       _T.Infos = {UnitDebuff(self.UnitID, i)};
       if not _T.Infos[11] then break; end
-      tableinsert(Cache.UnitInfo[self:GUID()].Debuffs, _T.Infos);
+      tableinsert(Cache.UnitInfo[guid].Debuffs, _T.Infos);
     end
   end
 
   -- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
   function Unit:Debuff (Spell, Index, AnyCaster)
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] or not Cache.UnitInfo[self:GUID()].Debuffs then
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] or not Cache.UnitInfo[guid].Debuffs then
         self:GetDebuffs();
       end
-      for i = 1, #Cache.UnitInfo[self:GUID()].Debuffs do
-        if Spell:ID() == Cache.UnitInfo[self:GUID()].Debuffs[i][11] then
-          if AnyCaster or (Cache.UnitInfo[self:GUID()].Debuffs[i][8] and Player:IsUnit(Unit(Cache.UnitInfo[self:GUID()].Debuffs[i][8]))) then
+      for i = 1, #Cache.UnitInfo[guid].Debuffs do
+        if Spell:ID() == Cache.UnitInfo[guid].Debuffs[i][11] then
+          if AnyCaster or (Cache.UnitInfo[guid].Debuffs[i][8] and Player:IsUnit(Unit(Cache.UnitInfo[guid].Debuffs[i][8]))) then
             if Index then
-              return Cache.UnitInfo[self:GUID()].Debuffs[i][Index];
+              return Cache.UnitInfo[guid].Debuffs[i][Index];
             else
-              return unpack(Cache.UnitInfo[self:GUID()].Debuffs[i]);
+              return unpack(Cache.UnitInfo[guid].Debuffs[i]);
             end
           end
         end
@@ -622,12 +642,13 @@
     return false;
   end
   function Unit:IsStunned ()
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].IsStunned == nil then
-        Cache.UnitInfo[self:GUID()].IsStunned = self:IterateStunDebuffs();
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].IsStunned == nil then
+        Cache.UnitInfo[guid].IsStunned = self:IterateStunDebuffs();
       end
-      return Cache.UnitInfo[self:GUID()].IsStunned;
+      return Cache.UnitInfo[guid].IsStunned;
     end
     return nil;
   end
@@ -645,12 +666,13 @@
   };
   function Unit:IsStunnable ()
     -- TODO: Add DR Check
-    if self:GUID() then
-      if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if Cache.UnitInfo[self:GUID()].IsStunnable == nil then
-        Cache.UnitInfo[self:GUID()].IsStunnable = IsStunnableClassification[self:Classification()];
+    local guid = self:GUID()
+    if guid then
+      if not Cache.UnitInfo[guid] then Cache.UnitInfo[guid] = {}; end
+      if Cache.UnitInfo[guid].IsStunnable == nil then
+        Cache.UnitInfo[guid].IsStunnable = IsStunnableClassification[self:Classification()];
       end
-      return Cache.UnitInfo[self:GUID()].IsStunnable;
+      return Cache.UnitInfo[guid].IsStunnable;
     end
     return nil;
   end
