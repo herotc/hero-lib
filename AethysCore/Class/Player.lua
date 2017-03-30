@@ -477,10 +477,10 @@
   function Unit:Maelstrom ()
     if self:GUID() then
       if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-      if not Cache.UnitInfo[self:GUID()].MaelstromMax then
-        Cache.UnitInfo[self:GUID()].MaelstromMax = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
+      if not Cache.UnitInfo[self:GUID()].Maelstrom then
+        Cache.UnitInfo[self:GUID()].Maelstrom = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
       end
-      return Cache.UnitInfo[self:GUID()].MaelstromMax;
+      return Cache.UnitInfo[self:GUID()].Maelstrom;
     end
   end
   -- maelstrom.pct
