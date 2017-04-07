@@ -191,7 +191,12 @@
     -- Player Inspector
     -- TODO : Split based on events
     AC:RegisterForEvent(
-      function ()
+      function (Event, ...)
+        -- Execute only for local player
+          if Event == "PLAYER_SPECIALIZATION_CHANGED" and ... ~= "player" then
+            return
+          end
+
         -- Refresh Player
           Cache.Persistent.Player.Class = {UnitClass("player")};
           Cache.Persistent.Player.Spec = {GetSpecializationInfo(GetSpecialization())};
@@ -219,7 +224,12 @@
   -- Spell Book Scanner
     -- Checks the same event as Blizzard Spell Book, from SpellBookFrame_OnLoad in SpellBookFrame.lua
     AC:RegisterForEvent(
-      function ()
+      function (Event, ...)
+        -- Execute only for local player
+        if Event == "PLAYER_SPECIALIZATION_CHANGED" and ... ~= "player" then
+          return
+        end
+
         wipe(Cache.Persistent.SpellLearned.Player);
         wipe(Cache.Persistent.SpellLearned.Pet);
         Spell:BookScan();
