@@ -355,6 +355,11 @@
       return Cache.SpellInfo[self.SpellID].ChargesFractional;
     end
 
+    -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
+    function Spell:FullRechargeTime ()
+      return self:MaxCharges()-self:ChargesFractional()*self:Recharge();
+    end
+
     -- cooldown.foo.remains
     -- TODO: Swap Cooldown() to CooldownRemains() and then make a Cooldown() for cooldown.foo.up (and keep IsOnCooldown() for !cooldown.foo.up)
     function Spell:Cooldown (BypassRecovery)
