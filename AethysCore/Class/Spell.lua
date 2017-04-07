@@ -301,6 +301,8 @@
       return self:CostInfo("cost");
     end
 
+    -- TODO: Improve all cooldown functions (separate Charges and GetChargesInfo, then make the simc expression)
+
     -- action.foo.charges or cooldown.foo.charges
     function Spell:Charges ()
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
@@ -308,6 +310,16 @@
         Cache.SpellInfo[self.SpellID].Charges = {GetSpellCharges(self.SpellID)};
       end
       return unpack(Cache.SpellInfo[self.SpellID].Charges);
+    end
+
+    -- action.foo.max_charges or cooldown.foo..max_charges
+    function Spell:MaxCharges ()
+      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
+      if not Cache.SpellInfo[self.SpellID].MaxCharges then
+        self:Charges(); -- Cache the charges infos to use the cache directly after. 
+        Cache.SpellInfo[self.SpellID].MaxCharges = Cache.SpellInfo[self.SpellID].Charges[2];
+      end
+      return Cache.SpellInfo[self.SpellID].MaxCharges;
     end
 
     -- action.foo.recharge_time or cooldown.foo.recharge_time
