@@ -199,22 +199,22 @@
 
   -- Get if we are in range of the unit.
   AC.IsInRangeItemTable = {
-    [5]    =  37727,  -- Ruby Acorn
-    [6]    =  63427,  -- Worgsaw
-    [8]    =  34368,  -- Attuned Crystal Cores
-    [10]  =  32321,  -- Sparrowhawk Net
-    [15]  =  33069,  -- Sturdy Rope
-    [20]  =  10645,  -- Gnomish Death Ray
-    [25]  =  41509,  -- Frostweave Net
-    [30]  =  34191,  -- Handful of Snowflakes
-    [35]  =  18904,  -- Zorbin's Ultra-Shrinker
-    [40]  =  28767,  -- The Decapitator
-    [45]  =  23836,  -- Goblin Rocket Launcher
-    [50]  =  116139,  -- Haunting Memento
-    [60]  =  32825,  -- Soul Cannon
-    [70]  =  41265,  -- Eyesore Blaster
-    [80]  =  35278,  -- Reinforced Net
-    [100]  =  33119  -- Malister's Frost Wand
+    [5]   = 37727,   -- Ruby Acorn
+    [6]   = 63427,   -- Worgsaw
+    [8]   = 34368,   -- Attuned Crystal Cores
+    [10]  = 32321,   -- Sparrowhawk Net
+    [15]  = 33069,   -- Sturdy Rope
+    [20]  = 10645,   -- Gnomish Death Ray
+    [25]  = 41509,   -- Frostweave Net
+    [30]  = 34191,   -- Handful of Snowflakes
+    [35]  = 18904,   -- Zorbin's Ultra-Shrinker
+    [40]  = 28767,   -- The Decapitator
+    [45]  = 23836,   -- Goblin Rocket Launcher
+    [50]  = 116139,  -- Haunting Memento
+    [60]  = 32825,   -- Soul Cannon
+    [70]  = 41265,   -- Eyesore Blaster
+    [80]  = 35278,   -- Reinforced Net
+    [100] = 33119    -- Malister's Frost Wand
   };
   -- Get if the unit is in range, you can use a number or a spell as argument.
   function Unit:IsInRange (Distance)
