@@ -191,9 +191,9 @@
     -- Player Inspector
     -- TODO : Split based on events
     AC:RegisterForEvent(
-      function (Event, Unit)
+      function (Event, Arg1)
         -- Prevent execute if not initiated by the player
-        if Event == "PLAYER_SPECIALIZATION_CHANGED" and Unit ~= "player" then
+        if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
           return;
         end
 
@@ -224,9 +224,9 @@
   -- Spell Book Scanner
     -- Checks the same event as Blizzard Spell Book, from SpellBookFrame_OnLoad in SpellBookFrame.lua
     AC:RegisterForEvent(
-      function (Event, Unit)
+      function (Event, Arg1)
         -- Prevent execute if not initiated by the player
-        if Event == "PLAYER_SPECIALIZATION_CHANGED" and Unit ~= "player" then
+        if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
           return;
         end
 
