@@ -257,17 +257,17 @@
   -- focus.time_to_max
   function Unit:FocusTimeToMax ()
     if self:FocusRegen() == 0 then return -1; end
-    return self:FocusDeficit() * (1 / self:FocusRegen());
+    return self:FocusDeficit() / self:FocusRegen();
   end
   -- "focus.time_to_x"
   function Unit:FocusTimeToX (Amount)
     if self:FocusRegen() == 0 then return -1; end
-    return Amount > self:Focus() and (Amount - self:Focus()) * (1 / self:FocusRegen()) or 0;
+    return Amount > self:Focus() and (Amount - self:Focus()) / self:FocusRegen() or 0;
   end
   -- "focus.time_to_x.pct"
   function Unit:FocusTimeToXPercentage (Amount)
     if self:FocusRegen() == 0 then return -1; end
-    return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) * (1 / self:FocusRegenPercentage()) or 0;
+    return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) / self:FocusRegenPercentage() or 0;
   end
   -- cast_regen
   function Unit:FocusCastRegen (CastTime)
@@ -347,17 +347,17 @@
   -- energy.time_to_max
   function Unit:EnergyTimeToMax ()
     if self:EnergyRegen() == 0 then return -1; end
-    return self:EnergyDeficit() * (1 / self:EnergyRegen());
+    return self:EnergyDeficit() / self:EnergyRegen();
   end
   -- "energy.time_to_x"
   function Unit:EnergyTimeToX (Amount, Offset)
     if self:EnergyRegen() == 0 then return -1; end
-    return Amount > self:Energy() and (Amount - self:Energy()) * (1 / (self:EnergyRegen() * (1 - (Offset or 0)))) or 0;
+    return Amount > self:Energy() and (Amount - self:Energy()) / (self:EnergyRegen() * (1 - (Offset or 0))) or 0;
   end
   -- "energy.time_to_x.pct"
   function Unit:EnergyTimeToXPercentage (Amount)
     if self:EnergyRegen() == 0 then return -1; end
-    return Amount > self:EnergyPercentage() and (Amount - self:EnergyPercentage()) * (1 / self:EnergyRegenPercentage()) or 0;
+    return Amount > self:EnergyPercentage() and (Amount - self:EnergyPercentage()) / self:EnergyRegenPercentage() or 0;
   end
 
   ----------------------------------
