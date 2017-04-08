@@ -1,8 +1,8 @@
-## Interface: 70100
+## Interface: 70200
 
 ## Title: Aethys |cFFA330C9Cache|r
 ## Author: Aethys
-## Version: 7.1.5001
+## Version: 7.2.0000
 ## Notes: Cache Library packaged with AethysCore and also used by AethysRotation and AethysTools. Can be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
