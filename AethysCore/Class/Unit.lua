@@ -246,7 +246,7 @@
     return nil;
   end
 
-  --- Get all the casting infos from an unit and put it into the Cache.
+  -- Get all the casting infos from an unit and put it into the Cache.
   function Unit:GetCastingInfo ()
     if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
     -- name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID

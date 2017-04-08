@@ -239,6 +239,25 @@
       return self:IsLearned() and not self:IsOnCooldown();
     end
 
+    -- Get the ChargesInfo (from GetSpellCharges) and cache it.
+    function Spell:GetChargesInfo ()
+      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
+      -- charges, maxCharges, chargeStart, chargeDuration, chargeModRate
+      Cache.SpellInfo[self.SpellID].Charges = {GetSpellCharges(self.SpellID)};
+    end
+
+    -- Get the ChargesInfos from the Cache.
+    function Spell:ChargesInfo (Index)
+      if not Cache.SpellInfo[self.SpellID] or not Cache.SpellInfo[self.SpellID].Charges then
+        self:GetChargesInfo();
+      end
+      if Index then
+        return Cache.SpellInfo[self.SpellID].Charges[Index];
+      else
+        return unpack(Cache.SpellInfo[self.SpellID].Charges);
+      end
+    end
+
     -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
     function Spell:CooldownInfo ()
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
@@ -301,25 +320,14 @@
       return self:CostInfo("cost");
     end
 
-    -- TODO: Improve all cooldown functions (separate Charges and GetChargesInfo, then make the simc expression)
-
     -- action.foo.charges or cooldown.foo.charges
     function Spell:Charges ()
-      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-      if not Cache.SpellInfo[self.SpellID].Charges then
-        Cache.SpellInfo[self.SpellID].Charges = {GetSpellCharges(self.SpellID)};
-      end
-      return unpack(Cache.SpellInfo[self.SpellID].Charges);
+      return self:ChargesInfo(1);
     end
 
     -- action.foo.max_charges or cooldown.foo..max_charges
     function Spell:MaxCharges ()
-      if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-      if not Cache.SpellInfo[self.SpellID].MaxCharges then
-        self:Charges(); -- Cache the charges infos to use the cache directly after. 
-        Cache.SpellInfo[self.SpellID].MaxCharges = Cache.SpellInfo[self.SpellID].Charges[2];
-      end
-      return Cache.SpellInfo[self.SpellID].MaxCharges;
+      return self:ChargesInfo(2);
     end
 
     -- action.foo.recharge_time or cooldown.foo.recharge_time
@@ -327,7 +335,7 @@
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if not Cache.SpellInfo[self.SpellID].Recharge then
         -- Get Spell Recharge Infos
-        _T.Charges, _T.MaxCharges, _T.CDTime, _T.CDValue = self:Charges();
+        _T.Charges, _T.MaxCharges, _T.CDTime, _T.CDValue = self:ChargesInfo();
         -- Return 0 if the Spell isn't in CD.
         if _T.Charges == _T.MaxCharges then
           return 0;
@@ -346,10 +354,11 @@
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if not Cache.SpellInfo[self.SpellID].ChargesFractional then
         self:Charges(); -- Cache the charges infos to use the cache directly after. 
-        if Cache.SpellInfo[self.SpellID].Charges[1] == Cache.SpellInfo[self.SpellID].Charges[2] then
-          Cache.SpellInfo[self.SpellID].ChargesFractional = Cache.SpellInfo[self.SpellID].Charges[1];
+        if self:Charges() == self:MaxCharges() then
+          Cache.SpellInfo[self.SpellID].ChargesFractional = self:Charges();
         else
-          Cache.SpellInfo[self.SpellID].ChargesFractional = Cache.SpellInfo[self.SpellID].Charges[1] + (Cache.SpellInfo[self.SpellID].Charges[4]-self:Recharge())/Cache.SpellInfo[self.SpellID].Charges[4];
+          -- charges + (chargeDuration - recharge) / chargeDuration
+          Cache.SpellInfo[self.SpellID].ChargesFractional = self:Charges() + (self:ChargesInfo(4)-self:Recharge())/self:ChargesInfo(4);
         end
       end
       return Cache.SpellInfo[self.SpellID].ChargesFractional;
@@ -357,12 +366,11 @@
 
     -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
     function Spell:FullRechargeTime ()
-      return self:MaxCharges()-self:ChargesFractional()*self:Recharge();
+      return self:MaxCharges() - self:ChargesFractional() * self:Recharge();
     end
 
     -- cooldown.foo.remains
-    -- TODO: Swap Cooldown() to CooldownRemains() and then make a Cooldown() for cooldown.foo.up (and keep IsOnCooldown() for !cooldown.foo.up)
-    function Spell:Cooldown (BypassRecovery)
+    function Spell:CooldownRemains (BypassRecovery)
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Cooldown) or (BypassRecovery and not Cache.SpellInfo[self.SpellID].CooldownNoRecovery) then
         -- Get Spell Cooldown Infos
@@ -384,9 +392,25 @@
       return BypassRecovery and Cache.SpellInfo[self.SpellID].CooldownNoRecovery or Cache.SpellInfo[self.SpellID].Cooldown;
     end
 
+    -- Old cooldown.foo.remains
+    -- DEPRECATED
+    function Spell:Cooldown (BypassRecovery)
+      return self:CooldownRemains(BypassRecovery);
+    end
+
+    -- cooldown.foo.up
+    function Spell:CooldownUp (BypassRecovery)
+      return self:Cooldown(BypassRecovery) == 0;
+    end
+
+    -- cooldown.foo.down
+    function Spell:CooldownDown (BypassRecovery)
+      return self:Cooldown(BypassRecovery) ~= 0;
+    end
+
     -- !cooldown.foo.up
     function Spell:IsOnCooldown (BypassRecovery)
-      return self:Cooldown(BypassRecovery) ~= 0;
+      return self:CooldownDown(BypassRecovery);
     end
 
     -- artifact.foo.rank
