@@ -262,6 +262,7 @@
     function Spell:CooldownInfo ()
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if not Cache.SpellInfo[self.SpellID].CooldownInfo then
+        -- start, duration, enable, modRate
         Cache.SpellInfo[self.SpellID].CooldownInfo = {GetSpellCooldown(self.SpellID)};
       end
       return unpack(Cache.SpellInfo[self.SpellID].CooldownInfo);
@@ -374,7 +375,7 @@
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Cooldown) or (BypassRecovery and not Cache.SpellInfo[self.SpellID].CooldownNoRecovery) then
         -- Get Spell Cooldown Infos
-        _T.CDTime, _T.CDValue = GetSpellCooldown(self.SpellID);
+        _T.CDTime, _T.CDValue = self:ChargesInfo();
         -- Return 0 if the Spell isn't in CD.
         if _T.CDTime == 0 then
           return 0;
@@ -403,12 +404,14 @@
       return self:Cooldown(BypassRecovery) == 0;
     end
 
-    -- cooldown.foo.down
+    -- "cooldown.foo.down"
+    -- Since it doesn't exists in SimC, I think it's better to use 'not Spell:CooldownUp' for consistency with APLs.
     function Spell:CooldownDown (BypassRecovery)
       return self:Cooldown(BypassRecovery) ~= 0;
     end
 
     -- !cooldown.foo.up
+    -- DEPRECATED
     function Spell:IsOnCooldown (BypassRecovery)
       return self:CooldownDown(BypassRecovery);
     end
