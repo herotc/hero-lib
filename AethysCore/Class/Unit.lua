@@ -476,6 +476,9 @@
       --- Darkheart Thicket
         -- Strangling roots can't be hit while this buff is present
         [100991] = function (self) return self:Buff(SpecialBlacklistDataSpells.D_DHT_Submerged, nil, true); end,
+      --- Mythic+ Affixes
+        -- Fel Explosives (7.2 Patch)
+        [120651] = true,
       ----- Trial of Valor (T19 - 7.1 Patch) -----
       --- Helya
         -- Striking Tentacle cannot be hit.
