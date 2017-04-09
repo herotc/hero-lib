@@ -375,7 +375,7 @@
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Cooldown) or (BypassRecovery and not Cache.SpellInfo[self.SpellID].CooldownNoRecovery) then
         -- Get Spell Cooldown Infos
-        _T.CDTime, _T.CDValue = self:ChargesInfo();
+        _T.CDTime, _T.CDValue = self:CooldownInfo();
         -- Return 0 if the Spell isn't in CD.
         if _T.CDTime == 0 then
           return 0;
