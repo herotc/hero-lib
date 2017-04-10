@@ -282,7 +282,7 @@
     -- Fills the PowerTable with every traits informations.
     local ArtifactUI, HasArtifactEquipped  = _G.C_ArtifactUI, _G.HasArtifactEquipped;
     local ArtifactFrame = _G.ArtifactFrame;
-    local PowerTable, Powers = {}, {};
+    local Powers, PowerTable, PowerTableByPowerID, PowerTableBySpellID = {}, {}, {}, {};
     --- PowerTable Schema :
     --   1         2        3        4          5           6          7         8               9               10       11         12         13         14
     -- offset, prereqsMet, cost, bonusRanks, maxRanks, linearIndex, position, isFinal, numMaxRankBonusFromTier, tier, isGoldMedal, isStart, currentRank, spellID
@@ -296,8 +296,14 @@
         Powers = ArtifactUI.GetPowers();
         if Powers then
           wipe(PowerTable);
+          wipe(PowerTableByPowerID);
+          wipe(PowerTableBySpellID);
+          local PowerInfo;
           for Index, Power in pairs(Powers) do
-            tableinsert(PowerTable, ArtifactUI.GetPowerInfo(Power));
+            PowerInfo = ArtifactUI.GetPowerInfo(Power);
+            tableinsert(PowerTable, PowerInfo);
+            PowerTableByPowerID[Power] = PowerInfo;
+            PowerTableBySpellID[PowerInfo.spellID] = PowerInfo;
           end
         end
         ArtifactUI.Clear();
@@ -418,17 +424,16 @@
 
     -- artifact.foo.rank
     function Spell:ArtifactRank ()
-      if #PowerTable > 0 then
-        for Index, Power in pairs(PowerTable) do
-          if self.SpellID == Power.spellID and Power.currentRank > 0 then
-            return Power.currentRank;
-          end
-        end
-      end
-      return 0;
+      return PowerTableBySpellID[self.SpellID] and PowerTableBySpellID[self.SpellID].currentRank or 0;
+    end
+    function Spell:ArtifactRankPowerID ()
+      return PowerTableByPowerID[self.SpellID] and PowerTableByPowerID[self.SpellID].currentRank or 0;
     end
 
     -- artifact.foo.enabled
     function Spell:ArtifactEnabled ()
       return self:ArtifactRank() > 0;
+    end
+    function Spell:ArtifactEnabledPowerID ()
+      return self:ArtifactRankPowerID() > 0;
     end
