@@ -279,29 +279,29 @@
     end
 
     --- Artifact Traits Scan
-    -- Fills the PowerTable with every traits informations.
+    -- Get every traits informations and stores them.
     local ArtifactUI, HasArtifactEquipped  = _G.C_ArtifactUI, _G.HasArtifactEquipped;
     local ArtifactFrame = _G.ArtifactFrame;
-    local Powers, PowerTable, PowerTableByPowerID, PowerTableBySpellID = {}, {}, {}, {};
-    --- PowerTable Schema :
-    --   1         2        3        4          5           6          7         8               9               10       11         12         13         14
-    -- offset, prereqsMet, cost, bonusRanks, maxRanks, linearIndex, position, isFinal, numMaxRankBonusFromTier, tier, isGoldMedal, isStart, currentRank, spellID
+    local Powers, PowerTableByPowerID, PowerTableBySpellID = {}, {}, {};
+    --local PowerTable = {}; -- Uncomment for debug purpose in case they changes the Artifact API
     function Spell:ArtifactScan ()
       ArtifactFrame = _G.ArtifactFrame;
-      -- Does the scan only if the Artifact is Equipped and the Frame not Opened.
+      -- Does the scan only if the artifact is equipped and the artifact frame not opened.
       if HasArtifactEquipped() and not (ArtifactFrame and ArtifactFrame:IsShown()) then
-        -- Unregister the events to prevent unwanted call.
+        -- Unregister the event to prevent unwanted call(s).
         UIParent:UnregisterEvent("ARTIFACT_UPDATE");
         SocketInventoryItem(INVSLOT_MAINHAND);
         Powers = ArtifactUI.GetPowers();
         if Powers then
-          wipe(PowerTable);
+          --wipe(PowerTable);
           wipe(PowerTableByPowerID);
           wipe(PowerTableBySpellID);
           local PowerInfo;
           for Index, Power in pairs(Powers) do
+            -- GetPowerInfo() returns a table and not multiple values unlike most WoW API.
+            -- offset, prereqsMet, cost, bonusRanks, maxRanks, linearIndex, position, isFinal, numMaxRankBonusFromTier, tier, isGoldMedal, isStart, currentRank, spellID
             PowerInfo = ArtifactUI.GetPowerInfo(Power);
-            tableinsert(PowerTable, PowerInfo);
+            --tableinsert(PowerTable, PowerInfo);
             PowerTableByPowerID[Power] = PowerInfo;
             PowerTableBySpellID[PowerInfo.spellID] = PowerInfo;
           end
