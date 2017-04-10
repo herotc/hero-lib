@@ -284,8 +284,8 @@
     local ArtifactFrame = _G.ArtifactFrame;
     local PowerTable, Powers = {}, {};
     --- PowerTable Schema :
-    --   1    2      3       4      5     6  7    8       9      10      11
-    -- SpellID, Cost, CurrentRank, MaxRank, BonusRanks, x, y, PreReqsMet, IsStart, IsGoldMedal, IsFinal
+    --   1         2        3        4          5           6          7         8               9               10       11         12         13         14
+    -- offset, prereqsMet, cost, bonusRanks, maxRanks, linearIndex, position, isFinal, numMaxRankBonusFromTier, tier, isGoldMedal, isStart, currentRank, spellID
     function Spell:ArtifactScan ()
       ArtifactFrame = _G.ArtifactFrame;
       -- Does the scan only if the Artifact is Equipped and the Frame not Opened.
@@ -297,7 +297,7 @@
         if Powers then
           wipe(PowerTable);
           for Index, Power in pairs(Powers) do
-            tableinsert(PowerTable, {ArtifactUI.GetPowerInfo(Power)});
+            tableinsert(PowerTable, ArtifactUI.GetPowerInfo(Power));
           end
         end
         ArtifactUI.Clear();
@@ -419,9 +419,9 @@
     -- artifact.foo.rank
     function Spell:ArtifactRank ()
       if #PowerTable > 0 then
-        for Index, Table in pairs(PowerTable) do
-          if self.SpellID == Table[1] and Table[3] > 0 then
-            return Table[3];
+        for Index, Power in pairs(PowerTable) do
+          if self.SpellID == Power.spellID and Power.currentRank > 0 then
+            return Power.currentRank;
           end
         end
       end
