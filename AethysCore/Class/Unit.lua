@@ -113,7 +113,10 @@
     [92166] = true,  -- Raider's Training Dummy
 	-- Priest Class Order Hall
 	[107555] = true, -- Bound void Wraith
-    [107556] = true -- Bound void Walker
+    [107556] = true, -- Bound void Walker
+	-- Druid Class Order Hall
+    [113964] = true, -- Raider's Training Dummy
+    [113966] = true, -- Dungeoneer's Training Dummy
   };
   function Unit:IsDummy ()
     return self:NPCID() >= 0 and DummyUnits[self:NPCID()] == true;
@@ -482,7 +485,11 @@
       ----- Trial of Valor (T19 - 7.1 Patch) -----
       --- Helya
         -- Striking Tentacle cannot be hit.
-        [114881] = true
+        [114881] = true,
+	  ----- Class Order Hall -----
+	  --- Druid
+	  -- Raider's Training Dummy 
+		[113964] = true
   }
   function Unit:IsBlacklisted ()
     if SpecialBlacklistData[self:NPCID()] then
