@@ -33,3 +33,15 @@
   function AC.Print (...)
     print("[|cFFFF6600Aethys Core|r]", ...);
   end
+
+  -- Compare two values
+  local CompareThisTable = {
+    [">"] = function (A, B) return A > B; end,
+    ["<"] = function (A, B) return A < B; end,
+    [">="] = function (A, B) return A >= B; end,
+    ["<="] = function (A, B) return A <= B; end,
+    ["=="] = function (A, B) return A == B; end
+  };
+  function AC.CompareThis (Operator, A, B)
+    return CompareThisTable[Operator](A, B);
+  end

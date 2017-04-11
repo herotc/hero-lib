@@ -366,6 +366,8 @@
     if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
     Cache.UnitInfo[self:GUID()].Buffs = {};
     for i = 1, AC.MAXIMUM do
+      --     1      2    3       4         5         6             7           8           9                   10              11         12            13             14               15           16       17      18      19
+      -- buffName, rank, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
       _T.Infos = {UnitBuff(self.UnitID, i)};
       if not _T.Infos[11] then break; end
       tableinsert(Cache.UnitInfo[self:GUID()].Buffs, _T.Infos);
@@ -829,4 +831,10 @@
         return Cache.UnitInfo[self:GUID()].TTD[TTD._T.MinSamples];
       end
       return 11111;
+    end
+
+    -- Get if the unit meets the TimeToDie requirements.
+    function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
+      local TTD = self:TimeToDie();
+      return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD, Value+(Offset or 0)) or false;
     end
