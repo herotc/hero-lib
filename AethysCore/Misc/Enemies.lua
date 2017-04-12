@@ -12,12 +12,10 @@
   -- Lua
   local pairs = pairs;
   local tableinsert = table.insert;
+  local tablesort = table.sort;
   local wipe = table.wipe;
   -- File Locals
-  local _T = { -- Temporary Vars
-    ThisUnit,                 -- GetEnemies
-    DistanceValues = {}       -- GetEnemies
-  };
+  local NameplateUnits = Unit["Nameplate"];
 
 
 --- ============================ CONTENT ============================
@@ -29,18 +27,18 @@
     Cache.Enemies[Distance] = {};
     -- Check if there is another Enemies table with a greater Distance to filter from it.
     if #Cache.Enemies >= 1 then
-      wipe(_T.DistanceValues);
+      local DistanceValues = {};
       for Key, Value in pairs(Cache.Enemies) do
         if Key > Distance then
-          tableinsert(_T.DistanceValues, Key);
+          tableinsert(DistanceValues, Key);
         end
       end
       -- Check if we have caught a table that we can use.
-      if #_T.DistanceValues >= 1 then
-        if #_T.DistanceValues >= 2 then
-          table.sort(_T.DistanceValues, function(a, b) return a < b; end);
+      if #DistanceValues >= 1 then
+        if #DistanceValues >= 2 then
+          tablesort(DistanceValues, function(a, b) return a < b; end);
         end
-        for Key, Value in pairs(Cache.Enemies[_T.DistanceValues[1]]) do
+        for Key, Value in pairs(Cache.Enemies[DistanceValues[1]]) do
           if Value:IsInRange(Distance) then
             tableinsert(Cache.Enemies[Distance], Value);
           end
@@ -49,15 +47,16 @@
       end
     end
     -- Else build from all the nameplates.
-    for i = 1, AC.MAXIMUM do
-      _T.ThisUnit = Unit["Nameplate"..tostring(i)];
-      if _T.ThisUnit:Exists() and
-        not _T.ThisUnit:IsBlacklisted() and
-        not _T.ThisUnit:IsUserBlacklisted() and
-        not _T.ThisUnit:IsDeadOrGhost() and
-        Player:CanAttack(_T.ThisUnit) and
-        _T.ThisUnit:IsInRange(Distance) then
-        tableinsert(Cache.Enemies[Distance], _T.ThisUnit);
+    local ThisUnit;
+    for i = 1, #NameplateUnits do
+      ThisUnit = NameplateUnits[i];
+      if ThisUnit:Exists() and
+        not ThisUnit:IsBlacklisted() and
+        not ThisUnit:IsUserBlacklisted() and
+        not ThisUnit:IsDeadOrGhost() and
+        Player:CanAttack(ThisUnit) and
+        ThisUnit:IsInRange(Distance) then
+        tableinsert(Cache.Enemies[Distance], ThisUnit);
       end
     end
     -- Cache the count of enemies

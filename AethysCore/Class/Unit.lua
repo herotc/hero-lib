@@ -20,6 +20,7 @@
   local tostring = tostring;
   local type = type;
   local unpack = unpack;
+  local wipe = table.wipe;
   -- File Locals
   local _T = {                  -- Temporary Vars
     Parts,                        -- NPCID
@@ -27,9 +28,16 @@
     Infos,                        -- GetBuffs / GetDebuffs
     ExpirationTime                -- BuffRemains / DebuffRemains
   };
+  local BossUnits = Unit["Boss"];
+  local NameplateUnits = Unit["Nameplate"];
 
 
 --- ============================ CONTENT ============================
+  -- Get the unit ID.
+  function Unit:ID ()
+    return self.UnitID;
+  end
+
   -- Get the unit GUID.
   function Unit:GUID ()
     return Cache.Get("GUIDInfo."..self.UnitID)
@@ -82,8 +90,10 @@
 
   -- Get if an unit with a given NPC ID is in the Boss list and has less HP than the given ones.
   function Unit:IsInBossList (NPCID, HP)
-    for i = 1, 4 do
-      if Unit["Boss"..tostring(i)]:NPCID() == NPCID and Unit["Boss"..tostring(i)]:HealthPercentage() <= HP then
+    local ThisUnit;
+    for i = 1, #BossUnits do
+      ThisUnit = BossUnits[i];
+      if ThisUnit:NPCID() == NPCID and ThisUnit:HealthPercentage() <= HP then
         return true;
       end
     end
@@ -654,61 +664,74 @@
     AC.TTD = {
       Settings = {
         -- Refresh time (seconds) : min=0.1,  max=2,    default = 0.2,  Aethys = 0.1
-        Refresh = 0.2,
+        Refresh = 0.1,
         -- History time (seconds) : min=5,    max=120,  default = 20,   Aethys = 10+0.4
         HistoryTime = 10+0.4,
         -- Max history count :      min=20,   max=500,  default = 120,  Aethys = 100
-        HistoryCount = 55 
-      },
-      _T = {
-        -- Both
-        Values,
-        -- TTDRefresh
-        UnitFound,
-        Time,
-        -- TimeToX
-        Seconds,
-        MaxHealth, StartingTime,
-        UnitTable,
-        MinSamples, -- In TimeToDie aswell
-        a, b,
-        n,
-        x, y,
-        Ex2, Ex, Exy, Ey,
-        Invariant
+        HistoryCount = 100
       },
       Units = {},
       Throttle = 0
     };
     local TTD = AC.TTD;
+    local TTDCache = {}; -- a cache of unused { time, value } tables
+    local ExistingUnits = {}; -- used to track guids of existing units
     function AC.TTDRefresh ()
-      for Key, Value in pairs(TTD.Units) do -- TODO: Need to be optimized
-        TTD._T.UnitFound = false;
-        for i = 1, AC.MAXIMUM do
-          _T.ThisUnit = Unit["Nameplate"..tostring(i)];
-          if Key == _T.ThisUnit:GUID() and _T.ThisUnit:Exists() then
-            TTD._T.UnitFound = true;
+      wipe(ExistingUnits);
+
+      -- this may not be needed if we don't have any units but caching them in case
+      -- we do speeds it all up a little bit
+      local CurrentTime = AC.GetTime();
+      local HistoryCount = TTD.Settings.HistoryCount;
+      local HistoryTime = TTD.Settings.HistoryTime;
+
+      local ThisUnit;
+      for i = 1, #NameplateUnits do
+        ThisUnit = NameplateUnits[i];
+        if ThisUnit:Exists() then
+          local GUID = ThisUnit:GUID();
+          ExistingUnits[GUID] = true;
+
+          local Health = ThisUnit:Health();
+          if Player:CanAttack(ThisUnit) and Health < ThisUnit:MaxHealth() then
+            local UnitTable = TTD.Units[GUID];
+            if not UnitTable or Health > UnitTable[1][1][2] then
+              UnitTable = {{}, ThisUnit:MaxHealth(), CurrentTime, -1};
+              TTD.Units[GUID] = UnitTable;
+            end
+
+            local Values = UnitTable[1];
+            local Time = CurrentTime - UnitTable[3];
+            if Health ~= UnitTable[4] then
+              -- we can optimize it even more by using a ring buffer for the values
+              -- table, this way most of the operations will be simple arithmetic
+              local Value;
+              if #TTDCache == 0 then
+                Value = {Time, Health};
+              else
+                Value = TTDCache[#TTDCache];
+                TTDCache[#TTDCache] = nil;
+                Value[1] = Time;
+                Value[2] = Health;
+              end
+              tableinsert(Values, 1, Value);
+              local n = #Values;
+              while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
+                TTDCache[#TTDCache + 1] = Values[n];
+                Values[n] = nil;
+                n = n - 1;
+              end
+              UnitTable[4] = Health;
+            end
           end
-        end
-        if not TTD._T.UnitFound then
-          TTD.Units[Key] = nil;
         end
       end
-      for i = 1, AC.MAXIMUM do
-        _T.ThisUnit = Unit["Nameplate"..tostring(i)];
-        if _T.ThisUnit:Exists() and Player:CanAttack(_T.ThisUnit) and _T.ThisUnit:Health() < _T.ThisUnit:MaxHealth() then
-          if not TTD.Units[_T.ThisUnit:GUID()] or _T.ThisUnit:Health() > TTD.Units[_T.ThisUnit:GUID()][1][1][2] then
-            TTD.Units[_T.ThisUnit:GUID()] = {{}, _T.ThisUnit:MaxHealth(), AC.GetTime(), -1};
-          end
-          TTD._T.Values = TTD.Units[_T.ThisUnit:GUID()][1];
-          TTD._T.Time = AC.GetTime() - TTD.Units[_T.ThisUnit:GUID()][3];
-          if _T.ThisUnit:Health() ~= TTD.Units[_T.ThisUnit:GUID()][4] then
-            tableinsert(TTD._T.Values, 1, {TTD._T.Time, _T.ThisUnit:Health()});
-            while (#TTD._T.Values > TTD.Settings.HistoryCount) or (TTD._T.Time - TTD._T.Values[#TTD._T.Values][1] > TTD.Settings.HistoryTime) do
-              tableremove(TTD._T.Values);
-            end
-            TTD.Units[_T.ThisUnit:GUID()][4] = _T.ThisUnit:Health();
-          end
+
+      -- not sure if it's even worth it to do this here
+      -- ideally this should be event driven or done at least once a second if not less
+      for Key in pairs(TTD.Units) do
+        if not ExistingUnits[Key] then
+          TTD.Units[Key] = nil;
         end
       end
     end
@@ -721,50 +744,48 @@
       --  8888 : Not Enough Samples or No Health Change
       --  7777 : No DPS
       --  6666 : Dummy
-    function Unit:TimeToX (Percentage, MinSamples) -- TODO : See with Skasch how accuracy & prediction can be improved.
+    function Unit:TimeToX (Percentage, MinSamples)
       if self:IsDummy() then return 6666; end
-      TTD._T.Seconds = 8888;
-      TTD._T.UnitTable = TTD.Units[self:GUID()];
-      TTD._T.MinSamples = MinSamples or 3;
-      TTD._T.a, TTD._T.b = 0, 0;
+      local Seconds = 8888;
+      local UnitTable = TTD.Units[self:GUID()];
       -- Simple linear regression
       -- ( E(x^2)  E(x) )  ( a )  ( E(xy) )
       -- ( E(x)     n  )  ( b ) = ( E(y)  )
       -- Format of the above: ( 2x2 Matrix ) * ( 2x1 Vector ) = ( 2x1 Vector )
       -- Solve to find a and b, satisfying y = a + bx
       -- Matrix arithmetic has been expanded and solved to make the following operation as fast as possible
-      if TTD._T.UnitTable then
-        TTD._T.Values = TTD._T.UnitTable[1];
-        TTD._T.n = #TTD._T.Values;
-        if TTD._T.n > MinSamples then
-          TTD._T.MaxHealth = TTD._T.UnitTable[2];
-          TTD._T.StartingTime = TTD._T.UnitTable[3];
-          TTD._T.x, TTD._T.y = 0, 0;
-          TTD._T.Ex2, TTD._T.Ex, TTD._T.Exy, TTD._T.Ey = 0, 0, 0, 0;
-          
-          for _, Value in pairs(TTD._T.Values) do
-            TTD._T.x, TTD._T.y = unpack(Value);
+      if UnitTable then
+        local Values = UnitTable[1];
+        local n = #Values;
+        if n > MinSamples then
+          local a, b = 0, 0;
+          local Ex2, Ex, Exy, Ey = 0, 0, 0, 0;
 
-            TTD._T.Ex2 = TTD._T.Ex2 + TTD._T.x * TTD._T.x;
-            TTD._T.Ex = TTD._T.Ex + TTD._T.x;
-            TTD._T.Exy = TTD._T.Exy + TTD._T.x * TTD._T.y;
-            TTD._T.Ey = TTD._T.Ey + TTD._T.y;
+          local Value, x, y;
+          for i = 1, n do
+            Value = Values[i];
+            x, y = Value[1], Value[2];
+
+            Ex2 = Ex2 + x * x;
+            Ex = Ex + x;
+            Exy = Exy + x * y;
+            Ey = Ey + y;
           end
           -- Invariant to find matrix inverse
-          TTD._T.Invariant = TTD._T.Ex2*TTD._T.n - TTD._T.Ex*TTD._T.Ex;
+          local Invariant = 1 / ( Ex2*n - Ex*Ex );
           -- Solve for a and b
-          TTD._T.a = (-TTD._T.Ex * TTD._T.Exy / TTD._T.Invariant) + (TTD._T.Ex2 * TTD._T.Ey / TTD._T.Invariant);
-          TTD._T.b = (TTD._T.n * TTD._T.Exy / TTD._T.Invariant) - (TTD._T.Ex * TTD._T.Ey / TTD._T.Invariant);
+          a = (-Ex * Exy * Invariant) + (Ex2 * Ey * Invariant);
+          b = (n * Exy * Invariant) - (Ex * Ey * Invariant);
+          if b ~= 0 then
+            -- Use best fit line to calculate estimated time to reach target health
+            Seconds = (Percentage * 0.01 * UnitTable[2] - a) / b;
+            -- Subtract current time to obtain "time remaining"
+            Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable[3]));
+            if Seconds < 0 then Seconds = 9999; end
+          end
         end
       end
-      if TTD._T.b ~= 0 then
-        -- Use best fit line to calculate estimated time to reach target health
-        TTD._T.Seconds = (Percentage * 0.01 * TTD._T.MaxHealth - TTD._T.a) / TTD._T.b;
-        -- Subtract current time to obtain "time remaining"
-        TTD._T.Seconds = mathmin(7777, TTD._T.Seconds - (AC.GetTime() - TTD._T.StartingTime));
-        if TTD._T.Seconds < 0 then TTD._T.Seconds = 9999; end
-      end
-      return mathfloor(TTD._T.Seconds);
+      return mathfloor(Seconds);
     end
 
     -- Get the unit TTD Percentage
@@ -821,20 +842,22 @@
 
     -- Get the unit TimeToDie
     function Unit:TimeToDie (MinSamples)
-      if self:GUID() then
-        TTD._T.MinSamples = MinSamples or 3;
-        if not Cache.UnitInfo[self:GUID()] then Cache.UnitInfo[self:GUID()] = {}; end
-        if not Cache.UnitInfo[self:GUID()].TTD then Cache.UnitInfo[self:GUID()].TTD = {}; end
-        if not Cache.UnitInfo[self:GUID()].TTD[TTD._T.MinSamples] then
-          Cache.UnitInfo[self:GUID()].TTD[TTD._T.MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), TTD._T.MinSamples)
+      local GUID = self:GUID();
+      if GUID then
+        local MinSamples = MinSamples or 3;
+        local UnitInfo = Cache.UnitInfo[GUID];
+        if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+        if not UnitInfo.TTD then UnitInfo.TTD = {}; end
+        if not UnitInfo.TTD[MinSamples] then
+          UnitInfo.TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples);
         end
-        return Cache.UnitInfo[self:GUID()].TTD[TTD._T.MinSamples];
+        return UnitInfo.TTD[MinSamples];
       end
       return 11111;
     end
 
     -- Get if the unit meets the TimeToDie requirements.
     function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
-      local TTD = self:TimeToDie();
+      local TTD = self:TimeToDie(MinSamples);
       return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD, Value+(Offset or 0)) or false;
     end
