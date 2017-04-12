@@ -7,6 +7,7 @@
   -- Lua
   local error = error;
   local setmetatable = setmetatable;
+  local stringformat = string.format;
   -- File Locals
   local Table, MetaTable;
   local Object;
@@ -51,14 +52,13 @@
     {"Boss", 4},
     {"Arena", 5}
   };
-  local TempUnitID;
   for Key, Value in pairs(UnitIDMap) do
+    Unit[Value[1]] = {};
     for i = 1, Value[2] do
-      TempUnitID = Value[1]..tostring(i);
-      Unit[TempUnitID] = Unit(TempUnitID);
+      Unit[Value[1]][i] = Unit(stringformat("%s%d", Value[1], i));
     end
   end
-  UnitIDMap,TempUnitID = nil, nil;
+  UnitIDMap = nil;
 
 --- ======= SPELL =======
   -- Defines the Spell Class.
