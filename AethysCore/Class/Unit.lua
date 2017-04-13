@@ -21,7 +21,9 @@
   local type = type;
   local unpack = unpack;
   local wipe = table.wipe;
-
+  -- File Locals
+  local Focus = Unit.Focus;
+  local MouseOver = Unit.MouseOver;
   local BossUnits = Unit["Boss"];
   local NameplateUnits = Unit["Nameplate"];
 
@@ -696,61 +698,72 @@
       Throttle = 0
     };
     local TTD = AC.TTD;
-    local TTDCache = {}; -- a cache of unused { time, value } tables
-    local ExistingUnits = {}; -- used to track guids of existing units
+    local TTDCache = {}; -- A cache of unused { time, value } tables
+    local IterableUnits = {
+      {Target},
+      {Focus},
+      {MouseOver},
+      {unpack(BossUnits)},
+      {unpack(NameplateUnits)}
+    };
+    local ExistingUnits = {}; -- Used to track GUIDs of existing units
     function AC.TTDRefresh ()
       wipe(ExistingUnits);
 
-      -- this may not be needed if we don't have any units but caching them in case
-      -- we do speeds it all up a little bit
+      -- This may not be needed if we don't have any units but caching them in case
+      -- We do speeds it all up a little bit
       local CurrentTime = AC.GetTime();
       local HistoryCount = TTD.Settings.HistoryCount;
       local HistoryTime = TTD.Settings.HistoryTime;
-
       local ThisUnit;
-      for i = 1, #NameplateUnits do
-        ThisUnit = NameplateUnits[i];
-        if ThisUnit:Exists() then
-          local GUID = ThisUnit:GUID();
-          ExistingUnits[GUID] = true;
 
-          local Health = ThisUnit:Health();
-          if Player:CanAttack(ThisUnit) and Health < ThisUnit:MaxHealth() then
-            local UnitTable = TTD.Units[GUID];
-            if not UnitTable or Health > UnitTable[1][1][2] then
-              UnitTable = {{}, ThisUnit:MaxHealth(), CurrentTime, -1};
-              TTD.Units[GUID] = UnitTable;
-            end
+      for Key, Units in pairs(IterableUnits) do
+        for i = 1, #Units do
+          ThisUnit = Units[i];
+          if ThisUnit:Exists() then
+            local GUID = ThisUnit:GUID();
+            if not ExistingUnits[GUID] then
+              ExistingUnits[GUID] = true;
 
-            local Values = UnitTable[1];
-            local Time = CurrentTime - UnitTable[3];
-            if Health ~= UnitTable[4] then
-              -- we can optimize it even more by using a ring buffer for the values
-              -- table, this way most of the operations will be simple arithmetic
-              local Value;
-              if #TTDCache == 0 then
-                Value = {Time, Health};
-              else
-                Value = TTDCache[#TTDCache];
-                TTDCache[#TTDCache] = nil;
-                Value[1] = Time;
-                Value[2] = Health;
+              local Health = ThisUnit:Health();
+              if Player:CanAttack(ThisUnit) and Health < ThisUnit:MaxHealth() then
+                local UnitTable = TTD.Units[GUID];
+                if not UnitTable or Health > UnitTable[1][1][2] then
+                  UnitTable = {{}, ThisUnit:MaxHealth(), CurrentTime, -1};
+                  TTD.Units[GUID] = UnitTable;
+                end
+
+                local Values = UnitTable[1];
+                local Time = CurrentTime - UnitTable[3];
+                if Health ~= UnitTable[4] then
+                  -- We can optimize it even more by using a ring buffer for the values
+                  -- table, this way most of the operations will be simple arithmetic
+                  local Value;
+                  if #TTDCache == 0 then
+                    Value = {Time, Health};
+                  else
+                    Value = TTDCache[#TTDCache];
+                    TTDCache[#TTDCache] = nil;
+                    Value[1] = Time;
+                    Value[2] = Health;
+                  end
+                  tableinsert(Values, 1, Value);
+                  local n = #Values;
+                  while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
+                    TTDCache[#TTDCache + 1] = Values[n];
+                    Values[n] = nil;
+                    n = n - 1;
+                  end
+                  UnitTable[4] = Health;
+                end
               end
-              tableinsert(Values, 1, Value);
-              local n = #Values;
-              while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-                TTDCache[#TTDCache + 1] = Values[n];
-                Values[n] = nil;
-                n = n - 1;
-              end
-              UnitTable[4] = Health;
             end
           end
         end
       end
 
-      -- not sure if it's even worth it to do this here
-      -- ideally this should be event driven or done at least once a second if not less
+      -- Not sure if it's even worth it to do this here
+      -- Ideally this should be event driven or done at least once a second if not less
       for Key in pairs(TTD.Units) do
         if not ExistingUnits[Key] then
           TTD.Units[Key] = nil;
