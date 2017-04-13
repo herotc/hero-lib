@@ -724,28 +724,27 @@
             local GUID = ThisUnit:GUID();
             if not ExistingUnits[GUID] then
               ExistingUnits[GUID] = true;
-
-              local Health = ThisUnit:Health();
-              if Player:CanAttack(ThisUnit) and Health < ThisUnit:MaxHealth() then
+              local HealthPercentage = ThisUnit:HealthPercentage();
+              if Player:CanAttack(ThisUnit) and HealthPercentage < 100 then
                 local UnitTable = TTD.Units[GUID];
-                if not UnitTable or Health > UnitTable[1][1][2] then
-                  UnitTable = {{}, ThisUnit:MaxHealth(), CurrentTime, -1};
+                if not UnitTable or HealthPercentage > UnitTable.Values[1][2] then
+                  UnitTable = {Values = {}, InitialTime = CurrentTime};
                   TTD.Units[GUID] = UnitTable;
                 end
 
-                local Values = UnitTable[1];
-                local Time = CurrentTime - UnitTable[3];
-                if Health ~= UnitTable[4] then
+                local Values = UnitTable.Values;
+                local Time = CurrentTime - UnitTable.InitialTime;
+                if not UnitTable.Values[1] or HealthPercentage ~= UnitTable.Values[1][2] then
                   -- We can optimize it even more by using a ring buffer for the values
                   -- table, this way most of the operations will be simple arithmetic
                   local Value;
                   if #TTDCache == 0 then
-                    Value = {Time, Health};
+                    Value = {Time, HealthPercentage};
                   else
                     Value = TTDCache[#TTDCache];
                     TTDCache[#TTDCache] = nil;
                     Value[1] = Time;
-                    Value[2] = Health;
+                    Value[2] = HealthPercentage;
                   end
                   tableinsert(Values, 1, Value);
                   local n = #Values;
@@ -754,7 +753,6 @@
                     Values[n] = nil;
                     n = n - 1;
                   end
-                  UnitTable[4] = Health;
                 end
               end
             end
@@ -790,7 +788,7 @@
       -- Solve to find a and b, satisfying y = a + bx
       -- Matrix arithmetic has been expanded and solved to make the following operation as fast as possible
       if UnitTable then
-        local Values = UnitTable[1];
+        local Values = UnitTable.Values;
         local n = #Values;
         if n > MinSamples then
           local a, b = 0, 0;
@@ -813,9 +811,9 @@
           b = (n * Exy * Invariant) - (Ex * Ey * Invariant);
           if b ~= 0 then
             -- Use best fit line to calculate estimated time to reach target health
-            Seconds = (Percentage * 0.01 * UnitTable[2] - a) / b;
+            Seconds = (Percentage - a) / b;
             -- Subtract current time to obtain "time remaining"
-            Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable[3]));
+            Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable.InitialTime));
             if Seconds < 0 then Seconds = 9999; end
           end
         end
