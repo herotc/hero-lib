@@ -700,11 +700,11 @@
     local TTD = AC.TTD;
     local TTDCache = {}; -- A cache of unused { time, value } tables
     local IterableUnits = {
-      {Target},
-      {Focus},
-      {MouseOver},
-      {unpack(BossUnits)},
-      {unpack(NameplateUnits)}
+      Target,
+      Focus,
+      MouseOver,
+      unpack(BossUnits),
+      unpack(NameplateUnits)
     };
     local ExistingUnits = {}; -- Used to track GUIDs of existing units
     function AC.TTDRefresh ()
@@ -717,42 +717,40 @@
       local HistoryTime = TTD.Settings.HistoryTime;
       local ThisUnit;
 
-      for Key, Units in pairs(IterableUnits) do
-        for i = 1, #Units do
-          ThisUnit = Units[i];
-          if ThisUnit:Exists() then
-            local GUID = ThisUnit:GUID();
-            if not ExistingUnits[GUID] then
-              ExistingUnits[GUID] = true;
-              local HealthPercentage = ThisUnit:HealthPercentage();
-              if Player:CanAttack(ThisUnit) and HealthPercentage < 100 then
-                local UnitTable = TTD.Units[GUID];
-                if not UnitTable or HealthPercentage > UnitTable.Values[1][2] then
-                  UnitTable = {Values = {}, InitialTime = CurrentTime};
-                  TTD.Units[GUID] = UnitTable;
-                end
+      for i = 1, #IterableUnits do
+        ThisUnit = IterableUnits[i];
+        if ThisUnit:Exists() then
+          local GUID = ThisUnit:GUID();
+          if not ExistingUnits[GUID] then
+            ExistingUnits[GUID] = true;
+            local HealthPercentage = ThisUnit:HealthPercentage();
+            if Player:CanAttack(ThisUnit) and HealthPercentage < 100 then
+              local UnitTable = TTD.Units[GUID];
+              if not UnitTable or HealthPercentage > UnitTable[1][1][2] then
+                UnitTable = {{}, CurrentTime};
+                TTD.Units[GUID] = UnitTable;
+              end
 
-                local Values = UnitTable.Values;
-                local Time = CurrentTime - UnitTable.InitialTime;
-                if not UnitTable.Values[1] or HealthPercentage ~= UnitTable.Values[1][2] then
-                  -- We can optimize it even more by using a ring buffer for the values
-                  -- table, this way most of the operations will be simple arithmetic
-                  local Value;
-                  if #TTDCache == 0 then
-                    Value = {Time, HealthPercentage};
-                  else
-                    Value = TTDCache[#TTDCache];
-                    TTDCache[#TTDCache] = nil;
-                    Value[1] = Time;
-                    Value[2] = HealthPercentage;
-                  end
-                  tableinsert(Values, 1, Value);
-                  local n = #Values;
-                  while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-                    TTDCache[#TTDCache + 1] = Values[n];
-                    Values[n] = nil;
-                    n = n - 1;
-                  end
+              local Values = UnitTable[1];
+              local Time = CurrentTime - UnitTable[2];
+              if not Values or HealthPercentage ~= Values[2] then
+                -- We can optimize it even more by using a ring buffer for the values
+                -- table, this way most of the operations will be simple arithmetic
+                local Value;
+                if #TTDCache == 0 then
+                  Value = {Time, HealthPercentage};
+                else
+                  Value = TTDCache[#TTDCache];
+                  TTDCache[#TTDCache] = nil;
+                  Value[1] = Time;
+                  Value[2] = HealthPercentage;
+                end
+                tableinsert(Values, 1, Value);
+                local n = #Values;
+                while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
+                  TTDCache[#TTDCache + 1] = Values[n];
+                  Values[n] = nil;
+                  n = n - 1;
                 end
               end
             end
@@ -788,7 +786,7 @@
       -- Solve to find a and b, satisfying y = a + bx
       -- Matrix arithmetic has been expanded and solved to make the following operation as fast as possible
       if UnitTable then
-        local Values = UnitTable.Values;
+        local Values = UnitTable[1];
         local n = #Values;
         if n > MinSamples then
           local a, b = 0, 0;
@@ -813,12 +811,12 @@
             -- Use best fit line to calculate estimated time to reach target health
             Seconds = (Percentage - a) / b;
             -- Subtract current time to obtain "time remaining"
-            Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable.InitialTime));
+            Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable[2]));
             if Seconds < 0 then Seconds = 9999; end
           end
         end
       end
-      return mathfloor(Seconds);
+      return Seconds;
     end
 
     -- Get the unit TTD Percentage
