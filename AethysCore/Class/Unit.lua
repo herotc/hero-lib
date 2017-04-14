@@ -890,7 +890,7 @@
     -- Get if the unit meets the TimeToDie requirements.
     function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
       local TTD = self:TimeToDie(MinSamples);
-      return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD, Value+(Offset or 0)) or false;
+      return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD+(Offset or 0), Value) or false;
     end
 
     function Unit:TimeToDieIsNotValid (MinSamples)
