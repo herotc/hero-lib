@@ -892,3 +892,7 @@
       local TTD = self:TimeToDie(MinSamples);
       return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD, Value+(Offset or 0)) or false;
     end
+
+    function Unit:TimeToDieIsNotValid (MinSamples)
+      return self:TimeToDie(MinSamples) >= 7777;
+    end
