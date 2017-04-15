@@ -822,6 +822,11 @@
     -- Get the unit TTD Percentage
     local SpecialTTDPercentageData = {
       --- Legion
+        ----- Open World  -----
+        --- Stormheim Invasion (7.2 Patch)
+          -- Lord Commander Alexius
+          [118566] = 85,
+
         ----- Dungeons (7.0 Patch) -----
         --- Halls of Valor
           -- Hymdall leaves the fight at 10%.
