@@ -106,7 +106,8 @@
   end
 
   local DummyUnits = {
-    [31146] = true,
+    -- City (SW, Orgri, ...)
+    [31146] = true, -- Raider's Training Dummy
     -- WoD Alliance Garrison
     [87317] = true, -- Mage Tower Damage Training Dummy
     [87318] = true, -- Alliance & Mage Tower Damage Dungeoneer's Training Dummy
@@ -117,12 +118,12 @@
     [92164] = true, -- Training Dummy
     [92165] = true, -- Dungeoneer's Training Dummy
     [92166] = true,  -- Raider's Training Dummy
-	-- Priest Class Order Hall
-	[107555] = true, -- Bound void Wraith
+    -- Priest Class Order Hall
+    [107555] = true, -- Bound void Wraith
     [107556] = true, -- Bound void Walker
-	-- Druid Class Order Hall
+    -- Druid Class Order Hall
     [113964] = true, -- Raider's Training Dummy
-    [113966] = true, -- Dungeoneer's Training Dummy
+    [113966] = true -- Dungeoneer's Training Dummy
   };
   function Unit:IsDummy ()
     local npcid = self:NPCID()
@@ -499,6 +500,84 @@
     return PandemicThreshold and self:DebuffRemains(Spell, AnyCaster) <= PandemicThreshold;
   end
 
+  -- Get the unit's power type
+  function Unit:PowerType ()
+    local guid = self:GUID()
+    if guid then
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.PowerType then
+        -- powerToken (ex: SPELL_POWER_ENERGY) when used for UnitPower function returns the powerType id (ex: 3), so we'll store the powerType id
+        unitInfo.PowerType = UnitPowerType(self.UnitID);
+      end
+      return unitInfo.PowerType;
+    end
+  end
+
+  -- power.max
+  function Unit:PowerMax ()
+    local guid = self:GUID()
+    if guid then
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.PowerMax then
+        unitInfo.PowerMax = UnitPowerMax(self.UnitID, self:PowerType());
+      end
+      return unitInfo.PowerMax;
+    end
+  end
+  -- power
+  function Unit:Power ()
+    local guid = self:GUID()
+    if guid then
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.Power then
+        unitInfo.Power = UnitPower(self.UnitID, self:PowerType());
+      end
+      return unitInfo.Power;
+    end
+  end
+  -- power.regen
+  function Unit:PowerRegen ()
+    local guid = self:GUID()
+    if guid then
+      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
+      if not unitInfo.PowerRegen then
+        unitInfo.PowerRegen = select(2, GetPowerRegen(self.UnitID));
+      end
+      return unitInfo.PowerRegen;
+    end
+  end
+  -- power.pct
+  function Unit:PowerPercentage ()
+    return (self:Power() / self:PowerMax()) * 100;
+  end
+  -- power.deficit
+  function Unit:PowerDeficit ()
+    return self:PowerMax() - self:Power();
+  end
+  -- "power.deficit.pct"
+  function Unit:PowerDeficitPercentage ()
+    return (self:PowerDeficit() / self:PowerMax()) * 100;
+  end
+  -- "power.regen.pct"
+  function Unit:PowerRegenPercentage ()
+    return (self:PowerRegen() / self:PowerMax()) * 100;
+  end
+  -- power.time_to_max
+  function Unit:PowerTimeToMax ()
+    if self:PowerRegen() == 0 then return -1; end
+    return self:PowerDeficit() / self:PowerRegen();
+  end
+  -- "power.time_to_x"
+  function Unit:PowerTimeToX (Amount, Offset)
+    if self:PowerRegen() == 0 then return -1; end
+    return Amount > self:Power() and (Amount - self:Power()) / (self:PowerRegen() * (1 - (Offset or 0))) or 0;
+  end
+  -- "power.time_to_x.pct"
+  function Unit:PowerTimeToXPercentage (Amount)
+    if self:PowerRegen() == 0 then return -1; end
+    return Amount > self:PowerPercentage() and (Amount - self:PowerPercentage()) / self:PowerRegenPercentage() or 0;
+  end
+
   -- Check if the unit is coded as blacklisted or not.
   local SpecialBlacklistDataSpells = {
     D_DHT_Submerged = Spell(220519)
@@ -515,11 +594,7 @@
       ----- Trial of Valor (T19 - 7.1 Patch) -----
       --- Helya
         -- Striking Tentacle cannot be hit.
-        [114881] = true,
-	  ----- Class Order Hall -----
-	  --- Druid
-	  -- Raider's Training Dummy 
-		[113964] = true
+        [114881] = true
   }
   function Unit:IsBlacklisted ()
     local npcid = self:NPCID()
@@ -850,8 +925,8 @@
         ----- Nighthold (T19 - 7.1.5 Patch) -----
         --- Elisande
           -- She leaves the fight two times at 10% then she normally dies.
-          -- TODO: Add check for Stage 1 & 2 only.
-          [106643] = 10,
+          -- She looses 50% power per stage (100 -> 50 -> 0).
+          [106643] = function (self) return (self:Power() > 0 and 10) or 0; end,
 
       --- Warlord of Draenor (WoD)
         ----- HellFire Citadel (T18 - 6.2 Patch) -----
