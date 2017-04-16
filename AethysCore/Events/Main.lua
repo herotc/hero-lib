@@ -230,9 +230,16 @@
           return;
         end
 
-        wipe(Cache.Persistent.SpellLearned.Player);
-        wipe(Cache.Persistent.SpellLearned.Pet);
-        Spell:BookScan();
+        -- TODO: FIXME workaround to prevent Lua errors when Blizz do some shenanigans with book in Arena/Timewalking
+        if pcall(
+          function ()
+            Spell.BookScan(true);
+          end
+        ) then
+          wipe(Cache.Persistent.SpellLearned.Player);
+          wipe(Cache.Persistent.SpellLearned.Pet);
+          Spell:BookScan();
+        end
       end
       , "SPELLS_CHANGED"
       , "LEARNED_SPELL_IN_TAB"

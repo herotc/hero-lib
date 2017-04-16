@@ -167,7 +167,7 @@
     end
 
     -- Scan the Book to cache every Spell Learned.
-    function Spell:BookScan ()
+    function Spell:BookScan (BlankScan)
       local CurrentSpellID, CurrentSpell;
       -- Pet Book
       local NumPetSpells = HasPetSpells();
@@ -177,7 +177,9 @@
           if CurrentSpellID then
             CurrentSpell = Spell(CurrentSpellID);
             if CurrentSpell:IsAvailable() and (CurrentSpell:IsKnown() or IsTalentSpell(i, BOOKTYPE_PET)) then
-              Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
+              if not BlankScan then
+                Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
+              end
             end
           end
         end
@@ -204,7 +206,9 @@
                 tostring(GetSpellLevelLearned(CurrentSpell:ID()))
               );
               ]]
-              Cache.Persistent.SpellLearned.Player[CurrentSpellID] = true;
+              if not BlankScan then
+                Cache.Persistent.SpellLearned.Player[CurrentSpellID] = true;
+              end
             end
           end
         end
