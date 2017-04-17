@@ -29,9 +29,13 @@
       -- pvp - Player versus player battleground
       -- raid - Raid instance
   function Unit:IsInInstance (Index)
-    if not Index then error("You must specify an Index."); end
-    return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
-                     function() return {UnitIsPlayer(self.UnitID)} end)[Index];
+    if Index then
+      return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
+                       function() return {IsInInstance(self.UnitID)} end)[Index];
+    else
+      return unpack(Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
+                       function() return {IsInInstance(self.UnitID)} end));
+    end
   end
 
   -- Get wether the player is in an instanced pvp area.
