@@ -862,7 +862,7 @@
       --    25 : A Player
     function Unit:TimeToX (Percentage, MinSamples)
       if self:IsDummy() then return 6666; end
-      if self:IsAPlayer() then return 25; end
+      if self:IsAPlayer() and Player:CanAttack(self) then return 25; end
       local Seconds = 8888;
       local UnitTable = TTD.Units[self:GUID()];
       -- Simple linear regression
