@@ -31,7 +31,7 @@
   function Unit:IsInInstance (Index)
     if not Index then error("You must specify an Index."); end
     return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
-                     function() return UnitIsPlayer(self.UnitID) end)[Index];
+                     function() return {UnitIsPlayer(self.UnitID)} end)[Index];
   end
 
   -- Get wether the player is in an instanced pvp area.
