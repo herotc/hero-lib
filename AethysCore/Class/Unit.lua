@@ -244,19 +244,19 @@
     [100] = 33119    -- Malister's Frost Wand
   };
   -- Get if the unit is in range, you can use a number or a spell as argument.
-  function Unit:IsInRange (Distance)
+  function Unit:IsInRange (Distance, SpellIDStr)
     local guid = self:GUID()
     if guid then
+      local DistIsANumber = type(Distance) == "number";
+      local Identifier = DistIsANumber and Distance or SpellIDStr;
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.IsInRange then unitInfo.IsInRange = {}; end
-      if unitInfo.IsInRange[Distance] == nil then
-        if type(Distance) == "number" then
-          unitInfo.IsInRange[Distance] = IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID) or false;
-        else
-          unitInfo.IsInRange[Distance] = IsSpellInRange(Distance:Name(), self.UnitID) or false;
-        end
+      if unitInfo.IsInRange[Identifier] == nil then
+        unitInfo.IsInRange[Identifier] = (DistIsANumber and IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID) == 1)
+                                         or (not DistIsANumber and IsSpellInRange(Distance:Name(), self.UnitID) == 1)
+                                         or false;
       end
-      return unitInfo.IsInRange[Distance];
+      return unitInfo.IsInRange[Identifier];
     end
     return nil;
   end

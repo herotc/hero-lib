@@ -20,16 +20,17 @@
 
 --- ============================ CONTENT ============================
   -- Fill the Enemies Cache table.
-  function AC.GetEnemies (Distance)
+  function AC.GetEnemies (Distance, SpellIDStr)
+    local Identifier = type(Distance) == "number" and Distance or SpellIDStr;
     -- Prevent building the same table if it's already cached.
-    if Cache.Enemies[Distance] then return; end
+    if Cache.Enemies[Identifier] then return; end
     -- Init the Variables used to build the table.
-    Cache.Enemies[Distance] = {};
+    Cache.Enemies[Identifier] = {};
     -- Check if there is another Enemies table with a greater Distance to filter from it.
-    if #Cache.Enemies >= 1 then
+    if #Cache.Enemies >= 1 and type(Distance) == "number" then
       local DistanceValues = {};
       for Key, Value in pairs(Cache.Enemies) do
-        if Key > Distance then
+        if type(Key) == "number" and Key > Distance then
           tableinsert(DistanceValues, Key);
         end
       end
@@ -40,7 +41,7 @@
         end
         for Key, Value in pairs(Cache.Enemies[DistanceValues[1]]) do
           if Value:IsInRange(Distance) then
-            tableinsert(Cache.Enemies[Distance], Value);
+            tableinsert(Cache.Enemies[Identifier], Value);
           end
         end
         return;
@@ -55,10 +56,10 @@
         not ThisUnit:IsUserBlacklisted() and
         not ThisUnit:IsDeadOrGhost() and
         Player:CanAttack(ThisUnit) and
-        ThisUnit:IsInRange(Distance) then
-        tableinsert(Cache.Enemies[Distance], ThisUnit);
+        ThisUnit:IsInRange(Distance, SpellIDStr) then
+        tableinsert(Cache.Enemies[Identifier], ThisUnit);
       end
     end
     -- Cache the count of enemies
-    Cache.EnemiesCount[Distance] = #Cache.Enemies[Distance];
+    Cache.EnemiesCount[Identifier] = #Cache.Enemies[Identifier];
   end
