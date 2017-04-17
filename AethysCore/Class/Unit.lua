@@ -130,6 +130,15 @@
     return npcid >= 0 and DummyUnits[npcid] == true;
   end
 
+  -- Get if the unit is a Player or not.
+  function Unit:IsAPlayer ()
+    if self:GUID() then
+      return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
+                       function() return UnitIsPlayer(self.UnitID) end);
+    end
+    return nil;
+  end
+
   -- Get the unit Health.
   function Unit:Health ()
     local guid = self:GUID()
@@ -850,8 +859,10 @@
       --  8888 : Not Enough Samples or No Health Change
       --  7777 : No DPS
       --  6666 : Dummy
+      --    25 : A Player
     function Unit:TimeToX (Percentage, MinSamples)
       if self:IsDummy() then return 6666; end
+      if self:IsAPlayer() then return 25; end
       local Seconds = 8888;
       local UnitTable = TTD.Units[self:GUID()];
       -- Simple linear regression
