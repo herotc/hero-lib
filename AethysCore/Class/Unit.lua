@@ -252,7 +252,7 @@
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.IsInRange then unitInfo.IsInRange = {}; end
       if unitInfo.IsInRange[Identifier] == nil then
-        unitInfo.IsInRange[Identifier] = (DistIsANumber and IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID) == 1)
+        unitInfo.IsInRange[Identifier] = (DistIsANumber and IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID))
                                          or (not DistIsANumber and IsSpellInRange(Distance:Name(), self.UnitID) == 1)
                                          or false;
       end

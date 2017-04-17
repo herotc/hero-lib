@@ -29,7 +29,7 @@
     -- Check if there is another Enemies table with a greater Distance to filter from it.
     if #Cache.Enemies >= 1 and type(Distance) == "number" then
       local DistanceValues = {};
-      for Key, Value in pairs(Cache.Enemies) do
+      for Key, UnitTable in pairs(Cache.Enemies) do
         if type(Key) == "number" and Key > Distance then
           tableinsert(DistanceValues, Key);
         end
@@ -39,9 +39,9 @@
         if #DistanceValues >= 2 then
           tablesort(DistanceValues, function(a, b) return a < b; end);
         end
-        for Key, Value in pairs(Cache.Enemies[DistanceValues[1]]) do
-          if Value:IsInRange(Distance) then
-            tableinsert(Cache.Enemies[Identifier], Value);
+        for Key, Unit in pairs(Cache.Enemies[DistanceValues[1]]) do
+          if Unit:IsInRange(Distance) then
+            tableinsert(Cache.Enemies[Identifier], Unit);
           end
         end
         return;
