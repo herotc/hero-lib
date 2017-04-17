@@ -19,6 +19,27 @@
 
 
 --- ============================ CONTENT ============================
+  -- Get wether the player is in instance.
+  -- Returns
+    -- isInstance - true if the player is in an instance, otherwise false (boolean)
+    -- instanceType - The type of instance the player is in (string)
+      -- arena - Player versus player arena
+      -- none - Not inside an instance
+      -- party - 5-man instance
+      -- pvp - Player versus player battleground
+      -- raid - Raid instance
+  function Unit:IsInInstance (Index)
+    if not Index then error("You must specify an Index."); end
+    return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
+                     function() return UnitIsPlayer(self.UnitID) end)[Index];
+  end
+
+  -- Get wether the player is in an instanced pvp area.
+  function Unit:IsInInstancedPvP ()
+    local InstanceType = self:IsInInstance(2);
+    return InstanceType == "arena" or InstanceType == "pvp" or false;
+  end
+
   -- Get if the player is mounted on a non-combat mount.
   function Unit:IsMounted ()
     return IsMounted() and not self:IsOnCombatMount();
