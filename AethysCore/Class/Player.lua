@@ -28,20 +28,15 @@
       -- party - 5-man instance
       -- pvp - Player versus player battleground
       -- raid - Raid instance
-  function Unit:IsInInstance (Index)
-    if Index then
-      return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
-                       function() return {IsInInstance(self.UnitID)} end)[Index];
-    else
-      return unpack(Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
-                       function() return {IsInInstance(self.UnitID)} end));
-    end
+  function Unit:IsInInstance ()
+    -- TODO: Fix Cache for multiple returns value.
+    return IsInInstance(self.UnitID);
   end
 
   -- Get wether the player is in an instanced pvp area.
   function Unit:IsInInstancedPvP ()
-    local InstanceType = self:IsInInstance(2);
-    return InstanceType == "arena" or InstanceType == "pvp" or false;
+    local IsIntance, InstanceType = self:IsInInstance();
+    return (IsIntance and (InstanceType == "arena" or InstanceType == "pvp")) or false;
   end
 
   -- Get if the player is mounted on a non-combat mount.
