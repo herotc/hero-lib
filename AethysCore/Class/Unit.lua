@@ -515,7 +515,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.PowerType then
-        -- powerToken (ex: SPELL_POWER_ENERGY) when used for UnitPower function returns the powerType id (ex: 3), so we'll store the powerType id
+        -- powerToken (ex: Enum.PowerType.Energy) when used for UnitPower function returns the powerType id (ex: 3), so we'll store the powerType id
         unitInfo.PowerType = UnitPowerType(self.UnitID);
       end
       return unitInfo.PowerType;

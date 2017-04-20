@@ -204,7 +204,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.RageMax then
-        unitInfo.RageMax = UnitPowerMax(self.UnitID, SPELL_POWER_RAGE);
+        unitInfo.RageMax = UnitPowerMax(self.UnitID, Enum.PowerType.Rage);
       end
       return unitInfo.RageMax;
     end
@@ -215,7 +215,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Rage then
-        unitInfo.Rage = UnitPower(self.UnitID, SPELL_POWER_RAGE);
+        unitInfo.Rage = UnitPower(self.UnitID, Enum.PowerType.Rage);
       end
       return unitInfo.Rage;
     end
@@ -242,7 +242,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.FocusMax then
-        unitInfo.FocusMax = UnitPowerMax(self.UnitID, SPELL_POWER_FOCUS);
+        unitInfo.FocusMax = UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
       end
       return unitInfo.FocusMax;
     end
@@ -253,7 +253,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Focus then
-        unitInfo.Focus = UnitPower(self.UnitID, SPELL_POWER_FOCUS);
+        unitInfo.Focus = UnitPower(self.UnitID, Enum.PowerType.Focus);
       end
       return unitInfo.Focus;
     end
@@ -335,7 +335,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.EnergyMax then
-        unitInfo.EnergyMax = UnitPowerMax(self.UnitID, SPELL_POWER_ENERGY);
+        unitInfo.EnergyMax = UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
       end
       return unitInfo.EnergyMax;
     end
@@ -346,7 +346,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Energy then
-        unitInfo.Energy = UnitPower(self.UnitID, SPELL_POWER_ENERGY);
+        unitInfo.Energy = UnitPower(self.UnitID, Enum.PowerType.Energy);
       end
       return unitInfo.Energy;
     end
@@ -403,7 +403,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.ComboPointsMax then
-        unitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, SPELL_POWER_COMBO_POINTS);
+        unitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
       end
       return unitInfo.ComboPointsMax;
     end
@@ -414,7 +414,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.ComboPoints then
-        unitInfo.ComboPoints = UnitPower(self.UnitID, SPELL_POWER_COMBO_POINTS);
+        unitInfo.ComboPoints = UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
       end
       return unitInfo.ComboPoints;
     end
@@ -433,7 +433,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.AstralPowerMax then
-        unitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_LUNAR_POWER);
+        unitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
       end
       return unitInfo.AstralPowerMax;
     end
@@ -444,7 +444,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.AstralPower then
-        unitInfo.AstralPower = UnitPower(self.UnitID, SPELL_POWER_LUNAR_POWER);
+        unitInfo.AstralPower = UnitPower(self.UnitID, Enum.PowerType.LunarPower);
       end
       return unitInfo.AstralPower;
     end
@@ -471,7 +471,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.HolyPowerMax then
-        unitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, SPELL_POWER_HOLY_POWER);
+        unitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
       end
       return unitInfo.HolyPowerMax;
     end
@@ -482,7 +482,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.HolyPower then
-        unitInfo.HolyPower = UnitPower(self.UnitID, SPELL_POWER_HOLY_POWER);
+        unitInfo.HolyPower = UnitPower(self.UnitID, Enum.PowerType.HolyPower);
       end
       return unitInfo.HolyPower;
     end
@@ -509,7 +509,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.MaelstromMax then
-        unitInfo.MaelstromMax = UnitPowerMax(self.UnitID, SPELL_POWER_MAELSTROM);
+        unitInfo.MaelstromMax = UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
       end
       return unitInfo.MaelstromMax;
     end
@@ -520,7 +520,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Maelstrom then
-        unitInfo.Maelstrom = UnitPower(self.UnitID, SPELL_POWER_MAELSTROM);
+        unitInfo.Maelstrom = UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
       end
       return unitInfo.Maelstrom;
     end
@@ -547,7 +547,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.InsanityMax then
-        unitInfo.InsanityMax = UnitPowerMax(self.UnitID, SPELL_POWER_INSANITY);
+        unitInfo.InsanityMax = UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
       end
       return unitInfo.InsanityMax;
     end
@@ -558,7 +558,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Insanity then
-        unitInfo.Insanity = UnitPower(self.UnitID, SPELL_POWER_INSANITY);
+        unitInfo.Insanity = UnitPower(self.UnitID, Enum.PowerType.Insanity);
       end
       return unitInfo.Insanity;
     end
@@ -590,7 +590,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.FuryMax then
-        unitInfo.FuryMax = UnitPowerMax(self.UnitID, SPELL_POWER_FURY);
+        unitInfo.FuryMax = UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
       end
       return unitInfo.FuryMax;
     end
@@ -601,7 +601,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.Fury then
-        unitInfo.Fury = UnitPower(self.UnitID, SPELL_POWER_FURY);
+        unitInfo.Fury = UnitPower(self.UnitID, Enum.PowerType.Fury);
       end
       return unitInfo.Fury;
     end
@@ -628,7 +628,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.PainMax then
-        unitInfo.PainMax = UnitPowerMax(self.UnitID, SPELL_POWER_PAIN);
+        unitInfo.PainMax = UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
       end
       return unitInfo.PainMax;
     end
@@ -639,7 +639,7 @@
     if guid then
       local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
       if not unitInfo.PainMax then
-        unitInfo.PainMax = UnitPower(self.UnitID, SPELL_POWER_PAIN);
+        unitInfo.PainMax = UnitPower(self.UnitID, Enum.PowerType.Pain);
       end
       return unitInfo.PainMax;
     end
