@@ -13,6 +13,7 @@
 # API
 Settings.lua
 Core.lua
+Deprecated.lua
 
 # Classes
 Class\Main.lua
