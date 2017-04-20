@@ -20,6 +20,22 @@
 
 
 --- ============================ CONTENT ============================
+  -- Build Infos
+  local LiveVersion, PTRVersion, BetaVersion = "7.2.0", "7.2.5", "7.2.5";
+  -- version, build, date, tocversion
+  AC.BuildInfo = {GetBuildInfo()};
+  -- Get if we are on the Live or not.
+  function AC.IsLive ()
+    return AC.BuildInfo[1] == LiveVersion;
+  end
+  -- Get if we are on the PTR or not.
+  function AC.IsPTR ()
+    return AC.BuildInfo[1] == PTRVersion;
+  end
+  function AC.IsBeta ()
+    return AC.BuildInfo[1] == BetaVersion;
+  end
+
   -- Get the GetTime and cache it.
   function AC.GetTime (Reset)
     if not Cache.MiscInfo then Cache.MiscInfo = {}; end
