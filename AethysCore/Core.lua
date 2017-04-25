@@ -25,14 +25,15 @@
   -- version, build, date, tocversion
   AC.BuildInfo = {GetBuildInfo()};
   -- Get if we are on the Live or not.
-  function AC.IsLive ()
+  function AC.LiveRealm ()
     return AC.BuildInfo[1] == LiveVersion;
   end
   -- Get if we are on the PTR or not.
-  function AC.IsPTR ()
+  function AC.PTRRealm ()
     return AC.BuildInfo[1] == PTRVersion;
   end
-  function AC.IsBeta ()
+  -- Get if we are on the Beta or not.
+  function AC.BetaRealm ()
     return AC.BuildInfo[1] == BetaVersion;
   end
 
