@@ -778,61 +778,69 @@
         -- Max history count :      min=20,   max=500,  default = 120,  Aethys = 100
         HistoryCount = 100
       },
-      Units = {},
+      Cache = {}, -- A cache of unused { time, value } tables to reduce garbage due to table creation
+      IterableUnits = {
+        Target,
+        Focus,
+        MouseOver,
+        unpack(BossUnits),
+        unpack(NameplateUnits)
+      },
+      Units = {}, -- Used to track units
+      ExistingUnits = {}, -- Used to track GUIDs of currently existing units (to be compared with tracked units)
       Throttle = 0
     };
     local TTD = AC.TTD;
-    local TTDCache = {}; -- A cache of unused { time, value } tables
-    local IterableUnits = {
-      Target,
-      Focus,
-      MouseOver,
-      unpack(BossUnits),
-      unpack(NameplateUnits)
-    };
-    local ExistingUnits = {}; -- Used to track GUIDs of existing units
     function AC.TTDRefresh ()
-      wipe(ExistingUnits);
-
       -- This may not be needed if we don't have any units but caching them in case
       -- We do speeds it all up a little bit
       local CurrentTime = AC.GetTime();
       local HistoryCount = TTD.Settings.HistoryCount;
       local HistoryTime = TTD.Settings.HistoryTime;
-      local ThisUnit;
+      local Cache = TTD.Cache;
+      local IterableUnits = TTD.IterableUnits;
+      local Units = TTD.Units;
+      local ExistingUnits = TTD.ExistingUnits;
 
+      wipe(ExistingUnits);
+
+      local ThisUnit;
       for i = 1, #IterableUnits do
         ThisUnit = IterableUnits[i];
         if ThisUnit:Exists() then
           local GUID = ThisUnit:GUID();
+          -- Check if we didn't already scanned this unit.
           if not ExistingUnits[GUID] then
             ExistingUnits[GUID] = true;
             local HealthPercentage = ThisUnit:HealthPercentage();
+            -- Check if it's a valid unit
             if Player:CanAttack(ThisUnit) and HealthPercentage < 100 then
-              local UnitTable = TTD.Units[GUID];
+              local UnitTable = Units[GUID];
+              -- Check if we have seen one time this unit, if we don't then initialize it.
               if not UnitTable or HealthPercentage > UnitTable[1][1][2] then
                 UnitTable = {{}, CurrentTime};
-                TTD.Units[GUID] = UnitTable;
+                Units[GUID] = UnitTable;
               end
-
               local Values = UnitTable[1];
               local Time = CurrentTime - UnitTable[2];
+              -- Check if the % HP changed since the last check (or if there were none)
               if not Values or HealthPercentage ~= Values[2] then
-                -- We can optimize it even more by using a ring buffer for the values
-                -- table, this way most of the operations will be simple arithmetic
                 local Value;
-                if #TTDCache == 0 then
+                local LastIndex = #Cache;
+                -- Check if we can re-use a table from the cache
+                if LastIndex == 0 then
                   Value = {Time, HealthPercentage};
                 else
-                  Value = TTDCache[#TTDCache];
-                  TTDCache[#TTDCache] = nil;
+                  Value = Cache[LastIndex];
+                  Cache[LastIndex] = nil;
                   Value[1] = Time;
                   Value[2] = HealthPercentage;
                 end
                 tableinsert(Values, 1, Value);
                 local n = #Values;
+                -- Delete values that are no longer valid
                 while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-                  TTDCache[#TTDCache + 1] = Values[n];
+                  Cache[#Cache + 1] = Values[n];
                   Values[n] = nil;
                   n = n - 1;
                 end
@@ -844,9 +852,9 @@
 
       -- Not sure if it's even worth it to do this here
       -- Ideally this should be event driven or done at least once a second if not less
-      for Key in pairs(TTD.Units) do
+      for Key in pairs(Units) do
         if not ExistingUnits[Key] then
-          TTD.Units[Key] = nil;
+          Units[Key] = nil;
         end
       end
     end
@@ -969,11 +977,12 @@
         local MinSamples = MinSamples or 3;
         local UnitInfo = Cache.UnitInfo[GUID];
         if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-        if not UnitInfo.TTD then UnitInfo.TTD = {}; end
-        if not UnitInfo.TTD[MinSamples] then
-          UnitInfo.TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples);
+        local TTD = UnitInfo.TTD;
+        if not TTD then TTD = {}; UnitInfo.TTD = TTD; end
+        if not TTD[MinSamples] then
+          TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples);
         end
-        return UnitInfo.TTD[MinSamples];
+        return TTD[MinSamples];
       end
       return 11111;
     end
@@ -981,9 +990,10 @@
     -- Get if the unit meets the TimeToDie requirements.
     function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
       local TTD = self:TimeToDie(MinSamples);
-      return TTD < (ValueThreshold or 7777) and AC.CompareThis (Operator, TTD+(Offset or 0), Value) or false;
+      return TTD < (ValueThreshold or 7777) and AC.CompareThis(Operator, TTD+(Offset or 0), Value) or false;
     end
 
+    -- Get if the Time To Die is Valid for an Unit (i.e. not returning a warning code).
     function Unit:TimeToDieIsNotValid (MinSamples)
       return self:TimeToDie(MinSamples) >= 7777;
     end
