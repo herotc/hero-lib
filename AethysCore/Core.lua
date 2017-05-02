@@ -6,6 +6,7 @@
   -- Lua
   local pairs = pairs;
   local print = print;
+  local tableinsert = table.insert;
   local type = type;
   local wipe = table.wipe;
   -- File Locals
@@ -49,6 +50,14 @@
   -- Print with AC Prefix
   function AC.Print (...)
     print("[|cFFFF6600Aethys Core|r]", ...);
+  end
+
+  -- Merge two tables
+  function AC.MergeTable(T1, T2)
+    for _, Value in pairs(T2) do
+      tableinsert(T1, Value);
+    end
+    return T1;
   end
 
   -- Compare two values

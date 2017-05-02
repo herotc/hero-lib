@@ -31,10 +31,10 @@
   function Unit:IsInInstance ()
     if Index then
       return Cache.Get("UnitInfo", self:GUID(), "IsInInstance",
-                       function() return {IsInInstance(self.UnitID)} end)[Index];
+                       function() return {IsInInstance(self.UnitID)}; end)[Index];
     else
       return unpack(Cache.Get("UnitInfo", self:GUID(), "IsInInstance",
-                       function() return {IsInInstance(self.UnitID)} end));
+                       function() return {IsInInstance(self.UnitID)}; end));
     end
   end
 
