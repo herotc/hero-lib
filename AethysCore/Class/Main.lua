@@ -48,9 +48,11 @@
   Unit.Vehicle = Unit("Vehicle");
   -- Iterable Units
   local UnitIDMap = {
-    {"Nameplate", AC.MAXIMUM},
+    {"Arena", 5},
     {"Boss", 4},
-    {"Arena", 5}
+    {"Nameplate", AC.MAXIMUM},
+    {"Party", 5},
+    {"Raid", 40}
   };
   for Key, Value in pairs(UnitIDMap) do
     Unit[Value[1]] = {};
