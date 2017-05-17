@@ -44,6 +44,11 @@
     return (InstanceType == "arena" or InstanceType == "pvp") or false;
   end
 
+  -- Get wether the player is in a raid area.
+  function Unit:IsInRaid ()
+    return self:IsInInstance(2) == "raid" or false;
+  end
+
   -- Get if the player is mounted on a non-combat mount.
   function Unit:IsMounted ()
     return IsMounted() and not self:IsOnCombatMount();
