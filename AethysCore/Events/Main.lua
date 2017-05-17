@@ -182,6 +182,9 @@
         if Prefix == "D4" and stringfind(Message, "PT") then
           AC.BossModTime = tonumber(stringsub(Message, 4, 5));
           AC.BossModEndTime = AC.GetTime() + AC.BossModTime;
+        elseif Prefix == "BigWigs" and string.find(Message, "Pull") then
+          AC.BossModTime = tonumber(stringsub(Message, 8, 9));
+          AC.BossModEndTime = AC.GetTime() + AC.BossModTime;
         end
       end
       , "CHAT_MSG_ADDON"
