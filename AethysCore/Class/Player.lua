@@ -28,7 +28,7 @@
       -- party - 5-man instance
       -- pvp - Player versus player battleground
       -- raid - Raid instance
-  function Unit:IsInInstance ()
+  function Unit:IsInInstance (Index)
     if Index then
       return Cache.Get("UnitInfo", self:GUID(), "IsInInstance",
                        function() return {IsInInstance(self.UnitID)}; end)[Index];
