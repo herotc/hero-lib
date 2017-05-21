@@ -16,6 +16,7 @@
   local select = select;
   local tableinsert = table.insert;
   local tableremove = table.remove;
+  local tablesort = table.sort;
   local tonumber = tonumber;
   local tostring = tostring;
   local type = type;
@@ -271,11 +272,19 @@
     return nil;
   end
 
+  local ReversedRangeTable = {};
+  -- Pulls the range from the Item Table.
+  for Range, _ in pairs(IsInRangeItemTable) do
+    tableinsert(ReversedRangeTable, Range);
+  end
+  -- Re-order them afterwards since pairs() doesn't guarantee the order.
+  tablesort(ReversedRangeTable, function(a, b) return a > b; end);
   -- Find Range mixin (used in xDistanceToPlayer)
-  local function FindRange (Table)
-    for Range, _ in pairs(Table) do
-      if self:IsInRange(Range) then
-        return Range;
+  local function FindRange (Unit, Max)
+    local RangeTable = ReversedRangeTable;
+    for i = 1 + (Max and 1 or 0) , #RangeTable do
+      if not Unit:IsInRange(RangeTable[i]) then
+        return Max and RangeTable[i-1] or RangeTable[i];
       end
     end
     return 110;
@@ -283,14 +292,12 @@
 
   -- Get the minimum distance to the player.
   function Unit:MinDistanceToPlayer ()
-    return FindRange(IsInRangeItemTable);
+    return FindRange(self);
   end
 
   -- Get the maximum distance to the player.
   function Unit:MaxDistanceToPlayer()
-    local RangeTable = IsInRangeItemTable;
-    tablesort(RangeTable, function(a, b) return a > b; end);
-    return FindRange(RangeTable);
+    return FindRange(self, true);
   end
 
   -- Get if we are Tanking or not the Unit.
