@@ -17,6 +17,7 @@ Deprecated.lua
 
 # Enum
 Enum\TriggerGCD.lua
+Enum\ProjectileSpeed.lua
 
 # Classes
 Class\Main.lua
