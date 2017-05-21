@@ -32,5 +32,6 @@ Misc\Enemies.lua
 
 # Events
 Events\Main.lua
+Events\Prev_Spell.lua
 
 Main.lua
