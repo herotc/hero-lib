@@ -235,7 +235,7 @@
   end
 
   -- Get if we are in range of the unit.
-  AC.IsInRangeItemTable = {
+  local IsInRangeItemTable = {
     [5]   = 37727,   -- Ruby Acorn
     [6]   = 63427,   -- Worgsaw
     [8]   = 34368,   -- Attuned Crystal Cores
@@ -262,13 +262,35 @@
       local unitInfo = Cache.UnitInfo[GUID] if not unitInfo then unitInfo = {} Cache.UnitInfo[GUID] = unitInfo end
       if not unitInfo.IsInRange then unitInfo.IsInRange = {}; end
       if unitInfo.IsInRange[Identifier] == nil then
-        unitInfo.IsInRange[Identifier] = (DistIsANumber and IsItemInRange(AC.IsInRangeItemTable[Distance], self.UnitID))
+        unitInfo.IsInRange[Identifier] = (DistIsANumber and IsItemInRange(IsInRangeItemTable[Distance], self.UnitID))
                                          or (not DistIsANumber and IsSpellInRange(Distance:Name(), self.UnitID) == 1)
                                          or false;
       end
       return unitInfo.IsInRange[Identifier];
     end
     return nil;
+  end
+
+  -- Find Range mixin (used in xDistanceToPlayer)
+  local function FindRange (Table)
+    for Range, _ in pairs(Table) do
+      if self:IsInRange(Range) then
+        return Range;
+      end
+    end
+    return 110;
+  end
+
+  -- Get the minimum distance to the player.
+  function Unit:MinDistanceToPlayer ()
+    return FindRange(IsInRangeItemTable);
+  end
+
+  -- Get the maximum distance to the player.
+  function Unit:MaxDistanceToPlayer()
+    local RangeTable = IsInRangeItemTable;
+    tablesort(RangeTable, function(a, b) return a > b; end);
+    return FindRange(RangeTable);
   end
 
   -- Get if we are Tanking or not the Unit.
