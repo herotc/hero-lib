@@ -243,7 +243,7 @@
     [10]  = 32321,   -- Sparrowhawk Net
     [15]  = 33069,   -- Sturdy Rope
     [20]  = 10645,   -- Gnomish Death Ray
-    [25]  = 41509,   -- Frostweave Net
+    [25]  = 24268,   -- Netherweave Net
     [30]  = 34191,   -- Handful of Snowflakes
     [35]  = 18904,   -- Zorbin's Ultra-Shrinker
     [40]  = 28767,   -- The Decapitator
