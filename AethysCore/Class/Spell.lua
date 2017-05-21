@@ -456,3 +456,24 @@
     function Spell:ArtifactEnabledPowerID ()
       return self:ArtifactRankPowerID() > 0;
     end
+
+    -- action.foo.travel_time
+    local ProjectileSpeed = AC.Enum.ProjectileSpeed;
+    function Spell:FilterProjectileSpeed (SpecID)
+      local RegisteredSpells = {};
+      local BaseProjectileSpeed = AC.Enum.ProjectileSpeed; -- In case FilterTravelTime is called multiple time, we take the Enum table as base.
+      -- Fetch registered spells during the init
+      for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
+        for _, Spell in pairs(Spells) do
+          local SpellID = Spell:ID();
+          local ProjectileSpeedInfo = BaseProjectileSpeed[SpellID];
+          if ProjectileSpeedInfo ~= nil then
+            RegisteredSpells[SpellID] = ProjectileSpeedInfo;
+          end
+        end
+      end
+      ProjectileSpeed = RegisteredSpells;
+    end
+    function Spell:TravelTime ()
+      return Target:MaxDistanceToPlayer() / (ProjectileSpeed[self.SpellID] or 22);
+    end
