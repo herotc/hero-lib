@@ -15,6 +15,9 @@ Settings.lua
 Core.lua
 Deprecated.lua
 
+# Enum
+Enum\TriggerGCD.lua
+
 # Classes
 Class\Main.lua
 Class\Unit.lua
