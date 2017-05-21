@@ -6,6 +6,7 @@
   local Cache = AethysCache;
   local Unit = AC.Unit;
   local Player = Unit.Player;
+  local Pet = Unit.Pet;
   local Target = Unit.Target;
   local Spell = AC.Spell;
   local Item = AC.Item;
@@ -23,6 +24,7 @@
   local Events = {}; -- All Events
   local CombatEvents = {}; -- Combat Log Unfiltered
   local SelfCombatEvents = {}; -- Combat Log Unfiltered with SourceGUID == PlayerGUID filter
+  local PetCombatEvents = {};  -- Combat Log Unfiltered with SourceGUID == PetGUID filter
   local PrefixCombatEvents = {};
   local SuffixCombatEvents = {};
   local CombatLogPrefixes = {
@@ -80,6 +82,21 @@
         SelfCombatEvents[Event] = {Handler};
       else
         tableinsert(SelfCombatEvents[Event], Handler);
+      end
+    end
+  end
+
+  -- Register a handler for a pet combat event.
+  -- @param Handler The handler function.
+  -- @param Events The events name.
+  function AC:RegisterForPetCombatEvent (Handler, ...)
+    local EventsTable = {...};
+    for i = 1, #EventsTable do
+      local Event = EventsTable[i];
+      if not PetCombatEvents[Event] then
+        PetCombatEvents[Event] = {Handler};
+      else
+        tableinsert(PetCombatEvents[Event], Handler);
       end
     end
   end
@@ -145,7 +162,7 @@
     end
   end
 
-  -- Unregister a handler from a combat event.
+  -- Unregister a handler from a self combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
   function AC:UnregisterForSelfCombatEvent (Handler, Event)
@@ -153,6 +170,20 @@
       for Index, Function in pairs(SelfCombatEvents[Event]) do
         if Function == Handler then
           tableremove(SelfCombatEvents[Event], Index);
+          return;
+        end
+      end
+    end
+  end
+
+  -- Unregister a handler from a pet combat event.
+  -- @param Handler The handler function.
+  -- @param Events The events name.
+  function AC:UnregisterForPetCombatEvent (Handler, Event)
+    if PetCombatEvents[Event] then
+      for Index, Function in pairs(PetCombatEvents[Event]) do
+        if Function == Handler then
+          tableremove(PetCombatEvents[Event], Index);
           return;
         end
       end
@@ -208,6 +239,14 @@
       if SelfCombatEvents[SubEvent] then
         -- Unfiltered Combat Log with SourceGUID == PlayerGUID filter
         if select(2, ...) == Player:GUID() then
+          for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
+            Handler(TimeStamp, SubEvent, ...);
+          end
+        end
+      end
+      if PetCombatEvents[SubEvent] then
+        -- Unfiltered Combat Log with SourceGUID == PetGUID filter
+        if select(2, ...) == Pet:GUID() then
           for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
             Handler(TimeStamp, SubEvent, ...);
           end
