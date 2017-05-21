@@ -21,6 +21,9 @@
 
 
 --- ============================ CONTENT ============================
+  -- Constant Infos Enum
+  AC.Enum = {};
+
   -- Build Infos
   local LiveVersion, PTRVersion, BetaVersion = "7.2.0", "7.2.5", "7.2.5";
   -- version, build, date, tocversion
