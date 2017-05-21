@@ -18,6 +18,6 @@
 --- ============================ CONTENT ============================
   -- Get if there is a pet currently active or not
   -- TODO: Cache
-  function Unit:IsActive ()
+  function Pet:IsActive ()
     return IsPetActive();
   end
