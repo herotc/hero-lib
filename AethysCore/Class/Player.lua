@@ -61,7 +61,7 @@
     -- isDynamicInstance - True for raid instances that can support multiple maxPlayers values (10 and 25) - eg. ToC, DS, ICC, etc (boolean)
     -- mapID - (number)
     -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
-  function Unit:InstanceInfo (Index)
+  function Player:InstanceInfo (Index)
     if Index then
       return Cache.Get("UnitInfo", self:GUID(), "InstanceInfo",
                        function() return {GetInstanceInfo()}; end)[Index];
@@ -72,28 +72,28 @@
   end
 
   -- Get the player instance type.
-  function Unit:InstanceType ()
+  function Player:InstanceType ()
     return self:InstanceInfo(2);
   end
 
   -- Get the player instance difficulty.
-  function Unit:InstanceDifficulty ()
+  function Player:InstanceDifficulty ()
     return self:InstanceInfo(3);
   end
 
   -- Get wether the player is in an instanced pvp area.
-  function Unit:IsInInstancedPvP ()
+  function Player:IsInInstancedPvP ()
     local InstanceType = self:InstanceType();
     return (InstanceType == "arena" or InstanceType == "pvp") or false;
   end
 
   -- Get wether the player is in a raid area.
-  function Unit:IsInRaid ()
+  function Player:IsInRaid ()
     return self:InstanceType() == "raid" or false;
   end
 
   -- Get if the player is mounted on a non-combat mount.
-  function Unit:IsMounted ()
+  function Player:IsMounted ()
     return IsMounted() and not self:IsOnCombatMount();
   end
 
@@ -128,7 +128,7 @@
       Spell(164222),  -- Frostwolf War Wolf
       Spell(165803)   -- Telaari Talbuk
   };
-  function Unit:IsOnCombatMount ()
+  function Player:IsOnCombatMount ()
     for i = 1, #CombatMountBuff do
       if self:Buff(CombatMountBuff[i], nil, true) then
         return true;
@@ -138,7 +138,7 @@
   end
 
   -- Get if the player is in a valid vehicle.
-  function Unit:IsInVehicle ()
+  function Player:IsInVehicle ()
     return UnitInVehicle(self.UnitID) and not self:IsInWhitelistedVehicle();
   end
 
@@ -163,7 +163,7 @@
         87076   -- Snarler
     }
   };
-  function Unit:IsInWhitelistedVehicle ()
+  function Player:IsInWhitelistedVehicle ()
     -- Spell
     for i = 1, #InVehicleWhitelist.Spell do
       if self:Debuff(InVehicleWhitelist.Spell[i], nil, true) then
@@ -191,55 +191,55 @@
     [269] = true    -- Windwalker
   };
   local GCD_Value = 1.5;
-  function Unit:GCD ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.GCD then
+  function Player:GCD ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.GCD then
         if GCD_OneSecond[Cache.Persistent.Player.Spec[1]] then
-          unitInfo.GCD = 1;
+          UnitInfo.GCD = 1;
         else
           GCD_Value = 1.5/(1+self:HastePct()/100);
-          unitInfo.GCD = GCD_Value > 0.75 and GCD_Value or 0.75;
+          UnitInfo.GCD = GCD_Value > 0.75 and GCD_Value or 0.75;
         end
       end
-      return unitInfo.GCD;
+      return UnitInfo.GCD;
     end
   end
   
   -- gcd.remains
   local GCDSpell = Spell(61304);
-  function Unit:GCDRemains ()
+  function Player:GCDRemains ()
     return GCDSpell:Cooldown(true);
   end
 
   -- attack_power
   -- TODO : Use Cache
-  function Unit:AttackPower ()
+  function Player:AttackPower ()
     return UnitAttackPower(self.UnitID);
   end
 
   -- crit_chance
   -- TODO : Use Cache
-  function Unit:CritChancePct ()
+  function Player:CritChancePct ()
     return GetCritChance();
   end
 
   -- haste
   -- TODO : Use Cache
-  function Unit:HastePct ()
+  function Player:HastePct ()
     return GetHaste();
   end
 
   -- mastery
   -- TODO : Use Cache
-  function Unit:MasteryPct ()
+  function Player:MasteryPct ()
     return GetMasteryEffect();
   end
 
   -- versatility
   -- TODO : Use Cache
-  function Unit:VersatilityDmgPct ()
+  function Player:VersatilityDmgPct ()
     return GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
   end
 
@@ -247,37 +247,37 @@
   --- 1 | Rage Functions ---
   --------------------------
   -- rage.max
-  function Unit:RageMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.RageMax then
-        unitInfo.RageMax = UnitPowerMax(self.UnitID, Enum.PowerType.Rage);
+  function Player:RageMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.RageMax then
+        UnitInfo.RageMax = UnitPowerMax(self.UnitID, Enum.PowerType.Rage);
       end
-      return unitInfo.RageMax;
+      return UnitInfo.RageMax;
     end
   end
   -- rage
-  function Unit:Rage ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Rage then
-        unitInfo.Rage = UnitPower(self.UnitID, Enum.PowerType.Rage);
+  function Player:Rage ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Rage then
+        UnitInfo.Rage = UnitPower(self.UnitID, Enum.PowerType.Rage);
       end
-      return unitInfo.Rage;
+      return UnitInfo.Rage;
     end
   end
   -- rage.pct
-  function Unit:RagePercentage ()
+  function Player:RagePercentage ()
     return (self:Rage() / self:RageMax()) * 100;
   end
   -- rage.deficit
-  function Unit:RageDeficit ()
+  function Player:RageDeficit ()
     return self:RageMax() - self:Rage();
   end
   -- "rage.deficit.pct"
-  function Unit:RageDeficitPercentage ()
+  function Player:RageDeficitPercentage ()
     return (self:RageDeficit() / self:RageMax()) * 100;
   end
 
@@ -285,76 +285,76 @@
   --- 2 | Focus Functions ---
   ---------------------------
   -- focus.max
-  function Unit:FocusMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.FocusMax then
-        unitInfo.FocusMax = UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
+  function Player:FocusMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.FocusMax then
+        UnitInfo.FocusMax = UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
       end
-      return unitInfo.FocusMax;
+      return UnitInfo.FocusMax;
     end
   end
   -- focus
-  function Unit:Focus ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Focus then
-        unitInfo.Focus = UnitPower(self.UnitID, Enum.PowerType.Focus);
+  function Player:Focus ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Focus then
+        UnitInfo.Focus = UnitPower(self.UnitID, Enum.PowerType.Focus);
       end
-      return unitInfo.Focus;
+      return UnitInfo.Focus;
     end
   end
   -- focus.regen
-  function Unit:FocusRegen ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.FocusRegen then
-        unitInfo.FocusRegen = select(2, GetPowerRegen(self.UnitID));
+  function Player:FocusRegen ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.FocusRegen then
+        UnitInfo.FocusRegen = select(2, GetPowerRegen(self.UnitID));
       end
-      return unitInfo.FocusRegen;
+      return UnitInfo.FocusRegen;
     end
   end
   -- focus.pct
-  function Unit:FocusPercentage ()
+  function Player:FocusPercentage ()
     return (self:Focus() / self:FocusMax()) * 100;
   end
   -- focus.deficit
-  function Unit:FocusDeficit ()
+  function Player:FocusDeficit ()
     return self:FocusMax() - self:Focus();
   end
   -- "focus.deficit.pct"
-  function Unit:FocusDeficitPercentage ()
+  function Player:FocusDeficitPercentage ()
     return (self:FocusDeficit() / self:FocusMax()) * 100;
   end
   -- "focus.regen.pct"
-  function Unit:FocusRegenPercentage ()
+  function Player:FocusRegenPercentage ()
     return (self:FocusRegen() / self:FocusMax()) * 100;
   end
   -- focus.time_to_max
-  function Unit:FocusTimeToMax ()
+  function Player:FocusTimeToMax ()
     if self:FocusRegen() == 0 then return -1; end
     return self:FocusDeficit() / self:FocusRegen();
   end
   -- "focus.time_to_x"
-  function Unit:FocusTimeToX (Amount)
+  function Player:FocusTimeToX (Amount)
     if self:FocusRegen() == 0 then return -1; end
     return Amount > self:Focus() and (Amount - self:Focus()) / self:FocusRegen() or 0;
   end
   -- "focus.time_to_x.pct"
-  function Unit:FocusTimeToXPercentage (Amount)
+  function Player:FocusTimeToXPercentage (Amount)
     if self:FocusRegen() == 0 then return -1; end
     return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) / self:FocusRegenPercentage() or 0;
   end
   -- cast_regen
-  function Unit:FocusCastRegen (CastTime)
+  function Player:FocusCastRegen (CastTime)
     if self:FocusRegen() == 0 then return -1; end
     return self:FocusRegen() * CastTime;
   end
   -- "remaining_cast_regen"
-  function Unit:FocusRemainingCastRegen (Offset)
+  function Player:FocusRemainingCastRegen (Offset)
     if self:FocusRegen() == 0 then return -1; end
     -- If we are casting, we check what we will regen until the end of the cast
     if self:IsCasting() then
@@ -365,11 +365,11 @@
     end
   end
   -- Get the Focus we will loose when our cast will end, if we cast.
-  function Unit:FocusLossOnCastEnd ()
+  function Player:FocusLossOnCastEnd ()
     return self:IsCasting() and Spell(self:CastID()):Cost() or 0;
   end
   -- Predict the expected Focus at the end of the Cast/GCD.
-  function Unit:FocusPredicted (Offset)
+  function Player:FocusPredicted (Offset)
     if self:FocusRegen() == 0 then return -1; end
     return self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd();
   end
@@ -378,66 +378,66 @@
   --- 3 | Energy Functions ---
   ----------------------------
   -- energy.max
-  function Unit:EnergyMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.EnergyMax then
-        unitInfo.EnergyMax = UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
+  function Player:EnergyMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.EnergyMax then
+        UnitInfo.EnergyMax = UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
       end
-      return unitInfo.EnergyMax;
+      return UnitInfo.EnergyMax;
     end
   end
   -- energy
-  function Unit:Energy ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Energy then
-        unitInfo.Energy = UnitPower(self.UnitID, Enum.PowerType.Energy);
+  function Player:Energy ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Energy then
+        UnitInfo.Energy = UnitPower(self.UnitID, Enum.PowerType.Energy);
       end
-      return unitInfo.Energy;
+      return UnitInfo.Energy;
     end
   end
   -- energy.regen
-  function Unit:EnergyRegen ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.EnergyRegen then
-        unitInfo.EnergyRegen = select(2, GetPowerRegen(self.UnitID));
+  function Player:EnergyRegen ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.EnergyRegen then
+        UnitInfo.EnergyRegen = select(2, GetPowerRegen(self.UnitID));
       end
-      return unitInfo.EnergyRegen;
+      return UnitInfo.EnergyRegen;
     end
   end
   -- energy.pct
-  function Unit:EnergyPercentage ()
+  function Player:EnergyPercentage ()
     return (self:Energy() / self:EnergyMax()) * 100;
   end
   -- energy.deficit
-  function Unit:EnergyDeficit ()
+  function Player:EnergyDeficit ()
     return self:EnergyMax() - self:Energy();
   end
   -- "energy.deficit.pct"
-  function Unit:EnergyDeficitPercentage ()
+  function Player:EnergyDeficitPercentage ()
     return (self:EnergyDeficit() / self:EnergyMax()) * 100;
   end
   -- "energy.regen.pct"
-  function Unit:EnergyRegenPercentage ()
+  function Player:EnergyRegenPercentage ()
     return (self:EnergyRegen() / self:EnergyMax()) * 100;
   end
   -- energy.time_to_max
-  function Unit:EnergyTimeToMax ()
+  function Player:EnergyTimeToMax ()
     if self:EnergyRegen() == 0 then return -1; end
     return self:EnergyDeficit() / self:EnergyRegen();
   end
   -- "energy.time_to_x"
-  function Unit:EnergyTimeToX (Amount, Offset)
+  function Player:EnergyTimeToX (Amount, Offset)
     if self:EnergyRegen() == 0 then return -1; end
     return Amount > self:Energy() and (Amount - self:Energy()) / (self:EnergyRegen() * (1 - (Offset or 0))) or 0;
   end
   -- "energy.time_to_x.pct"
-  function Unit:EnergyTimeToXPercentage (Amount)
+  function Player:EnergyTimeToXPercentage (Amount)
     if self:EnergyRegen() == 0 then return -1; end
     return Amount > self:EnergyPercentage() and (Amount - self:EnergyPercentage()) / self:EnergyRegenPercentage() or 0;
   end
@@ -446,29 +446,29 @@
   --- 4 | Combo Points Functions ---
   ----------------------------------
   -- combo_points.max
-  function Unit:ComboPointsMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.ComboPointsMax then
-        unitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
+  function Player:ComboPointsMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.ComboPointsMax then
+        UnitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
       end
-      return unitInfo.ComboPointsMax;
+      return UnitInfo.ComboPointsMax;
     end
   end
   -- combo_points
-  function Unit:ComboPoints ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.ComboPoints then
-        unitInfo.ComboPoints = UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
+  function Player:ComboPoints ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.ComboPoints then
+        UnitInfo.ComboPoints = UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
       end
-      return unitInfo.ComboPoints;
+      return UnitInfo.ComboPoints;
     end
   end
   -- combo_points.deficit
-  function Unit:ComboPointsDeficit ()
+  function Player:ComboPointsDeficit ()
     return self:ComboPointsMax() - self:ComboPoints();
   end
 
@@ -476,37 +476,37 @@
   --- 8 | Astral Power ---
   ------------------------
   -- astral_power.Max
-  function Unit:AstralPowerMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.AstralPowerMax then
-        unitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
+  function Player:AstralPowerMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.AstralPowerMax then
+        UnitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
       end
-      return unitInfo.AstralPowerMax;
+      return UnitInfo.AstralPowerMax;
     end
   end
   -- astral_power
-  function Unit:AstralPower ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.AstralPower then
-        unitInfo.AstralPower = UnitPower(self.UnitID, Enum.PowerType.LunarPower);
+  function Player:AstralPower ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.AstralPower then
+        UnitInfo.AstralPower = UnitPower(self.UnitID, Enum.PowerType.LunarPower);
       end
-      return unitInfo.AstralPower;
+      return UnitInfo.AstralPower;
     end
   end
   -- astral_power.pct
-  function Unit:AstralPowerPercentage ()
+  function Player:AstralPowerPercentage ()
     return (self:AstralPower() / self:AstralPowerMax()) * 100;
   end
   -- astral_power.deficit
-  function Unit:AstralPowerDeficit ()
+  function Player:AstralPowerDeficit ()
     return self:AstralPowerMax() - self:AstralPower();
   end
   -- "astral_power.deficit.pct"
-  function Unit:AstralPowerDeficitPercentage ()
+  function Player:AstralPowerDeficitPercentage ()
     return (self:AstralPowerDeficit() / self:AstralPowerMax()) * 100;
   end
 
@@ -514,37 +514,37 @@
   --- 9 | Holy Power Functions ---
   --------------------------------
   -- holy_power.max
-  function Unit:HolyPowerMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.HolyPowerMax then
-        unitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
+  function Player:HolyPowerMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.HolyPowerMax then
+        UnitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
       end
-      return unitInfo.HolyPowerMax;
+      return UnitInfo.HolyPowerMax;
     end
   end
   -- holy_power
-  function Unit:HolyPower ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.HolyPower then
-        unitInfo.HolyPower = UnitPower(self.UnitID, Enum.PowerType.HolyPower);
+  function Player:HolyPower ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.HolyPower then
+        UnitInfo.HolyPower = UnitPower(self.UnitID, Enum.PowerType.HolyPower);
       end
-      return unitInfo.HolyPower;
+      return UnitInfo.HolyPower;
     end
   end
   -- holy_power.pct
-  function Unit:HolyPowerPercentage ()
+  function Player:HolyPowerPercentage ()
     return (self:HolyPower() / self:HolyPowerMax()) * 100;
   end
   -- holy_power.deficit
-  function Unit:HolyPowerDeficit ()
+  function Player:HolyPowerDeficit ()
     return self:HolyPowerMax() - self:HolyPower();
   end
   -- "holy_power.deficit.pct"
-  function Unit:HolyPowerDeficitPercentage ()
+  function Player:HolyPowerDeficitPercentage ()
     return (self:HolyPowerDeficit() / self:HolyPowerMax()) * 100;
   end
 
@@ -552,37 +552,37 @@
   -- 11 | Maelstrom Functions --
   ------------------------------
   -- maelstrom.max
-  function Unit:MaelstromMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.MaelstromMax then
-        unitInfo.MaelstromMax = UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
+  function Player:MaelstromMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.MaelstromMax then
+        UnitInfo.MaelstromMax = UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
       end
-      return unitInfo.MaelstromMax;
+      return UnitInfo.MaelstromMax;
     end
   end
   -- maelstrom
-  function Unit:Maelstrom ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Maelstrom then
-        unitInfo.Maelstrom = UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
+  function Player:Maelstrom ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Maelstrom then
+        UnitInfo.Maelstrom = UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
       end
-      return unitInfo.Maelstrom;
+      return UnitInfo.Maelstrom;
     end
   end
   -- maelstrom.pct
-  function Unit:MaelstromPercentage ()
+  function Player:MaelstromPercentage ()
     return (self:Maelstrom() / self:MaelstromMax()) * 100;
   end
   -- maelstrom.deficit
-  function Unit:MaelstromDeficit ()
+  function Player:MaelstromDeficit ()
     return self:MaelstromMax() - self:Maelstrom();
   end
   -- "maelstrom.deficit.pct"
-  function Unit:MaelstromDeficitPercentage ()
+  function Player:MaelstromDeficitPercentage ()
     return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
   end
 
@@ -590,41 +590,41 @@
   -- 13 | Insanity Functions ---
   ------------------------------
   -- insanity.max
-  function Unit:InsanityMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.InsanityMax then
-        unitInfo.InsanityMax = UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
+  function Player:InsanityMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.InsanityMax then
+        UnitInfo.InsanityMax = UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
       end
-      return unitInfo.InsanityMax;
+      return UnitInfo.InsanityMax;
     end
   end
   -- insanity
-  function Unit:Insanity ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Insanity then
-        unitInfo.Insanity = UnitPower(self.UnitID, Enum.PowerType.Insanity);
+  function Player:Insanity ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Insanity then
+        UnitInfo.Insanity = UnitPower(self.UnitID, Enum.PowerType.Insanity);
       end
-      return unitInfo.Insanity;
+      return UnitInfo.Insanity;
     end
   end
   -- insanity.pct
-  function Unit:InsanityPercentage ()
+  function Player:InsanityPercentage ()
     return (self:Insanity() / self:InsanityMax()) * 100;
   end
   -- insanity.deficit
-  function Unit:InsanityDeficit ()
+  function Player:InsanityDeficit ()
     return self:InsanityMax() - self:Insanity();
   end
   -- "insanity.deficit.pct"
-  function Unit:InsanityDeficitPercentage ()
+  function Player:InsanityDeficitPercentage ()
     return (self:InsanityDeficit() / self:InsanityMax()) * 100;
   end
   -- Insanity Drain
-  function Unit:Insanityrain ()
+  function Player:Insanityrain ()
     --TODO : calculate insanitydrain
     return 1;
   end
@@ -633,37 +633,37 @@
   --- 17 | Fury Functions ---
   ---------------------------
   -- fury.max
-  function Unit:FuryMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.FuryMax then
-        unitInfo.FuryMax = UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
+  function Player:FuryMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.FuryMax then
+        UnitInfo.FuryMax = UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
       end
-      return unitInfo.FuryMax;
+      return UnitInfo.FuryMax;
     end
   end
   -- fury
-  function Unit:Fury ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.Fury then
-        unitInfo.Fury = UnitPower(self.UnitID, Enum.PowerType.Fury);
+  function Player:Fury ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Fury then
+        UnitInfo.Fury = UnitPower(self.UnitID, Enum.PowerType.Fury);
       end
-      return unitInfo.Fury;
+      return UnitInfo.Fury;
     end
   end
   -- fury.pct
-  function Unit:FuryPercentage ()
+  function Player:FuryPercentage ()
     return (self:Fury() / self:FuryMax()) * 100;
   end
   -- fury.deficit
-  function Unit:FuryDeficit ()
+  function Player:FuryDeficit ()
     return self:FuryMax() - self:Fury();
   end
   -- "fury.deficit.pct"
-  function Unit:FuryDeficitPercentage ()
+  function Player:FuryDeficitPercentage ()
     return (self:FuryDeficit() / self:FuryMax()) * 100;
   end
 
@@ -671,37 +671,37 @@
   --- 18 | Pain Functions ---
   ---------------------------
   -- pain.max
-  function Unit:PainMax ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.PainMax then
-        unitInfo.PainMax = UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
+  function Player:PainMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.PainMax then
+        UnitInfo.PainMax = UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
       end
-      return unitInfo.PainMax;
+      return UnitInfo.PainMax;
     end
   end
   -- pain
-  function Unit:Pain ()
-    local guid = self:GUID()
-    if guid then
-      local unitInfo = Cache.UnitInfo[guid] if not unitInfo then unitInfo = {} Cache.UnitInfo[guid] = unitInfo end
-      if not unitInfo.PainMax then
-        unitInfo.PainMax = UnitPower(self.UnitID, Enum.PowerType.Pain);
+  function Player:Pain ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.PainMax then
+        UnitInfo.PainMax = UnitPower(self.UnitID, Enum.PowerType.Pain);
       end
-      return unitInfo.PainMax;
+      return UnitInfo.PainMax;
     end
   end
   -- pain.pct
-  function Unit:PainPercentage ()
+  function Player:PainPercentage ()
     return (self:Pain() / self:PainMax()) * 100;
   end
   -- pain.deficit
-  function Unit:PainDeficit ()
+  function Player:PainDeficit ()
     return self:PainMax() - self:Pain();
   end
   -- "pain.deficit.pct"
-  function Unit:PainDeficitPercentage ()
+  function Player:PainDeficitPercentage ()
     return (self:PainDeficit() / self:PainMax()) * 100;
   end
 
@@ -729,7 +729,7 @@
       Spell(58984)    -- Shadowmeld
     }
   };
-  function Unit:IterateStealthBuffs (Abilities, Special, Duration)
+  function Player:IterateStealthBuffs (Abilities, Special, Duration)
     -- TODO: Add Assassination Spells when it'll be done and improve code
     -- TODO: Add Feral if we do supports it some day
     if  Spell.Rogue.Outlaw.Vanish:TimeSinceLastCast() < 0.3 or
@@ -767,7 +767,7 @@
     return false;
   end
   local IsStealthedKey;
-  function Unit:IsStealthed (Abilities, Special, Duration)
+  function Player:IsStealthed (Abilities, Special, Duration)
     IsStealthedKey = tostring(Abilites).."-"..tostring(Special).."-"..tostring(Duration);
     if not Cache.MiscInfo then Cache.MiscInfo = {}; end
     if not Cache.MiscInfo.IsStealthed then Cache.MiscInfo.IsStealthed = {}; end
@@ -776,7 +776,7 @@
     end
     return Cache.MiscInfo.IsStealthed[IsStealthedKey];
   end
-  function Unit:IsStealthedRemains (Abilities, Special)
+  function Player:IsStealthedRemains (Abilities, Special)
     return self:IsStealthed(Abilities, Special, true);
   end
 
@@ -788,7 +788,7 @@
     Spell(160452), -- Netherwinds
     Spell(80353)   -- Time Warp
   };
-  function Unit:HasHeroism (Duration)
+  function Player:HasHeroism (Duration)
      for i = 1, #HeroismBuff do
        if self:Buff(HeroismBuff[i], nil, true) then
          return Duration and self:BuffRemains(HeroismBuff[i], true) or true;
