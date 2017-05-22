@@ -471,7 +471,37 @@
   function Player:ComboPointsDeficit ()
     return self:ComboPointsMax() - self:ComboPoints();
   end
-
+  
+  ------------------------
+  --- 8 | Soul Shards  ---
+  ------------------------
+  -- SoulShardsMax
+  function Player:SoulShardsMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.SoulShardsMax then
+        UnitInfo.SoulShardsMax = UnitPowerMax(self.UnitID, Enum.PowerType.SoulShards);
+      end
+      return UnitInfo.SoulShardsMax;
+    end
+  end
+  -- SoulShards
+  function Player:SoulShards ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.SoulShards then
+        UnitInfo.SoulShards = UnitPower(self.UnitID, Enum.PowerType.SoulShards);
+      end
+      return UnitInfo.SoulShards;
+    end
+  end
+  -- SoulShards.deficit
+  function Player:SoulShardsDeficit ()
+    return self:SoulShardsMax() - self:SoulShards();
+  end  
+  
   ------------------------
   --- 8 | Astral Power ---
   ------------------------
