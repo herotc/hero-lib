@@ -124,10 +124,14 @@
     end
 
     -- Check if the spell Is Available or not.
-    function Spell:IsAvailable ()
+    function Spell:IsAvailable (CheckPet)
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if Cache.SpellInfo[self.SpellID].IsAvailable == nil then
-        Cache.SpellInfo[self.SpellID].IsAvailable = IsPlayerSpell(self.SpellID);
+		if CheckPet == true then
+			Cache.SpellInfo[self.SpellID].IsAvailable = IsSpellKnown(self.SpellID, true );
+		else
+			Cache.SpellInfo[self.SpellID].IsAvailable = IsPlayerSpell(self.SpellID);
+		end
       end
       return Cache.SpellInfo[self.SpellID].IsAvailable;
     end
@@ -175,9 +179,9 @@
         for i = 1, NumPetSpells do
           CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET))
           if CurrentSpellID then
-            CurrentSpell = Spell(CurrentSpellID);
-            if CurrentSpell:IsAvailable() and (CurrentSpell:IsKnown() or IsTalentSpell(i, BOOKTYPE_PET)) then
-              if not BlankScan then
+            CurrentSpell = Spell(CurrentSpellID, "Pet");
+            if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown( true ) or IsTalentSpell(i, BOOKTYPE_PET)) then
+			  if not BlankScan then
                 Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
               end
             end

@@ -7,6 +7,7 @@
   local Unit = AC.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
+  local Pet = Unit.Pet;
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
@@ -519,7 +520,7 @@
       local unitInfo = Cache.UnitInfo[GUID]
       for i = 1, #unitInfo.Debuffs do
         if Spell:ID() == unitInfo.Debuffs[i][11] then
-          if AnyCaster or (unitInfo.Debuffs[i][8] and Player:IsUnit(Unit(unitInfo.Debuffs[i][8]))) then
+          if AnyCaster or (unitInfo.Debuffs[i][8] and (Player:IsUnit(Unit(unitInfo.Debuffs[i][8])) or Pet:IsUnit(Unit(unitInfo.Debuffs[i][8])))) then
             if Index then
               return unitInfo.Debuffs[i][Index];
             else
