@@ -513,8 +513,27 @@
   ---------------------------
   --- 6 | Runes Functions ---
   ---------------------------
-
-  -- TODO
+  -- Computes any rune cooldown.
+  local function ComputeRuneCooldown (Slot, BypassRecovery)
+    -- Get rune cooldown infos
+    local CDTime, CDValue = GetRuneCooldown(Slot);
+    -- Return 0 if the rune isn't in CD.
+    if CDTime == 0 then return 0; end
+    -- Compute the CD.
+    local CD = CDTime + CDValue - AC.GetTime() - (BypassRecovery and 0 or AC.RecoveryOffset());
+    -- Return the Rune CD
+    return CD > 0 and CD or 0;
+  end
+  -- rune
+  function Player:Runes ()
+    local Count = 0;
+    for i = 1, 6 do
+      if ComputeRuneCooldown(i) == 0 then
+        Count = Count + 1;
+      end
+    end
+    return Count;
+  end
 
   ------------------------
   --- 8 | Soul Shards  ---
