@@ -735,6 +735,44 @@
     return (self:PainDeficit() / self:PainMax()) * 100;
   end
 
+  ---------------------------------
+  --- 19 | RunicPower Functions ---
+  ---------------------------------
+  -- runicpower.max
+  function Player:RunicPowerMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.RunicPowerMax then
+        UnitInfo.RunicPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.RunicPower);
+      end
+      return UnitInfo.RunicPowerMax;
+    end
+  end
+  -- RunicPower
+  function Player:RunicPower ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.RunicPower then
+        UnitInfo.RunicPower = UnitPower(self.UnitID, Enum.PowerType.RunicPower);
+      end
+      return UnitInfo.RunicPower;
+    end
+  end
+  -- RunicPower.pct
+  function Player:RunicPowerPercentage ()
+    return (self:RunicPower() / self:RunicPowerMax()) * 100;
+  end
+  -- RunicPower.deficit
+  function Player:RunicPowerDeficit ()
+    return self:RunicPowerMax() - self:RunicPower();
+  end
+  -- "RunicPower.deficit.pct"
+  function Player:RunicPowerDeficitPercentage ()
+    return (self:RunicPowerDeficit() / self:RunicPowerMax()) * 100;
+  end
+
   -- Get if the player is stealthed or not
   local IsStealthedBuff = {
     -- Normal Stealth
