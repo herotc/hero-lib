@@ -510,6 +510,12 @@
     return (self:RunicPowerDeficit() / self:RunicPowerMax()) * 100;
   end
 
+  ---------------------------
+  --- 6 | Runes Functions ---
+  ---------------------------
+
+  -- TODO
+
   ------------------------
   --- 8 | Soul Shards  ---
   ------------------------
