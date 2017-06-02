@@ -538,7 +538,7 @@
   ------------------------
   --- 8 | Soul Shards  ---
   ------------------------
-  -- SoulShardsMax
+  -- soul_shard.max
   function Player:SoulShardsMax ()
     local GUID = self:GUID()
     if GUID then
@@ -549,7 +549,7 @@
       return UnitInfo.SoulShardsMax;
     end
   end
-  -- SoulShards
+  -- soul_shard
   function Player:SoulShards ()
     local GUID = self:GUID()
     if GUID then
@@ -560,7 +560,7 @@
       return UnitInfo.SoulShards;
     end
   end
-  -- SoulShards.deficit
+  -- soul_shard.deficit
   function Player:SoulShardsDeficit ()
     return self:SoulShardsMax() - self:SoulShards();
   end  
@@ -568,7 +568,7 @@
   ------------------------
   --- 8 | Astral Power ---
   ------------------------
-  -- astral_power.Max
+  -- astral_power.max
   function Player:AstralPowerMax ()
     local GUID = self:GUID()
     if GUID then
