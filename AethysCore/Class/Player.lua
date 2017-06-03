@@ -13,6 +13,7 @@
   -- Lua
   local pairs = pairs;
   local select = select;
+  local tablesort = table.sort;
   local tostring = tostring;
   -- File Locals
   
@@ -534,6 +535,24 @@
     end
     return Count;
   end
+  -- rune.time_to_x
+  function Player:RuneTimeToX (Value)
+    if type(Value) ~= "number" then error("Value must be a number."); end
+    if Value < 1 or Value > 6 then error("Value must be a number between 1 and 6."); end
+    local Runes = {};
+    for i = 1, 6 do
+      Runes[i] = ComputeRuneCooldown(i);
+    end
+    tablesort(Runes, function(a, b) return a < b; end);
+    local Count = 1;
+    for _, CD in pairs(Runes) do
+      if Count == Value then
+        return CD;
+      end
+      Count = Count + 1;
+    end
+  end
+
 
   ------------------------
   --- 8 | Soul Shards  ---
