@@ -44,7 +44,7 @@
   )
 
   -- Register spells to listen for a given class (based on SpecID).
-  function Player:RegisterListenedSpell (SpecID)
+  function Player:RegisterListenedSpells (SpecID)
     ListenedSpells = {};
     -- Fetch registered spells during the init
     local PlayerClass = AC.SpecID_ClassesSpecs[SpecID][1];
