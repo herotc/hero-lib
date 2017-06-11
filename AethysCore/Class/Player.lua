@@ -98,6 +98,13 @@
     return IsMounted() and not self:IsOnCombatMount();
   end
 
+  -- Get the player race.
+  function Player:Race ()
+    -- race, raceEn
+    return Cache.Get("UnitInfo", self:GUID(), "Race",
+                       function() return {UnitRace(self.UnitID)}; end)[2];
+  end
+
   -- Get if the player is on a combat mount or not.
   local CombatMountBuff = {
     --- Classes
