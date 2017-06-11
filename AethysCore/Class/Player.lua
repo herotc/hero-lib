@@ -99,6 +99,9 @@
   end
 
   -- Get the player race.
+    -- Dwarf, Draenei, Gnome, Human, NightElf, Worgen
+    -- BloodElf, Goblin, Orc, Tauren, Troll, Scourge
+    -- Pandaren
   function Player:Race ()
     -- race, raceEn
     return Cache.Get("UnitInfo", self:GUID(), "Race",
