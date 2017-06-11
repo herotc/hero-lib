@@ -243,6 +243,11 @@
       return self:IsLearned() and not self:IsOnCooldown();
     end
 
+    -- Check if the spell Is Castable and Usable or not.
+    function Spell:IsReady ()
+      return self:IsLearned() and not self:IsOnCooldown() and self:IsUsable();
+    end
+
     -- Get the ChargesInfo (from GetSpellCharges) and cache it.
     function Spell:GetChargesInfo ()
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
