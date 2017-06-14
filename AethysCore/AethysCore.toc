@@ -2,7 +2,7 @@
 
 ## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
-## Version: 7.2.0.01
+## Version: 7.2.5.01
 ## Notes: Core Library used by AethysRotation and AethysTools. Can be used by others 3rd-Party Addons (like WeakAuras).
 
 ## DefaultState: Enabled
