@@ -565,7 +565,7 @@
 
 
   ------------------------
-  --- 8 | Soul Shards  ---
+  --- 7 | Soul Shards  ---
   ------------------------
   -- soul_shard.max
   function Player:SoulShardsMax ()
