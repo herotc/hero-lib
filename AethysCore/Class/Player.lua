@@ -255,6 +255,44 @@
   end
 
   --------------------------
+  --- 0 | Mana Functions ---
+  --------------------------
+  -- mana.max
+  function Player:ManaMax ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.ManaMax then
+        UnitInfo.ManaMax = UnitPowerMax(self.UnitID, Enum.PowerType.Mana);
+      end
+      return UnitInfo.ManaMax;
+    end
+  end
+  -- Mana
+  function Player:Mana ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.Mana then
+        UnitInfo.Mana = UnitPower(self.UnitID, Enum.PowerType.Mana);
+      end
+      return UnitInfo.Mana;
+    end
+  end
+  -- Mana.pct
+  function Player:ManaPercentage ()
+    return (self:Mana() / self:ManaMax()) * 100;
+  end
+  -- Mana.deficit
+  function Player:ManaDeficit ()
+    return self:ManaMax() - self:Mana();
+  end
+  -- "Mana.deficit.pct"
+  function Player:ManaDeficitPercentage ()
+    return (self:ManaDeficit() / self:ManaMax()) * 100;
+  end  
+  
+  --------------------------
   --- 1 | Rage Functions ---
   --------------------------
   -- rage.max
