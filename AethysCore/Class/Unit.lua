@@ -98,6 +98,8 @@
 
   -- Get if an unit with a given NPC ID is in the Boss list and has less HP than the given ones.
   function Unit:IsInBossList (NPCID, HP)
+    local NPCID = NPCID or self:NPCID();
+    local HP = HP or 100;
     local ThisUnit;
     for i = 1, #BossUnits do
       ThisUnit = BossUnits[i];
