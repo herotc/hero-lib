@@ -25,20 +25,24 @@
   AC.Enum = {};
 
   -- Build Infos
-  local LiveVersion, PTRVersion, BetaVersion = "7.2.0", "7.2.5", "7.2.5";
+  local LiveVersion, PTRVersion, BetaVersion = "7.2.5", "7.2.5", "7.2.5";
   -- version, build, date, tocversion
   AC.BuildInfo = {GetBuildInfo()};
+  -- Get the current build version.
+  function AC.BuildVersion ()
+    return AC.BuildInfo[1];
+  end
   -- Get if we are on the Live or not.
   function AC.LiveRealm ()
-    return AC.BuildInfo[1] == LiveVersion;
+    return AC.BuildVersion() == LiveVersion;
   end
   -- Get if we are on the PTR or not.
   function AC.PTRRealm ()
-    return AC.BuildInfo[1] == PTRVersion;
+    return AC.BuildVersion() == PTRVersion;
   end
   -- Get if we are on the Beta or not.
   function AC.BetaRealm ()
-    return AC.BuildInfo[1] == BetaVersion;
+    return AC.BuildVersion() == BetaVersion;
   end
 
   -- Get the GetTime and cache it.

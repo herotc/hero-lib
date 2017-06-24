@@ -13,7 +13,7 @@
   -- Based on Deprecated_7_2_5.lua from Blizzard Interface.
   -- All SPELL_POWER_TYPE are changed on 7.2.5 to use Enum table instead.
   -- Since it's not live yet, we create it on the live.
-  if AC.LiveRealm() then
+  if AC.BuildVersion() == "7.2.0" then
     Enum.PowerType = {
       -- Classes
       Mana = SPELL_POWER_MANA;
