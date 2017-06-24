@@ -74,6 +74,7 @@
     self.SpellType = SpellType or "Player"; -- For Pet, put "Pet". Default is "Player".
     self.LastCastTime = 0;
     self.LastDisplayTime = 0;
+    self.LastHitTime = 0;
   end
 
 --- ======= ITEM =======
@@ -87,4 +88,6 @@
     self.ItemID = ItemID;
     self.ItemSlotID = ItemSlotID or {0};
     self.LastCastTime = 0;
+    self.LastDisplayTime = 0;
+    self.LastHitTime = 0;
   end

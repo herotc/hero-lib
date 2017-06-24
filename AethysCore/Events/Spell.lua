@@ -26,8 +26,10 @@
   -- Player On Cast Success Listener
   AC:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if ListenedSpells[SpellID] then
-        ListenedSpells[SpellID].LastCastTime = AC.GetTime();
+      local ListenedSpell = ListenedSpells[SpellID];
+      if ListenedSpell then
+        ListenedSpell.LastCastTime = AC.GetTime();
+        ListenedSpell.LastHitTime = AC.GetTime() + ListenedSpell:TravelTime();
       end
     end
     , "SPELL_CAST_SUCCESS"
@@ -36,8 +38,10 @@
   -- Pet On Cast Success Listener
   AC:RegisterForPetCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if ListenedSpells[SpellID] then
-        ListenedSpells[SpellID].LastCastTime = AC.GetTime();
+      local ListenedSpell = ListenedSpells[SpellID];
+      if ListenedSpell then
+        ListenedSpell.LastCastTime = AC.GetTime();
+        ListenedSpell.LastHitTime = AC.GetTime() + ListenedSpell:TravelTime();
       end
     end
     , "SPELL_CAST_SUCCESS"
