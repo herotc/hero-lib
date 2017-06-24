@@ -301,14 +301,14 @@
     end
 
     -- Get the CostInfo (from GetSpellPowerCost) and cache it.
-    function Spell:CostInfo (Key)
+    function Spell:CostInfo (Index, Key)
       if not Key or type(Key) ~= "string" then error("Invalid Key."); end
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
       if not Cache.SpellInfo[self.SpellID].CostInfo then
         -- hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec
-        Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID)[1];
+        Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID);
       end
-      return Cache.SpellInfo[self.SpellID].CostInfo[Key];
+      return Cache.SpellInfo[self.SpellID].CostInfo[Index][Key];
     end
 
     --- Artifact Traits Scan
@@ -356,8 +356,9 @@
     end
 
     -- action.foo.cost
-    function Spell:Cost ()
-      return self:CostInfo("cost");
+    function Spell:Cost (Index)
+      local Index = Index or 1;
+      return self:CostInfo(Index, "cost");
     end
 
     -- action.foo.charges or cooldown.foo.charges
