@@ -354,6 +354,15 @@
         return self:InfoID(4)/1000;
       end
     end
+    
+    -- action.foo.execute_time
+    function Spell:ExecuteTime ()
+      if self:CastTime() > Player:GCD() then
+        return self:CastTime()
+      else
+        return Player:GCD()
+      end
+    end
 
     -- action.foo.cost
     function Spell:Cost (Index)
