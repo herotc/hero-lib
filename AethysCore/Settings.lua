@@ -56,7 +56,12 @@
                 [109038] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
               --- Star Augur Etraeus
                 -- Voidling
-                [104688] = true
+                [104688] = true,
+            ----- Tomb of Sargeras (T20 - 7.2.5 Patch) -----
+              --- Fallen Avatar
+                -- Maiden of Valor
+                [120437] = true
+
         }
       }
     }
