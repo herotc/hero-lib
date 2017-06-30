@@ -308,7 +308,7 @@
         -- hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec
         Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID);
       end
-      return Cache.SpellInfo[self.SpellID].CostInfo[Index][Key];
+      return Cache.SpellInfo[self.SpellID].CostInfo[Index] and Cache.SpellInfo[self.SpellID].CostInfo[Index][Key] and Cache.SpellInfo[self.SpellID].CostInfo[Index][Key] or nil;
     end
 
     --- Artifact Traits Scan
@@ -367,7 +367,8 @@
     -- action.foo.cost
     function Spell:Cost (Index)
       local Index = Index or 1;
-      return self:CostInfo(Index, "cost");
+      local Cost = self:CostInfo(Index, "cost")
+      return Cost and Cost or 0;
     end
 
     -- action.foo.charges or cooldown.foo.charges
