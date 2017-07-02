@@ -437,6 +437,12 @@
       end
       return BypassRecovery and Cache.SpellInfo[self.SpellID].CooldownNoRecovery or Cache.SpellInfo[self.SpellID].Cooldown;
     end
+    
+    -- predict cooldown at the end on cast / GCD
+    function Spell:CooldownRemainsPredicted ()
+      if self:CooldownRemains() == 0 then return 0; end
+      return self:CooldownRemains() - Player:CastRemains();
+    end
 
     -- Old cooldown.foo.remains
     -- DEPRECATED
