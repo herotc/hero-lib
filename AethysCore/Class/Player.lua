@@ -511,6 +511,11 @@
     if self:EnergyRegen() == 0 then return -1; end
     return self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset);
   end
+  -- Predict time to max energy at the end of Cast/GCD
+  function Player:EnergyTimeToMaxPredicted ()
+  if self:EnergyRegen() == 0 then return -1; end
+  return self:EnergyDeficitPredicted()  / self:EnergyRegen();
+end
 
   ----------------------------------
   --- 4 | Combo Points Functions ---
