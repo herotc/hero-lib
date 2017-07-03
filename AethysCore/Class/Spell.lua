@@ -441,7 +441,7 @@
     -- predict cooldown at the end on cast / GCD
     function Spell:CooldownRemainsPredicted ()
       if self:CooldownRemains() == 0 then return 0; end
-      return self:CooldownRemains() - Player:CastRemains();
+      return math.max(self:CooldownRemains() - Player:CastRemains(),0)
     end
 
     -- Old cooldown.foo.remains
