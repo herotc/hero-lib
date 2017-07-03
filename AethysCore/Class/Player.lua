@@ -494,7 +494,7 @@
   function Player:EnergyRemainingCastRegen (Offset)
     if self:EnergyRegen() == 0 then return -1; end
     -- If we are casting, we check what we will regen until the end of the cast
-    if self:IsCasting() then
+    if self:IsCasting() or self:IsChanneling() then
       return self:EnergyRegen() * (self:CastRemains() + (Offset or 0));
     -- Else we'll use the remaining GCD as "CastTime"
     else
