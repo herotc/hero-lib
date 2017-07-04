@@ -10,6 +10,9 @@
 ## Dependencies: AethysCache
 ## SavedVariables: AethysCoreDB
 
+# GUI
+GUI\Panels.lua
+
 # API
 Settings.lua
 Core.lua
