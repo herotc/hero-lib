@@ -137,7 +137,12 @@
     [107556] = true, -- Bound void Walker
     -- Druid Class Order Hall
     [113964] = true, -- Raider's Training Dummy
-    [113966] = true -- Dungeoneer's Training Dummy
+    [113966] = true, -- Dungeoneer's Training Dummy
+    -- Warlock Class Order Hall
+    [102052] = true, -- Rebellious imp
+    [102048] = true, -- Rebellious Felguard
+    [102045] = true, -- Rebellious WrathGuard
+    [101956] = true -- Rebellious Fel Lord
   };
   function Unit:IsDummy ()
     local npcid = self:NPCID()
