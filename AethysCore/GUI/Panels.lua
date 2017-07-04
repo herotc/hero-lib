@@ -72,8 +72,9 @@
     end
 
     local function UpdateSetting(self)
-      self.SettingTable[self.SettingKey] = not self.SettingTable[self.SettingKey];
-      self.SavedVariablesTable[self.SavedVariablesKey] = not self.SavedVariablesTable[self.SavedVariablesKey];
+      local NewValue = not self.SettingTable[self.SettingKey];
+      self.SettingTable[self.SettingKey] = NewValue;
+      self.SavedVariablesTable[self.SavedVariablesKey] = NewValue;
     end
     CheckButton:SetScript("onClick", UpdateSetting);
   end
