@@ -8,6 +8,7 @@
   -- File Locals
   AC.GUI = {};
   local GUI = AC.GUI;
+  local StringToNumberIfPossible = AC.StringToNumberIfPossible;
 
 
 --- ============================ CONTENT ============================
@@ -19,7 +20,9 @@
     for i = 1, #Keys-1 do
       SettingTable = SettingTable[Keys[i]];
     end
-    return SettingTable, Keys[#Keys];
+    -- Check if the final key is a string or a number (the case for table values with numeric index)
+    local ParsedKey = StringToNumberIfPossible(Keys[#Keys]);
+    return SettingTable, ParsedKey;
   end
   -- Filter tooltips based on Optionals input
   local function FilterTooltip (Tooltip, Optionals)

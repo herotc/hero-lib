@@ -10,12 +10,13 @@
 ## Dependencies: AethysCache
 ## SavedVariables: AethysCoreDB
 
+Core.lua
+
 # GUI
 GUI\Panels.lua
 
 # API
 Settings.lua
-Core.lua
 Deprecated.lua
 
 # Enum
