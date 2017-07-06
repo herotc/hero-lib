@@ -202,7 +202,7 @@
   function GUI.CreatePanel (Parent, Addon, PName, SettingsTable, SavedVariablesTable)
     local Panel = CreateFrame("Frame", Addon .. "_" .. PName, UIParent);
     Parent.Panel = Panel;
-    Parent.Panel.Childs = {};
+    Parent.Panel.Children = {};
     Parent.Panel.SettingsTable = SettingsTable;
     Parent.Panel.SavedVariablesTable = SavedVariablesTable;
     Panel.name = Addon;
@@ -211,9 +211,17 @@
   end
   -- Make a child panel
   function GUI.CreateChildPanel (Parent, CName)
-    local CP = CreateFrame("Frame", Parent:GetName() .. "_ChildPanel_" .. CName, Parent);
-    Parent.Childs[CName] = CP;
-    CP.Childs = {};
+    -- Indent the child if needed
+    local ParentName = Parent:GetName()
+    local CLevel = AC.SubStringCount(ParentName, "_ChildPanel_");
+    local CName = CName;
+    for i = 0, CLevel do
+      CName = "   " .. CName;
+    end
+
+    local CP = CreateFrame("Frame", ParentName .. "_ChildPanel_" .. CName, Parent);
+    Parent.Children[CName] = CP;
+    CP.Children = {};
     CP.SettingsTable = Parent.SettingsTable;
     CP.SavedVariablesTable = Parent.SavedVariablesTable;
     CP.name = CName;
