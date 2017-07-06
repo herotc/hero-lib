@@ -4,6 +4,7 @@
   local addonName, AC = ...;
   local Cache = AethysCache;
   -- Lua
+  local gmatch = gmatch;
   local pairs = pairs;
   local print = print;
   local tableinsert = table.insert;
@@ -60,6 +61,10 @@
     print("[|cFFFF6600Aethys Core|r]", ...);
   end
 
+
+
+-- TODO: Move all this into an utils table
+
   -- Merge two tables
   function AC.MergeTable(T1, T2)
     for _, Value in pairs(T2) do
@@ -85,4 +90,13 @@
   function AC.StringToNumberIfPossible (String)
     local Converted = tonumber(String);
     return Converted ~= nil and Converted or String;
+  end
+
+  -- Count how many string occurances there is in a string.
+  function AC.SubStringCount (String, SubString)
+    local Count = 0;
+    for _ in String:gmatch(SubString) do 
+        Count = Count + 1;
+    end
+    return Count;
   end
