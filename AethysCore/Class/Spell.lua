@@ -313,7 +313,8 @@
 
     --- Artifact Traits Scan
     -- Get every traits informations and stores them.
-    local ArtifactUI, HasArtifactEquipped  = _G.C_ArtifactUI, _G.HasArtifactEquipped;
+    local ArtifactUI = _G.C_ArtifactUI;
+    local HasArtifactEquipped, SocketInventoryItem = _G.HasArtifactEquipped, _G.SocketInventoryItem;
     local ArtifactFrame = _G.ArtifactFrame;
     local Powers, PowerTableByPowerID, PowerTableBySpellID = {}, {}, {};
     --local PowerTable = {}; -- Uncomment for debug purpose in case they changes the Artifact API
