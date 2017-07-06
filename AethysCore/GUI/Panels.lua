@@ -219,7 +219,16 @@
     CP.name = CName;
     CP.parent = Parent.name;
     InterfaceOptions_AddCategory(CP);
+    if Parent.collapsed then
+      GUI.TogglePanel(Parent);
+    end
     return CP;
+  end
+  -- Toggle a panel
+  function GUI.TogglePanel (Panel)
+    local Table = {};
+    Table.element = Panel;
+    InterfaceOptionsListButton_ToggleSubCategories(Table);
   end
   -- Make a panel option
   local CreatePanelOption = {
