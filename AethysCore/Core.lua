@@ -7,6 +7,7 @@
   local pairs = pairs;
   local print = print;
   local tableinsert = table.insert;
+  local tonumber = tonumber;
   local type = type;
   local wipe = table.wipe;
   -- File Locals
@@ -77,4 +78,11 @@
   };
   function AC.CompareThis (Operator, A, B)
     return CompareThisTable[Operator](A, B);
+  end
+
+  -- Convert a string to a number if possible, or return the string.
+  -- If the conversion is nil, it means it's not a number, then return the string.
+  function AC.StringToNumberIfPossible (String)
+    local Converted = tonumber(String);
+    return Converted ~= nil and Converted or String;
   end
