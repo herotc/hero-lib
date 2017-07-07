@@ -33,13 +33,13 @@
 
           --- Legion
             ----- Trial of Valor (T19 - 7.1 Patch) -----
-            --- Helya
-              -- Bilewater Slime
-              [114553] = function (self) return self:HealthPercentage() >= 65 and true or false; end,
-              -- Decaying Minion
-              [114568] = true,
-              -- Helarjar Mistwatcher
-              [116335] = true,
+              --- Helya
+                -- Bilewater Slime
+                [114553] = function (self) return self:HealthPercentage() >= 65 and true or false; end,
+                -- Decaying Minion
+                [114568] = true,
+                -- Helarjar Mistwatcher
+                [116335] = true,
             ----- Nighthold (T19 - 7.1.5 Patch) -----
               --- Trilliax
                 -- Scrubber
@@ -58,6 +58,11 @@
                 -- Voidling
                 [104688] = true,
             ----- Tomb of Sargeras (T20 - 7.2.5 Patch) -----
+              --- Mistress Sassz'ine
+                -- Abyss Stalker
+                [115795] = true,
+                -- Razorjaw Waverunner
+                [115902] = true,
               --- Fallen Avatar
                 -- Maiden of Valor
                 [120437] = true
