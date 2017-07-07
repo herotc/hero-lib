@@ -2,6 +2,7 @@
 
 AethysCore is a World of Warcraft addon to provide a simple and clean API to get most advanced WoW features.
 It acts as a complete replacement of the WoW API and makes easy-to-use some non directly available informations in-game like the TimeToDie of an unit.
+
 It is really simple to use and is used by [AethysRotation](https://github.com/SimCMinMax/AethysRotation) and [AethysTools](https://github.com/Aethys256/AethysTools).
 You can also use anything from the addon in a WeakAura.
 The project is hosted on [GitHub](https://github.com/SimCMinMax/AethysCore).
