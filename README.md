@@ -7,7 +7,7 @@ It is really simple to use and is used by [AethysRotation](https://github.com/Si
 You can also use anything from the addon in a WeakAura.
 The project is hosted on [GitHub](https://github.com/SimCMinMax/AethysCore).
 It is maintained by [Aethys](https://github.com/Aethys256/) and the [SimCMinMax](https://github.com/orgs/SimCMinMax/people) team.
-Also, you can find it on [Curse](https://mods.curse.com/addons/wow/aethyscore) and [CurseForge](https://wow.curseforge.com/projects/aethyscore).
+Also, you can find it on [Curse](https://mods.curse.com/project/271528) and [CurseForge](https://www.curseforge.com/projects/271528/).
 
 Feel free to join our [Discord](https://discord.gg/tFR2uvK). Feedback is highly appreciated !
 
