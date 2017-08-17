@@ -161,9 +161,10 @@
     LastOptionAttached[Parent.name] = {Slider, -5, -20};
 
     Slider:SetMinMaxValues(Values[1], Values[2]);
-    Slider.minValue, Slider.maxValue = Slider:GetMinMaxValues() 
+    Slider.minValue, Slider.maxValue = Slider:GetMinMaxValues()
     Slider:SetValue(Slider.SettingTable[Slider.SettingKey]);
     Slider:SetValueStep(Values[3]);
+    Slider:SetObeyStepOnDrag(true);
 
     local Name = Slider:GetName();
     _G[Name .. "Low"]:SetText(Slider.minValue);
