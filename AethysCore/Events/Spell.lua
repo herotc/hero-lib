@@ -52,6 +52,7 @@
     , "SPELL_CAST_SUCCESS"
   )
   
+  -- Player Buff Listener
   AC:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       for i = 1, #PlayerSpecs do

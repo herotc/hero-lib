@@ -42,7 +42,7 @@
     return AC.GetTime() - self.LastDisplayTime;
   end
   
-  -- Get the Time since Last spell Cast.
+  -- Get the Time since Last Buff applied.
   function Spell:TimeSinceLastBuff ()
     return AC.GetTime() - self.LastBuffTime;
   end
