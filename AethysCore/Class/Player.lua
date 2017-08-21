@@ -1095,6 +1095,21 @@ end
       [10] = {[5] = 147151, [15] = 147152, [10] = 147153, [1] = 147154, [7] = 147155, [3] = 147156},  -- Monk:         Chest, Back, Hands, Head, Legs, Shoulder
       [11] = {[5] = 147133, [15] = 147134, [10] = 147135, [1] = 147136, [7] = 147137, [3] = 147138},  -- Druid:        Chest, Back, Hands, Head, Legs, Shoulder
       [12] = {[5] = 147127, [15] = 147128, [10] = 147129, [1] = 147130, [7] = 147131, [3] = 147132}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
+    },
+    ["T21"] = {
+      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [1]  = {[5] = 152178, [15] = 152179, [10] = 152180, [1] = 152181, [7] = 152182, [3] = 152183},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
+      [2]  = {[5] = 152148, [15] = 152149, [10] = 152150, [1] = 152151, [7] = 152152, [3] = 152153},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
+      [3]  = {[5] = 152130, [15] = 152131, [10] = 152132, [1] = 152133, [7] = 152134, [3] = 152135},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
+      [4]  = {[5] = 152160, [15] = 152161, [10] = 152162, [1] = 152163, [7] = 152164, [3] = 152165},  -- Rogue:        Chest, Back, Hands, Head, Legs, Shoulder
+      [5]  = {[5] = 152158, [15] = 152154, [10] = 152155, [1] = 152156, [7] = 152157, [3] = 152159},  -- Priest:       Chest, Back, Hands, Head, Legs, Shoulder
+      [6]  = {[5] = 152112, [15] = 152113, [10] = 152114, [1] = 152115, [7] = 152116, [3] = 152117},  -- Death Knight: Chest, Back, Hands, Head, Legs, Shoulder
+      [7]  = {[5] = 152166, [15] = 152167, [10] = 152168, [1] = 152169, [7] = 152170, [3] = 152171},  -- Shaman:       Chest, Back, Hands, Head, Legs, Shoulder
+      [8]  = {[5] = 152140, [15] = 152136, [10] = 152137, [1] = 152138, [7] = 152139, [3] = 152141},  -- Mage:         Chest, Back, Hands, Head, Legs, Shoulder
+      [9]  = {[5] = 152176, [15] = 152172, [10] = 152173, [1] = 152174, [7] = 152175, [3] = 152177},  -- Warlock:      Chest, Back, Hands, Head, Legs, Shoulder
+      [10] = {[5] = 152142, [15] = 152143, [10] = 152144, [1] = 152145, [7] = 152146, [3] = 152147},  -- Monk:         Chest, Back, Hands, Head, Legs, Shoulder
+      [11] = {[5] = 152124, [15] = 152125, [10] = 152126, [1] = 152127, [7] = 152128, [3] = 152129},  -- Druid:        Chest, Back, Hands, Head, Legs, Shoulder
+      [12] = {[5] = 152118, [15] = 152119, [10] = 152120, [1] = 152121, [7] = 152122, [3] = 152123}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     }
   };
   function AC.HasTier (Tier)
