@@ -91,7 +91,13 @@
     return self:Rarity() == 5;
   end
   
-  -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
+  -- Get wether an item is usable currently.
+  -- TODO : cache
+  function Item:IsUsable()
+    return select(1,IsUsableItem(self.ItemID))
+  end
+  
+  -- Get the CooldownInfo (from GetItemCooldown) and cache it.
   function Item:CooldownInfo ()
     if not Cache.ItemInfo[self.ItemID] then Cache.ItemInfo[self.ItemID] = {}; end
     if not Cache.ItemInfo[self.ItemID].CooldownInfo then
