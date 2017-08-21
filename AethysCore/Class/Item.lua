@@ -90,6 +90,65 @@
   function Item:IsLegendary ()
     return self:Rarity() == 5;
   end
+  
+  -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
+  function Item:CooldownInfo ()
+    if not Cache.ItemInfo[self.ItemID] then Cache.ItemInfo[self.ItemID] = {}; end
+    if not Cache.ItemInfo[self.ItemID].CooldownInfo then
+      -- start, duration, enable, modRate
+      Cache.ItemInfo[self.ItemID].CooldownInfo = {GetItemCooldown(self.ItemID)};
+    end
+    return unpack(Cache.ItemInfo[self.ItemID].CooldownInfo);
+  end
+  
+  -- Computes any item cooldown.
+  function Item:ComputeCooldown (BypassRecovery)
+    local Charges, MaxCharges, CDTime, CDValue;
+    -- Get Item cooldown infos
+    CDTime, CDValue = self:CooldownInfo();
+    -- Return 0 if the Item isn't in CD.
+    if CDTime == 0 then return 0; end
+    -- Compute the CD.
+    local CD = CDTime + CDValue - AC.GetTime() - (BypassRecovery and 0 or AC.RecoveryOffset());
+    -- Return the Item CD
+    return CD > 0 and CD or 0;
+  end
+    
+  function Item:CooldownRemains (BypassRecovery)
+    if not Cache.ItemInfo[self.ItemID] then Cache.ItemInfo[self.ItemID] = {}; end
+    if (not BypassRecovery and not Cache.ItemInfo[self.ItemID].Cooldown)
+      or (BypassRecovery and not Cache.ItemInfo[self.ItemID].CooldownNoRecovery) then
+      if BypassRecovery then
+        Cache.ItemInfo[self.ItemID].CooldownNoRecovery = self:ComputeCooldown(BypassRecovery);
+      else
+        Cache.ItemInfo[self.ItemID].Cooldown = self:ComputeCooldown();
+      end
+    end
+    return BypassRecovery and Cache.ItemInfo[self.SpellID].CooldownNoRecovery or Cache.ItemInfo[self.ItemID].Cooldown;
+  end
+  
+  -- Old cooldown.foo.remains
+  -- DEPRECATED
+  function Item:Cooldown (BypassRecovery)
+    return self:CooldownRemains(BypassRecovery);
+  end
+
+  -- cooldown.foo.up
+  function Item:CooldownUp (BypassRecovery)
+    return self:Cooldown(BypassRecovery) == 0;
+  end
+
+  -- "cooldown.foo.down"
+  -- Since it doesn't exists in SimC, I think it's better to use 'not Spell:CooldownUp' for consistency with APLs.
+  function Item:CooldownDown (BypassRecovery)
+    return self:Cooldown(BypassRecovery) ~= 0;
+  end
+
+  -- !cooldown.foo.up
+  -- DEPRECATED
+  function Item:IsOnCooldown (BypassRecovery)
+    return self:CooldownDown(BypassRecovery);
+  end
 
   -- Check if a given item is currently equipped in the given slot.
   -- Inventory slots
