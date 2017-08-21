@@ -75,6 +75,7 @@
     self.LastCastTime = 0;
     self.LastDisplayTime = 0;
     self.LastHitTime = 0;
+    self.LastBuffTime = 0;
   end
 
 --- ======= ITEM =======

@@ -41,6 +41,11 @@
   function Spell:TimeSinceLastDisplay ()
     return AC.GetTime() - self.LastDisplayTime;
   end
+  
+  -- Get the Time since Last spell Cast.
+  function Spell:TimeSinceLastBuff ()
+    return AC.GetTime() - self.LastBuffTime;
+  end
 
   -- Register the spell damage formula.
   function Spell:RegisterDamage (Function)

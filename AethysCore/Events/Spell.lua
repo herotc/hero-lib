@@ -51,6 +51,18 @@
     end
     , "SPELL_CAST_SUCCESS"
   )
+  
+  AC:RegisterForSelfCombatEvent(
+    function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID];
+        if ListenedSpell then
+          ListenedSpell.LastBuffTime = AC.GetTime();
+        end
+      end
+    end
+    , "SPELL_AURA_APPLIED"
+  )
 
   -- Register spells to listen for a given class (based on SpecID).
   function Player:RegisterListenedSpells (SpecID)
