@@ -97,6 +97,12 @@
     return select(1,IsUsableItem(self.ItemID))
   end
   
+  -- Get wether an item is ready to be used
+  -- TODO : cache
+  function Item:IsReady()
+    return (self:IsUsable() and self:CooldownRemains()==0);
+  end
+  
   -- Get the CooldownInfo (from GetItemCooldown) and cache it.
   function Item:CooldownInfo ()
     if not Cache.ItemInfo[self.ItemID] then Cache.ItemInfo[self.ItemID] = {}; end
