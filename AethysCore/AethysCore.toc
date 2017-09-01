@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 
 ## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
-## Version: 7.2.5.04
+## Version: 7.3.0.01
 ## Notes: Core Library used by AethysRotation and AethysTools. Can be used by others 3rd-Party Addons (like WeakAuras).
 
 ## DefaultState: Enabled
