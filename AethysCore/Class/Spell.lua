@@ -252,8 +252,12 @@
       * @return {boolean}
       *]]
     function Spell:IsCastable ( ThisRange, ThisUnit )
-      return self:IsLearned() and not self:IsOnCooldown()
-        and ( not ThisRange or ( ( ThisUnit and ThisUnit:IsInRange( ThisRange ) ) or ( not ThisUnit and Target:IsInRange( ThisRange ) ) ) );
+      if ThisRange then
+        local RangeUnit = ThisUnit or Target;
+        return self:IsLearned() and not self:IsOnCooldown() and RangeUnit:IsInRange( ThisRange );
+      else
+        return self:IsLearned() and not self:IsOnCooldown();
+      end
     end
 
     -- Check if the spell Is Castable and Usable or not.
