@@ -243,9 +243,17 @@
       return Cache.Persistent.SpellLearned[self:Type()][self:ID()] or false;
     end
 
-    -- Check if the spell Is Castable or not.
-    function Spell:IsCastable ()
-      return self:IsLearned() and not self:IsOnCooldown();
+    --[[
+      * Check if the spell Is Castable or not.
+      *
+      * @param {integer} [ThisRange] - Range to check.
+      * @param {object} [ThisUnit=Target] - Unit to check the range for.
+      *
+      * @return boolean
+      *]]
+    function Spell:IsCastable ( ThisRange, ThisUnit )
+      return self:IsLearned() and not self:IsOnCooldown()
+        and ( not ThisRange or ( ( ThisUnit and ThisUnit:IsInRange( ThisRange ) ) or ( not ThisUnit and Target:IsInRange( ThisRange ) ) ) );
     end
 
     -- Check if the spell Is Castable and Usable or not.
