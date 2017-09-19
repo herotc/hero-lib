@@ -249,7 +249,7 @@
       * @param {integer} [ThisRange] - Range to check.
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
       *
-      * @return boolean
+      * @return {boolean}
       *]]
     function Spell:IsCastable ( ThisRange, ThisUnit )
       return self:IsLearned() and not self:IsOnCooldown()
