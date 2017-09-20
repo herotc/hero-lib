@@ -526,5 +526,5 @@
 
     -- action.foo.in_flight
     function Spell:IsInFlight ()
-      return AC.GetTime() < self.HitTime;
+      return AC.GetTime() < self.LastHitTime;
     end
