@@ -484,9 +484,34 @@
     return nil;
   end
 
-  -- buff.foo.remains
-  function Unit:BuffRemains (Spell, AnyCaster)
+  --[[*
+    * Get the remaining time, if there is any, on a buff.
+    *
+    * @simc buff.foo.remains
+    *
+    * @param {object} Spell - Spell to check.
+    * @param {boolean} [AnyCaster] - Check from any caster ?
+    * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
+    *
+    * @return {number}
+    *]]
+  function Unit:BuffRemains (Spell, AnyCaster, Offset)
     local ExpirationTime = self:Buff(Spell, 7, AnyCaster);
+    if Offset then
+      if type(Offset) == "number" then
+        ExpirationTime = ExpirationTime - Offset;
+      else if type(Offset) == "string" then
+        if Offset == "GCDRemains" then
+          ExpirationTime = ExpirationTime - Player:GCDRemains();
+        else if Offset == 'CastRemains' then
+          ExpirationTime = ExpirationTime - Player:CastRemains();
+        else if Offset == "Auto" then
+          ExpirationTime = ExpirationTime - mathmax(Player:GCDRemains(), Player:CastRemains());
+        end
+      else
+        error("Invalid Offset.");
+      end
+    end
     return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
 
@@ -542,16 +567,16 @@
   end
 
   --[[*
-      * Get the remaining time, if there is any, on a debuff.
-      *
-      * @simc debuff.foo.remains | dot.foo.remains
-      *
-      * @param {object} Spell - Spell to check.
-      * @param {boolean} [AnyCaster] - Check from any caster ?
-      * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
-      *
-      * @return {number}
-      *]]
+    * Get the remaining time, if there is any, on a debuff.
+    *
+    * @simc debuff.foo.remains | dot.foo.remains
+    *
+    * @param {object} Spell - Spell to check.
+    * @param {boolean} [AnyCaster] - Check from any caster ?
+    * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
+    *
+    * @return {number}
+    *]]
   function Unit:DebuffRemains (Spell, AnyCaster, Offset)
     local ExpirationTime = self:Debuff(Spell, 7, AnyCaster);
     if Offset then
@@ -560,7 +585,7 @@
       else if type(Offset) == "string" then
         if Offset == "GCDRemains" then
           ExpirationTime = ExpirationTime - Player:GCDRemains();
-        else if Offset == "CastRemains" then
+        else if Offset == 'CastRemains' then
           ExpirationTime = ExpirationTime - Player:CastRemains();
         else if Offset == "Auto" then
           ExpirationTime = ExpirationTime - mathmax(Player:GCDRemains(), Player:CastRemains());
