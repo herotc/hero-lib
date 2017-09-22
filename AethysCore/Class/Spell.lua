@@ -243,10 +243,10 @@
       return Cache.Persistent.SpellLearned[self:Type()][self:ID()] or false;
     end
 
-    --[[
+    --[[*
       * Check if the spell Is Castable or not.
       *
-      * @param {integer} [ThisRange] - Range to check.
+      * @param {number} [ThisRange] - Range to check.
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
       *
       * @return {boolean}
