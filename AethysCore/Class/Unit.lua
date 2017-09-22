@@ -12,7 +12,7 @@
   local Item = AC.Item;
   -- Lua
   local mathfloor = math.floor;
-  local mathma = math.max;
+  local mathmax = math.max;
   local mathmin = math.min;
   local pairs = pairs;
   local select = select;
