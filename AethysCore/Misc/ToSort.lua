@@ -10,6 +10,7 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
+  local mathmax = math.max;
   local select = select;
   -- File Locals
   
@@ -98,6 +99,31 @@
       return AC.BossModEndTime-AC.GetTime();
     end
   end
+
+  --[[*
+  * OffsetRemains Mixin
+  *
+  * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
+  *
+  * @return {number}
+  *]]
+  function AC.OffsetRemains (ExpirationTime, Offset)
+    if type( Offset ) == "number" then
+      ExpirationTime = ExpirationTime - Offset;
+    else if type( Offset ) == "string" then
+      if Offset == "GCDRemains" then
+        ExpirationTime = ExpirationTime - Player:GCDRemains();
+      else if Offset == "CastRemains" then
+        ExpirationTime = ExpirationTime - Player:CastRemains();
+      else if Offset == "Auto" then
+        ExpirationTime = ExpirationTime - mathmax( Player:GCDRemains(), Player:CastRemains() );
+      end
+    else
+      error( "Invalid Offset." );
+    end
+    return ExpirationTime;
+  end
+
 
   AC.SpecID_ClassesSpecs = {
   -- Death Knight

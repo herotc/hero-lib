@@ -12,7 +12,6 @@
   local Item = AC.Item;
   -- Lua
   local mathfloor = math.floor;
-  local mathmax = math.max;
   local mathmin = math.min;
   local pairs = pairs;
   local select = select;
@@ -495,22 +494,10 @@
     *
     * @return {number}
     *]]
-  function Unit:BuffRemains (Spell, AnyCaster, Offset)
-    local ExpirationTime = self:Buff(Spell, 7, AnyCaster);
+  function Unit:BuffRemains ( Spell, AnyCaster, Offset )
+    local ExpirationTime = self:Buff( Spell, 7, AnyCaster );
     if Offset then
-      if type(Offset) == "number" then
-        ExpirationTime = ExpirationTime - Offset;
-      else if type(Offset) == "string" then
-        if Offset == "GCDRemains" then
-          ExpirationTime = ExpirationTime - Player:GCDRemains();
-        else if Offset == 'CastRemains' then
-          ExpirationTime = ExpirationTime - Player:CastRemains();
-        else if Offset == "Auto" then
-          ExpirationTime = ExpirationTime - mathmax(Player:GCDRemains(), Player:CastRemains());
-        end
-      else
-        error("Invalid Offset.");
-      end
+      ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
     end
     return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
@@ -526,9 +513,9 @@
   end
 
   -- buff.foo.refreshable (doesn't exists on SimC atm tho)
-  function Unit:BuffRefreshable (Spell, PandemicThreshold, AnyCaster)
+  function Unit:BuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
     if not self:Buff(Spell, nil, AnyCaster) then return true; end
-    return PandemicThreshold and self:BuffRemains(Spell, AnyCaster) <= PandemicThreshold;
+    return PandemicThreshold and self:BuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
   end
 
   --- Get all the debuffs from an unit and put it into the Cache.
@@ -577,22 +564,10 @@
     *
     * @return {number}
     *]]
-  function Unit:DebuffRemains (Spell, AnyCaster, Offset)
-    local ExpirationTime = self:Debuff(Spell, 7, AnyCaster);
+  function Unit:DebuffRemains ( Spell, AnyCaster, Offset )
+    local ExpirationTime = self:Debuff( Spell, 7, AnyCaster );
     if Offset then
-      if type(Offset) == "number" then
-        ExpirationTime = ExpirationTime - Offset;
-      else if type(Offset) == "string" then
-        if Offset == "GCDRemains" then
-          ExpirationTime = ExpirationTime - Player:GCDRemains();
-        else if Offset == 'CastRemains' then
-          ExpirationTime = ExpirationTime - Player:CastRemains();
-        else if Offset == "Auto" then
-          ExpirationTime = ExpirationTime - mathmax(Player:GCDRemains(), Player:CastRemains());
-        end
-      else
-        error("Invalid Offset.");
-      end
+      ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
     end
     return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
@@ -608,9 +583,9 @@
   end
 
   -- debuff.foo.refreshable or dot.foo.refreshable
-  function Unit:DebuffRefreshable (Spell, PandemicThreshold, AnyCaster)
+  function Unit:DebuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
     if not self:Debuff(Spell, nil, AnyCaster) then return true; end
-    return PandemicThreshold and self:DebuffRemains(Spell, AnyCaster) <= PandemicThreshold;
+    return PandemicThreshold and self:DebuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
   end
 
   -- Get the unit's power type

@@ -310,7 +310,7 @@
       end
       -- Compute the CD.
       local CD = CDTime + CDValue - AC.GetTime() - (BypassRecovery and 0 or AC.RecoveryOffset());
-      -- Return the Spell CD
+      -- Return the Spell CD.
       return CD > 0 and CD or 0;
     end
     function Spell:ComputeChargesCooldown (BypassRecovery)
@@ -442,18 +442,32 @@
       return self:MaxCharges() - self:ChargesFractional() * self:Recharge();
     end
 
-    -- cooldown.foo.remains
-    function Spell:CooldownRemains (BypassRecovery)
+    --[[*
+      * Get the remaining time, if there is any, on a cooldown.
+      *
+      * @simc cooldown.foo.remains
+      *
+      * @param {boolean} [BypassRecovery] - Do you want to take in account Recovery offset ?
+      * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
+      *
+      * @return {number}
+      *]]
+    function Spell:CooldownRemains ( BypassRecovery, Offset )
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-      if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Cooldown)
-        or (BypassRecovery and not Cache.SpellInfo[self.SpellID].CooldownNoRecovery) then
+      local Cooldown = Cache.SpellInfo[self.SpellID].Cooldown;
+      local CooldownNoRecovery = Cache.SpellInfo[self.SpellID].CooldownNoRecovery;
+      if ( not BypassRecovery and not Cooldown ) or ( BypassRecovery and not CooldownNoRecovery ) then
         if BypassRecovery then
-          Cache.SpellInfo[self.SpellID].CooldownNoRecovery = self:ComputeCooldown(BypassRecovery);
+          CooldownNoRecovery = self:ComputeCooldown(BypassRecovery);
         else
-          Cache.SpellInfo[self.SpellID].Cooldown = self:ComputeCooldown();
+          Cooldown = self:ComputeCooldown();
         end
       end
-      return BypassRecovery and Cache.SpellInfo[self.SpellID].CooldownNoRecovery or Cache.SpellInfo[self.SpellID].Cooldown;
+      if Offset then
+        return BypassRecovery and AC.OffsetRemains( CooldownNoRecovery, Offset ) or AC.OffsetRemains( Cooldown, Offset );
+      else
+        return BypassRecovery and CooldownNoRecovery or Cooldown;
+      end
     end
     
     -- predict cooldown at the end on cast / GCD
