@@ -244,7 +244,7 @@
     end
 
     --[[*
-      * Check if the spell Is Castable or not.
+      * @function Check if the spell Is Castable or not.
       *
       * @param {number} [ThisRange] - Range to check.
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
@@ -443,7 +443,7 @@
     end
 
     --[[*
-      * Get the remaining time, if there is any, on a cooldown.
+      * @function Get the remaining time, if there is any, on a cooldown.
       *
       * @simc cooldown.foo.remains
       *
@@ -469,7 +469,20 @@
         return BypassRecovery and CooldownNoRecovery or Cooldown;
       end
     end
-    
+
+    --[[*
+      * @override Spell:CooldownRemains()
+      *
+      * @function Offset defaulted to "Auto" which is ideal in most cases.
+      *
+      * @param {string|number} [Offset="Auto"]
+      *
+      * @returns {number}
+      *]]
+    function Spell:CooldownRemainsP ( BypassRecovery, Offset )
+      return self:CooldownRemains( BypassRecovery, Offset or "Auto" );
+    end
+
     -- predict cooldown at the end on cast / GCD
     function Spell:CooldownRemainsPredicted ()
       if self:CooldownRemains() == 0 then return 0; end

@@ -490,7 +490,7 @@
   end
 
   --[[*
-    * Get the remaining time, if there is any, on a buff.
+    * @function Get the remaining time, if there is any, on a buff.
     *
     * @simc buff.foo.remains
     *
