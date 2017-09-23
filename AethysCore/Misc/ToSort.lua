@@ -110,12 +110,12 @@
   function AC.OffsetRemains (ExpirationTime, Offset)
     if type( Offset ) == "number" then
       ExpirationTime = ExpirationTime - Offset;
-    else if type( Offset ) == "string" then
+    elseif type( Offset ) == "string" then
       if Offset == "GCDRemains" then
         ExpirationTime = ExpirationTime - Player:GCDRemains();
-      else if Offset == "CastRemains" then
+      elseif Offset == "CastRemains" then
         ExpirationTime = ExpirationTime - Player:CastRemains();
-      else if Offset == "Auto" then
+      elseif Offset == "Auto" then
         ExpirationTime = ExpirationTime - mathmax( Player:GCDRemains(), Player:CastRemains() );
       end
     else
