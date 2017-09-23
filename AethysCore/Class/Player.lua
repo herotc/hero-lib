@@ -969,14 +969,14 @@ end
     -- Normal Stealth
     for i = 1, #IsStealthedBuff[1] do
       if self:Buff(IsStealthedBuff[1][i]) then
-        return Duration and (self:BuffRemains(IsStealthedBuff[1][i]) >= 0 and self:BuffRemains(IsStealthedBuff[1][i]) or 60) or true;
+        return Duration and (self:BuffRemainsP(IsStealthedBuff[1][i]) >= 0 and self:BuffRemainsP(IsStealthedBuff[1][i]) or 60) or true;
       end
     end
     -- Combat Stealth
     if Abilities then
       for i = 1, #IsStealthedBuff[2] do
         if self:Buff(IsStealthedBuff[2][i]) then
-          return Duration and (self:BuffRemains(IsStealthedBuff[2][i]) >= 0 and self:BuffRemains(IsStealthedBuff[2][i]) or 60) or true;
+          return Duration and (self:BuffRemainsP(IsStealthedBuff[2][i]) >= 0 and self:BuffRemainsP(IsStealthedBuff[2][i]) or 60) or true;
         end
       end
     end
@@ -984,7 +984,7 @@ end
     if Special then
       for i = 1, #IsStealthedBuff[3] do
         if self:Buff(IsStealthedBuff[3][i]) then
-          return Duration and (self:BuffRemains(IsStealthedBuff[3][i]) >= 0 and self:BuffRemains(IsStealthedBuff[3][i]) or 60) or true;
+          return Duration and (self:BuffRemainsP(IsStealthedBuff[3][i]) >= 0 and self:BuffRemainsP(IsStealthedBuff[3][i]) or 60) or true;
         end
       end
     end
