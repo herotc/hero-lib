@@ -473,7 +473,7 @@
     --[[*
       * @override Spell:CooldownRemains()
       *
-      * @function Offset defaulted to "Auto" which is ideal in most cases.
+      * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
       *
       * @param {string|number} [Offset="Auto"]
       *

@@ -515,7 +515,7 @@
   --[[*
     * @override Unit:BuffRemains()
     *
-    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -544,7 +544,7 @@
   --[[*
     * @override Unit:BuffRefreshable()
     *
-    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -615,7 +615,7 @@
   --[[*
     * @override Unit:DebuffRemains()
     *
-    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -644,7 +644,7 @@
   --[[*
     * @override Unit:DebuffRefreshable()
     *
-    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
