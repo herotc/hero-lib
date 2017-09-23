@@ -502,10 +502,14 @@
     *]]
   function Unit:BuffRemains ( Spell, AnyCaster, Offset )
     local ExpirationTime = self:Buff( Spell, 7, AnyCaster );
-    if Offset then
-      ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+    if ExpirationTime then
+      if Offset then
+        ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+      end
+      return ExpirationTime - AC.GetTime();
+    else
+      return 0;
     end
-    return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
 
   --[[*
@@ -598,10 +602,14 @@
     *]]
   function Unit:DebuffRemains ( Spell, AnyCaster, Offset )
     local ExpirationTime = self:Debuff( Spell, 7, AnyCaster );
-    if Offset then
-      ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+    if ExpirationTime then
+      if Offset then
+        ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+      end
+      return ExpirationTime - AC.GetTime();
+    else
+      return 0;
     end
-    return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
   end
 
   --[[*
