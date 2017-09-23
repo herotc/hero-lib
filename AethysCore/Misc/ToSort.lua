@@ -101,12 +101,13 @@
   end
 
   --[[*
-  * OffsetRemains Mixin
-  *
-  * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
-  *
-  * @return {number}
-  *]]
+    * @mixin Apply an offset to an expiration time.
+    *
+    * @param {number} ExpirationTime - The expiration time to apply the offset on.
+    * @param {string|number} Offset - The offset to apply, can be a string for a known method or directly the offset value in seconds.
+    *
+    * @returns {number}
+    *]]
   function AC.OffsetRemains (ExpirationTime, Offset)
     if type( Offset ) == "number" then
       ExpirationTime = ExpirationTime - Offset;

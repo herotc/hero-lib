@@ -249,7 +249,7 @@
       * @param {number} [ThisRange] - Range to check.
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
       *
-      * @return {boolean}
+      * @returns {boolean}
       *]]
     function Spell:IsCastable ( ThisRange, ThisUnit )
       if ThisRange then
@@ -450,7 +450,7 @@
       * @param {boolean} [BypassRecovery] - Do you want to take in account Recovery offset ?
       * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
       *
-      * @return {number}
+      * @returns {number}
       *]]
     function Spell:CooldownRemains ( BypassRecovery, Offset )
       if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end

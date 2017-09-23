@@ -124,10 +124,16 @@
     [31146] = true, -- Raider's Training Dummy
     -- WoD Alliance Garrison
     [87317] = true, -- Mage Tower Damage Training Dummy
-    [87318] = true, -- Alliance & Mage Tower Damage Dungeoneer's Training Dummy
+    [87318] = true, -- Mage Tower Damage Dungeoneer's Training Dummy (& Garrison)
     [87320] = true, -- Mage Tower Damage Raider's Training Dummy
-    [88314] = true, -- Alliance Tanking Dungeoneer's Training Dummy
-    [88316] = true, -- Alliance Healing Training Dummy ----> FRIENDLY
+    [88314] = true, -- Tanking Dungeoneer's Training Dummy
+    [88316] = true, -- Healing Training Dummy ----> FRIENDLY
+    -- WoD Horde Garrison
+    [87760] = true, -- Mage Tower Damage Training Dummy
+    [87761] = true, -- Mage Tower Damage Dungeoneer's Training Dummy (& Garrison)
+    [87762] = true, -- Mage Tower Damage Raider's Training Dummy
+    [88288] = true, -- Tanking Dungeoneer's Training Dummy
+    [88289] = true, -- Healing Training Dummy ----> FRIENDLY
     -- Rogue Class Order Hall
     [92164] = true, -- Training Dummy
     [92165] = true, -- Dungeoneer's Training Dummy
@@ -492,7 +498,7 @@
     * @param {boolean} [AnyCaster] - Check from any caster ?
     * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
     *
-    * @return {number}
+    * @returns {number}
     *]]
   function Unit:BuffRemains ( Spell, AnyCaster, Offset )
     local ExpirationTime = self:Buff( Spell, 7, AnyCaster );
@@ -500,6 +506,19 @@
       ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
     end
     return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
+  end
+
+  --[[*
+    * @override Unit:BuffRemains()
+    *
+    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:BuffRemainsP ( Spell, AnyCaster, Offset )
+    return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" );
   end
 
   -- buff.foo.duration
@@ -516,6 +535,19 @@
   function Unit:BuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
     if not self:Buff(Spell, nil, AnyCaster) then return true; end
     return PandemicThreshold and self:BuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
+  end
+
+  --[[*
+    * @override Unit:BuffRefreshable()
+    *
+    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:BuffRefreshableP ( Spell, PandemicThreshold, AnyCaster, Offset )
+    return self:BuffRefreshable( Spell, PandemicThreshold, AnyCaster, Offset or "Auto" );
   end
 
   --- Get all the debuffs from an unit and put it into the Cache.
@@ -554,15 +586,15 @@
   end
 
   --[[*
-    * Get the remaining time, if there is any, on a debuff.
+    * @function Get the remaining time, if there is any, on a debuff.
     *
-    * @simc debuff.foo.remains | dot.foo.remains
+    * @simc debuff.foo.remains, dot.foo.remains
     *
     * @param {object} Spell - Spell to check.
     * @param {boolean} [AnyCaster] - Check from any caster ?
     * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
     *
-    * @return {number}
+    * @returns {number}
     *]]
   function Unit:DebuffRemains ( Spell, AnyCaster, Offset )
     local ExpirationTime = self:Debuff( Spell, 7, AnyCaster );
@@ -570,6 +602,19 @@
       ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
     end
     return ExpirationTime and ExpirationTime - AC.GetTime() or 0;
+  end
+
+  --[[*
+    * @override Unit:DebuffRemains()
+    *
+    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:DebuffRemainsP ( Spell, AnyCaster, Offset )
+    return self:DebuffRemains( Spell, AnyCaster, Offset or "Auto" );
   end
 
   -- debuff.foo.duration or dot.foo.duration
@@ -586,6 +631,19 @@
   function Unit:DebuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
     if not self:Debuff(Spell, nil, AnyCaster) then return true; end
     return PandemicThreshold and self:DebuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
+  end
+
+  --[[*
+    * @override Unit:DebuffRefreshable()
+    *
+    * @function Offset defaulted to "Auto" which is ideal in most cases.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:DebuffRefreshableP ( Spell, PandemicThreshold, AnyCaster, Offset )
+    return self:DebuffRefreshable( Spell, PandemicThreshold, AnyCaster, Offset or "Auto" );
   end
 
   -- Get the unit's power type
