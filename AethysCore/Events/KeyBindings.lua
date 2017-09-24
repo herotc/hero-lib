@@ -40,7 +40,7 @@
       [3] = "MULTIACTIONBAR3BUTTON",
       [4] = "MULTIACTIONBAR4BUTTON",
       [5] = "MULTIACTIONBAR2BUTTON",
-      [6] = "MULTIACTIONBAR1BUTTON",
+      [6] = "MULTIACTIONBAR1BUTTON"
     };
     for i = 1, 10 do
       local CommandName = CommandNames[ i ] or "ACTIONBUTTON";
@@ -80,7 +80,7 @@
       local CommandName, Category, Binding1, Binding2 = GetBinding( i );
       local Actions = Commands[ CommandName ];
       if Actions then
-        local Binding = Binding1 and ShortenKB(Binding1) or "";
+        local Binding = Binding1 and ShortenKB( Binding1 ) or "";
         for _, Action in pairs( Actions ) do
           Action.Binding = Binding;
         end
@@ -108,8 +108,6 @@
         end
       end
     end
-
-    AethysRotationDB.KeyBindings = nil;
 
     return KeyBindings;
   end
