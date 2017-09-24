@@ -39,5 +39,6 @@ Misc\Enemies.lua
 Events\Main.lua
 Events\Spell.lua
 Events\Prev_Spell.lua
+Events\KeyBindings.lua
 
 Main.lua
