@@ -101,7 +101,8 @@
   end
 
   --[[*
-    * @mixin Apply an offset to an expiration time.
+    * @mixin AC.OffsetRemains
+    * @desc Apply an offset to an expiration time.
     *
     * @param {number} ExpirationTime - The expiration time to apply the offset on.
     * @param {string|number} Offset - The offset to apply, can be a string for a known method or directly the offset value in seconds.

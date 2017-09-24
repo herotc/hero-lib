@@ -490,8 +490,8 @@
   end
 
   --[[*
-    * @function Get the remaining time, if there is any, on a buff.
-    *
+    * @function Unit:BuffRemains
+    * @desc Get the remaining time, if there is any, on a buff.
     * @simc buff.foo.remains
     *
     * @param {object} Spell - Spell to check.
@@ -513,9 +513,9 @@
   end
 
   --[[*
-    * @override Unit:BuffRemains()
-    *
-    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    * @function Unit:BuffRemainsP
+    * @override Unit:BuffRemains
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -542,9 +542,9 @@
   end
 
   --[[*
-    * @override Unit:BuffRefreshable()
-    *
-    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    * @function Unit:BuffRefreshableP
+    * @override Unit:BuffRefreshable
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -590,8 +590,8 @@
   end
 
   --[[*
-    * @function Get the remaining time, if there is any, on a debuff.
-    *
+    * @function Unit:DebuffRemains
+    * @desc Get the remaining time, if there is any, on a debuff.
     * @simc debuff.foo.remains, dot.foo.remains
     *
     * @param {object} Spell - Spell to check.
@@ -613,9 +613,9 @@
   end
 
   --[[*
-    * @override Unit:DebuffRemains()
-    *
-    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    * @function Unit:DebuffRemainsP
+    * @override Unit:DebuffRemains
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *
@@ -642,9 +642,9 @@
   end
 
   --[[*
-    * @override Unit:DebuffRefreshable()
-    *
-    * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    * @function Unit:DebuffRefreshableP
+    * @override Unit:DebuffRefreshable
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
     *
     * @param {string|number} [Offset="Auto"]
     *

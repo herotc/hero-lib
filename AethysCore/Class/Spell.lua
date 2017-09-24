@@ -244,7 +244,8 @@
     end
 
     --[[*
-      * @function Check if the spell Is Castable or not.
+      * @function Spell:IsCastable
+      * @desc Check if the spell Is Castable or not.
       *
       * @param {number} [ThisRange] - Range to check.
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
@@ -443,8 +444,8 @@
     end
 
     --[[*
-      * @function Get the remaining time, if there is any, on a cooldown.
-      *
+      * @function Spell:CooldownRemains
+      * @desc Get the remaining time, if there is any, on a cooldown.
       * @simc cooldown.foo.remains
       *
       * @param {boolean} [BypassRecovery] - Do you want to take in account Recovery offset ?
@@ -471,9 +472,9 @@
     end
 
     --[[*
-      * @override Spell:CooldownRemains()
-      *
-      * @function Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+      * @function Spell:CooldownRemainsP
+      * @override Spell:CooldownRemains
+      * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
       *
       * @param {string|number} [Offset="Auto"]
       *
