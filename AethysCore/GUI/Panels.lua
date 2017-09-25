@@ -183,8 +183,6 @@
     local Label = Slider:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     Label:SetPoint("BOTTOMLEFT", Slider, "TOPLEFT")
     Label:SetJustifyH("LEFT")
-    Label:SetHeight(15)
-    Label:SetWidth(500);
     Label:SetText("|c00dfb802" .. Text .. "|r");
 
     if Optionals and Optionals["ReloadRequired"] then
