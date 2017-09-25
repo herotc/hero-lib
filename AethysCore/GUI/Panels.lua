@@ -169,7 +169,6 @@
     local Name = Slider:GetName();
     _G[Name .. "Low"]:SetText(Slider.minValue);
     _G[Name .. "High"]:SetText(Slider.maxValue);
-    _G[Name .. "Text"]:SetText("|c00dfb802" .. Text .. "|r");
 
     AnchorTooltip(Slider, FilterTooltip(Tooltip, Optionals));
 
@@ -180,6 +179,13 @@
     ShowValue:SetWidth(50);
     ShowValue:SetJustifyH("CENTER");
     ShowValue:SetText(stringformat("%.2f", Slider.SettingTable[Slider.SettingKey]));
+    
+    local Label = Slider:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    Label:SetPoint("BOTTOMLEFT", Slider, "TOPLEFT")
+    Label:SetJustifyH("LEFT")
+    Label:SetHeight(15)
+    Label:SetWidth(500);
+    Label:SetText("|c00dfb802" .. Text .. "|r");
 
     if Optionals and Optionals["ReloadRequired"] then
       UpdateSetting = function (self)
