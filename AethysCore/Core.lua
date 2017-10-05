@@ -27,7 +27,7 @@
   AC.Enum = {};
 
   -- Build Infos
-  local LiveVersion, PTRVersion, BetaVersion = "7.2.5", "7.2.5", "7.2.5";
+  local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2";
   -- version, build, date, tocversion
   AC.BuildInfo = {GetBuildInfo()};
   -- Get the current build version.
