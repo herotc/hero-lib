@@ -20,8 +20,9 @@ Settings.lua
 Deprecated.lua
 
 # Enum
-Enum\TriggerGCD.lua
+Enum\ItemRange.lua
 Enum\ProjectileSpeed.lua
+Enum\TriggerGCD.lua
 
 # Classes
 Class\Main.lua
