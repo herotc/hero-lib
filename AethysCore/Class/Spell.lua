@@ -574,6 +574,12 @@
       if not Tick or Tick == 0 then return 0; end
       return Tick/1000;
     end
+    function Spell:TickTime ()
+      local BaseTickTime =self:BaseTickTime()
+      if not BaseTickTime or BaseTickTime == 0 then return 0; end
+      print(BaseTickTime,Player:HastePct(),BaseTickTime/(1+(Player:HastePct()/100)))
+      return BaseTickTime/(1+(Player:HastePct()/100));
+    end
 
     -- action.foo.in_flight
     function Spell:IsInFlight ()
