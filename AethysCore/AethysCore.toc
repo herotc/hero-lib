@@ -23,6 +23,7 @@ Deprecated.lua
 Enum\ItemRange.lua
 Enum\ProjectileSpeed.lua
 Enum\TriggerGCD.lua
+Enum\TickTime.lua
 
 # Classes
 Class\Main.lua

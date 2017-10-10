@@ -551,6 +551,29 @@
       if not Speed or Speed == 0 then return 0; end
       return Target:MaxDistanceToPlayer() / (ProjectileSpeed[self.SpellID] or 22);
     end
+    
+    -- action.foo.tick_time
+    local TickTime = AC.Enum.TickTime;
+    function Spell:FilterTickTime (SpecID)
+      local RegisteredSpells = {};
+      local BaseTickTime = AC.Enum.TickTime; 
+      -- Fetch registered spells during the init
+      for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
+        for _, Spell in pairs(Spells) do
+          local SpellID = Spell:ID();
+          local TickTimeInfo = BaseTickTime[SpellID];
+          if TickTimeInfo ~= nil then
+            RegisteredSpells[SpellID] = TickTimeInfo;
+          end
+        end
+      end
+      TickTime = RegisteredSpells;
+    end
+    function Spell:BaseTickTime ()
+      local Tick = TickTime[self.SpellID];
+      if not Tick or Tick == 0 then return 0; end
+      return Tick/1000;
+    end
 
     -- action.foo.in_flight
     function Spell:IsInFlight ()
