@@ -122,6 +122,7 @@
   local DummyUnits = {
     -- City (SW, Orgri, ...)
     [31146] = true, -- Raider's Training Dummy
+    [46647] = true, -- Training Dummy
     -- WoD Alliance Garrison
     [87317] = true, -- Mage Tower Damage Training Dummy
     [87318] = true, -- Mage Tower Damage Dungeoneer's Training Dummy (& Garrison)
@@ -137,7 +138,7 @@
     -- Rogue Class Order Hall
     [92164] = true, -- Training Dummy
     [92165] = true, -- Dungeoneer's Training Dummy
-    [92166] = true,  -- Raider's Training Dummy
+    [92166] = true, -- Raider's Training Dummy
     -- Priest Class Order Hall
     [107555] = true, -- Bound void Wraith
     [107556] = true, -- Bound void Walker
@@ -517,8 +518,8 @@
     local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
     UnitInfo.Buffs = {};
     for i = 1, AC.MAXIMUM do
-      --     1      2    3       4         5         6             7           8           9                   10              11         12            13             14               15           16       17      18      19
-      -- buffName, rank, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
+      --  1     2     3      4        5          6             7           8           9                   10              11         12            13           14               15           16       17      18      19
+      -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
       local Infos = {UnitBuff(self.UnitID, i)};
       if not Infos[11] then break; end
       UnitInfo.Buffs[i] = Infos;
@@ -535,7 +536,11 @@
       local UnitInfo = Cache.UnitInfo[GUID]
       for i = 1, #UnitInfo.Buffs do
         if Spell:ID() == UnitInfo.Buffs[i][11] then
-          if AnyCaster or (UnitInfo.Buffs[i][8] and Player:IsUnit(Unit(UnitInfo.Buffs[i][8]))) then
+          local Caster = UnitInfo.Buffs[i][8];
+          if Caster == "player" then
+            Caster = Unit[AC.UpperCaseFirst(Caster)];
+          end
+          if AnyCaster or (Caster and Player:IsUnit(Caster)) then
             if Index then
               return UnitInfo.Buffs[i][Index];
             else
@@ -619,6 +624,8 @@
     local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
     UnitInfo.Debuffs = {};
     for i = 1, AC.MAXIMUM do
+      --  1     2     3      4         5          6             7          8           9                   10              11         12            13           14               15           16       17      18      19
+      -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
       local Infos = {UnitDebuff(self.UnitID, i)};
       if not Infos[11] then break; end
       UnitInfo.Debuffs[i] = Infos;
@@ -635,7 +642,11 @@
       local UnitInfo = Cache.UnitInfo[GUID]
       for i = 1, #UnitInfo.Debuffs do
         if Spell:ID() == UnitInfo.Debuffs[i][11] then
-          if AnyCaster or (UnitInfo.Debuffs[i][8] and (Player:IsUnit(Unit(UnitInfo.Debuffs[i][8])) or Pet:IsUnit(Unit(UnitInfo.Debuffs[i][8])))) then
+          local Caster = UnitInfo.Debuffs[i][8];
+          if Caster == "player" or Caster == "pet" then
+            Caster = Unit[AC.UpperCaseFirst(Caster)];
+          end
+          if AnyCaster or (Caster and (Player:IsUnit(Caster) or Pet:IsUnit(Caster))) then
             if Index then
               return UnitInfo.Debuffs[i][Index];
             else
