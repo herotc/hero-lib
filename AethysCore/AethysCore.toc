@@ -20,7 +20,7 @@ Settings.lua
 Deprecated.lua
 
 # Enum
-Enum\ItemRange.lua
+Enum\ItemRangeUnfiltered.lua
 Enum\ProjectileSpeed.lua
 Enum\TriggerGCD.lua
 Enum\TickTime.lua
