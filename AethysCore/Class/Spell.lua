@@ -561,7 +561,7 @@
       for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
         for _, Spell in pairs(Spells) do
           local SpellID = Spell:ID();
-          local TickTimeInfo = BaseTickTime[SpellID];
+          local TickTimeInfo = BaseTickTime[SpellID][1];
           if TickTimeInfo ~= nil then
             RegisteredSpells[SpellID] = TickTimeInfo;
           end
@@ -570,15 +570,20 @@
       TickTime = RegisteredSpells;
     end
     function Spell:BaseTickTime ()
-      local Tick = TickTime[self.SpellID];
+      local Tick = TickTime[self.SpellID][1];
       if not Tick or Tick == 0 then return 0; end
-      return Tick/1000;
+      return Tick / 1000;
     end
     function Spell:TickTime ()
-      local BaseTickTime =self:BaseTickTime()
+      local BaseTickTime = self:BaseTickTime();
       if not BaseTickTime or BaseTickTime == 0 then return 0; end
-      print(BaseTickTime,Player:HastePct(),BaseTickTime/(1+(Player:HastePct()/100)))
-      return BaseTickTime/(1+(Player:HastePct()/100));
+      
+      local Hasted = TickTime[self.SpellID][2];
+      if Hasted then
+        return BaseTickTime / (1 + (Player:HastePct() / 100));
+      else
+        return BaseTickTime;
+      end
     end
 
     -- action.foo.in_flight
