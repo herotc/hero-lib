@@ -7,6 +7,7 @@
   local gmatch = gmatch;
   local pairs = pairs;
   local print = print;
+  local stringupper = string.upper;
   local tableinsert = table.insert;
   local tonumber = tonumber;
   local type = type;
@@ -65,6 +66,11 @@
 
 -- TODO: Move all this into an utils table
 
+  -- Uppercase the first letter in a string
+  function AC.UpperCaseFirst (ThisString)
+    return (ThisString:gsub("^%l", stringupper));
+  end
+
   -- Merge two tables
   function AC.MergeTable(T1, T2)
     for _, Value in pairs(T2) do
@@ -101,6 +107,7 @@
     return Count;
   end
 
+  -- Revert a table index
   function AC.RevertTableIndex (Table)
     local NewTable = {};
     for i=#Table, 1, -1 do
@@ -109,14 +116,17 @@
     return NewTable;
   end
 
+  -- Ascending sort function
   function AC.SortASC (a, b)
     return a < b;
   end
 
+  -- Descending sort function
   function AC.SortDESC (a, b)
     return a > b;
   end
 
+  -- Ascending sort function for string + number type
   function AC.SortMixedASC (a, b)
     if type(a) == "string" and type(b) == "number" then
       return a < tostring(b);
