@@ -16,6 +16,11 @@
   local wipe = table.wipe;
   -- File Locals
   local NameplateUnits = Unit["Nameplate"];
+  local UnitIDs = {
+    "Arena",
+    "Boss",
+    "Nameplate"
+  };
 
 
 --- ============================ CONTENT ============================
@@ -47,17 +52,19 @@
         return;
       end
     end
-    -- Else build from all the nameplates.
+    -- Else build from all the available units.
     local ThisUnit;
-    for i = 1, #NameplateUnits do
-      ThisUnit = NameplateUnits[i];
-      if ThisUnit:Exists() and
-        not ThisUnit:IsBlacklisted() and
-        not ThisUnit:IsUserBlacklisted() and
-        not ThisUnit:IsDeadOrGhost() and
-        Player:CanAttack(ThisUnit) and
-        ThisUnit:IsInRange(Distance, SpellIDStr) then
-        tableinsert(Cache.Enemies[Identifier], ThisUnit);
+    for _, UnitID in pairs(UnitIDs) do
+      local Units = Unit[UnitID];
+      for _, ThisUnit in pairs(Units) do
+        if ThisUnit:Exists() and
+          not ThisUnit:IsBlacklisted() and
+          not ThisUnit:IsUserBlacklisted() and
+          not ThisUnit:IsDeadOrGhost() and
+          Player:CanAttack(ThisUnit) and
+          ThisUnit:IsInRange(Distance, SpellIDStr) then
+          tableinsert(Cache.Enemies[Identifier], ThisUnit);
+        end
       end
     end
     -- Cache the count of enemies

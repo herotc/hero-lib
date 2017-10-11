@@ -186,7 +186,7 @@
           if CurrentSpellID then
             CurrentSpell = Spell(CurrentSpellID, "Pet");
             if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown( true ) or IsTalentSpell(i, BOOKTYPE_PET)) then
-			  if not BlankScan then
+              if not BlankScan then
                 Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
               end
             end
