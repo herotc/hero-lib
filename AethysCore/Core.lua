@@ -73,10 +73,14 @@
 
   -- Merge two tables
   function AC.MergeTable(T1, T2)
-    for _, Value in pairs(T2) do
-      tableinsert(T1, Value);
+    local Table = {};
+    for _, Value in pairs(T1) do
+      tableinsert(Table, Value);
     end
-    return T1;
+    for _, Value in pairs(T2) do
+      tableinsert(Table, Value);
+    end
+    return Table;
   end
 
   -- Compare two values
