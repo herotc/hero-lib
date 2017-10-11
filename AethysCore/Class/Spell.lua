@@ -570,20 +570,17 @@
       TickTime = RegisteredSpells;
     end
     function Spell:BaseTickTime ()
-      local Tick = TickTime[self.SpellID][1];
+      local Tick = TickTime[self.SpellID]
       if not Tick or Tick == 0 then return 0; end
-      return Tick / 1000;
+      local TickTime = Tick[1];
+      return TickTime / 1000;
     end
     function Spell:TickTime ()
       local BaseTickTime = self:BaseTickTime();
       if not BaseTickTime or BaseTickTime == 0 then return 0; end
-      
       local Hasted = TickTime[self.SpellID][2];
-      if Hasted then
-        return BaseTickTime / (1 + (Player:HastePct() / 100));
-      else
-        return BaseTickTime;
-      end
+      if Hasted then return BaseTickTime / (1 + (Player:HastePct() / 100)); end
+      return BaseTickTime;
     end
 
     -- action.foo.in_flight
