@@ -539,7 +539,7 @@
     function Spell:TravelTime ()
       local Speed = ProjectileSpeed[self.SpellID];
       if not Speed or Speed == 0 then return 0; end
-      return Target:MaxDistanceToPlayer() / (ProjectileSpeed[self.SpellID] or 22);
+      return Target:MaxDistanceToPlayer(true) / (ProjectileSpeed[self.SpellID] or 22);
     end
     
     -- action.foo.tick_time

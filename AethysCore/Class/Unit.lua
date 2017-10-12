@@ -374,7 +374,12 @@
       end
 
       local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      local UI_IsInRange = UnitInfo.IsInRange; if not UI_IsInRange then UI_IsInRange = {}; UnitInfo.IsInRange = UI_IsInRange; end
+      local UI_IsInRange;
+      if AoESpell then
+        UI_IsInRange = UnitInfo.IsInRangeAoE; if not UI_IsInRange then UI_IsInRange = {}; UnitInfo.IsInRangeAoE = UI_IsInRange; end
+      else
+        UI_IsInRange = UnitInfo.IsInRange; if not UI_IsInRange then UI_IsInRange = {}; UnitInfo.IsInRange = UI_IsInRange; end
+      end
       if UI_IsInRange[Identifier] == nil then UI_IsInRange[Identifier] = IsInRange; end
 
       return IsInRange;
@@ -396,13 +401,15 @@
   end
 
   -- Get the minimum distance to the player.
-  function Unit:MinDistanceToPlayer ()
-    return FindRange(self);
+  function Unit:MinDistanceToPlayer (IntOnly)
+    local Range = FindRange(self);
+    return IntOnly and ((Range == "Melee" and 5) or Range) or Range;
   end
 
   -- Get the maximum distance to the player.
-  function Unit:MaxDistanceToPlayer ()
-    return FindRange(self, true);
+  function Unit:MaxDistanceToPlayer (IntOnly)
+    local Range = FindRange(self, true);
+    return IntOnly and ((Range == "Melee" and 5) or Range) or Range;
   end
 
   -- Get if we are Tanking or not the Unit.
