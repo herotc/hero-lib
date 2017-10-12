@@ -256,15 +256,15 @@
     function Spell:IsCastable ( ThisRange, ThisUnit )
       if ThisRange then
         local RangeUnit = ThisUnit or Target;
-        return self:IsLearned() and not self:IsOnCooldown() and RangeUnit:IsInRange( ThisRange );
+        return self:IsLearned() and self:CooldownUp() and RangeUnit:IsInRange( ThisRange );
       else
-        return self:IsLearned() and not self:IsOnCooldown();
+        return self:IsLearned() and self:CooldownUp();
       end
     end
 
     -- Check if the spell Is Castable and Usable or not.
     function Spell:IsReady ()
-      return self:IsLearned() and not self:IsOnCooldown() and self:IsUsable();
+      return self:IsLearned() and self:CooldownUp() and self:IsUsable();
     end
 
     -- Get the ChargesInfo (from GetSpellCharges) and cache it.
