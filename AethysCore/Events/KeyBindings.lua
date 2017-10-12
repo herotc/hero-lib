@@ -76,7 +76,7 @@
       end
       return KeyBinding;
     end
-    for i = 0, GetNumBindings() do
+    for i = 1, GetNumBindings() do
       local CommandName, Category, Binding1, Binding2 = GetBinding( i );
       local Actions = Commands[ CommandName ];
       if Actions then

@@ -2,13 +2,16 @@
 --- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
+  -- AethysCore
+  local Utils = AC.Utils;
   -- Lua
   local stringformat = string.format;
   local strsplit = strsplit;
   -- File Locals
   AC.GUI = {};
   local GUI = AC.GUI;
-  local StringToNumberIfPossible = AC.StringToNumberIfPossible;
+  local StringToNumberIfPossible = Utils.StringToNumberIfPossible;
+  local SubStringCount = Utils.SubStringCount;
 
 
 --- ============================ CONTENT ============================
@@ -218,7 +221,7 @@
   function GUI.CreateChildPanel (Parent, CName)
     -- Indent the child if needed
     local ParentName = Parent:GetName()
-    local CLevel = AC.SubStringCount(ParentName, "_ChildPanel_");
+    local CLevel = SubStringCount(ParentName, "_ChildPanel_");
     local CName = CName;
     for i = 0, CLevel do
       CName = "   " .. CName;

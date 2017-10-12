@@ -221,7 +221,7 @@
   -- gcd.remains
   local GCDSpell = Spell(61304);
   function Player:GCDRemains ()
-    return GCDSpell:Cooldown(true);
+    return GCDSpell:CooldownRemains(true);
   end
 
   -- attack_power
@@ -240,6 +240,10 @@
   -- TODO : Use Cache
   function Player:HastePct ()
     return GetHaste();
+  end
+  
+  function Player:SpellHaste()
+    return (1 + (Player:HastePct() / 100));
   end
 
   -- mastery
@@ -648,7 +652,7 @@ end
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.SoulShards then
-        UnitInfo.SoulShards = UnitPower(self.UnitID, Enum.PowerType.SoulShards);
+        UnitInfo.SoulShards = WarlockPowerBar_UnitPower(self.UnitID);
       end
       return UnitInfo.SoulShards;
     end

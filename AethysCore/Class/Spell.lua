@@ -11,6 +11,7 @@
   local Item = AC.Item;
   -- Lua
   local error = error;
+  local mathmax = math.max;
   local pairs = pairs;
   local print = print;
   local select = select;
@@ -186,7 +187,7 @@
           if CurrentSpellID then
             CurrentSpell = Spell(CurrentSpellID, "Pet");
             if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown( true ) or IsTalentSpell(i, BOOKTYPE_PET)) then
-			  if not BlankScan then
+              if not BlankScan then
                 Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
               end
             end
@@ -247,23 +248,24 @@
       * @function Spell:IsCastable
       * @desc Check if the spell Is Castable or not.
       *
-      * @param {number} [ThisRange] - Range to check.
+      * @param {number} [Range] - Range to check.
+      * @param {boolean} [AoESpell] - Is it an AoE Spell ?
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
       *
       * @returns {boolean}
       *]]
-    function Spell:IsCastable ( ThisRange, ThisUnit )
-      if ThisRange then
+    function Spell:IsCastable ( Range, AoESpell, ThisUnit )
+      if Range then
         local RangeUnit = ThisUnit or Target;
-        return self:IsLearned() and not self:IsOnCooldown() and RangeUnit:IsInRange( ThisRange );
+        return self:IsLearned() and self:CooldownUp() and RangeUnit:IsInRange( Range, AoESpell );
       else
-        return self:IsLearned() and not self:IsOnCooldown();
+        return self:IsLearned() and self:CooldownUp();
       end
     end
 
     -- Check if the spell Is Castable and Usable or not.
     function Spell:IsReady ()
-      return self:IsLearned() and not self:IsOnCooldown() and self:IsUsable();
+      return self:IsLearned() and self:CooldownUp() and self:IsUsable();
     end
 
     -- Get the ChargesInfo (from GetSpellCharges) and cache it.
@@ -465,7 +467,7 @@
         end
       end
       if Offset then
-        return BypassRecovery and AC.OffsetRemains( CooldownNoRecovery, Offset ) or AC.OffsetRemains( Cooldown, Offset );
+        return BypassRecovery and mathmax( AC.OffsetRemains( CooldownNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( Cooldown, Offset ), 0 );
       else
         return BypassRecovery and CooldownNoRecovery or Cooldown;
       end
@@ -484,33 +486,21 @@
       return self:CooldownRemains( BypassRecovery, Offset or "Auto" );
     end
 
-    -- predict cooldown at the end on cast / GCD
-    function Spell:CooldownRemainsPredicted ()
-      if self:CooldownRemains() == 0 then return 0; end
-      return math.max(self:CooldownRemains() - Player:CastRemains(),0)
-    end
-
-    -- Old cooldown.foo.remains
-    -- DEPRECATED
-    function Spell:Cooldown (BypassRecovery)
-      return self:CooldownRemains(BypassRecovery);
-    end
-
     -- cooldown.foo.up
     function Spell:CooldownUp (BypassRecovery)
-      return self:Cooldown(BypassRecovery) == 0;
+      return self:CooldownRemains(BypassRecovery) == 0;
+    end
+    function Spell:CooldownUpP (BypassRecovery)
+      return self:CooldownRemainsP(BypassRecovery) == 0;
     end
 
     -- "cooldown.foo.down"
     -- Since it doesn't exists in SimC, I think it's better to use 'not Spell:CooldownUp' for consistency with APLs.
     function Spell:CooldownDown (BypassRecovery)
-      return self:Cooldown(BypassRecovery) ~= 0;
+      return self:CooldownRemains(BypassRecovery) ~= 0;
     end
-
-    -- !cooldown.foo.up
-    -- DEPRECATED
-    function Spell:IsOnCooldown (BypassRecovery)
-      return self:CooldownDown(BypassRecovery);
+    function Spell:CooldownDownP (BypassRecovery)
+      return self:CooldownRemainsP(BypassRecovery) ~= 0;
     end
 
     -- artifact.foo.rank
@@ -549,7 +539,38 @@
     function Spell:TravelTime ()
       local Speed = ProjectileSpeed[self.SpellID];
       if not Speed or Speed == 0 then return 0; end
-      return Target:MaxDistanceToPlayer() / (ProjectileSpeed[self.SpellID] or 22);
+      return Target:MaxDistanceToPlayer(true) / (ProjectileSpeed[self.SpellID] or 22);
+    end
+    
+    -- action.foo.tick_time
+    local TickTime = AC.Enum.TickTime;
+    function Spell:FilterTickTime (SpecID)
+      local RegisteredSpells = {};
+      local BaseTickTime = AC.Enum.TickTime; 
+      -- Fetch registered spells during the init
+      for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
+        for _, Spell in pairs(Spells) do
+          local SpellID = Spell:ID();
+          local TickTimeInfo = BaseTickTime[SpellID][1];
+          if TickTimeInfo ~= nil then
+            RegisteredSpells[SpellID] = TickTimeInfo;
+          end
+        end
+      end
+      TickTime = RegisteredSpells;
+    end
+    function Spell:BaseTickTime ()
+      local Tick = TickTime[self.SpellID]
+      if not Tick or Tick == 0 then return 0; end
+      local TickTime = Tick[1];
+      return TickTime / 1000;
+    end
+    function Spell:TickTime ()
+      local BaseTickTime = self:BaseTickTime();
+      if not BaseTickTime or BaseTickTime == 0 then return 0; end
+      local Hasted = TickTime[self.SpellID][2];
+      if Hasted then return BaseTickTime / Player:SpellHaste(); end
+      return BaseTickTime;
     end
 
     -- action.foo.in_flight

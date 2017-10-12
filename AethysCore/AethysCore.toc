@@ -12,6 +12,10 @@
 
 Core.lua
 
+# Utils
+Utils.lua
+Lib\json.lua
+
 # GUI
 GUI\Panels.lua
 
@@ -20,8 +24,10 @@ Settings.lua
 Deprecated.lua
 
 # Enum
-Enum\TriggerGCD.lua
+Enum\ItemRange.lua
 Enum\ProjectileSpeed.lua
+Enum\TriggerGCD.lua
+Enum\TickTime.lua
 
 # Classes
 Class\Main.lua
