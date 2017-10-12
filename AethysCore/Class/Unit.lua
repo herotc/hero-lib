@@ -303,6 +303,9 @@
       for Range, Items in pairs(Ranges) do
         if Type == "Melee" and Range == 5 then
           Range = "Melee";
+        else
+          -- We are going to encode it as json afterwards, so we convert it to string here.
+          Range = tostring(Range);
         end
         local ValidItems = {};
         for i = 1, #Items do
@@ -325,6 +328,9 @@
       end
     end
     HostileTable.ItemRange = Utils.JSON.encode(HostileTable.ItemRange);
+    HostileTable.RangeIndex = Utils.JSON.encode(HostileTable.RangeIndex);
+    FriendlyTable.ItemRange = Utils.JSON.encode(FriendlyTable.ItemRange);
+    FriendlyTable.RangeIndex = Utils.JSON.encode(FriendlyTable.RangeIndex);
     AethysCoreDB = IsInRangeTable;
   end
 
