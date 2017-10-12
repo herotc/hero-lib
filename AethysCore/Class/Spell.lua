@@ -248,15 +248,16 @@
       * @function Spell:IsCastable
       * @desc Check if the spell Is Castable or not.
       *
-      * @param {number} [ThisRange] - Range to check.
+      * @param {number} [Range] - Range to check.
+      * @param {boolean} [AoESpell] - Is it an AoE Spell ?
       * @param {object} [ThisUnit=Target] - Unit to check the range for.
       *
       * @returns {boolean}
       *]]
-    function Spell:IsCastable ( ThisRange, ThisUnit )
-      if ThisRange then
+    function Spell:IsCastable ( Range, AoESpell, ThisUnit )
+      if Range then
         local RangeUnit = ThisUnit or Target;
-        return self:IsLearned() and self:CooldownUp() and RangeUnit:IsInRange( ThisRange );
+        return self:IsLearned() and self:CooldownUp() and RangeUnit:IsInRange( Range, AoESpell );
       else
         return self:IsLearned() and self:CooldownUp();
       end

@@ -24,7 +24,7 @@
 
 --- ============================ CONTENT ============================
   -- Fill the Enemies Cache table.
-  function AC.GetEnemies (Distance)
+  function AC.GetEnemies ( Distance, AoESpell )
     local DistanceType, Identifier = type(Distance), nil;
     -- Regular ranged distance check through IsItemInRange & Special distance check (like melee)
     if DistanceType == "number" or (DistanceType == "string" and Distance == 'Melee') then
@@ -53,7 +53,7 @@
           tablesort(DistanceValues, function(a, b) return a < b; end);
         end
         for Key, Unit in pairs(Cache.Enemies[DistanceValues[1]]) do
-          if Unit:IsInRange(Distance) then
+          if Unit:IsInRange(Distance, AoESpell) then
             tableinsert(Cache.Enemies[Identifier], Unit);
           end
         end
@@ -70,7 +70,7 @@
           not ThisUnit:IsUserBlacklisted() and
           not ThisUnit:IsDeadOrGhost() and
           Player:CanAttack(ThisUnit) and
-          ThisUnit:IsInRange(Distance) then
+          ThisUnit:IsInRange(Distance, AoESpell) then
           tableinsert(Cache.Enemies[Identifier], ThisUnit);
         end
       end
