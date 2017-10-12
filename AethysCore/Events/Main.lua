@@ -326,6 +326,7 @@
         end
 
         -- Refresh Player
+        local PrevSpec = Cache.Persistent.Player.Spec[1];
         Cache.Persistent.Player.Class = {UnitClass("player")};
         Cache.Persistent.Player.Spec = {GetSpecializationInfo(GetSpecialization())};
 
@@ -334,19 +335,30 @@
         wipe(Cache.Persistent.Texture.Item);
 
         -- Refresh Gear
-        AC.GetEquipment();
-        -- WoD (They are working but not used, so I'll comment them)
-        --AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
-        --AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
-        -- Legion
-        Spell:ArtifactScan();
-        AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
-        AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
+        if Event == "PLAYER_EQUIPMENT_CHANGED" 
+        or Event == "PLAYER_LOGIN" then
+          AC.GetEquipment();
+          
+          -- WoD (They are working but not used, so I'll comment them)
+          --AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
+          --AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
+          -- Legion
+          AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
+          AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
+        end
+    
+        -- Refresh Artifact
+        if Event == "PLAYER_LOGIN"
+        or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16) 
+        or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+          Spell:ArtifactScan();
+        end
       end
       , "ZONE_CHANGED_NEW_AREA"
       , "PLAYER_SPECIALIZATION_CHANGED"
       , "PLAYER_TALENT_UPDATE"
       , "PLAYER_EQUIPMENT_CHANGED"
+      , "PLAYER_LOGIN"
     );
 
   -- Spell Book Scanner
@@ -357,7 +369,7 @@
         if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
           return;
         end
-
+        
         -- TODO: FIXME workaround to prevent Lua errors when Blizz do some shenanigans with book in Arena/Timewalking
         if pcall(
           function ()
