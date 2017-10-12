@@ -14,6 +14,7 @@
   -- Lua
   local mathfloor = math.floor;
   local mathmin = math.min;
+  local mathrandom = math.random;
   local pairs = pairs;
   local select = select;
   local tableinsert = table.insert;
@@ -251,42 +252,10 @@
     return "";
   end
 
-  -- Get if we are in range of the unit.
-  -- IsInRangeTable generated manually by FilterItemRange
-  local IsInRangeTable = {
-    Hostile = {
-      RangeIndex = {"Melee", 5, 6, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 100},
-      ItemRange = {
-        ['Melee'] = 37727,   -- Ruby Acorn
-        [5]       = 37727,   -- Ruby Acorn
-        [6]       = 63427,   -- Worgsaw
-        [8]       = 34368,   -- Attuned Crystal Cores
-        [10]      = 32321,   -- Sparrowhawk Net
-        [15]      = 33069,   -- Sturdy Rope
-        [20]      = 10645,   -- Gnomish Death Ray
-        [25]      = 24268,   -- Netherweave Net
-        [30]      = 34191,   -- Handful of Snowflakes
-        [35]      = 18904,   -- Zorbin's Ultra-Shrinker
-        [40]      = 28767,   -- The Decapitator
-        [45]      = 23836,   -- Goblin Rocket Launcher
-        [50]      = 116139,  -- Haunting Memento
-        [60]      = 32825,   -- Soul Cannon
-        [70]      = 41265,   -- Eyesore Blaster
-        [80]      = 35278,   -- Reinforced Net
-        [100]     = 33119    -- Malister's Frost Wand
-      }
-    },
-    Friendly = {
-      RangeIndex = {},
-      ItemRange = {}
-    }
-  };
-  -- Sort RangeIndex for FindRange
-  tablesort(IsInRangeTable.Hostile.RangeIndex, Utils.SortMixedASC);
-  IsInRangeTable.Hostile.RangeIndex = Utils.RevertTableIndex(IsInRangeTable.Hostile.RangeIndex);
-  -- Run FilterItemRange() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with 2 players)
+  --- IsInRange
+  -- Run FilterItemRange() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with 2 players or in Orgrimmar)
   function AC.ManuallyFilterItemRanges ()
-    IsInRangeTable = {
+    local IsInRangeTable = {
       Hostile = {
         RangeIndex = {},
         ItemRange = {}
@@ -333,7 +302,35 @@
     FriendlyTable.RangeIndex = Utils.JSON.encode(FriendlyTable.RangeIndex);
     AethysCoreDB = IsInRangeTable;
   end
+  -- IsInRangeTable generated manually by FilterItemRange
+  local IsInRangeTable = {
+    Hostile = {
+      RangeIndex = {},
+      ItemRange = {}
+    },
+    Friendly = {
+      RangeIndex = {},
+      ItemRange = {}
+    }
+  };
+  do
+    local Enum = AC.Enum.ItemRange;
+    local Hostile, Friendly = IsInRangeTable.Hostile, IsInRangeTable.Friendly;
 
+    Hostile.RangeIndex = Enum.Hostile.RangeIndex;
+    tablesort(Hostile.RangeIndex, Utils.SortMixedASC);
+    Friendly.RangeIndex = Enum.Friendly.RangeIndex;
+    tablesort(Friendly.RangeIndex, Utils.SortMixedASC);
+
+    for k, v in pairs(Enum.Hostile.ItemRange) do
+      Hostile.ItemRange[k] = v[mathrandom(1, #v)];
+    end
+    Enum.Hostile.ItemRange = nil;
+    for k, v in pairs(Enum.Friendly.ItemRange) do
+      Friendly.ItemRange[k] = v[mathrandom(1, #v)];
+    end
+    Enum.Friendly.ItemRange = nil;
+  end
   -- Get if the unit is in range, you can use a number or a spell as argument.
   function Unit:IsInRange (Distance, AoESpell)
     local GUID = self:GUID();
@@ -390,12 +387,12 @@
   -- param Max Boolean Min or Max range ?
   local function FindRange (Unit, Max)
     local RangeIndex = IsInRangeTable.Hostile.RangeIndex;
-    for i = 1 + (Max and 1 or 0) , #RangeIndex do
+    for i = #RangeIndex - (Max and 1 or 0), 1, -1 do
       if not Unit:IsInRange(RangeIndex[i]) then
-        return Max and RangeIndex[i-1] or RangeIndex[i];
+        return Max and RangeIndex[i+1] or RangeIndex[i];
       end
     end
-    return 110;
+    return "Melee";
   end
 
   -- Get the minimum distance to the player.

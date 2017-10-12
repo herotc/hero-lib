@@ -1,3 +1,5 @@
+-- credits: https://github.com/rxi/json.lua
+
 --
 -- json.lua
 --
@@ -380,7 +382,6 @@ end
 -- return json
 
 --- ============================ OVERRIDE ============================
--- source: https://github.com/rxi/json.lua
 local addonName, AC = ...;
 AC.Utils.JSON = json;
 
