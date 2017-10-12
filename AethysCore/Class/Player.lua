@@ -241,6 +241,10 @@
   function Player:HastePct ()
     return GetHaste();
   end
+  
+  function Player:SpellHaste()
+    return (1 + (Player:HastePct() / 100));
+  end
 
   -- mastery
   -- TODO : Use Cache
