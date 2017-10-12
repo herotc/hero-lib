@@ -13,21 +13,17 @@
   local type = type;
   local wipe = table.wipe;
   -- File Locals
-  local _T = {                  -- Temporary Vars
-    Argument,                     -- CmdHandler
-  };
-  AC.MAXIMUM = 40;              -- Max # Buffs and Max # Nameplates.
+
 
 --- ======= GLOBALIZE =======
   -- Addon
   AethysCore = AC;
+  AC.Enum = {}; -- Constant Infos Enum
+  AC.MAXIMUM = 40; -- Max # Buffs and Max # Nameplates.
 
 
 --- ============================ CONTENT ============================
-  -- Constant Infos Enum
-  AC.Enum = {};
-
-  -- Build Infos
+  --- Build Infos
   local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2";
   -- version, build, date, tocversion
   AC.BuildInfo = {GetBuildInfo()};
@@ -60,85 +56,6 @@
   -- Print with AC Prefix
   function AC.Print (...)
     print("[|cFFFF6600Aethys Core|r]", ...);
-  end
-
-
-
--- TODO: Move all this into an utils table
-
-  -- Uppercase the first letter in a string
-  function AC.UpperCaseFirst (ThisString)
-    return (ThisString:gsub("^%l", stringupper));
-  end
-
-  -- Merge two tables
-  function AC.MergeTable(T1, T2)
-    local Table = {};
-    for _, Value in pairs(T1) do
-      tableinsert(Table, Value);
-    end
-    for _, Value in pairs(T2) do
-      tableinsert(Table, Value);
-    end
-    return Table;
-  end
-
-  -- Compare two values
-  local CompareThisTable = {
-    [">"] = function (A, B) return A > B; end,
-    ["<"] = function (A, B) return A < B; end,
-    [">="] = function (A, B) return A >= B; end,
-    ["<="] = function (A, B) return A <= B; end,
-    ["=="] = function (A, B) return A == B; end
-  };
-  function AC.CompareThis (Operator, A, B)
-    return CompareThisTable[Operator](A, B);
-  end
-
-  -- Convert a string to a number if possible, or return the string.
-  -- If the conversion is nil, it means it's not a number, then return the string.
-  function AC.StringToNumberIfPossible (String)
-    local Converted = tonumber(String);
-    return Converted ~= nil and Converted or String;
-  end
-
-  -- Count how many string occurances there is in a string.
-  function AC.SubStringCount (String, SubString)
-    local Count = 0;
-    for _ in String:gmatch(SubString) do 
-        Count = Count + 1;
-    end
-    return Count;
-  end
-
-  -- Revert a table index
-  function AC.RevertTableIndex (Table)
-    local NewTable = {};
-    for i=#Table, 1, -1 do
-      tableinsert(NewTable, Table[i]);
-    end
-    return NewTable;
-  end
-
-  -- Ascending sort function
-  function AC.SortASC (a, b)
-    return a < b;
-  end
-
-  -- Descending sort function
-  function AC.SortDESC (a, b)
-    return a > b;
-  end
-
-  -- Ascending sort function for string + number type
-  function AC.SortMixedASC (a, b)
-    if type(a) == "string" and type(b) == "number" then
-      return a < tostring(b);
-    elseif type(a) == "number" and type(b) == "string" then
-      return b < tostring(a);
-    else
-      return a < b;
-    end
   end
 
   AC.SpecID_ClassesSpecs = {
@@ -190,4 +107,4 @@
       [71]    = {"Warrior", "Arms"},
       [72]    = {"Warrior", "Fury"},
       [73]    = {"Warrior", "Protection"}
-    };
+  };

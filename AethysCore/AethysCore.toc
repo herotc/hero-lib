@@ -12,6 +12,10 @@
 
 Core.lua
 
+# Utils
+Utils.lua
+Lib\json.lua
+
 # GUI
 GUI\Panels.lua
 

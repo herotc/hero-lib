@@ -4,6 +4,7 @@
   local addonName, AC = ...;
   -- AethysCore
   local Cache = AethysCache;
+  local Utils = AC.Utils;
   local Unit = AC.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
@@ -281,8 +282,8 @@
     }
   };
   -- Sort RangeIndex for FindRange
-  tablesort(IsInRangeTable.Hostile.RangeIndex, AC.SortMixedASC);
-  IsInRangeTable.Hostile.RangeIndex = AC.RevertTableIndex(IsInRangeTable.Hostile.RangeIndex);
+  tablesort(IsInRangeTable.Hostile.RangeIndex, Utils.SortMixedASC);
+  IsInRangeTable.Hostile.RangeIndex = Utils.RevertTableIndex(IsInRangeTable.Hostile.RangeIndex);
   -- Run FilterItemRange() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with 2 players)
   function AC.ManuallyFilterItemRanges ()
     IsInRangeTable = {
@@ -323,6 +324,7 @@
         end
       end
     end
+    HostileTable.ItemRange = Utils.JSON.encode(HostileTable.ItemRange);
     AethysCoreDB = IsInRangeTable;
   end
 
@@ -565,7 +567,7 @@
         if Spell:ID() == UnitInfo.Buffs[i][11] then
           local Caster = UnitInfo.Buffs[i][8];
           if Caster == "player" then
-            Caster = Unit[AC.UpperCaseFirst(Caster)];
+            Caster = Unit[Utils.UpperCaseFirst(Caster)];
           end
           if AnyCaster or (Caster and Player:IsUnit(Caster)) then
             if Index then
@@ -671,7 +673,7 @@
         if Spell:ID() == UnitInfo.Debuffs[i][11] then
           local Caster = UnitInfo.Debuffs[i][8];
           if Caster == "player" or Caster == "pet" then
-            Caster = Unit[AC.UpperCaseFirst(Caster)];
+            Caster = Unit[Utils.UpperCaseFirst(Caster)];
           end
           if AnyCaster or (Caster and (Player:IsUnit(Caster) or Pet:IsUnit(Caster))) then
             if Index then
@@ -1025,7 +1027,7 @@
         Target,
         Focus,
         MouseOver,
-        unpack(AC.MergeTable(BossUnits, NameplateUnits))
+        unpack(Utils.MergeTable(BossUnits, NameplateUnits))
       }; -- It's not possible to unpack multiple tables during the creation process, so we merge them before unpacking it (not efficient but done only 1 time)
       -- TODO: Improve IterableUnits creation
       Units = {}, -- Used to track units
@@ -1232,7 +1234,7 @@
     -- Get if the unit meets the TimeToDie requirements.
     function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
       local TTD = self:TimeToDie(MinSamples);
-      return TTD < (ValueThreshold or 7777) and AC.CompareThis(Operator, TTD+(Offset or 0), Value) or false;
+      return TTD < (ValueThreshold or 7777) and Utils.CompareThis(Operator, TTD+(Offset or 0), Value) or false;
     end
 
     -- Get if the Time To Die is Valid for an Unit (i.e. not returning a warning code).
