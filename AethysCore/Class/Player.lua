@@ -648,7 +648,7 @@ end
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.SoulShards then
-        UnitInfo.SoulShards = UnitPower(self.UnitID, Enum.PowerType.SoulShards);
+        UnitInfo.SoulShards = WarlockPowerBar_UnitPower(self.UnitID);
       end
       return UnitInfo.SoulShards;
     end
