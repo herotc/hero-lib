@@ -15,6 +15,7 @@
   local tablesort = table.sort;
   local wipe = table.wipe;
   -- File Locals
+  local Enemies = Cache.Enemies;
   local UnitIDs = {
     "Arena",
     "Boss",
@@ -36,13 +37,14 @@
       error( "Invalid Distance." );
     end
     -- Prevent building the same table if it's already cached.
-    if Cache.Enemies[Identifier] then return; end
+    if Enemies[Identifier] then return; end
     -- Init the Variables used to build the table.
-    Cache.Enemies[Identifier] = {};
+    local EnemiesTable = {};
+    Enemies[Identifier] = EnemiesTable;
     -- Check if there is another Enemies table with a greater Distance to filter from it.
-    if #Cache.Enemies >= 1 and type(Distance) == "number" then
+    if #Enemies >= 1 and type(Distance) == "number" then
       local DistanceValues = {};
-      for Key, UnitTable in pairs(Cache.Enemies) do
+      for Key, UnitTable in pairs(Enemies) do
         if type(Key) == "number" and Key > Distance then
           tableinsert(DistanceValues, Key);
         end
@@ -52,9 +54,9 @@
         if #DistanceValues >= 2 then
           tablesort(DistanceValues, function(a, b) return a < b; end);
         end
-        for Key, Unit in pairs(Cache.Enemies[DistanceValues[1]]) do
+        for Key, Unit in pairs(Enemies[DistanceValues[1]]) do
           if Unit:IsInRange(Distance, AoESpell) then
-            tableinsert(Cache.Enemies[Identifier], Unit);
+            tableinsert(EnemiesTable, Unit);
           end
         end
         return;
@@ -70,11 +72,11 @@
         if not InsertedUnits[GUID] and ThisUnit:Exists() and not ThisUnit:IsBlacklisted()
           and not ThisUnit:IsUserBlacklisted() and not ThisUnit:IsDeadOrGhost() and Player:CanAttack(ThisUnit)
           and ThisUnit:IsInRange(Distance, AoESpell) then
-          tableinsert(Cache.Enemies[Identifier], ThisUnit);
+          tableinsert(EnemiesTable, ThisUnit);
           InsertedUnits[GUID] = true;
         end
       end
     end
     -- Cache the count of enemies
-    Cache.EnemiesCount[Identifier] = #Cache.Enemies[Identifier];
+    Cache.EnemiesCount[Identifier] = #EnemiesTable;
   end
