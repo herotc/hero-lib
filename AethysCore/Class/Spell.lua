@@ -11,6 +11,7 @@
   local Item = AC.Item;
   -- Lua
   local error = error;
+  local mathmax = math.max;
   local pairs = pairs;
   local print = print;
   local select = select;
@@ -465,7 +466,7 @@
         end
       end
       if Offset then
-        return BypassRecovery and AC.OffsetRemains( CooldownNoRecovery, Offset ) or AC.OffsetRemains( Cooldown, Offset );
+        return BypassRecovery and mathmax( AC.OffsetRemains( CooldownNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( Cooldown, Offset ), 0 );
       else
         return BypassRecovery and CooldownNoRecovery or Cooldown;
       end
@@ -484,33 +485,21 @@
       return self:CooldownRemains( BypassRecovery, Offset or "Auto" );
     end
 
-    -- predict cooldown at the end on cast / GCD
-    function Spell:CooldownRemainsPredicted ()
-      if self:CooldownRemains() == 0 then return 0; end
-      return math.max(self:CooldownRemains() - Player:CastRemains(),0)
-    end
-
-    -- Old cooldown.foo.remains
-    -- DEPRECATED
-    function Spell:Cooldown (BypassRecovery)
-      return self:CooldownRemains(BypassRecovery);
-    end
-
     -- cooldown.foo.up
     function Spell:CooldownUp (BypassRecovery)
-      return self:Cooldown(BypassRecovery) == 0;
+      return self:CooldownRemains(BypassRecovery) == 0;
+    end
+    function Spell:CooldownUpP (BypassRecovery)
+      return self:CooldownRemainsP(BypassRecovery) == 0;
     end
 
     -- "cooldown.foo.down"
     -- Since it doesn't exists in SimC, I think it's better to use 'not Spell:CooldownUp' for consistency with APLs.
     function Spell:CooldownDown (BypassRecovery)
-      return self:Cooldown(BypassRecovery) ~= 0;
+      return self:CooldownRemains(BypassRecovery) ~= 0;
     end
-
-    -- !cooldown.foo.up
-    -- DEPRECATED
-    function Spell:IsOnCooldown (BypassRecovery)
-      return self:CooldownDown(BypassRecovery);
+    function Spell:CooldownDownP (BypassRecovery)
+      return self:CooldownRemainsP(BypassRecovery) ~= 0;
     end
 
     -- artifact.foo.rank
