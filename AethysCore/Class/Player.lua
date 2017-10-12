@@ -221,7 +221,7 @@
   -- gcd.remains
   local GCDSpell = Spell(61304);
   function Player:GCDRemains ()
-    return GCDSpell:Cooldown(true);
+    return GCDSpell:CooldownRemains(true);
   end
 
   -- attack_power
