@@ -62,16 +62,16 @@
     end
     -- Else build from all the available units.
     local ThisUnit;
+    local InsertedUnits = {};
     for _, UnitID in pairs(UnitIDs) do
       local Units = Unit[UnitID];
       for _, ThisUnit in pairs(Units) do
-        if ThisUnit:Exists() and
-          not ThisUnit:IsBlacklisted() and
-          not ThisUnit:IsUserBlacklisted() and
-          not ThisUnit:IsDeadOrGhost() and
-          Player:CanAttack(ThisUnit) and
-          ThisUnit:IsInRange(Distance, AoESpell) then
+        local GUID = ThisUnit:GUID();
+        if not InsertedUnits[GUID] and ThisUnit:Exists() and not ThisUnit:IsBlacklisted()
+          and not ThisUnit:IsUserBlacklisted() and not ThisUnit:IsDeadOrGhost() and Player:CanAttack(ThisUnit)
+          and ThisUnit:IsInRange(Distance, AoESpell) then
           tableinsert(Cache.Enemies[Identifier], ThisUnit);
+          InsertedUnits[GUID] = true;
         end
       end
     end
