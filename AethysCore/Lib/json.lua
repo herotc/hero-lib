@@ -72,12 +72,8 @@ local function encode_table(val, stack)
   else
     -- Treat as an object
     for k, v in pairs(val) do
-      local ktype = type(k)
-      if ktype ~= "string" and ktype ~= "number" then
+      if type(k) ~= "string" then
         error("invalid table: mixed or invalid key types")
-      end
-      if ktype == "number" then
-        k = tostring(k)
       end
       table.insert(res, encode(k, stack) .. ":" .. encode(v, stack))
     end
@@ -389,4 +385,3 @@ local addonName, AC = ...;
 AC.Utils.JSON = json;
 
 -- return json commented
--- encode_table tweaked to convert numbers to string
