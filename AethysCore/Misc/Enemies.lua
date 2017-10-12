@@ -15,7 +15,6 @@
   local tablesort = table.sort;
   local wipe = table.wipe;
   -- File Locals
-  local NameplateUnits = Unit["Nameplate"];
   local UnitIDs = {
     "Arena",
     "Boss",
@@ -25,8 +24,17 @@
 
 --- ============================ CONTENT ============================
   -- Fill the Enemies Cache table.
-  function AC.GetEnemies (Distance, SpellIDStr)
-    local Identifier = type(Distance) == "number" and Distance or SpellIDStr;
+  function AC.GetEnemies (Distance)
+    local DistanceType, Identifier = type(Distance), nil;
+    -- Regular ranged distance check through IsItemInRange & Special distance check (like melee)
+    if DistanceType == "number" or (DistanceType == "string" and Distance == 'Melee') then
+      Identifier = Distance;
+    -- Distance check through IsSpellInRange (works only for targeted spells only)
+    elseif DistanceType == "table" then
+      Identifier = tostring(Distance:ID());
+    else
+      error( "Invalid Distance." );
+    end
     -- Prevent building the same table if it's already cached.
     if Cache.Enemies[Identifier] then return; end
     -- Init the Variables used to build the table.
@@ -62,7 +70,7 @@
           not ThisUnit:IsUserBlacklisted() and
           not ThisUnit:IsDeadOrGhost() and
           Player:CanAttack(ThisUnit) and
-          ThisUnit:IsInRange(Distance, SpellIDStr) then
+          ThisUnit:IsInRange(Distance) then
           tableinsert(Cache.Enemies[Identifier], ThisUnit);
         end
       end
