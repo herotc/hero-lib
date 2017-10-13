@@ -10,6 +10,11 @@
 ## Dependencies: AethysCache
 ## SavedVariables: AethysCoreDB
 
+# WoW Lib Stuff
+Lib\LibStub\LibStub.lua
+Lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
+
+# Core
 Core.lua
 
 # Utils
@@ -31,7 +36,6 @@ Enum\TickTime.lua
 
 # Classes
 Class\Main.lua
-
 Class\Unit\Main.lua
 Class\Unit\Power.lua
 Class\Unit\Range.lua
@@ -48,13 +52,11 @@ Class\Unit\Player\Aura.lua
 Class\Unit\Player\Instance.lua
 Class\Unit\Player\MythicDungeon.lua
 Class\Unit\Pet\Main.lua
-
 Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
 Class\Spell\Travel.lua
 Class\Spell\Artifact.lua
-
 Class\Item.lua
 
 # Misc
