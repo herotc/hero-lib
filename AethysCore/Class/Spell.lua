@@ -264,8 +264,8 @@
     end
 
     -- Check if the spell Is Castable and Usable or not.
-    function Spell:IsReady ()
-      return self:IsLearned() and self:CooldownUp() and self:IsUsable();
+    function Spell:IsReady ( Range, AoESpell, ThisUnit )
+      return self:IsCastable( Range, AoESpell, ThisUnit ) and self:IsUsable();
     end
 
     -- Get the ChargesInfo (from GetSpellCharges) and cache it.
