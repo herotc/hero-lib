@@ -55,10 +55,7 @@
       for i = 1, #UnitInfo.Buffs do
         if Spell:ID() == UnitInfo.Buffs[i][11] then
           local Caster = UnitInfo.Buffs[i][8];
-          if Caster == "player" then
-            Caster = Unit[Utils.UpperCaseFirst(Caster)];
-          end
-          if AnyCaster or (Caster and Player:IsUnit(Caster)) then
+          if AnyCaster or Caster == "player" then
             if Index then
               return UnitInfo.Buffs[i][Index];
             else
@@ -161,10 +158,7 @@
       for i = 1, #UnitInfo.Debuffs do
         if Spell:ID() == UnitInfo.Debuffs[i][11] then
           local Caster = UnitInfo.Debuffs[i][8];
-          if Caster == "player" or Caster == "pet" then
-            Caster = Unit[Utils.UpperCaseFirst(Caster)];
-          end
-          if AnyCaster or (Caster and (Player:IsUnit(Caster) or Pet:IsUnit(Caster))) then
+          if AnyCaster or Caster == "player" or Caster == "pet" then
             if Index then
               return UnitInfo.Debuffs[i][Index];
             else
