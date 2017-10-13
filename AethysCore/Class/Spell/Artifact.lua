@@ -12,16 +12,10 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
-  local error = error;
-  local mathmax = math.max;
   local pairs = pairs;
-  local print = print;
-  local select = select;
-  local tableinsert = table.insert;
-  local tostring = tostring;
-  local unpack = unpack;
   local wipe = table.wipe;
   -- File Locals
+  
 
 
 --- ============================ CONTENT ============================
@@ -49,7 +43,6 @@
             -- GetPowerInfo() returns a table and not multiple values unlike most WoW API.
             -- offset, prereqsMet, cost, bonusRanks, maxRanks, linearIndex, position, isFinal, numMaxRankBonusFromTier, tier, isGoldMedal, isStart, currentRank, spellID
             PowerInfo = ArtifactUI.GetPowerInfo(Power);
-            --tableinsert(PowerTable, PowerInfo);
             PowerTableByPowerID[Power] = PowerInfo;
             PowerTableBySpellID[PowerInfo.spellID] = PowerInfo;
           end

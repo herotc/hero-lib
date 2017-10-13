@@ -13,9 +13,6 @@
   local Item = AC.Item;
   -- Lua
   local pairs = pairs;
-  local select = select;
-  local tablesort = table.sort;
-  local tostring = tostring;
   -- File Locals
   
 

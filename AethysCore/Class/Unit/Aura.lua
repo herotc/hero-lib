@@ -12,19 +12,7 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
-  local mathfloor = math.floor;
-  local mathmin = math.min;
-  local mathrandom = math.random;
-  local pairs = pairs;
-  local select = select;
-  local tableinsert = table.insert;
-  local tableremove = table.remove;
-  local tablesort = table.sort;
-  local tonumber = tonumber;
-  local tostring = tostring;
-  local type = type;
   local unpack = unpack;
-  local wipe = table.wipe;
   -- File Locals
   
 

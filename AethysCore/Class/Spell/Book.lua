@@ -12,16 +12,9 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
-  local error = error;
-  local mathmax = math.max;
-  local pairs = pairs;
-  local print = print;
   local select = select;
-  local tableinsert = table.insert;
-  local tostring = tostring;
-  local unpack = unpack;
-  local wipe = table.wipe;
   -- File Locals
+  
 
 
 --- ============================ CONTENT ============================
