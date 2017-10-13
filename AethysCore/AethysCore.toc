@@ -31,10 +31,30 @@ Enum\TickTime.lua
 
 # Classes
 Class\Main.lua
-Class\Unit.lua
-Class\Player.lua
-Class\Pet.lua
-Class\Spell.lua
+
+Class\Unit\Main.lua
+Class\Unit\Power.lua
+Class\Unit\Range.lua
+Class\Unit\Cast.lua
+Class\Unit\Aura.lua
+Class\Unit\Control.lua
+Class\Unit\TimeToDie.lua
+Class\Unit\List.lua
+Class\Unit\Player\Main.lua
+Class\Unit\Player\Power.lua
+Class\Unit\Player\Stat.lua
+Class\Unit\Player\Equipment.lua
+Class\Unit\Player\Aura.lua
+Class\Unit\Player\Instance.lua
+Class\Unit\Player\MythicDungeon.lua
+Class\Unit\Pet\Main.lua
+
+Class\Spell\Main.lua
+Class\Spell\Book.lua
+Class\Spell\Cooldown.lua
+Class\Spell\Travel.lua
+Class\Spell\Artifact.lua
+
 Class\Item.lua
 
 # Misc
@@ -45,6 +65,6 @@ Misc\Enemies.lua
 Events\Main.lua
 Events\Spell.lua
 Events\Prev_Spell.lua
-Events\KeyBindings.lua
+Events\KeyBinding.lua
 
 Main.lua
