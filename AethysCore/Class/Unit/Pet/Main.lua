@@ -3,14 +3,16 @@
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
-  local Cache = AethysCache;
+  local Cache, Utils = AethysCache, AC.Utils;
   local Unit = AC.Unit;
-  local Player = Unit.Player;
-  local Pet = Unit.Pet;
-  local Target = Unit.Target;
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
+  local Party, Raid = Unit.Party, Unit.Raid;
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
+  
   -- File Locals
   
 
