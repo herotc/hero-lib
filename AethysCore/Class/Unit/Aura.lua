@@ -34,32 +34,35 @@
   function Unit:GetBuffs ()
     local GUID = self:GUID();
     local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-    UnitInfo.Buffs = {};
-    for i = 1, AC.MAXIMUM do
-      --  1     2     3      4        5          6             7           8           9                   10              11         12            13           14               15           16       17      18      19
-      -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-      local Infos = {UnitBuff(self.UnitID, i)};
-      if not Infos[11] then break; end
-      UnitInfo.Buffs[i] = Infos;
+    local Buffs = UnitInfo.Buffs;
+    if not Buffs then
+      Buffs = {};
+      UnitInfo.Buffs = Buffs;
+      for i = 1, AC.MAXIMUM do
+        --  1     2     3      4        5          6             7           8           9                   10              11         12            13           14               15           16       17      18      19
+        -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
+        local Infos = {UnitBuff(self.UnitID, i)};
+        if not Infos[11] then break; end
+        Buffs[i] = Infos;
+      end
     end
+    return Buffs;
   end
 
   -- buff.foo.up (does return the buff table and not only true/false)
   function Unit:Buff (Spell, Index, AnyCaster)
     local GUID = self:GUID();
     if GUID then
-      if not Cache.UnitInfo[GUID] or not Cache.UnitInfo[GUID].Buffs then
-        self:GetBuffs();
-      end
-      local UnitInfo = Cache.UnitInfo[GUID]
-      for i = 1, #UnitInfo.Buffs do
-        if Spell:ID() == UnitInfo.Buffs[i][11] then
-          local Caster = UnitInfo.Buffs[i][8];
+      local Buffs = self:GetBuffs();
+      for i = 1, #Buffs do
+        local Buff = Buffs[i];
+        if Spell:ID() == Buff[11] then
+          local Caster = Buff[8];
           if AnyCaster or Caster == "player" then
             if Index then
-              return UnitInfo.Buffs[i][Index];
+              return Buff[Index];
             else
-              return unpack(UnitInfo.Buffs[i]);
+              return unpack(Buff);
             end
           end
         end
@@ -116,8 +119,7 @@
 
   -- buff.foo.refreshable (doesn't exists on SimC atm tho)
   function Unit:BuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
-    if not self:Buff(Spell, nil, AnyCaster) then return true; end
-    return PandemicThreshold and self:BuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
+    return self:BuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
   end
 
   --[[*
@@ -137,32 +139,35 @@
   function Unit:GetDebuffs ()
     local GUID = self:GUID();
     local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-    UnitInfo.Debuffs = {};
-    for i = 1, AC.MAXIMUM do
-      --  1     2     3      4         5          6             7          8           9                   10              11         12            13           14               15           16       17      18      19
-      -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-      local Infos = {UnitDebuff(self.UnitID, i)};
-      if not Infos[11] then break; end
-      UnitInfo.Debuffs[i] = Infos;
+    local Debuffs = UnitInfo.Debuffs;
+    if not Debuffs then
+      Debuffs = {};
+      UnitInfo.Debuffs = Debuffs;
+      for i = 1, AC.MAXIMUM do
+        --  1     2     3      4         5          6             7          8           9                   10              11         12            13           14               15           16       17      18      19
+        -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
+        local Infos = {UnitDebuff(self.UnitID, i)};
+        if not Infos[11] then break; end
+        Debuffs[i] = Infos;
+      end
     end
+    return Debuffs;
   end
 
   -- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
   function Unit:Debuff (Spell, Index, AnyCaster)
     local GUID = self:GUID();
     if GUID then
-      if not Cache.UnitInfo[GUID] or not Cache.UnitInfo[GUID].Debuffs then
-        self:GetDebuffs();
-      end
-      local UnitInfo = Cache.UnitInfo[GUID]
-      for i = 1, #UnitInfo.Debuffs do
-        if Spell:ID() == UnitInfo.Debuffs[i][11] then
-          local Caster = UnitInfo.Debuffs[i][8];
+      local Debuffs = self:GetDebuffs();
+      for i = 1, #Debuffs do
+        local Debuff = Debuffs[i];
+        if Spell:ID() == Debuff[11] then
+          local Caster = Debuff[8];
           if AnyCaster or Caster == "player" or Caster == "pet" then
             if Index then
-              return UnitInfo.Debuffs[i][Index];
+              return Debuff[Index];
             else
-              return unpack(UnitInfo.Debuffs[i]);
+              return unpack(Debuff);
             end
           end
         end
@@ -219,8 +224,7 @@
 
   -- debuff.foo.refreshable or dot.foo.refreshable
   function Unit:DebuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
-    if not self:Debuff(Spell, nil, AnyCaster) then return true; end
-    return PandemicThreshold and self:DebuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
+    return self:DebuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold;
   end
 
   --[[*
