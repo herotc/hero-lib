@@ -14,31 +14,28 @@
 
 --- ============================ CONTENT ============================
 --- ======= PSEUDO-CLASS =======
-  -- Defines a Class.
-  local function NewInstance ( self, ... )
-    local Object = {};
-    setmetatable( Object, self );
-    Object:Constructor( ... );
-    return Object;
-  end
-  function AC.Class ()
+  local function Class ()
     local Class = {};
     Class.__index = Class;
-    setmetatable( Class, { __call = NewInstance } );
+    setmetatable( Class, { __call =
+      function ( self, ... )
+        local Object = {};
+        setmetatable( Object, self );
+        Object:New( ... );
+        return Object;
+      end
+    } );
     return Class;
   end
-  local Class = AC.Class;
 
 --- ======= UNIT =======
-  -- Defines the Unit Class.
-  AC.Unit = Class();
-  local Unit = AC.Unit;
-  -- Unit Constructor
-  function Unit:Constructor ( UnitID )
+do
+  local Unit = Class();
+  AC.Unit = Unit;
+  function Unit:New ( UnitID )
     if type( UnitID ) ~= "string" then error( "Invalid UnitID." ); end
     self.UnitID = UnitID;
   end
-  -- Defines Unit Objects.
   -- Unique Units
   Unit.Player = Unit( "Player" );
   Unit.Pet = Unit( "Pet" );
@@ -55,21 +52,20 @@
     { "Raid", 40 }
   };
   for _, UnitID in pairs( UnitIDs ) do
-    local UnitType = UnitID[1];
-    local UnitCount = UnitID[2];
+    local UnitType = UnitID[ 1 ];
+    local UnitCount = UnitID[ 2 ];
     Unit[ UnitType ] = {};
     for i = 1, UnitCount do
-      Unit[ UnitType ][ i ] = Unit( stringformat( "%s%d", UnitType, i) );
+      Unit[ UnitType ][ i ] = Unit( stringformat( "%s%d", UnitType, i ) );
     end
   end
-  UnitIDs = nil;
+end
 
 --- ======= SPELL =======
-  -- Defines the Spell Class.
-  AC.Spell = Class();
-  local Spell = AC.Spell;
-  -- Spell Constructor
-  function Spell:Constructor ( SpellID, SpellType )
+do
+  local Spell = Class();
+  AC.Spell = Spell;
+  function Spell:New ( SpellID, SpellType )
     if type( SpellID ) ~= "number" then error( "Invalid SpellID." ); end
     if SpellType and type( SpellType ) ~= "string" then error( "Invalid Spell Type." ); end
     self.SpellID = SpellID;
@@ -79,18 +75,19 @@
     self.LastHitTime = 0;
     self.LastBuffTime = 0;
   end
+end
 
 --- ======= ITEM =======
-  -- Defines the Item Class.
-  AC.Item = Class();
-  local Item = AC.Item;
-  -- Item Constructor
-  function Item:Constructor ( ItemID, ItemSlotID )
+do
+  local Item = Class();
+  AC.Item = Item;
+  function Item:New ( ItemID, ItemSlotID )
     if type( ItemID ) ~= "number" then error( "Invalid ItemID." ); end
     if ItemSlotID and type( ItemSlotID ) ~= "table" then error( "Invalid ItemSlotID." ); end
     self.ItemID = ItemID;
-    self.ItemSlotID = ItemSlotID or {0};
+    self.ItemSlotID = ItemSlotID or { 0 };
     self.LastCastTime = 0;
     self.LastDisplayTime = 0;
     self.LastHitTime = 0;
   end
+end

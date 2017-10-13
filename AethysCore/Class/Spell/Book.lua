@@ -13,6 +13,9 @@
   local Item = AC.Item;
   -- Lua
   local select = select;
+  -- WoW API
+  local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo;
+  local BOOKTYPE_PET, BOOKTYPE_SPELL = BOOKTYPE_PET, BOOKTYPE_SPELL;
   -- File Locals
   
 
@@ -20,26 +23,26 @@
 --- ============================ CONTENT ============================
   -- Get the spell BookIndex along with BookType.
   function Spell:BookIndex ()
-    local CurrentSpellID;
     -- Pet Book
-    local NumPetSpells = HasPetSpells();
-    if NumPetSpells then
-      for i = 1, NumPetSpells do
-        CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET));
-        if CurrentSpellID and CurrentSpellID == self:ID() then
-          return i, BOOKTYPE_PET;
+    do
+      local NumPetSpells = HasPetSpells();
+      if NumPetSpells then
+        for i = 1, NumPetSpells do
+          local CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET));
+          if CurrentSpellID and CurrentSpellID == self:ID() then
+            return i, BOOKTYPE_PET;
+          end
         end
       end
     end
     -- Player Book
-    local Offset, NumSpells, OffSpec;
     for i = 1, GetNumSpellTabs() do
-      Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i));
+      local Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i));
       -- GetSpellTabInfo has been updated, it now returns the OffSpec ID.
       -- If the OffSpec ID is set to 0, then it's the Main Spec.
       if OffSpec == 0 then
         for j = 1, (Offset + NumSpells) do
-          CurrentSpellID = select(7, GetSpellInfo(j, BOOKTYPE_SPELL));
+          local CurrentSpellID = select(7, GetSpellInfo(j, BOOKTYPE_SPELL));
           if CurrentSpellID and CurrentSpellID == self:ID() then
             return j, BOOKTYPE_SPELL;
           end
@@ -50,61 +53,59 @@
 
   -- Scan the Book to cache every Spell Learned.
   function Spell:BookScan (BlankScan)
-    local CurrentSpellID, CurrentSpell;
+    local SpellLearned = Cache.Persistent.SpellLearned;
+
     -- Pet Book
-    local NumPetSpells = HasPetSpells();
-    if NumPetSpells then
-      for i = 1, NumPetSpells do
-        CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET))
-        if CurrentSpellID then
-          CurrentSpell = Spell(CurrentSpellID, "Pet");
-          if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown( true ) or IsTalentSpell(i, BOOKTYPE_PET)) then
-            if not BlankScan then
-              Cache.Persistent.SpellLearned.Pet[CurrentSpell:ID()] = true;
+    do
+      local NumPetSpells = HasPetSpells();
+      if NumPetSpells then
+        local SpellLearned = SpellLearned.Pet;
+        local IsTalentSpell = IsTalentSpell;
+        for i = 1, NumPetSpells do
+          local CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET))
+          if CurrentSpellID then
+            local CurrentSpell = Spell(CurrentSpellID, "Pet");
+            if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown(true) or IsTalentSpell(i, BOOKTYPE_PET)) then
+              if not BlankScan then
+                SpellLearned[CurrentSpell:ID()] = true;
+              end
             end
           end
         end
       end
     end
-    -- Player Book (except Flyout Spells)
-    local Offset, NumSpells, OffSpec;
-    for i = 1, GetNumSpellTabs() do
-      Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i));
-      -- GetSpellTabInfo has been updated, it now returns the OffSpec ID.
-      -- If the OffSpec ID is set to 0, then it's the Main Spec.
-      if OffSpec == 0 then
-        for j = 1, (Offset + NumSpells) do
-          CurrentSpellID = select(7, GetSpellInfo(j, BOOKTYPE_SPELL))
-          if CurrentSpellID and GetSpellBookItemInfo(j, BOOKTYPE_SPELL) == "SPELL" then
-            --[[ Debug Code
-            CurrentSpell = Spell(CurrentSpellID);
-            print(
-              tostring(CurrentSpell:ID()) .. " | " .. 
-              tostring(CurrentSpell:Name()) .. " | " .. 
-              tostring(CurrentSpell:IsAvailable()) .. " | " .. 
-              tostring(CurrentSpell:IsKnown()) .. " | " .. 
-              tostring(IsTalentSpell(j, BOOKTYPE_SPELL)) .. " | " .. 
-              tostring(GetSpellBookItemInfo(j, BOOKTYPE_SPELL)) .. " | " .. 
-              tostring(GetSpellLevelLearned(CurrentSpell:ID()))
-            );
-            ]]
-            if not BlankScan then
-              Cache.Persistent.SpellLearned.Player[CurrentSpellID] = true;
+    -- Player Book
+    do
+      local SpellLearned = SpellLearned.Player;
+
+      local GetSpellBookItemInfo = GetSpellBookItemInfo;
+      for i = 1, GetNumSpellTabs() do
+        local Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i));
+        -- GetSpellTabInfo has been updated, it now returns the OffSpec ID.
+        -- If the OffSpec ID is set to 0, then it's the Main Spec.
+        if OffSpec == 0 then
+          for j = 1, (Offset + NumSpells) do
+            local CurrentSpellID = select(7, GetSpellInfo(j, BOOKTYPE_SPELL))
+            if CurrentSpellID and GetSpellBookItemInfo(j, BOOKTYPE_SPELL) == "SPELL" then
+              if not BlankScan then
+                SpellLearned[CurrentSpellID] = true;
+              end
             end
           end
         end
       end
-    end
-    -- Flyout Spells
-    local FlyoutID, NumSlots, IsKnown, IsKnownSpell;
-    for i = 1, GetNumFlyouts() do
-      FlyoutID = GetFlyoutID(i);
-      NumSlots, IsKnown = select(3, GetFlyoutInfo(FlyoutID));
-      if IsKnown and NumSlots > 0 then
-        for j = 1, NumSlots do
-          CurrentSpellID, _, IsKnownSpell = GetFlyoutSlotInfo(FlyoutID, j);
-          if CurrentSpellID and IsKnownSpell then
-            Cache.Persistent.SpellLearned.Player[CurrentSpellID] = true;
+
+      -- Flyout Spells
+      local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo;
+      for i = 1, GetNumFlyouts() do
+        local FlyoutID = GetFlyoutID(i);
+        local NumSlots, IsKnown = select(3, GetFlyoutInfo(FlyoutID));
+        if IsKnown and NumSlots > 0 then
+          for j = 1, NumSlots do
+            local CurrentSpellID, _, IsKnownSpell = GetFlyoutSlotInfo(FlyoutID, j);
+            if CurrentSpellID and IsKnownSpell then
+              SpellLearned[CurrentSpellID] = true;
+            end
           end
         end
       end
