@@ -28,10 +28,15 @@
     -- Dwarf, Draenei, Gnome, Human, NightElf, Worgen
     -- BloodElf, Goblin, Orc, Tauren, Troll, Scourge
     -- Pandaren
-  function Player:Race ()
+  do
     -- race, raceEn
-    return Cache.Get("UnitInfo", self:GUID(), "Race",
-                       function() return {UnitRace(self.UnitID)}; end)[2];
+    local UnitRace = UnitRace; 
+    local UnitID;
+    local function _UnitRace () return select(2, UnitRace(UnitID)); end
+    function Player:Race ()
+      UnitID = self.UnitID;
+      return Cache.Get("UnitInfo", self:GUID(), "Race", _UnitRace);
+    end
   end
 
   -- Get if the player is on a combat mount or not.

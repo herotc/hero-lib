@@ -24,19 +24,31 @@
   end
 
   -- Get the unit GUID.
-  function Unit:GUID ()
-    return Cache.Get("GUIDInfo", self.UnitID,
-                    function() return UnitGUID(self.UnitID); end);
+  do
+    -- guid
+    local UnitGUID = UnitGUID;
+    local UnitID;
+    local function _UnitGUID () return UnitGUID(UnitID); end
+    function Unit:GUID ()
+      UnitID = self.UnitID;
+      return Cache.Get("GUIDInfo", UnitID, _UnitGUID);
+    end
   end
 
   -- Get the unit Name.
-  function Unit:Name ()
-    local GUID = self:GUID();
-    if GUID then
-      return Cache.Get("UnitInfo", GUID, "Name",
-                      function() return UnitName(self.UnitID); end);
+  do
+    -- name
+    local UnitName = UnitName;
+    local UnitID;
+    local function _UnitName () return UnitName(UnitID); end
+    function Unit:Name ()
+      local GUID = self:GUID();
+      if GUID then
+        UnitID = self.UnitID;
+        return Cache.Get("UnitInfo", GUID, "Name", _UnitName);
+      end
+      return nil;
     end
-    return nil;
   end
 
   -- Get if the unit Exists and is visible.
@@ -98,12 +110,19 @@
   end
 
   -- Get if the unit CanAttack the other one.
-  function Unit:CanAttack (Other)
-    if self:GUID() and Other:GUID() then
-      return Cache.Get("UnitInfo", self:GUID(), "CanAttack", Other:GUID(),
-                      function() return UnitCanAttack(self.UnitID, Other.UnitID) end);
+  do
+    -- canAttack
+    local UnitCanAttack = UnitCanAttack;
+    local UnitID, OtherUnitID;
+    local function _UnitCanAttack () return UnitCanAttack(UnitID, OtherUnitID); end
+    function Unit:CanAttack (Other)
+      local GUID, OtherGUID = self:GUID(), Other:GUID();
+      if GUID and OtherGUID then
+        UnitID, OtherUnitID = self.UnitID, Other.UnitID;
+        return Cache.Get("UnitInfo", GUID, "CanAttack", OtherGUID, _UnitCanAttack);
+      end
+      return nil;
     end
-    return nil;
   end
 
   local DummyUnits = {
@@ -144,12 +163,19 @@
   end
 
   -- Get if the unit is a Player or not.
-  function Unit:IsAPlayer ()
-    if self:GUID() then
-      return Cache.Get("UnitInfo", self:GUID(), "IsAPlayer",
-                      function() return UnitIsPlayer(self.UnitID) end);
+  do
+    -- isPlayer
+    local UnitIsPlayer = UnitIsPlayer;
+    local UnitID;
+    local function _UnitIsPlayer () return UnitIsPlayer(UnitID); end
+    function Unit:IsAPlayer ()
+      local GUID = self:GUID();
+      if GUID then
+        UnitID = self.UnitID;
+        return Cache.Get("UnitInfo", GUID, "IsAPlayer", _UnitIsPlayer);
+      end
+      return nil;
     end
-    return nil;
   end
 
   -- Get the unit Health.
@@ -253,7 +279,17 @@
   end
 
   -- Get if the unit is moving or not.
-  function Unit:IsMoving()
-    return Cache.Get("UnitInfo", self:GUID(), "IsMoving",
-                       function() return GetUnitSpeed(self.UnitID) ~= 0; end)
+  do
+    -- speed, groundSpeed, flightSpeed, swimSpeed
+    local GetUnitSpeed = GetUnitSpeed;
+    local UnitID;
+    local function _GetUnitSpeed () return GetUnitSpeed(UnitID) ~= 0; end
+    function Unit:IsMoving ()
+      local GUID = self:GUID();
+      if GUID then
+        UnitID = self.UnitID;
+        return Cache.Get("UnitInfo", GUID, "IsMoving", _GetUnitSpeed);
+      end
+      return nil;
+    end
   end

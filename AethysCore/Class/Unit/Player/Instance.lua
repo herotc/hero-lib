@@ -21,7 +21,7 @@
   -- Get the instance information about the current area.
   -- Returns
     -- name - Name of the instance or world area (string)
-    -- type - Type of the instance (string)
+    -- instanceType - Type of the instance (string)
     --   arena - A PvP Arena instance
     --   none - Normal world area (e.g. Northrend, Kalimdor, Deeprun Tram)
     --   party - An instance for 5-man groups
@@ -58,15 +58,22 @@
     -- maxPlayers - Maximum number of players allowed in the instance (number)
     -- playerDifficulty - Unknown (number)
     -- isDynamicInstance - True for raid instances that can support multiple maxPlayers values (10 and 25) - eg. ToC, DS, ICC, etc (boolean)
-    -- mapID - (number)
+    -- mapID - Unknown (number)
     -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
-  function Player:InstanceInfo (Index)
-    if Index then
-      return Cache.Get("UnitInfo", self:GUID(), "InstanceInfo",
-                        function() return {GetInstanceInfo()}; end)[Index];
-    else
-      return unpack(Cache.Get("UnitInfo", self:GUID(), "InstanceInfo",
-                        function() return {GetInstanceInfo()}; end));
+    -- lfgID - Unknown (number)
+  do
+    -- name, instanceType, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize, lfgID
+    local GetInstanceInfo = GetInstanceInfo;
+    local function _GetInstanceInfo () return {GetInstanceInfo()}; end
+    function Player:InstanceInfo ()
+      local Infos = Cache.Get("UnitInfo", self:GUID(), "InstanceInfo", _GetInstanceInfo);
+      if Infos then
+        if Index then
+          return Infos[Index];
+        else
+          return unpack(Infos);
+        end
+      end
     end
   end
 
