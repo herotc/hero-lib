@@ -34,8 +34,12 @@
     local UnitID;
     local function _UnitRace () return select(2, UnitRace(UnitID)); end
     function Player:Race ()
-      UnitID = self.UnitID;
-      return Cache.Get("UnitInfo", self:GUID(), "Race", _UnitRace);
+      local GUID = self:GUID();
+      if GUID then
+        UnitID = self.UnitID;
+        return Cache.Get("UnitInfo", GUID, "Race", _UnitRace);
+      end
+      return nil;
     end
   end
 

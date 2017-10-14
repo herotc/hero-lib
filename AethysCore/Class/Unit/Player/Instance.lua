@@ -66,14 +66,18 @@
     local GetInstanceInfo = GetInstanceInfo;
     local function _GetInstanceInfo () return {GetInstanceInfo()}; end
     function Player:InstanceInfo ()
-      local Infos = Cache.Get("UnitInfo", self:GUID(), "InstanceInfo", _GetInstanceInfo);
-      if Infos then
-        if Index then
-          return Infos[Index];
-        else
-          return unpack(Infos);
+      local GUID = self:GUID();
+      if GUID then
+        local Infos = Cache.Get("UnitInfo", GUID, "InstanceInfo", _GetInstanceInfo);
+        if Infos then
+          if Index then
+            return Infos[Index];
+          else
+            return unpack(Infos);
+          end
         end
       end
+      return nil;
     end
   end
 
