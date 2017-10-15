@@ -27,11 +27,8 @@
   do
     -- guid
     local UnitGUID = UnitGUID;
-    local UnitID;
-    local function _UnitGUID () return UnitGUID(UnitID); end
     function Unit:GUID ()
-      UnitID = self.UnitID;
-      return Cache.Get("GUIDInfo", UnitID, _UnitGUID);
+      return UnitGUID(self.UnitID);
     end
   end
 
@@ -39,13 +36,10 @@
   do
     -- name
     local UnitName = UnitName;
-    local UnitID;
-    local function _UnitName () return UnitName(UnitID); end
     function Unit:Name ()
       local GUID = self:GUID();
       if GUID then
-        UnitID = self.UnitID;
-        return Cache.Get("UnitInfo", GUID, "Name", _UnitName);
+        return UnitName(self.UnitID);
       end
       return nil;
     end
@@ -113,13 +107,10 @@
   do
     -- canAttack
     local UnitCanAttack = UnitCanAttack;
-    local UnitID, OtherUnitID;
-    local function _UnitCanAttack () return UnitCanAttack(UnitID, OtherUnitID); end
     function Unit:CanAttack (Other)
       local GUID, OtherGUID = self:GUID(), Other:GUID();
       if GUID and OtherGUID then
-        UnitID, OtherUnitID = self.UnitID, Other.UnitID;
-        return Cache.Get("UnitInfo", GUID, "CanAttack", OtherGUID, _UnitCanAttack);
+        return UnitCanAttack(self.UnitID, Other.UnitID);
       end
       return nil;
     end
@@ -166,13 +157,10 @@
   do
     -- isPlayer
     local UnitIsPlayer = UnitIsPlayer;
-    local UnitID;
-    local function _UnitIsPlayer () return UnitIsPlayer(UnitID); end
     function Unit:IsAPlayer ()
       local GUID = self:GUID();
       if GUID then
-        UnitID = self.UnitID;
-        return Cache.Get("UnitInfo", GUID, "IsAPlayer", _UnitIsPlayer);
+        return UnitIsPlayer(self.UnitID);
       end
       return nil;
     end
@@ -282,13 +270,10 @@
   do
     -- speed, groundSpeed, flightSpeed, swimSpeed
     local GetUnitSpeed = GetUnitSpeed;
-    local UnitID;
-    local function _GetUnitSpeed () return GetUnitSpeed(UnitID) ~= 0; end
     function Unit:IsMoving ()
       local GUID = self:GUID();
       if GUID then
-        UnitID = self.UnitID;
-        return Cache.Get("UnitInfo", GUID, "IsMoving", _GetUnitSpeed);
+        return GetUnitSpeed(self.UnitID) ~= 0;
       end
       return nil;
     end

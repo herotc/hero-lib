@@ -31,13 +31,10 @@
   do
     -- race, raceEn
     local UnitRace = UnitRace; 
-    local UnitID;
-    local function _UnitRace () return select(2, UnitRace(UnitID)); end
     function Player:Race ()
       local GUID = self:GUID();
       if GUID then
-        UnitID = self.UnitID;
-        return Cache.Get("UnitInfo", GUID, "Race", _UnitRace);
+        return select(2, UnitRace(self.UnitID));
       end
       return nil;
     end
