@@ -5,7 +5,10 @@
   -- Lua
   
   -- File Locals
-  local CacheIsEnabled = true; -- TODO: Make a settings to disable it (currently not supported).
+  if not AethysCacheDB then
+    AethysCacheDB = {};
+    AethysCacheDB.Enabled = true;
+  end
 --- ======= GLOBALIZE =======
   -- Addon
   AethysCache = Cache;
@@ -249,7 +252,7 @@ end
   --    return Cache.Get("SpellInfo", 53, "CostInfo",
   --                     function() return GetSpellPowerCost(53)[1] end) -- if you have a "fallback" value
   function Cache.Get (...)
-    if CacheIsEnabled then
+    if AethysCacheDB.Enabled then
       return CacheImpl.GetSet(...)
     else
       local last = select(select('#', ...), ...)
@@ -264,7 +267,7 @@ end
   -- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
   -- Typical usage is : return Cache.Set("SpellInfo", 53, "CostInfo", GetSpellPowerCost(53)[1]);
   function Cache.Set (...)
-    return CacheIsEnabled and CacheImpl.Set(...) or select(select('#', ...), ...)
+    return AethysCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
   end
 
   -- Wipe a table while keeping the structure
