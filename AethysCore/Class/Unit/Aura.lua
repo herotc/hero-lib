@@ -135,7 +135,7 @@
       for i = 1, AC.MAXIMUM do
         local Infos = {UnitDebuff(UnitID, i)};
         if not Infos[11] then break; end
-        Debuff[i] = Infos;
+        Debuffs[i] = Infos;
       end
       return Debuffs;
     end
