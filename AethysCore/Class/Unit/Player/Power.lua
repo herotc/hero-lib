@@ -454,8 +454,10 @@ end
     return (self:AstralPower() / self:AstralPowerMax()) * 100;
   end
   -- astral_power.deficit
-  function Player:AstralPowerDeficit ()
-    return self:AstralPowerMax() - self:AstralPower();
+  function Player:AstralPowerDeficit (overrideFuturAstralPower)
+    local AstralPower = self:AstralPower()
+    if overrideFuturAstralPower then AstralPower=overrideFuturAstralPower end
+    return self:AstralPowerMax() - AstralPower;
   end
   -- "astral_power.deficit.pct"
   function Player:AstralPowerDeficitPercentage ()
