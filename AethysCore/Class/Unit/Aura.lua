@@ -123,6 +123,32 @@
   function Unit:BuffRefreshableP ( Spell, PandemicThreshold, AnyCaster, Offset )
     return self:BuffRefreshable( Spell, PandemicThreshold, AnyCaster, Offset or "Auto" );
   end
+  
+  --[[*
+    * @function Unit:BuffRefreshableC
+    * @override Unit:BuffRefreshable
+    * @desc Automaticaly calculates the pandemicThreshold from enum table.
+    *
+    * @param 
+    *
+    * @returns {number}
+    *]]
+  function Unit:BuffRefreshableC ( Spell, AnyCaster, Offset )
+    return self:BuffRefreshable( Spell, Spell:PandemicThreshold(), AnyCaster, Offset);
+  end
+  
+  --[[*
+    * @function Unit:BuffRefreshableCP
+    * @override Unit:BuffRefreshableP
+    * @desc Automaticaly calculates the pandemicThreshold from enum table with prediction.
+    *
+    * @param 
+    *
+    * @returns {number}
+    *]]  
+  function Unit:BuffRefreshableCP ( Spell, AnyCaster, Offset )
+    return self:BuffRefreshableP( Spell, Spell:PandemicThreshold(), AnyCaster, Offset);
+  end
 
   -- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
   do
@@ -230,6 +256,32 @@
     return self:DebuffRefreshable( Spell, PandemicThreshold, AnyCaster, Offset or "Auto" );
   end
 
+  --[[*
+    * @function Unit:DebuffRefreshableC
+    * @override Unit:DebuffRefreshable
+    * @desc Automaticaly calculates the pandemicThreshold from enum table.
+    *
+    * @param 
+    *
+    * @returns {number}
+    *]]
+  function Unit:DebuffRefreshableC ( Spell, AnyCaster, Offset )
+    return self:DebuffRefreshable( Spell, Spell:PandemicThreshold(), AnyCaster, Offset);
+  end
+  
+  --[[*
+    * @function Unit:DebuffRefreshableCP
+    * @override Unit:DebuffRefreshableP
+    * @desc Automaticaly calculates the pandemicThreshold from enum table with prediction.
+    *
+    * @param 
+    *
+    * @returns {number}
+    *]]  
+  function Unit:DebuffRefreshableCP ( Spell, AnyCaster, Offset )
+    return self:DebuffRefreshableP( Spell, Spell:PandemicThreshold(), AnyCaster, Offset);
+  end
+  
   -- buff.bloodlust.up
   do
     local HeroismBuff = {
