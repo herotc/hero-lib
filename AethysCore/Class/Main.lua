@@ -73,7 +73,8 @@ do
     self.LastCastTime = 0;
     self.LastDisplayTime = 0;
     self.LastHitTime = 0;
-    self.LastBuffTime = 0;
+    self.LastAppliedOnPlayerTime = 0;
+    self.LastRemovedFromPlayerTime = 0;
   end
 end
 

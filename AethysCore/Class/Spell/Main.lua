@@ -40,9 +40,14 @@
     return AC.GetTime() - self.LastDisplayTime;
   end
   
-  -- Get the Time since Last Buff applied.
-  function Spell:TimeSinceLastBuff ()
-    return AC.GetTime() - self.LastBuffTime;
+  -- Get the Time since Last Buff applied on the player.
+  function Spell:TimeSinceLastAppliedOnPlayer ()
+    return AC.GetTime() - self.LastAppliedOnPlayerTime;
+  end
+
+  -- Get the Time since Last Buff removed from the player.
+  function Spell:TimeSinceLastRemovedOnPlayer ()
+    return AC.GetTime() - self.LastRemovedFromPlayerTime;
   end
 
   -- Register the spell damage formula.

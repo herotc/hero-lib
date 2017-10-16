@@ -51,18 +51,31 @@
     end
     , "SPELL_CAST_SUCCESS"
   )
-  
-  -- Player Buff Listener
+
+  -- Player Aura Applied Listener
   AC:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       for i = 1, #PlayerSpecs do
         local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID];
         if ListenedSpell then
-          ListenedSpell.LastBuffTime = AC.GetTime();
+          ListenedSpell.LastAppliedOnPlayerTime = AC.GetTime();
         end
       end
     end
     , "SPELL_AURA_APPLIED"
+  )
+
+  -- Player Aura Removed Listener
+  AC:RegisterForSelfCombatEvent(
+    function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID];
+        if ListenedSpell then
+          ListenedSpell.LastRemovedFromPlayerTime = AC.GetTime();
+        end
+      end
+    end
+    , "SPELL_AURA_REMOVED"
   )
 
   -- Register spells to listen for a given class (based on SpecID).
