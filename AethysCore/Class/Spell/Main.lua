@@ -242,3 +242,19 @@
     if Hasted then return BaseTickTime / Player:SpellHaste(); end
     return BaseTickTime;
   end
+  
+  -- Base Duration of a dot/hot/channel...
+  local SpellDuration = AC.Enum.SpellDuration
+  function Spell:BaseDuration ()
+    local Duration = SpellDuration[self.SpellID]
+    if not Duration or Duration == 0 then return 0; end
+    local BaseDuration = Duration[1];
+    return BaseDuration / 1000;
+  end
+  
+  function Spell:MaxDuration ()
+    local Duration = SpellDuration[self.SpellID]
+    if not Duration or Duration == 0 then return 0; end
+    local BaseDuration = Duration[2];
+    return BaseDuration / 1000;
+  end

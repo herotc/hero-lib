@@ -33,6 +33,7 @@ Enum\ItemRange.lua
 Enum\ProjectileSpeed.lua
 Enum\TriggerGCD.lua
 Enum\TickTime.lua
+Enum\SpellDuration.lua
 
 # Classes
 Class\Main.lua
