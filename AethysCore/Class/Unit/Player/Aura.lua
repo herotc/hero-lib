@@ -33,7 +33,9 @@
         Spell(11327),   -- Vanish
         Spell(115193),  -- Vanish w/ Subterfuge Talent
         Spell(115192),  -- Subterfuge Buff
-        Spell(185422)   -- Stealth from Shadow Dance
+        Spell(185422),  -- Stealth from Shadow Dance
+        -- Druid
+        Spell(102543)   -- Incarnation: King of the Jungle
       },
       -- Special Stealth
       { -- Night Elf
