@@ -66,6 +66,7 @@ Misc\Enemies.lua
 # Events
 Events\Main.lua
 Events\Spell.lua
+Events\PMultiplier.lua
 Events\Prev_Spell.lua
 Events\KeyBinding.lua
 
