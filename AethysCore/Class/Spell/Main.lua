@@ -258,3 +258,9 @@
     local BaseDuration = Duration[2];
     return BaseDuration / 1000;
   end
+  
+  function Spell:PandemicThreshold ()
+    local BaseDuration = self:BaseDuration()
+    if not BaseDuration or BaseDuration == 0 then return 0; end
+    return BaseDuration * 0.3;
+  end
