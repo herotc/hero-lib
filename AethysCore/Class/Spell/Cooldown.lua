@@ -115,7 +115,7 @@
     * @returns {number}
     *]]
   function Spell:RechargeP ( BypassRecovery, Offset )
-    Spell:Recharge (BypassRecovery, Offset or "Auto")
+    return self:Recharge(BypassRecovery, Offset or "Auto");
   end
 
   -- action.foo.charges_fractional or cooldown.foo.charges_fractional
@@ -159,7 +159,7 @@
     * @returns {number}
     *]]
   function Spell:ChargesFractionalP ( BypassRecovery, Offset )
-    Spell:ChargesFractional (BypassRecovery, Offset or "Auto")
+    return self:ChargesFractional(BypassRecovery, Offset or "Auto");
   end
 
   -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
