@@ -85,18 +85,37 @@
   end
 
   -- action.foo.recharge_time or cooldown.foo.recharge_time
-  function Spell:Recharge (BypassRecovery)
+  function Spell:Recharge (BypassRecovery, Offset)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
     if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    local Recharge = Cache.SpellInfo[self.SpellID].Recharge;
+    local RechargeNoRecovery = Cache.SpellInfo[self.SpellID].RechargeNoRecovery;
     if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Recharge)
       or (BypassRecovery and not Cache.SpellInfo[self.SpellID].RechargeNoRecovery) then
       if BypassRecovery then
-        Cache.SpellInfo[self.SpellID].RechargeNoRecovery = self:ComputeChargesCooldown(BypassRecovery);
+        RechargeNoRecovery = self:ComputeChargesCooldown(BypassRecovery);
       else
-        Cache.SpellInfo[self.SpellID].Recharge = self:ComputeChargesCooldown();
+        Recharge = self:ComputeChargesCooldown();
       end
     end
-    return Cache.SpellInfo[self.SpellID].Recharge;
+    if Offset then
+      return BypassRecovery and mathmax( AC.OffsetRemains( RechargeNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( Recharge, Offset ), 0 );
+    else
+      return BypassRecovery and RechargeNoRecovery or Recharge;
+    end
+  end
+  
+  --[[*
+    * @function Spell:RechargeP
+    * @override Spell:Recharge
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:RechargeP ( BypassRecovery, Offset )
+    Spell:Recharge (BypassRecovery, Offset or "Auto")
   end
 
   -- action.foo.charges_fractional or cooldown.foo.charges_fractional
@@ -104,24 +123,43 @@
   function Spell:ChargesFractional (BypassRecovery)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
     if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    local ChargesFractional = Cache.SpellInfo[self.SpellID].ChargesFractional;
+    local ChargesFractionalNoRecovery = Cache.SpellInfo[self.SpellID].ChargesFractionalNoRecovery;
     if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].ChargesFractional)
       or (BypassRecovery and not Cache.SpellInfo[self.SpellID].ChargesFractionalNoRecovery) then
       if self:Charges() == self:MaxCharges() then
         if BypassRecovery then
-          Cache.SpellInfo[self.SpellID].ChargesFractionalNoRecovery = self:Charges();
+          ChargesFractionalNoRecovery = self:Charges();
         else
-          Cache.SpellInfo[self.SpellID].ChargesFractional = self:Charges();
+          ChargesFractional = self:Charges();
         end
       else
         -- charges + (chargeDuration - recharge) / chargeDuration
         if BypassRecovery then
-          Cache.SpellInfo[self.SpellID].ChargesFractionalNoRecovery = self:Charges() + (self:ChargesInfo(4)-self:Recharge(BypassRecovery))/self:ChargesInfo(4);
+          ChargesFractionalNoRecovery = self:Charges() + (self:ChargesInfo(4)-self:Recharge(BypassRecovery))/self:ChargesInfo(4);
         else
-          Cache.SpellInfo[self.SpellID].ChargesFractional = self:Charges() + (self:ChargesInfo(4)-self:Recharge())/self:ChargesInfo(4);
+          ChargesFractional = self:Charges() + (self:ChargesInfo(4)-self:Recharge())/self:ChargesInfo(4);
         end
       end
     end
-    return Cache.SpellInfo[self.SpellID].ChargesFractional;
+    if Offset then
+      return BypassRecovery and mathmax( AC.OffsetRemains( ChargesFractionalNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( ChargesFractional, Offset ), 0 );
+    else
+      return BypassRecovery and ChargesFractionalNoRecovery or ChargesFractional;
+    end
+  end
+  
+  --[[*
+    * @function Spell:ChargesFractionalP
+    * @override Spell:ChargesFractional
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:ChargesFractionalP ( BypassRecovery, Offset )
+    Spell:ChargesFractional (BypassRecovery, Offset or "Auto")
   end
 
   -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
