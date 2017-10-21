@@ -103,7 +103,10 @@
         87081,  -- Rocktusk
         87080,  -- Riverwallow
         87079,  -- Meadowstomper
-        87076   -- Snarler
+        87076,  -- Snarler
+      --- Legion
+        -- Karazhan
+        116802  -- Rodent of Usual Size
     }
   };
   function Player:IsInWhitelistedVehicle ()
