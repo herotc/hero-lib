@@ -78,6 +78,23 @@
   function Spell:Charges ()
     return self:ChargesInfo(1);
   end
+  
+  --[[*
+    * @function Spell:ChargesP
+    * @override Spell:Charges
+    * @desc Charges with recharge prediction
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:ChargesP ( BypassRecovery, Offset )
+    local Charges = self:Charges ()
+    if Charges < self:MaxCharges() and self:RechargeP( BypassRecovery, Offset ) == 0 then
+      Charges = Charges + 1;
+    end
+    return Charges
+  end
 
   -- action.foo.max_charges or cooldown.foo..max_charges
   function Spell:MaxCharges ()
