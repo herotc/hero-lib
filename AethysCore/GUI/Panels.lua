@@ -206,7 +206,7 @@
   end
   
   local function CreateButton (Parent, Setting, Text, Tooltip, Action, Width, Height, Optionals)
-    local Button = CreateFrame("Button", "mybutton", Parent, "UIPanelButtonTemplate")
+    local Button = CreateFrame("Button", "$parent_"..Setting, Parent, "UIPanelButtonTemplate")
     Parent[Setting] = Button;
     
     if Width then
