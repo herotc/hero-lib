@@ -1422,7 +1422,6 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       4374,
       4388,
       4852,
-      4985,
       5013,
       5387,
       7247,
@@ -1883,6 +1882,7 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       17054,
       17068,
       17071,
+      17076,
       17202,
       17223,
       17310,
@@ -1896,7 +1896,6 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       18671,
       18752,
       18816,
-      18882,
       19099,
       19100,
       19166,
@@ -2655,6 +2654,7 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       151875,
       151926,
       151927,
+      151967,
       152574,
       152996,
       153126,
@@ -2736,7 +2736,6 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       151958,
       151960,
       151963,
-      151967,
       151969,
       151970,
       152098
@@ -3007,6 +3006,7 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       151310,
       151312,
       151547,
+      151969,
       151975,
       153293
     }
