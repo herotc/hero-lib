@@ -204,6 +204,25 @@
     end
     Slider:SetScript("OnValueChanged", UpdateSetting);
   end
+  
+  local function CreateButton (Parent, Setting, Text, Tooltip, Action, Optionals)
+    local Button = CreateFrame("Button", "mybutton", Parent, "UIPanelButtonTemplate")
+    Parent[Setting] = Button;
+    
+    -- Frame init
+    if not LastOptionAttached[Parent.name] then
+      Button:SetPoint("TOPLEFT", 15, -15);
+    else
+      Button:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3]-5);
+    end
+    LastOptionAttached[Parent.name] = {Button, 0, 0};
+    
+    _G[Button:GetName().."Text"]:SetText("|c00dfb802" .. Text .. "|r");
+
+    AnchorTooltip(Button, FilterTooltip(Tooltip, Optionals));
+
+    Button:SetScript("onClick", Action);
+  end
 
 --- ======= PUBLIC PANELS FUNCTIONS =======
   -- Make a panel
@@ -250,7 +269,8 @@
   local CreatePanelOption = {
     CheckButton = CreateCheckButton,
     Dropdown = CreateDropdown,
-    Slider = CreateSlider
+    Slider = CreateSlider,
+    Button = CreateButton
   }
   function GUI.CreatePanelOption (Type, ...)
     CreatePanelOption[Type](...);
