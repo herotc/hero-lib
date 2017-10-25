@@ -205,9 +205,20 @@
     Slider:SetScript("OnValueChanged", UpdateSetting);
   end
   
-  local function CreateButton (Parent, Setting, Text, Tooltip, Action, Optionals)
+  local function CreateButton (Parent, Setting, Text, Tooltip, Action, Width, Height, Optionals)
     local Button = CreateFrame("Button", "mybutton", Parent, "UIPanelButtonTemplate")
     Parent[Setting] = Button;
+    
+    if Width then
+      Button:SetWidth(Width)
+    else
+      Button:SetWidth(20)
+    end
+    if Height then
+      Button:SetWidth(Height)
+    else
+      Button:SetWidth(150)
+    end
     
     -- Frame init
     if not LastOptionAttached[Parent.name] then
@@ -225,6 +236,7 @@
   end
 
 --- ======= PUBLIC PANELS FUNCTIONS =======
+  GUI.PanelsTable = {};
   -- Make a panel
   function GUI.CreatePanel (Parent, Addon, PName, SettingsTable, SavedVariablesTable)
     local Panel = CreateFrame("Frame", Addon .. "_" .. PName, UIParent);
@@ -233,7 +245,9 @@
     Parent.Panel.SettingsTable = SettingsTable;
     Parent.Panel.SavedVariablesTable = SavedVariablesTable;
     Panel.name = Addon;
+    Panel.usedName = Addon:gsub(" ","");
     InterfaceOptions_AddCategory(Panel);
+    GUI.PanelsTable[Panel.usedName] = Panel
     return Panel;
   end
   -- Make a child panel
@@ -253,10 +267,12 @@
     CP.SavedVariablesTable = Parent.SavedVariablesTable;
     CP.name = CName;
     CP.parent = Parent.name;
+    CP.usedName = CName:gsub(" ","");
     InterfaceOptions_AddCategory(CP);
     if Parent.collapsed then
       GUI.TogglePanel(Parent);
     end
+    GUI.PanelsTable[CP.usedName] = CP
     return CP;
   end
   -- Toggle a panel
@@ -274,4 +290,7 @@
   }
   function GUI.CreatePanelOption (Type, ...)
     CreatePanelOption[Type](...);
+  end
+  function GUI.GetPanelByName(PanelName)
+    return GUI.PanelsTable[PanelName]
   end
