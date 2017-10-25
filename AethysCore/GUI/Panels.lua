@@ -148,7 +148,7 @@
     AnchorTooltip(Dropdown, FilterTooltip(Tooltip, Optionals));
   end
   -- Make a Slider
-  local function CreateSlider (Parent, Setting, Values, Text, Tooltip, Optionals)
+  local function CreateSlider (Parent, Setting, Values, Text, Tooltip, Action, Optionals)
     -- Constructor
     local Slider = CreateFrame("Slider", "$parent_"..Setting, Parent, "OptionsSliderTemplate");
     Parent[Setting] = Slider;
@@ -193,12 +193,18 @@
         local Value = self:GetValue();
         self.SavedVariablesTable[self.SavedVariablesKey] = Value;
         ShowValue:SetText(stringformat("%.2f", Value));
+        if Action then
+          Action(self:GetValue()) ;
+        end
       end
     else
       UpdateSetting = function (self)
         local Value = self:GetValue();
         self.SettingTable[self.SettingKey] = Value;
         self.SavedVariablesTable[self.SavedVariablesKey] = Value;
+        if Action then
+          Action(self:GetValue()) ;
+        end
         ShowValue:SetText(stringformat("%.2f", Value));
       end
     end
