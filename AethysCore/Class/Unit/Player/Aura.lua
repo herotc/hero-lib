@@ -66,6 +66,15 @@
           end
         end
       end
+      if Spell.Druid then
+        local Feral = Spell.Druid.Feral;
+        if Feral then
+          if (Abilities and Feral.Incarnation:TimeSinceLastCast() < 0.3) or
+            (Special and Feral.Shadowmeld:TimeSinceLastCast() < 0.3) then
+            return _Remains and 1 or true;
+          end
+        end
+      end
       for i = 1, #IsStealthedBuff do
         if i == 1 or (i == 2 and _Abilities) or (i == 3 and _Special) then
           local Buffs = IsStealthedBuff[i];
