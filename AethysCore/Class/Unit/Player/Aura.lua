@@ -44,24 +44,26 @@
     };
     local ThisUnit, _Abilities, _Special, _Remains;
     local function _IsStealthed ()
-      local Assassination, Outlaw, Subtlety = Spell.Rogue.Assassination, Spell.Rogue.Outlaw, Spell.Rogue.Subtlety;
-      if Assassination then
-        if (Abilities and Assassination.Vanish:TimeSinceLastCast() < 0.3) or
-          (Special and Assassination.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true;
+      if Spell.Rogue then
+        local Assassination, Outlaw, Subtlety = Spell.Rogue.Assassination, Spell.Rogue.Outlaw, Spell.Rogue.Subtlety;
+        if Assassination then
+          if (Abilities and Assassination.Vanish:TimeSinceLastCast() < 0.3) or
+            (Special and Assassination.Shadowmeld:TimeSinceLastCast() < 0.3) then
+            return _Remains and 1 or true;
+          end
         end
-      end
-      if Outlaw then
-        if (Abilities and Outlaw.Vanish:TimeSinceLastCast() < 0.3) or
-          (Special and Outlaw.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true;
+        if Outlaw then
+          if (Abilities and Outlaw.Vanish:TimeSinceLastCast() < 0.3) or
+            (Special and Outlaw.Shadowmeld:TimeSinceLastCast() < 0.3) then
+            return _Remains and 1 or true;
+          end
         end
-      end
-      if Subtlety then
-        if (Abilities and (Subtlety.Vanish:TimeSinceLastCast() < 0.3
-            or Subtlety.ShadowDance:TimeSinceLastCast() < 0.3))
-          or (Special and Subtlety.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true;
+        if Subtlety then
+          if (Abilities and (Subtlety.Vanish:TimeSinceLastCast() < 0.3
+              or Subtlety.ShadowDance:TimeSinceLastCast() < 0.3))
+            or (Special and Subtlety.Shadowmeld:TimeSinceLastCast() < 0.3) then
+            return _Remains and 1 or true;
+          end
         end
       end
       for i = 1, #IsStealthedBuff do
