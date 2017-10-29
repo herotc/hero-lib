@@ -77,7 +77,8 @@
       if Offset then
         ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
       end
-      return ExpirationTime - AC.GetTime();
+      local Remains = ExpirationTime - AC.GetTime();
+      return Remains >= 0 and Remains or 0;
     else
       return 0;
     end
@@ -209,7 +210,8 @@
       if Offset then
         ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
       end
-      return ExpirationTime - AC.GetTime();
+      local Remains = ExpirationTime - AC.GetTime();
+      return Remains >= 0 and Remains or 0;
     else
       return 0;
     end
