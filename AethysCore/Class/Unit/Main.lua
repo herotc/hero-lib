@@ -253,17 +253,30 @@
 
   -- Get if we are Tanking or not the Unit.
   -- TODO: Use both GUID like CanAttack / IsUnit for better management.
-  function Unit:IsTanking (Other)
+  function Unit:IsTanking (Other, ThreatSituation)
     local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
       if UnitInfo.Tanked == nil then
+        local ThreatSituation = ThreatSituation or 2;
         local Situation = UnitThreatSituation(self.UnitID, Other.UnitID);
-        UnitInfo.Tanked = Situation and Situation >= 2 and true or false;
+        UnitInfo.Tanked = Situation and Situation >= ThreatSituation and true or false;
       end
       return UnitInfo.Tanked;
     end
     return nil;
+  end
+
+  function Unit:IsTankingAoE (Radius)
+    local Radius = Radius or 8;
+    AC.GetEnemies(Radius, true);
+    local IsTankingAOE = false;
+    for _, Unit in pairs(Cache.Enemies[Radius]) do
+      if self:IsTanking(Unit) then
+        IsTankingAOE = true;
+      end
+    end
+    return IsTankingAOE;
   end
 
   -- Get if the unit is moving or not.
