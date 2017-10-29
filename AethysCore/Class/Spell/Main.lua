@@ -230,7 +230,7 @@
     TickTime = RegisteredSpells;
   end
   function Spell:BaseTickTime ()
-    local Tick = TickTime[self.SpellID]
+    local Tick = TickTime[self.SpellID];
     if not Tick or Tick == 0 then return 0; end
     local TickTime = Tick[1];
     return TickTime / 1000;
@@ -244,9 +244,9 @@
   end
   
   -- Base Duration of a dot/hot/channel...
-  local SpellDuration = AC.Enum.SpellDuration
+  local SpellDuration = AC.Enum.SpellDuration;
   function Spell:BaseDuration ()
-    local Duration = SpellDuration[self.SpellID]
+    local Duration = SpellDuration[self.SpellID];
     if not Duration or Duration == 0 then return 0; end
     local BaseDuration = Duration[1];
     return BaseDuration / 1000;
@@ -260,7 +260,7 @@
   end
   
   function Spell:PandemicThreshold ()
-    local BaseDuration = self:BaseDuration()
+    local BaseDuration = self:BaseDuration();
     if not BaseDuration or BaseDuration == 0 then return 0; end
     return BaseDuration * 0.3;
   end
