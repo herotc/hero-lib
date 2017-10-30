@@ -44,9 +44,9 @@
   end
 
   -- Get if the unit is casting or not. Param to check if the unit is casting a specific spell or not
-  function Unit:IsCasting (SpellID)
+  function Unit:IsCasting (Spell)
     if SpellID then
-      return self:CastingInfo(10) == SpellID and true or false;
+      return self:CastingInfo(10) == Spell:ID() and true or false;
     else
       return self:CastingInfo(1) and true or false;
     end
