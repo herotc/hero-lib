@@ -43,9 +43,13 @@
     return nil;
   end
 
-  -- Get if the unit is casting or not.
-  function Unit:IsCasting ()
-    return self:CastingInfo(1) and true or false;
+  -- Get if the unit is casting or not. Param to check if the unit is casting a specific spell or not
+  function Unit:IsCasting (SpellID)
+    if SpellID then
+      return self:CastingInfo(10) == SpellID and true or false;
+    else
+      return self:CastingInfo(1) and true or false;
+    end
   end
 
   -- Get the unit cast's name if there is any.
