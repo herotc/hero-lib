@@ -56,7 +56,55 @@
   -- "Mana.deficit.pct"
   function Player:ManaDeficitPercentage ()
     return (self:ManaDeficit() / self:ManaMax()) * 100;
-  end  
+  end 
+  -- mana.regen
+  function Player:ManaRegen ()
+    local GUID = self:GUID()
+    if GUID then
+      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
+      if not UnitInfo.ManaRegen then
+        UnitInfo.ManaRegen = select(2, GetPowerRegen(self.UnitID));
+      end
+      return UnitInfo.ManaRegen;
+    end
+  end
+  -- Mana regen in a cast
+  function Player:ManaCastRegen (CastTime)
+    if self:ManaRegen() == 0 then return -1; end
+    return self:ManaRegen() * CastTime;
+  end
+  -- "remaining_cast_regen"
+  function Player:ManaRemainingCastRegen (Offset)
+    if self:ManaRegen() == 0 then return -1; end
+    -- If we are casting, we check what we will regen until the end of the cast
+    if self:IsCasting() then
+      return self:ManaRegen() * (self:CastRemains() + (Offset or 0));
+    -- Else we'll use the remaining GCD as "CastTime"
+    else
+      return self:ManaRegen() * (self:GCDRemains() + (Offset or 0));
+    end
+  end
+  -- Mana Predicted with current cast
+  function Player:ManaP ()
+    local FutureMana = Player:Mana() - Player:CastCost()
+    -- Add the mana tha we will regen during the remaining of the cast
+    if Player:Mana() ~= Player:ManaMax() then FutureMana = FutureMana + Player:ManaRemainingCastRegen() end
+    -- Cap the max
+    if FutureMana > Player:ManaMax() then FutureMana = Player:ManaMax() end
+    return FutureMana
+  end
+  -- Mana.pct Predicted with current cast
+  function Player:ManaPercentageP ()
+    return (self:ManaP() / self:ManaMax()) * 100;
+  end
+  -- Mana.deficit Predicted with current cast
+  function Player:ManaDeficitP ()
+    return self:ManaMax() - self:ManaP();
+  end
+  -- "Mana.deficit.pct" Predicted with current cast
+  function Player:ManaDeficitPercentageP ()
+    return (self:ManaDeficitP() / self:ManaMax()) * 100;
+  end 
   
   --------------------------
   --- 1 | Rage Functions ---
@@ -439,29 +487,29 @@ end
     end
   end
   -- astral_power
-  function Player:AstralPower ()
+  function Player:AstralPower (overrideFutureAstralPower)
     local GUID = self:GUID()
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.AstralPower then
         UnitInfo.AstralPower = UnitPower(self.UnitID, Enum.PowerType.LunarPower);
       end
+      if overrideFutureAstralPower then UnitInfo.AstralPower = overrideFutureAstralPower end
       return UnitInfo.AstralPower;
     end
   end
   -- astral_power.pct
-  function Player:AstralPowerPercentage ()
-    return (self:AstralPower() / self:AstralPowerMax()) * 100;
+  function Player:AstralPowerPercentage (overrideFutureAstralPower)
+    return (self:AstralPower(overrideFutureAstralPower) / self:AstralPowerMax()) * 100;
   end
   -- astral_power.deficit
-  function Player:AstralPowerDeficit (overrideFuturAstralPower)
-    local AstralPower = self:AstralPower()
-    if overrideFuturAstralPower then AstralPower=overrideFuturAstralPower end
+  function Player:AstralPowerDeficit (overrideFutureAstralPower)
+    local AstralPower = self:AstralPower(overrideFutureAstralPower)
     return self:AstralPowerMax() - AstralPower;
   end
   -- "astral_power.deficit.pct"
-  function Player:AstralPowerDeficitPercentage ()
-    return (self:AstralPowerDeficit() / self:AstralPowerMax()) * 100;
+  function Player:AstralPowerDeficitPercentage (overrideFutureAstralPower)
+    return (self:AstralPowerDeficit(overrideFutureAstralPower) / self:AstralPowerMax()) * 100;
   end
 
   --------------------------------
