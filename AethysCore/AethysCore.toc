@@ -2,7 +2,7 @@
 
 ## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
-## Version: 7.3.0.06
+## Version: 7.3.0.07
 ## Notes: Core Library used by Aethys Addons. Can be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
