@@ -22,12 +22,7 @@
   function Unit:PowerType ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.PowerType then
-        -- powerToken (ex: Enum.PowerType.Energy) when used for UnitPower function returns the powerType id (ex: 3), so we'll store the powerType id
-        UnitInfo.PowerType = UnitPowerType(self.UnitID);
-      end
-      return UnitInfo.PowerType;
+      return UnitPowerType(self.UnitID);
     end
   end
 
@@ -35,33 +30,21 @@
   function Unit:PowerMax ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.PowerMax then
-        UnitInfo.PowerMax = UnitPowerMax(self.UnitID, self:PowerType());
-      end
-      return UnitInfo.PowerMax;
+      return UnitPowerMax(self.UnitID, self:PowerType());
     end
   end
   -- power
   function Unit:Power ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.Power then
-        UnitInfo.Power = UnitPower(self.UnitID, self:PowerType());
-      end
-      return UnitInfo.Power;
+      return UnitPower(self.UnitID, self:PowerType());
     end
   end
   -- power.regen
   function Unit:PowerRegen ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.PowerRegen then
-        UnitInfo.PowerRegen = select(2, GetPowerRegen(self.UnitID));
-      end
-      return UnitInfo.PowerRegen;
+      return select(2, GetPowerRegen(self.UnitID));
     end
   end
   -- power.pct

@@ -151,33 +151,21 @@
   function Player:FocusMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.FocusMax then
-        UnitInfo.FocusMax = UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
-      end
-      return UnitInfo.FocusMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
     end
   end
   -- focus
   function Player:Focus ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Focus then
-        UnitInfo.Focus = UnitPower(self.UnitID, Enum.PowerType.Focus);
-      end
-      return UnitInfo.Focus;
+      return UnitPower(self.UnitID, Enum.PowerType.Focus);
     end
   end
   -- focus.regen
   function Player:FocusRegen ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.FocusRegen then
-        UnitInfo.FocusRegen = select(2, GetPowerRegen(self.UnitID));
-      end
-      return UnitInfo.FocusRegen;
+      return select(2, GetPowerRegen(self.UnitID));
     end
   end
   -- focus.pct
@@ -244,33 +232,21 @@
   function Player:EnergyMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.EnergyMax then
-        UnitInfo.EnergyMax = UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
-      end
-      return UnitInfo.EnergyMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
     end
   end
   -- energy
   function Player:Energy ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Energy then
-        UnitInfo.Energy = UnitPower(self.UnitID, Enum.PowerType.Energy);
-      end
-      return UnitInfo.Energy;
+      return UnitPower(self.UnitID, Enum.PowerType.Energy);
     end
   end
   -- energy.regen
   function Player:EnergyRegen ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.EnergyRegen then
-        UnitInfo.EnergyRegen = select(2, GetPowerRegen(self.UnitID));
-      end
-      return UnitInfo.EnergyRegen;
+      return select(2, GetPowerRegen(self.UnitID));
     end
   end
   -- energy.pct
@@ -338,22 +314,14 @@ end
   function Player:ComboPointsMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.ComboPointsMax then
-        UnitInfo.ComboPointsMax = UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
-      end
-      return UnitInfo.ComboPointsMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
     end
   end
   -- combo_points
   function Player:ComboPoints ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.ComboPoints then
-        UnitInfo.ComboPoints = UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
-      end
-      return UnitInfo.ComboPoints;
+      return UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
     end
   end
   -- combo_points.deficit
@@ -368,22 +336,14 @@ end
   function Player:RunicPowerMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.RunicPowerMax then
-        UnitInfo.RunicPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.RunicPower);
-      end
-      return UnitInfo.RunicPowerMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.RunicPower);
     end
   end
   -- runicpower
   function Player:RunicPower ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.RunicPower then
-        UnitInfo.RunicPower = UnitPower(self.UnitID, Enum.PowerType.RunicPower);
-      end
-      return UnitInfo.RunicPower;
+      return UnitPower(self.UnitID, Enum.PowerType.RunicPower);
     end
   end
   -- runicpower.pct
@@ -449,22 +409,14 @@ end
   function Player:SoulShardsMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.SoulShardsMax then
-        UnitInfo.SoulShardsMax = UnitPowerMax(self.UnitID, Enum.PowerType.SoulShards);
-      end
-      return UnitInfo.SoulShardsMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.SoulShards);
     end
   end
   -- soul_shard
   function Player:SoulShards ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.SoulShards then
-        UnitInfo.SoulShards = WarlockPowerBar_UnitPower(self.UnitID);
-      end
-      return UnitInfo.SoulShards;
+      return WarlockPowerBar_UnitPower(self.UnitID);
     end
   end
   -- soul_shard.deficit
@@ -479,37 +431,28 @@ end
   function Player:AstralPowerMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.AstralPowerMax then
-        UnitInfo.AstralPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
-      end
-      return UnitInfo.AstralPowerMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
     end
   end
   -- astral_power
-  function Player:AstralPower (overrideFutureAstralPower)
+  function Player:AstralPower (OverrideFutureAstralPower)
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.AstralPower then
-        UnitInfo.AstralPower = UnitPower(self.UnitID, Enum.PowerType.LunarPower);
-      end
-      if overrideFutureAstralPower then UnitInfo.AstralPower = overrideFutureAstralPower end
-      return UnitInfo.AstralPower;
+      return OverrideFutureAstralPower or UnitPower(self.UnitID, Enum.PowerType.LunarPower);
     end
   end
   -- astral_power.pct
-  function Player:AstralPowerPercentage (overrideFutureAstralPower)
-    return (self:AstralPower(overrideFutureAstralPower) / self:AstralPowerMax()) * 100;
+  function Player:AstralPowerPercentage (OverrideFutureAstralPower)
+    return (self:AstralPower(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100;
   end
   -- astral_power.deficit
-  function Player:AstralPowerDeficit (overrideFutureAstralPower)
-    local AstralPower = self:AstralPower(overrideFutureAstralPower)
+  function Player:AstralPowerDeficit (OverrideFutureAstralPower)
+    local AstralPower = self:AstralPower(OverrideFutureAstralPower)
     return self:AstralPowerMax() - AstralPower;
   end
   -- "astral_power.deficit.pct"
-  function Player:AstralPowerDeficitPercentage (overrideFutureAstralPower)
-    return (self:AstralPowerDeficit(overrideFutureAstralPower) / self:AstralPowerMax()) * 100;
+  function Player:AstralPowerDeficitPercentage (OverrideFutureAstralPower)
+    return (self:AstralPowerDeficit(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100;
   end
 
   --------------------------------
@@ -519,22 +462,14 @@ end
   function Player:HolyPowerMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.HolyPowerMax then
-        UnitInfo.HolyPowerMax = UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
-      end
-      return UnitInfo.HolyPowerMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
     end
   end
   -- holy_power
   function Player:HolyPower ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.HolyPower then
-        UnitInfo.HolyPower = UnitPower(self.UnitID, Enum.PowerType.HolyPower);
-      end
-      return UnitInfo.HolyPower;
+      return UnitPower(self.UnitID, Enum.PowerType.HolyPower);
     end
   end
   -- holy_power.pct
@@ -557,22 +492,14 @@ end
   function Player:MaelstromMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.MaelstromMax then
-        UnitInfo.MaelstromMax = UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
-      end
-      return UnitInfo.MaelstromMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
     end
   end
   -- maelstrom
   function Player:Maelstrom ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Maelstrom then
-        UnitInfo.Maelstrom = UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
-      end
-      return UnitInfo.Maelstrom;
+      return UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
     end
   end
   -- maelstrom.pct
@@ -595,22 +522,14 @@ end
   function Player:ChiMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.ChiMax then
-        UnitInfo.ChiMax = UnitPowerMax(self.UnitID, Enum.PowerType.Chi);
-      end
-      return UnitInfo.ChiMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Chi);
     end
   end
   -- Chi
   function Player:Chi ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Chi then
-        UnitInfo.Chi = UnitPower(self.UnitID, Enum.PowerType.Chi);
-      end
-      return UnitInfo.Chi;
+      return UnitPower(self.UnitID, Enum.PowerType.Chi);
     end
   end
   -- Chi.pct
@@ -633,22 +552,14 @@ end
   function Player:InsanityMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.InsanityMax then
-        UnitInfo.InsanityMax = UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
-      end
-      return UnitInfo.InsanityMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
     end
   end
   -- insanity
   function Player:Insanity ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Insanity then
-        UnitInfo.Insanity = UnitPower(self.UnitID, Enum.PowerType.Insanity);
-      end
-      return UnitInfo.Insanity;
+      return UnitPower(self.UnitID, Enum.PowerType.Insanity);
     end
   end
   -- insanity.pct
@@ -676,22 +587,14 @@ end
   function Player:FuryMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.FuryMax then
-        UnitInfo.FuryMax = UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
-      end
-      return UnitInfo.FuryMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
     end
   end
   -- fury
   function Player:Fury ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.Fury then
-        UnitInfo.Fury = UnitPower(self.UnitID, Enum.PowerType.Fury);
-      end
-      return UnitInfo.Fury;
+      return UnitPower(self.UnitID, Enum.PowerType.Fury);
     end
   end
   -- fury.pct
@@ -714,22 +617,14 @@ end
   function Player:PainMax ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.PainMax then
-        UnitInfo.PainMax = UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
-      end
-      return UnitInfo.PainMax;
+      return UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
     end
   end
   -- pain
   function Player:Pain ()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.PainMax then
-        UnitInfo.PainMax = UnitPower(self.UnitID, Enum.PowerType.Pain);
-      end
-      return UnitInfo.PainMax;
+      return UnitPower(self.UnitID, Enum.PowerType.Pain);
     end
   end
   -- pain.pct

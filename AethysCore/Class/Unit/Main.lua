@@ -49,11 +49,7 @@
   function Unit:Exists ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.Exists == nil then
-        UnitInfo.Exists = UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
-      end
-      return UnitInfo.Exists;
+      return UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
     end
     return nil;
   end
@@ -80,11 +76,7 @@
   function Unit:Level()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.UnitLevel == nil then
-        UnitInfo.UnitLevel = UnitLevel(self.UnitID);
-      end
-      return UnitInfo.UnitLevel;
+      return UnitLevel(self.UnitID);
     end
     return nil;
   end
@@ -149,8 +141,8 @@
     [101956] = true -- Rebellious Fel Lord
   };
   function Unit:IsDummy ()
-    local npcid = self:NPCID()
-    return npcid >= 0 and DummyUnits[npcid] == true;
+    local NPCID = self:NPCID()
+    return NPCID >= 0 and DummyUnits[NPCID] == true;
   end
 
   -- Get if the unit is a Player or not.
@@ -170,11 +162,7 @@
   function Unit:Health ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.Health then
-        UnitInfo.Health = UnitHealth(self.UnitID);
-      end
-      return UnitInfo.Health;
+      return UnitHealth(self.UnitID);
     end
     return -1;
   end
@@ -183,11 +171,7 @@
   function Unit:MaxHealth ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.MaxHealth then
-        UnitInfo.MaxHealth = UnitHealthMax(self.UnitID);
-      end
-      return UnitInfo.MaxHealth;
+      return UnitHealthMax(self.UnitID);
     end
     return -1;
   end
@@ -201,11 +185,7 @@
   function Unit:IsDeadOrGhost ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.IsDeadOrGhost == nil then
-        UnitInfo.IsDeadOrGhost = UnitIsDeadOrGhost(self.UnitID);
-      end
-      return UnitInfo.IsDeadOrGhost;
+      return UnitIsDeadOrGhost(self.UnitID);
     end
     return nil;
   end
@@ -214,26 +194,16 @@
   function Unit:AffectingCombat ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.AffectingCombat == nil then
-        UnitInfo.AffectingCombat = UnitAffectingCombat(self.UnitID);
-      end
-      return UnitInfo.AffectingCombat;
+      return UnitAffectingCombat(self.UnitID);
     end
     return nil;
   end
 
   -- Get if two unit are the same.
   function Unit:IsUnit (Other)
-    local GUID = self:GUID();
-    local OtherGUID = Other:GUID();
+    local GUID, OtherGUID = self:GUID(), Other:GUID();
     if GUID and OtherGUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if not UnitInfo.IsUnit then UnitInfo.IsUnit = {}; end
-      if UnitInfo.IsUnit[OtherGUID] == nil then
-        UnitInfo.IsUnit[OtherGUID] = UnitIsUnit(self.UnitID, Other.UnitID);
-      end
-      return UnitInfo.IsUnit[OtherGUID];
+      return UnitIsUnit(self.UnitID, Other.UnitID);
     end
     return nil;
   end
@@ -242,37 +212,28 @@
   function Unit:Classification ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.Classification == nil then
-        UnitInfo.Classification = UnitClassification(self.UnitID);
-      end
-      return UnitInfo.Classification;
+      return UnitClassification(self.UnitID);
     end
     return "";
   end
 
   -- Get if we are Tanking or not the Unit.
-  -- TODO: Use both GUID like CanAttack / IsUnit for better management.
-  function Unit:IsTanking (Other, ThreatSituation)
-    local GUID = self:GUID();
-    if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
-      if UnitInfo.Tanked == nil then
-        local ThreatSituation = ThreatSituation or 2;
-        local Situation = UnitThreatSituation(self.UnitID, Other.UnitID);
-        UnitInfo.Tanked = Situation and Situation >= ThreatSituation and true or false;
-      end
-      return UnitInfo.Tanked;
+  function Unit:IsTanking (Other, ThreatThreshold)
+    local GUID, OtherGUID = self:GUID(), Other:GUID();
+    if GUID and OtherGUID then
+      local ThreatThreshold = ThreatThreshold or 2;
+      local ThreatSituation = UnitThreatSituation(self.UnitID, Other.UnitID);
+      return ThreatSituation and ThreatSituation >= ThreatThreshold or false;
     end
     return nil;
   end
 
-  function Unit:IsTankingAoE (Radius)
+  function Unit:IsTankingAoE (Radius, ThreatSituation)
     local Radius = Radius or 8;
     AC.GetEnemies(Radius, true);
     local IsTankingAOE = false;
     for _, Unit in pairs(Cache.Enemies[Radius]) do
-      if self:IsTanking(Unit) then
+      if self:IsTanking(Unit, ThreatSituation) then
         IsTankingAOE = true;
       end
     end

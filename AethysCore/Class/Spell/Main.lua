@@ -117,20 +117,12 @@
 
   -- Check if the spell Is Available or not.
   function Spell:IsAvailable (CheckPet)
-    if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-    if Cache.SpellInfo[self.SpellID].IsAvailable == nil then
-      if CheckPet == true then
-        Cache.SpellInfo[self.SpellID].IsAvailable = IsSpellKnown(self.SpellID, true );
-      else
-        Cache.SpellInfo[self.SpellID].IsAvailable = IsPlayerSpell(self.SpellID);
-      end
-    end
-    return Cache.SpellInfo[self.SpellID].IsAvailable;
+    return CheckPet and IsSpellKnown(self.SpellID, true) or IsPlayerSpell(self.SpellID);
   end
 
   -- Check if the spell Is Known or not.
   function Spell:IsKnown (CheckPet)
-    return IsSpellKnown(self.SpellID, CheckPet and CheckPet or false); 
+    return IsSpellKnown(self.SpellID, CheckPet and true or false); 
   end
 
   -- Check if the spell Is Known (including Pet) or not.
@@ -140,11 +132,7 @@
 
   -- Check if the spell Is Usable or not.
   function Spell:IsUsable ()
-    if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-    if Cache.SpellInfo[self.SpellID].IsUsable == nil then
-      Cache.SpellInfo[self.SpellID].IsUsable = IsUsableSpell(self.SpellID);
-    end
-    return Cache.SpellInfo[self.SpellID].IsUsable;
+    return IsUsableSpell(self.SpellID);
   end
 
   -- Check if the spell is in the Spell Learned Cache.
@@ -188,21 +176,18 @@
   -- action.foo.execute_time
   function Spell:ExecuteTime ()
     if self:CastTime() > Player:GCD() then
-      return self:CastTime()
+      return self:CastTime();
     else
-      return Player:GCD()
+      return Player:GCD();
     end
   end
 
   -- Get the CostInfo (from GetSpellPowerCost) and cache it.
   function Spell:CostInfo (Index, Key)
     if not Key or type(Key) ~= "string" then error("Invalid Key."); end
-    if not Cache.SpellInfo[self.SpellID] then Cache.SpellInfo[self.SpellID] = {}; end
-    if not Cache.SpellInfo[self.SpellID].CostInfo then
-      -- hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec
-      Cache.SpellInfo[self.SpellID].CostInfo = GetSpellPowerCost(self.SpellID);
-    end
-    return Cache.SpellInfo[self.SpellID].CostInfo[Index] and Cache.SpellInfo[self.SpellID].CostInfo[Index][Key] and Cache.SpellInfo[self.SpellID].CostInfo[Index][Key] or nil;
+    -- {hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec}
+    local PowerCost = GetSpellPowerCost(self.SpellID);
+    return PowerCost[Index] and PowerCost[Index][Key] and PowerCost[Index][Key] or nil;
   end
 
   -- action.foo.cost
