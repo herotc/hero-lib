@@ -20,7 +20,8 @@
 --- ============================ CONTENT ============================
   -- Check if the unit is coded as blacklisted or not.
   local SpecialBlacklistDataSpells = {
-    D_DHT_Submerged = Spell(220519)
+    D_DHT_Submerged = Spell(220519),
+    R_TOS_SpiritRealm = Spell(235621)
   }
   local SpecialBlacklistData = {
     --- Legion
@@ -34,7 +35,13 @@
       ----- Trial of Valor (T19 - 7.1 Patch) -----
       --- Helya
         -- Striking Tentacle cannot be hit.
-        [114881] = true
+        [114881] = true,
+      ----- Tomb of Sargeras (T20 - 7.2 Patch) -----
+      --- Desolate Host
+        -- Engine of Eradication cannot be hit in Spirit Realm.
+        [118460] = function (self) return Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true); end,
+        -- Soul Queen Dejahna cannot be hit outside Spirit Realm.
+        [118462] = function (self) return not Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true); end,
   }
   function Unit:IsBlacklisted ()
     local npcid = self:NPCID()
