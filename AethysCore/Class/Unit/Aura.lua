@@ -61,6 +61,21 @@
   end
 
   --[[*
+    * @function Unit:BuffDown
+    * @desc Get if the buff is down.
+    * @simc buff.foo.down
+    *
+    * @param {object} Spell - Spell to check.
+    * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
+    * @param {boolean} [AnyCaster] - Check from any caster ?
+    *
+    * @returns {boolean}
+    *]]
+  function Unit:BuffDown ( Spell, Index, AnyCaster )
+    return (not self:Buff( Spell, Index, AnyCaster ));
+  end
+
+  --[[*
     * @function Unit:BuffRemains
     * @desc Get the remaining time, if there is any, on a buff.
     * @simc buff.foo.remains
@@ -191,6 +206,21 @@
       end
       return false;
     end
+  end
+
+  --[[*
+    * @function Unit:DebuffDown
+    * @desc Get if the debuff is down.
+    * @simc debuff.foo.down
+    *
+    * @param {object} Spell - Spell to check.
+    * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
+    * @param {boolean} [AnyCaster] - Check from any caster ?
+    *
+    * @returns {boolean}
+    *]]
+  function Unit:DebuffDown ( Spell, Index, AnyCaster )
+    return (not self:Debuff( Spell, Index, AnyCaster ));
   end
 
   --[[*
