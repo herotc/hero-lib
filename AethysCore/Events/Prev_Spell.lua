@@ -16,11 +16,12 @@
   -- File Locals
   local TriggerGCD = AC.Enum.TriggerGCD; -- TriggerGCD table until it has been filtered.
   local LastRecord = 15;
+  local PrevGCDPredicted = 0;
   local Prev = {
     GCD = {},
     OffGCD = {},
     PetGCD = {},
-    PetOffGCD = {}
+    PetOffGCD = {},
   };
   local Custom = {
     Whitelist = {},
@@ -53,6 +54,8 @@
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] then
         tableinsert(Prev.GCD, 1, SpellID);
+        Prev.OffGCD = {};
+        PrevGCDPredicted = 0;
       elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
         tableinsert(Prev.OffGCD, 1, SpellID);
       end
@@ -60,12 +63,28 @@
     end
     , "SPELL_CAST_SUCCESS"
   )
-
+  AC:RegisterForSelfCombatEvent(
+    function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      if TriggerGCD[SpellID] then
+        PrevGCDPredicted = SpellID;
+      end
+    end
+    , "SPELL_CAST_START"
+  )
+  AC:RegisterForSelfCombatEvent(
+    function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      if PrevGCDPredicted == SpellID then
+        PrevGCDPredicted = 0;
+      end
+    end
+    , "SPELL_CAST_FAILED"
+  )
   -- Pet On Cast Success Listener
   AC:RegisterForPetCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] then
         tableinsert(Prev.PetGCD, 1, SpellID);
+        Prev.PetOffGCD = {};
       elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
         tableinsert(Prev.PetOffGCD, 1, SpellID);
       end
@@ -104,7 +123,7 @@
 
   -- Add spells in the Trigger GCD Whitelist
   function Spell:AddToTriggerGCD (Value)
-    if type(Value) ~= "boolean" then error("You must gives a boolean as argument."); end
+    if type(Value) ~= "boolean" then error("You must give a boolean as argument."); end
     Custom.Whitelist[self.SpellID] = Value;
   end
 
@@ -115,24 +134,48 @@
 
   -- prev_gcd.x.foo
   function Player:PrevGCD (Index, Spell)
-    if Index > LastRecord then error("Only the lasts " .. LastRecord  .. " GCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
     return Prev.GCD[Index] == Spell:ID();
+  end
+
+  -- Player:PrevGCD with cast start prediction
+  function Player:PrevGCDP (Index, Spell)
+    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked."); end
+    if PrevGCDPredicted > 0 and Index == 1 then
+      return PrevGCDPredicted == Spell:ID();
+    elseif PrevGCDPredicted > 0 then
+      return Player:PrevGCD (Index - 1, Spell);
+    else
+      return Player:PrevGCD (Index, Spell);
+    end
   end
 
   -- prev_off_gcd.x.foo
   function Player:PrevOffGCD (Index, Spell)
-    if Index > LastRecord then error("Only the lasts " .. LastRecord  .. " OffGCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked."); end
     return Prev.OffGCD[Index] == Spell:ID();
+  end
+
+  -- Player:PrevOffGCD with cast start prediction
+  function Player:PrevOffGCDP (Index, Spell)
+    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked."); end
+    if PrevGCDPredicted > 0 and Index == 1 then
+      return false;
+    elseif PrevGCDPredicted > 0 then
+      return Player:PrevOffGCD (Index - 1, Spell);
+    else
+      return Player:PrevOffGCD (Index, Spell);
+    end
   end
 
   -- "pet.prev_gcd.x.foo"
   function Pet:PrevGCD (Index, Spell)
-    if Index > LastRecord then error("Only the lasts " .. LastRecord  .. " GCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
     return Prev.PetGCD[Index] == Spell:ID();
   end
 
   -- "pet.prev_off_gcd.x.foo"
   function Pet:PrevOffGCD (Index, Spell)
-    if Index > LastRecord then error("Only the lasts " .. LastRecord  .. " OffGCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked."); end
     return Prev.PetOffGCD[Index] == Spell:ID();
   end
