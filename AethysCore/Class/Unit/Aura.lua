@@ -112,6 +112,14 @@
     return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" );
   end
 
+  function Unit:BuffP (Spell, AnyCaster, Offset)
+    return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" ) > 0;
+  end
+
+  function Unit:BuffDownP (Spell, AnyCaster, Offset)
+    return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" ) == 0;
+  end
+
   -- buff.foo.duration
   function Unit:BuffDuration (Spell, AnyCaster)
     return self:Buff(Spell, 6, AnyCaster) or 0;
