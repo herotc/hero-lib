@@ -100,6 +100,26 @@
   function Spell:MaxCharges ()
     return self:ChargesInfo(2);
   end
+  
+  -- action.foo.usable_in
+  function Spell:UsableIn ()
+    if self:Charges() > 0 then return 0 end;
+    return self:Recharge();
+  end
+  
+  --[[*
+    * @function Spell:UsableInP
+    * @override Spell:UsableIn
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:UsableInP (BypassRecovery, Offset)
+    if self:ChargesP(BypassRecovery, Offset) > 0 then return 0 end;
+    return self:RechargeP(BypassRecovery, Offset);
+  end
 
   -- action.foo.recharge_time or cooldown.foo.recharge_time
   function Spell:Recharge (BypassRecovery, Offset)
