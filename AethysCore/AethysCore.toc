@@ -70,5 +70,6 @@ Events\Spell.lua
 Events\PMultiplier.lua
 Events\Prev_Spell.lua
 Events\KeyBinding.lua
+Events\InFlight.lua
 
 Main.lua
