@@ -129,6 +129,23 @@
   function Unit:BuffStack (Spell, AnyCaster)
     return self:Buff(Spell, 4, AnyCaster) or 0;
   end
+  
+  --[[*
+    * @function Unit:BuffStackP
+    * @override Unit:BuffStack
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:BuffStackP (Spell, AnyCaster, Offset)
+    if self:BuffP(Spell, AnyCaster, Offset) then
+      return self:BuffStack(Spell, 4, AnyCaster);
+    else
+      return 0
+    end
+  end
 
   -- buff.foo.refreshable (doesn't exists on SimC atm tho)
   function Unit:BuffRefreshable (Spell, PandemicThreshold, AnyCaster, Offset)
@@ -276,6 +293,23 @@
   -- debuff.foo.stack or dot.foo.stack
   function Unit:DebuffStack (Spell, AnyCaster)
     return self:Debuff(Spell, 4, AnyCaster) or 0;
+  end
+  
+  --[[*
+    * @function Unit:DebuffStackP
+    * @override Unit:DebuffStack
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Unit:DebuffStackP (Spell, AnyCaster, Offset)
+    if self:DebuffP(Spell, AnyCaster, Offset) then
+      return self:DebuffStack(Spell, 4, AnyCaster);
+    else
+      return 0
+    end
   end
 
   -- debuff.foo.refreshable or dot.foo.refreshable
