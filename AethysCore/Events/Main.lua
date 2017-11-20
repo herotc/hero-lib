@@ -345,6 +345,7 @@
           -- Legion
           AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
           AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
+          AC.Tier21_2Pc, AC.Tier21_4Pc = AC.HasTier("T21");
         end
     
         -- Refresh Artifact
