@@ -579,7 +579,37 @@ end
     --TODO : calculate insanitydrain
     return 1;
   end
-
+  
+  -----------------------------------
+  -- 16 | Arcane Charges Functions --
+  -----------------------------------
+  -- arcanecharges.max
+  function Player:ArcaneChargesMax ()
+    local GUID = self:GUID()
+    if GUID then
+      return UnitPowerMax(self.UnitID, Enum.PowerType.ArcaneCharges);
+    end
+  end
+  -- arcanecharges
+  function Player:ArcaneCharges ()
+    local GUID = self:GUID()
+    if GUID then
+      return UnitPower(self.UnitID, Enum.PowerType.ArcaneCharges);
+    end
+  end
+  -- arcanecharges.pct
+  function Player:ArcaneChargesPercentage ()
+    return (self:ArcaneCharges() / self:ArcaneChargesMax()) * 100;
+  end
+  -- arcanecharges.deficit
+  function Player:ArcaneChargesDeficit ()
+    return self:ArcaneChargesMax() - self:ArcaneCharges();
+  end
+  -- "arcanecharges.deficit.pct"
+  function Player:ArcaneChargesDeficitPercentage ()
+    return (self:ArcaneChargesDeficit() / self:ArcaneChargesMax()) * 100;
+  end
+  
   ---------------------------
   --- 17 | Fury Functions ---
   ---------------------------
