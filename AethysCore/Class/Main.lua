@@ -127,7 +127,7 @@ do
     if type( ItemID ) ~= "number" then error( "Invalid ItemID." ); end
     if ItemSlotID and type( ItemSlotID ) ~= "table" then error( "Invalid ItemSlotID." ); end
     self.ItemID = ItemID;
-    self.ItemSlotID = ItemSlotID or defaultItemSlotID( ItemID ) or { 0 };
+    self.ItemSlotID = ItemSlotID or usableSlotID(defaultItemSlotID( ItemID )) or { 0 };
     self.LastCastTime = 0;
     self.LastDisplayTime = 0;
     self.LastHitTime = 0;
