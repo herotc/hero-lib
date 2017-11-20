@@ -138,7 +138,11 @@
     [102052] = true, -- Rebellious imp
     [102048] = true, -- Rebellious Felguard
     [102045] = true, -- Rebellious WrathGuard
-    [101956] = true -- Rebellious Fel Lord
+    [101956] = true, -- Rebellious Fel Lord
+    -- Mage Class Order Hall
+    [103397] = true, -- Greater Bullwark Construct
+    [103404] = true, -- Bullwark Construct
+    [103402] = true -- Lesser Bullwark Construct
   };
   function Unit:IsDummy ()
     local NPCID = self:NPCID()
