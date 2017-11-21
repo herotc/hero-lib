@@ -284,6 +284,14 @@
   function Unit:DebuffRemainsP ( Spell, AnyCaster, Offset )
     return self:DebuffRemains( Spell, AnyCaster, Offset or "Auto" );
   end
+  
+  function Unit:DebuffP ( Spell, AnyCaster, Offset )
+    return self:DebuffRemains( Spell, AnyCaster, Offset or "Auto" ) > 0;
+  end
+  
+  function Unit:DebuffDownP ( Spell, AnyCaster, Offset )
+    return self:DebuffRemains( Spell, AnyCaster, Offset or "Auto" ) == 0;
+  end
 
   -- debuff.foo.duration or dot.foo.duration
   function Unit:DebuffDuration (Spell, AnyCaster)
