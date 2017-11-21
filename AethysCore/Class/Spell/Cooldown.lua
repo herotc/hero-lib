@@ -200,9 +200,46 @@
   end
 
   -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
-  function Spell:FullRechargeTime ()
-    return self:MaxCharges() - self:ChargesFractional() * self:Recharge();
+  function Spell:FullRechargeTime (BypassRecovery, Offset)
+    local SpellInfo = Cache.SpellInfo[self.SpellID];
+    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    local FullRechargeTime = Cache.SpellInfo[self.SpellID].FullRechargeTime;
+    local FullRechargeTimeNoRecovery = Cache.SpellInfo[self.SpellID].FullRechargeTimeNoRecovery;
+    if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].FullRechargeTime)
+      or (BypassRecovery and not Cache.SpellInfo[self.SpellID].FullRechargeTimeNoRecovery) then
+      if self:Charges() == self:MaxCharges() then
+        if BypassRecovery then
+          FullRechargeTimeNoRecovery = 0;
+        else
+          FullRechargeTime = 0;
+        end
+      else
+        if BypassRecovery then
+          FullRechargeTimeNoRecovery = (self:MaxCharges() - self:ChargesFractional(BypassRecovery)) * self:ChargesInfo(4) 
+        else
+          FullRechargeTime = (self:MaxCharges() - self:ChargesFractional()) * self:ChargesInfo(4)
+        end
+      end
+    end
+    if Offset then
+      return BypassRecovery and mathmax( AC.OffsetRemains( FullRechargeTimeNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( FullRechargeTime, Offset ), 0 );
+    else
+      return BypassRecovery and FullRechargeTimeNoRecovery or FullRechargeTime;
+    end
   end
+  
+  --[[*
+    * @function Spell:FullRechargeTimeP
+    * @override Spell:FullRechargeTime
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:FullRechargeTimeP (BypassRecovery, Offset)
+    return self:FullRechargeTime(BypassRecovery, Offset or "Auto");
+  end  
 
   --[[*
     * @function Spell:CooldownRemains
