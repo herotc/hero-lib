@@ -158,6 +158,24 @@
       return self:IsLearned() and self:CooldownUp();
     end
   end
+  
+  --[[*
+    * @function Spell:IsCastableP
+    * @override Spell:IsCastable
+    * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
+    *
+    * @param {string|number} [Offset="Auto"]
+    *
+    * @returns {number}
+    *]]
+  function Spell:IsCastableP ( Range, AoESpell, ThisUnit, BypassRecovery, Offset )
+    if Range then
+      local RangeUnit = ThisUnit or Target;
+      return self:IsLearned() and self:CooldownRemainsP( BypassRecovery, Offset or "Auto") == 0 and RangeUnit:IsInRange( Range, AoESpell );
+    else
+      return self:IsLearned() and self:CooldownRemainsP( BypassRecovery, Offset or "Auto") == 0;
+    end
+  end
 
   -- Check if the spell Is Castable and Usable or not.
   function Spell:IsReady ( Range, AoESpell, ThisUnit )
