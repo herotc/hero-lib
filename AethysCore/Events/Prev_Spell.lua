@@ -144,9 +144,9 @@
     if PrevGCDPredicted > 0 and Index == 1 then
       return PrevGCDPredicted == Spell:ID();
     elseif PrevGCDPredicted > 0 then
-      return Player:PrevGCD (Index - 1, Spell);
+      return Player:PrevGCD(Index - 1, Spell);
     else
-      return Player:PrevGCD (Index, Spell);
+      return Player:PrevGCD(Index, Spell);
     end
   end
 
