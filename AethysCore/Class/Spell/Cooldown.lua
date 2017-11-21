@@ -73,6 +73,11 @@
   function Spell:ComputeChargesCooldown (BypassRecovery)
     return self:ComputeCooldown(BypassRecovery, "Charges");
   end
+  
+  -- action.foo.cooldown
+  function Spell:Cooldown ()
+    return self:ChargesInfo(4);
+  end
 
   -- action.foo.charges or cooldown.foo.charges
   function Spell:Charges ()
