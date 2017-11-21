@@ -157,7 +157,7 @@
 
   -- action.foo.charges_fractional or cooldown.foo.charges_fractional
   -- TODO : Changes function to avoid using the cache directly
-  function Spell:ChargesFractional (BypassRecovery)
+  function Spell:ChargesFractional (BypassRecovery, Offset)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
     if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
     local ChargesFractional = Cache.SpellInfo[self.SpellID].ChargesFractional;
