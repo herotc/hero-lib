@@ -396,3 +396,6 @@
   function Unit:HasHeroismRemains ()
     return self:HasHeroism(true);
   end
+  function Unit:HasNotHeroism ()
+    return (not self:HasHeroism());
+  end
