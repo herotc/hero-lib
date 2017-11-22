@@ -112,11 +112,11 @@
     return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" );
   end
 
-  function Unit:BuffP (Spell, AnyCaster, Offset)
+  function Unit:BuffP ( Spell, AnyCaster, Offset )
     return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" ) > 0;
   end
 
-  function Unit:BuffDownP (Spell, AnyCaster, Offset)
+  function Unit:BuffDownP ( Spell, AnyCaster, Offset )
     return self:BuffRemains( Spell, AnyCaster, Offset or "Auto" ) == 0;
   end
 
@@ -140,8 +140,8 @@
     * @returns {number}
     *]]
   function Unit:BuffStackP (Spell, AnyCaster, Offset)
-    if self:BuffP(Spell, AnyCaster, Offset) then
-      return self:BuffStack(Spell, 4, AnyCaster);
+    if self:BuffRemainsP ( Spell, AnyCaster, Offset ) then
+      return self:BuffStack(Spell, AnyCaster);
     else
       return 0
     end
