@@ -26,45 +26,6 @@
     * @returns {table}
     *]]
   local function FindKeyBindings ()
-    local Commands = {};
-    --- Populate Actions
-    -- SlotIndex      ActionFrame                     CommandName
-    -- 1..12        = ActionButton (Primary Bar)      ACTIONBUTTON..Slot
-    -- 13..24       = ActionButton (Secondary Bar)    ACTIONBUTTON..Slot
-    -- 25..36       = MultiBarRightButton             MULTIACTIONBAR3BUTTON..j
-    -- 37..48       = MultiBarLeftButton              MULTIACTIONBAR4BUTTON..j
-    -- 49..60       = MultiBarBottomRightButton       MULTIACTIONBAR2BUTTON..j
-    -- 61..72       = MultiBarBottomLeftButton        MULTIACTIONBAR1BUTTON..j
-    -- 72..120      = ?                               ACTIONBUTTON..Slot
-    -- Where Slot is the SlotIndex in 1..120
-    -- and j is the bar index in 1..12 for MULTIACTIONBARs
-    local CommandNames = {
-      [3] = "MULTIACTIONBAR3BUTTON",
-      [4] = "MULTIACTIONBAR4BUTTON",
-      [5] = "MULTIACTIONBAR2BUTTON",
-      [6] = "MULTIACTIONBAR1BUTTON"
-    };
-    for i = 1, 10 do
-      for j = 1, 12 do
-        local Slot = 12 * (i - 1) + j;
-        if HasAction( Slot ) then
-          local ActionType, ActionID, ActionSubtype, SpellID = GetActionInfo( Slot );
-          local CommandName;
-          if CommandNames[ i ] then
-            CommandName = CommandNames[ i ] .. j;
-          else
-            CommandName = "ACTIONBUTTON" .. Slot;
-          end
-          if not Commands[ CommandName ] then Commands[ CommandName ] = {}; end
-          tableinsert( Commands[ CommandName ], {
-            ActionType = ActionType,
-            ActionID = ActionID,
-            ActionSubtype = ActionSubtype
-          } );
-        end
-      end
-    end
-
     --- Populate KeyBindings
     local ShortKBSubString = {
       ["-"] = ":", -- TODO: Add options to choose the separator : { ":", "", "~", ",", ".", "_", "-", " "}.
@@ -83,6 +44,53 @@
       end
       return KeyBinding;
     end
+  
+    local Commands = {};
+    --- Populate Actions
+    -- SlotIndex      ActionFrame                     CommandName
+    -- 1..12        = ActionButton (Primary Bar)      ACTIONBUTTON..Slot
+    -- 13..24       = ActionButton (Secondary Bar)    ACTIONBUTTON..Slot
+    -- 25..36       = MultiBarRightButton             MULTIACTIONBAR3BUTTON..j
+    -- 37..48       = MultiBarLeftButton              MULTIACTIONBAR4BUTTON..j
+    -- 49..60       = MultiBarBottomRightButton       MULTIACTIONBAR2BUTTON..j
+    -- 61..72       = MultiBarBottomLeftButton        MULTIACTIONBAR1BUTTON..j
+    -- 72..120      = ?                               ACTIONBUTTON..Slot
+    -- Where Slot is the SlotIndex in 1..120
+    -- and j is the bar index in 1..12 for MULTIACTIONBARs
+    local CommandNames = {
+      [3] = "MULTIACTIONBAR3BUTTON",
+      [4] = "MULTIACTIONBAR4BUTTON",
+      [5] = "MULTIACTIONBAR2BUTTON",
+      [6] = "MULTIACTIONBAR1BUTTON"
+    };
+    local BTCommandLeft = "CLICK BT4Button";
+    local BTCommandRight = ":LeftButton";
+    for i = 1, 10 do
+      local CommandName = CommandNames[ i ] or "ACTIONBUTTON";
+      for j = 1, 12 do
+        local Slot = 12 * (i - 1) + j;
+        local BTCommandName = BTCommandLeft .. Slot .. BTCommandRight;
+        if HasAction( Slot ) then
+          local ActionType, ActionID, ActionSubtype, SpellID = GetActionInfo( Slot );
+          if not Commands[ CommandName .. j ] then Commands[ CommandName .. j ] = {}; end
+          tableinsert( Commands[ CommandName .. j ], {
+            ActionType = ActionType,
+            ActionID = ActionID,
+            ActionSubtype = ActionSubtype
+          } );
+          local BTKeybind = GetBindingKey(BTCommandName);
+          local Binding = BTKeybind and ShortenKB(BTKeybind) or "";
+          if not Commands[ BTCommandName ] then Commands[ BTCommandName ] = {}; end
+          tableinsert( Commands[ BTCommandName ], {
+            ActionType = ActionType,
+            ActionID = ActionID,
+            ActionSubtype = ActionSubtype,
+            Binding = Binding
+          } );
+        end
+      end
+    end
+    
     for i = 1, GetNumBindings() do
       local CommandName, Category, Binding1, Binding2 = GetBinding( i );
       local Actions = Commands[ CommandName ];
