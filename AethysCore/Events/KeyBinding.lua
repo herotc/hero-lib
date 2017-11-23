@@ -63,6 +63,7 @@
       [5] = "MULTIACTIONBAR2BUTTON",
       [6] = "MULTIACTIONBAR1BUTTON"
     };
+    local BTCommandLeft = "CLICK BT4Button";
     local BTCommandRight = ":LeftButton";
     for i = 1, 10 do
       local CommandName = CommandNames[ i ] or "ACTIONBUTTON";
