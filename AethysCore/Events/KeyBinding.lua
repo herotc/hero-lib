@@ -48,8 +48,8 @@
         local Slot = 12 * (i - 1) + j;
         if HasAction( Slot ) then
           local ActionType, ActionID, ActionSubtype, SpellID = GetActionInfo( Slot );
-          if not Commands[ CommandName .. Slot ] then Commands[ CommandName .. Slot ] = {}; end
-          tableinsert( Commands[ CommandName .. Slot ], {
+          if not Commands[ CommandName .. j ] then Commands[ CommandName .. j ] = {}; end
+          tableinsert( Commands[ CommandName .. j ], {
             ActionType = ActionType,
             ActionID = ActionID,
             ActionSubtype = ActionSubtype
