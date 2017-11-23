@@ -69,16 +69,22 @@
       local CommandName = CommandNames[ i ] or "ACTIONBUTTON";
       for j = 1, 12 do
         local Slot = 12 * (i - 1) + j;
-        local BTCommandName = BTCommandLeft .. Slot .. BTCommandRight;
+        local CommandName;
+        if CommandNames[ i ] then
+          CommandName = CommandNames[ i ] .. j;
+        else
+          CommandName = "ACTIONBUTTON" .. Slot;
+        end
         if HasAction( Slot ) then
           local ActionType, ActionID, ActionSubtype, SpellID = GetActionInfo( Slot );
-          if not Commands[ CommandName .. j ] then Commands[ CommandName .. j ] = {}; end
-          tableinsert( Commands[ CommandName .. j ], {
+          if not Commands[ CommandName ] then Commands[ CommandName ] = {}; end
+          tableinsert( Commands[ CommandName ], {
             ActionType = ActionType,
             ActionID = ActionID,
             ActionSubtype = ActionSubtype
           } );
         end
+        local BTCommandName = BTCommandLeft .. Slot .. BTCommandRight;
         local BTKeybind = GetBindingKey(BTCommandName);
         local Binding = BTKeybind and ShortenKB(BTKeybind) or "";
         if Binding then
