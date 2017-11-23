@@ -63,7 +63,6 @@
       [5] = "MULTIACTIONBAR2BUTTON",
       [6] = "MULTIACTIONBAR1BUTTON"
     };
-    local BTCommandLeft = "CLICK BT4Button";
     local BTCommandRight = ":LeftButton";
     for i = 1, 10 do
       local CommandName = CommandNames[ i ] or "ACTIONBUTTON";
@@ -78,8 +77,10 @@
             ActionID = ActionID,
             ActionSubtype = ActionSubtype
           } );
-          local BTKeybind = GetBindingKey(BTCommandName);
-          local Binding = BTKeybind and ShortenKB(BTKeybind) or "";
+        end
+        local BTKeybind = GetBindingKey(BTCommandName);
+        local Binding = BTKeybind and ShortenKB(BTKeybind) or "";
+        if Binding then
           if not Commands[ BTCommandName ] then Commands[ BTCommandName ] = {}; end
           tableinsert( Commands[ BTCommandName ], {
             ActionType = ActionType,
@@ -113,15 +114,13 @@
         local ActionType = Action.ActionType;
         local ActionID = Action.ActionID;
         local Binding = Action.Binding;
-        if Binding then
-          if ActionType == "item" then
-            KeyBindings.Item[ ActionID ] = Binding;
-          elseif ActionType == "macro" then
-            local Name = GetMacroInfo( ActionID );
-            KeyBindings.Macro[ Name ] = Binding;
-          elseif ActionType == "spell" then
-            KeyBindings.Spell[ ActionID ] = Binding;
-          end
+        if ActionType == "item" then
+          KeyBindings.Item[ ActionID ] = Binding;
+        elseif ActionType == "macro" then
+          local Name = GetMacroInfo( ActionID );
+          KeyBindings.Macro[ Name ] = Binding;
+        elseif ActionType == "spell" then
+          KeyBindings.Spell[ ActionID ] = Binding;
         end
       end
     end
