@@ -314,7 +314,7 @@
     *]]
   function Unit:DebuffStackP (Spell, AnyCaster, Offset)
     if self:DebuffP(Spell, AnyCaster, Offset) then
-      return self:DebuffStack(Spell, 4, AnyCaster);
+      return self:DebuffStack(Spell, AnyCaster);
     else
       return 0
     end
@@ -383,6 +383,15 @@
       end
       return false;
     end
+    local function _HasHeroismP (Offset)
+      for i = 1, #HeroismBuff do
+        local Buff = HeroismBuff[i];
+        if ThisUnit:Buff(Buff, nil, true) then
+          return _Remains and ThisUnit:BuffRemainsP(Buff, true, Offset or "Auto" ) or true;
+        end
+      end
+      return false;
+    end
     function Unit:HasHeroism (Remains)
       local GUID = self:GUID();
       if GUID then
@@ -392,9 +401,21 @@
       end
       return Remains and 0 or false;
     end
+    function Unit:HasHeroismP (Remains)
+      local GUID = self:GUID();
+      if GUID then
+        local Key = Remains and "Remains" or "Up";
+        ThisUnit, _Remains = self, Remains;
+        return Cache.Get("UnitInfo", GUID, "HasHeroismP", Key, _HasHeroismP);
+      end
+      return Remains and 0 or false;
+    end
   end
   function Unit:HasHeroismRemains ()
     return self:HasHeroism(true);
+  end
+  function Unit:HasHeroismRemainsP ()
+    return self:HasHeroismP(true);
   end
   function Unit:HasNotHeroism ()
     return (not self:HasHeroism());
