@@ -88,6 +88,7 @@
         local BTKeybind = GetBindingKey(BTCommandName);
         local Binding = BTKeybind and ShortenKB(BTKeybind) or "";
         if Binding then
+          local ActionType, ActionID, ActionSubtype, SpellID = GetActionInfo( Slot );
           if not Commands[ BTCommandName ] then Commands[ BTCommandName ] = {}; end
           tableinsert( Commands[ BTCommandName ], {
             ActionType = ActionType,
