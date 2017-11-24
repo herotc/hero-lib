@@ -135,13 +135,17 @@
   -- prev_gcd.x.foo
   function Player:PrevGCD (Index, Spell)
     if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
-    return Prev.GCD[Index] == Spell:ID();
+    if Spell then
+      return Prev.GCD[Index] == Spell:ID()
+    else 
+      return Prev.GCD[Index];
+    end
   end
 
   -- Player:PrevGCD with cast start prediction
-  function Player:PrevGCDP (Index, Spell)
+  function Player:PrevGCDP (Index, Spell, ForcePred)
     if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked."); end
-    if PrevGCDPredicted > 0 and Index == 1 then
+    if PrevGCDPredicted > 0 and Index == 1 or ForcePred then
       return PrevGCDPredicted == Spell:ID();
     elseif PrevGCDPredicted > 0 then
       return Player:PrevGCD(Index - 1, Spell);
