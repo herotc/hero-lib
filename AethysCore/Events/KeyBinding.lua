@@ -122,7 +122,7 @@
         local ActionType = Action.ActionType;
         local ActionID = Action.ActionID;
         local Binding = Action.Binding;
-        if Binding then
+        if Binding and Binding ~= "" then
           if ActionType == "item" then
             KeyBindings.Item[ ActionID ] = Binding;
           elseif ActionType == "macro" then
