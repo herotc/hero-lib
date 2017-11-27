@@ -127,7 +127,7 @@
             KeyBindings.Item[ ActionID ] = Binding;
           elseif ActionType == "macro" then
             local Name = GetMacroInfo( ActionID );
-            KeyBindings.Macro[ Name ] = Binding;
+            if Name then KeyBindings.Macro[ Name ] = Binding; end
           elseif ActionType == "spell" then
             KeyBindings.Spell[ ActionID ] = Binding;
           end
