@@ -36,7 +36,8 @@
       ["DIVIDE"] = "/",
       ["MINUS"] = "-",
       ["MULTIPLY"] = "*",
-      ["PLUS"] = "+"
+      ["PLUS"] = "+",
+      ["BUTTON"] = "M"
     };
     local function ShortenKB (KeyBinding)
       for Pattern, Replace in pairs ( ShortKBSubString ) do
