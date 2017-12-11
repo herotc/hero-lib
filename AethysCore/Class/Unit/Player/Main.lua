@@ -38,6 +38,11 @@
       end
       return nil;
     end
+    
+    -- Test if the unit is of race unit_race
+    function Player:IsRace (unit_race)
+      return unit_race and self:Race() == unit_race or false;
+    end
   end
 
   -- Get if the player is on a combat mount or not.
