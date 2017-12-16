@@ -110,7 +110,9 @@
       local DistanceType, Identifier, IsInRange = type(Distance), nil, nil;
       if DistanceType == "number" or (DistanceType == "string" and Distance == "Melee") then
         Identifier = Distance;
-        local ItemRange = IsInRangeTable.Hostile.ItemRange;
+        --Behavior in Line with AC.GetEnemies
+        local ReactionRangeTable = Player:CanAttack(self) and IsInRangeTable.Hostile or IsInRangeTable.Friendly
+        local ItemRange = ReactionRangeTable.ItemRange;
 
         -- AoESpell Offset & Distance Fallback
         if DistanceType == "number" then
@@ -120,7 +122,7 @@
           end
           -- If the distance we wants to check doesn't exists, we look for a fallback.
           if not ItemRange[Distance] then
-            local RangeIndex = IsInRangeTable.Hostile.RangeIndex;
+            local RangeIndex = ReactionRangeTable.RangeIndex;
             for i = 1, #RangeIndex do
               local Range = RangeIndex[i];
               if type(Range) == "number" and Range < Distance then
