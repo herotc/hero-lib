@@ -294,17 +294,21 @@
   -- Predict the expected Energy at the end of the Cast/GCD.
   function Player:EnergyPredicted (Offset)
     if self:EnergyRegen() == 0 then return -1; end
-    return self:Energy() + self:EnergyRemainingCastRegen(Offset);
+    return math.min(Player:EnergyMax(), self:Energy() + self:EnergyRemainingCastRegen(Offset));
   end
   -- Predict the expected Energy Deficit at the end of the Cast/GCD.
   function Player:EnergyDeficitPredicted (Offset)
     if self:EnergyRegen() == 0 then return -1; end
-    return self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset);
+    return math.max(0, self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset));
   end
   -- Predict time to max energy at the end of Cast/GCD
   function Player:EnergyTimeToMaxPredicted ()
   if self:EnergyRegen() == 0 then return -1; end
-  return self:EnergyDeficitPredicted()  / self:EnergyRegen();
+    local EnergyDeficitPredicted = self:EnergyDeficitPredicted();
+    if EnergyDeficitPredicted <= 0 then
+      return 0;
+    end
+    return EnergyDeficitPredicted / self:EnergyRegen();
 end
 
   ----------------------------------
