@@ -122,7 +122,7 @@
           -- If the distance we wants to check doesn't exists, we look for a fallback.
           if not ItemRange[Distance] then
             local RangeIndex = RangeTable.RangeIndex;
-            for i = 1, #RangeIndex do
+            for i = #RangeIndex, 1, -1 do
               local Range = RangeIndex[i];
               if type(Range) == "number" and Range < Distance then
                 Distance = Range;
