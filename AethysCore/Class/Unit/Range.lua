@@ -110,10 +110,9 @@
       local DistanceType, Identifier, IsInRange = type(Distance), nil, nil;
       if DistanceType == "number" or (DistanceType == "string" and Distance == "Melee") then
         Identifier = Distance;
-        --Behavior in Line with AC.GetEnemies
-        local ReactionRangeTable = Player:CanAttack(self) and IsInRangeTable.Hostile or IsInRangeTable.Friendly
-        local ItemRange = ReactionRangeTable.ItemRange;
-
+        -- Select the hostile or friendly range table
+        local RangeTable = Player:CanAttack(self) and IsInRangeTable.Hostile or IsInRangeTable.Friendly;
+        local ItemRange = RangeTable.ItemRange;
         -- AoESpell Offset & Distance Fallback
         if DistanceType == "number" then
           -- AoESpell ignores Player CombatReach which is equals to 1.5yds
@@ -122,7 +121,7 @@
           end
           -- If the distance we wants to check doesn't exists, we look for a fallback.
           if not ItemRange[Distance] then
-            local RangeIndex = ReactionRangeTable.RangeIndex;
+            local RangeIndex = RangeTable.RangeIndex;
             for i = 1, #RangeIndex do
               local Range = RangeIndex[i];
               if type(Range) == "number" and Range < Distance then
@@ -136,7 +135,6 @@
             end
           end
         end
-
         IsInRange = IsItemInRange(ItemRange[Distance], self.UnitID);
       -- Distance check through IsSpellInRange (works only for targeted spells only)
       elseif DistanceType == "table" then

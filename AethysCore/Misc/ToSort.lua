@@ -30,7 +30,11 @@
     -- mapID - (number)
     -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
   function AC.GetInstanceInfo (Index)
-    return Index and ({GetInstanceInfo()})[Index] or GetInstanceInfo();
+    if Index then
+      local Result = select(Index, GetInstanceInfo());
+      return Result;
+    end
+    return GetInstanceInfo();
   end
 
   -- Get the Instance Difficulty Infos
