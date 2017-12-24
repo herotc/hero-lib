@@ -58,6 +58,16 @@
     print("[|cFFFF6600Aethys Core|r]", ...);
   end
 
+  do
+    local Setting = AC.GUISettings.General;
+    -- Debug print with AC Prefix
+    function AC.Debug (...)
+      if Setting.DebugMode then
+        print("[|cFFFF6600AC Debug|r]", ...);
+      end
+    end
+  end
+
   AC.SpecID_ClassesSpecs = {
     -- Death Knight
       [250]   = {"DeathKnight", "Blood"},

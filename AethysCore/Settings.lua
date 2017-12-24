@@ -8,6 +8,8 @@
   -- All settings here should be moved into the GUI someday
   AC.GUISettings = {
     General = {
+      -- Debug Mode
+      DebugMode = false,
       -- Recovery Timer
       RecoveryMode = "GCD", -- "GCD" to always display the next ability, "Custom" for Custom RecoveryTimer
       RecoveryTimer = 950,

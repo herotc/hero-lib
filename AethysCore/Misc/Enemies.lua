@@ -3,7 +3,7 @@
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
-  local Cache = AethysCache;
+  local Cache, Utils = AethysCache, AC.Utils;
   local Unit = AC.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
@@ -45,14 +45,14 @@
     if #Enemies >= 1 and type(Distance) == "number" then
       local DistanceValues = {};
       for Key, UnitTable in pairs(Enemies) do
-        if type(Key) == "number" and Key > Distance then
+        if type(Key) == "number" and Key >= Distance then
           tableinsert(DistanceValues, Key);
         end
       end
       -- Check if we have caught a table that we can use.
       if #DistanceValues >= 1 then
         if #DistanceValues >= 2 then
-          tablesort(DistanceValues, function(a, b) return a < b; end);
+          tablesort(DistanceValues, Utils.SortASC);
         end
         for Key, Unit in pairs(Enemies[DistanceValues[1]]) do
           if Unit:IsInRange(Distance, AoESpell) then
