@@ -14,9 +14,6 @@
 Lib\LibStub\LibStub.lua
 Lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
-# Core
-Core.lua
-
 # Utils
 Utils.lua
 Lib\json.lua
@@ -26,6 +23,7 @@ GUI\Panels.lua
 
 # API
 Settings.lua
+Core.lua
 Deprecated.lua
 
 # Enum
