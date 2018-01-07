@@ -50,6 +50,7 @@ Class\Unit\Player\Equipment.lua
 Class\Unit\Player\Aura.lua
 Class\Unit\Player\Instance.lua
 Class\Unit\Player\MythicDungeon.lua
+Class\Unit\Player\Tank.lua
 Class\Unit\Pet\Main.lua
 Class\Spell\Main.lua
 Class\Spell\Book.lua
