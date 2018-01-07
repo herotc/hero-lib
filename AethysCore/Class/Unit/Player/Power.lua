@@ -25,7 +25,7 @@
   --------------------------
   -- mana.max
   function Player:ManaMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.ManaMax then
@@ -36,7 +36,7 @@
   end
   -- Mana
   function Player:Mana ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.Mana then
@@ -59,7 +59,7 @@
   end 
   -- mana.regen
   function Player:ManaRegen ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.ManaRegen then
@@ -111,7 +111,7 @@
   --------------------------
   -- rage.max
   function Player:RageMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.RageMax then
@@ -122,7 +122,7 @@
   end
   -- rage
   function Player:Rage ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
       if not UnitInfo.Rage then
@@ -149,21 +149,21 @@
   ---------------------------
   -- focus.max
   function Player:FocusMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Focus);
     end
   end
   -- focus
   function Player:Focus ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Focus);
     end
   end
   -- focus.regen
   function Player:FocusRegen ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return select(2, GetPowerRegen(self.UnitID));
     end
@@ -230,21 +230,21 @@
   ----------------------------
   -- energy.max
   function Player:EnergyMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Energy);
     end
   end
   -- energy
   function Player:Energy ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Energy);
     end
   end
   -- energy.regen
   function Player:EnergyRegen ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return select(2, GetPowerRegen(self.UnitID));
     end
@@ -316,14 +316,14 @@ end
   ----------------------------------
   -- combo_points.max
   function Player:ComboPointsMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.ComboPoints);
     end
   end
   -- combo_points
   function Player:ComboPoints ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.ComboPoints);
     end
@@ -338,14 +338,14 @@ end
   ---------------------------------
   -- runicpower.max
   function Player:RunicPowerMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.RunicPower);
     end
   end
   -- runicpower
   function Player:RunicPower ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.RunicPower);
     end
@@ -411,14 +411,14 @@ end
   ------------------------
   -- soul_shard.max
   function Player:SoulShardsMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.SoulShards);
     end
   end
   -- soul_shard
   function Player:SoulShards ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return WarlockPowerBar_UnitPower(self.UnitID);
     end
@@ -433,14 +433,14 @@ end
   ------------------------
   -- astral_power.max
   function Player:AstralPowerMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.LunarPower);
     end
   end
   -- astral_power
   function Player:AstralPower (OverrideFutureAstralPower)
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return OverrideFutureAstralPower or UnitPower(self.UnitID, Enum.PowerType.LunarPower);
     end
@@ -464,14 +464,14 @@ end
   --------------------------------
   -- holy_power.max
   function Player:HolyPowerMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.HolyPower);
     end
   end
   -- holy_power
   function Player:HolyPower ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.HolyPower);
     end
@@ -494,14 +494,14 @@ end
   ------------------------------
   -- maelstrom.max
   function Player:MaelstromMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
     end
   end
   -- maelstrom
   function Player:Maelstrom ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
     end
@@ -519,49 +519,66 @@ end
     return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
   end
 
-  --------------------------------
-  --- 12 | Chi Functions ---
-  --------------------------------
-  -- Chi.max
+  --------------------------------------
+  --- 12 | Chi Functions (& Stagger) ---
+  --------------------------------------
+  -- chi.max
   function Player:ChiMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Chi);
     end
   end
-  -- Chi
+  -- chi
   function Player:Chi ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Chi);
     end
   end
-  -- Chi.pct
+  -- chi.pct
   function Player:ChiPercentage ()
     return (self:Chi() / self:ChiMax()) * 100;
   end
-  -- Chi.deficit
+  -- chi.deficit
   function Player:ChiDeficit ()
     return self:ChiMax() - self:Chi();
   end
-  -- "Chi.deficit.pct"
+  -- "chi.deficit.pct"
   function Player:ChiDeficitPercentage ()
     return (self:ChiDeficit() / self:ChiMax()) * 100;
   end
+  -- "stagger.max"
+  function Player:StaggerMax ()
+    return self:MaxHealth();
+  end
+  -- stagger_amount
+  function Player:Stagger ()
+    local GUID = self:GUID();
+    if GUID then
+      return UnitStagger(self.UnitID);
+    end
+  end
+  -- stagger_percent
+  function Player:StaggerPercentage ()
+    return (self:Stagger() / self:StaggerMax()) * 100;
+  end
+
+
 
   ------------------------------
   -- 13 | Insanity Functions ---
   ------------------------------
   -- insanity.max
   function Player:InsanityMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Insanity);
     end
   end
   -- insanity
   function Player:Insanity ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Insanity);
     end
@@ -589,14 +606,14 @@ end
   -----------------------------------
   -- arcanecharges.max
   function Player:ArcaneChargesMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.ArcaneCharges);
     end
   end
   -- arcanecharges
   function Player:ArcaneCharges ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.ArcaneCharges);
     end
@@ -619,14 +636,14 @@ end
   ---------------------------
   -- fury.max
   function Player:FuryMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Fury);
     end
   end
   -- fury
   function Player:Fury ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Fury);
     end
@@ -649,14 +666,14 @@ end
   ---------------------------
   -- pain.max
   function Player:PainMax ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPowerMax(self.UnitID, Enum.PowerType.Pain);
     end
   end
   -- pain
   function Player:Pain ()
-    local GUID = self:GUID()
+    local GUID = self:GUID();
     if GUID then
       return UnitPower(self.UnitID, Enum.PowerType.Pain);
     end
