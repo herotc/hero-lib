@@ -43,6 +43,10 @@
       for Pattern, Replace in pairs ( ShortKBSubString ) do
         KeyBinding = stringgsub( KeyBinding, Pattern, Replace );
       end
+
+      -- Hotfix for Numpad "-"
+      KeyBinding = stringgsub( KeyBinding, "N:", "N-" );
+
       return KeyBinding;
     end
   
