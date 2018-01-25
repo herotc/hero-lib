@@ -53,9 +53,13 @@
       Spell(165962),  -- Druid Flight Form
       Spell(220509),  -- Paladin Divine Steed
       Spell(221883),  -- Paladin Divine Steed
-      Spell(221884),  -- Paladin Divine Steed
+      Spell(221885),  -- Paladin Divine Steed
       Spell(221886),  -- Paladin Divine Steed
       Spell(221887),  -- Paladin Divine Steed
+      Spell(254471),  -- Paladin Divine Steed
+      Spell(254472),  -- Paladin Divine Steed
+      Spell(254473),  -- Paladin Divine Steed
+      Spell(254474),  -- Paladin Divine Steed
     --- Legion
       -- Class Order Hall
       Spell(220480),  -- Death Knight Ebon Blade Deathcharger
