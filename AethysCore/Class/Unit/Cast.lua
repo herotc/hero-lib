@@ -89,7 +89,6 @@
   -- Get if the unit is xhanneling or not.
   function Unit:IsChanneling (Spell)
     if Spell then
-      -- print(self:ChannelingInfo(1),", self : ",self:ChannelName()," spell : ",Spell:Name())
       return self:ChannelName() == Spell:Name() and true or false;
     else
       return self:ChannelingInfo(1) and true or false;
