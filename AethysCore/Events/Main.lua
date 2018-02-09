@@ -36,6 +36,8 @@
     "SWING"
   };
   local CombatLogPrefixesCount = #CombatLogPrefixes;
+  local restoreDB = {};
+  local overrideDB = {};
 
 
 --- ============================ CONTENT ============================
@@ -276,7 +278,34 @@
     , "COMBAT_LOG_EVENT_UNFILTERED"
   );
 
-
+  -- Core Override System
+  function AC.AddCoreOverride (target, newfunction, specKey)
+    local loadOverrideFunc = assert(loadstring([[
+      return function (func)
+      ]]..target..[[ = func;
+      end, ]]..target..[[
+      ]]));
+    setfenv(loadOverrideFunc, {AC = AC, Player = Player, Spell = Spell, Item = Item, Target = Target, Unit = Unit, Pet = Pet})
+    local overrideFunc, oldfunction = loadOverrideFunc();
+    if overrideDB[specKey] == nil then
+      overrideDB[specKey] = {}
+    end
+    tableinsert(overrideDB[specKey], {overrideFunc, newfunction})
+    tableinsert(restoreDB, {overrideFunc, oldfunction})
+    return oldfunction;
+  end
+  function AC.LoadRestores ()
+    for k, v in pairs(restoreDB) do
+      v[1](v[2]);
+    end
+  end
+  function AC.LoadOverrides (specKey)
+    if type(overrideDB[specKey]) == "table" then
+      for k, v in pairs(overrideDB[specKey]) do
+        v[1](v[2]);
+      end
+    end
+  end
 --- ======= NON-COMBATLOG =======
   -- PLAYER_REGEN_DISABLED
     AC.CombatStarted = 0;
@@ -353,6 +382,15 @@
         or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16) 
         or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
           Spell:ArtifactScan();
+        end
+
+        -- Load / Refresh Core Overrides
+        if Event == "PLAYER_LOGIN" then
+          C_Timer.After(3, function() AC.LoadOverrides(Cache.Persistent.Player.Spec[1]) end) -- TODO: fix timing issue via event?
+        end
+        if Event == "PLAYER_SPECIALIZATION_CHANGED" then
+          AC.LoadRestores();
+          AC.LoadOverrides(Cache.Persistent.Player.Spec[1]);
         end
       end
       , "ZONE_CHANGED_NEW_AREA"
