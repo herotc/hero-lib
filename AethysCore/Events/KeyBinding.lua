@@ -11,9 +11,7 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
-  local pairs = pairs;
   local stringgsub = string.gsub;
-  local tableinsert = table.insert;
   -- File Locals
   local KeyBindings = {};
   local BarNames = {};
@@ -29,6 +27,8 @@
       if Button and Button.icon and Button.HotKey then
         ButtonTexture = Button.icon:GetTexture();
         ButtonHotKey = Button.HotKey:GetText();
+        -- Numpad isn't shortened, so we have to do it manually
+        ButtonHotKey = stringgsub( ButtonHotKey, "Num Pad ", "N" );
         if Button.icon:IsShown() and ButtonTexture and ButtonHotKey and strbyte(ButtonHotKey) ~= 226 then
           if not KeyBindings[ButtonTexture] or Override then
             KeyBindings[ButtonTexture] = ButtonHotKey;
