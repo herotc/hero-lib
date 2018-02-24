@@ -42,7 +42,6 @@
     * @function FindKeyBindings
     * @desc Populate KeyBindings table with <TextureID> = <HotKey> data.
     *]]
-
   local function FindKeyBindings ()
     -- SlotIndex      ActionFrame                     CommandName                 Page
     -- 1..12        = ActionButton (Primary Bar)      ACTIONBUTTON..Slot          1
@@ -90,7 +89,6 @@
     for i = 1, #BarNames do
       ParseBar(BarNames[i], true);
     end
-
   end
 
   AC:RegisterForEvent(
@@ -101,7 +99,7 @@
         end
       ); -- on a timer, because of Bar Update Delay
     end
-    , "UPDATE_SHAPESHIFT_FORM"  
+    , "UPDATE_SHAPESHIFT_FORM"
   );
   
   AC:RegisterForEvent(
@@ -116,6 +114,13 @@
     , "LEARNED_SPELL_IN_TAB"
   );
 
-  function AC.FindKeyBinding (TextureID)
-    return KeyBindings[TextureID] or false;
+  do
+    local KeyBindingsWhitelist = {};
+    function AC.WhitelistKeyBinding (TextureID, KeyBinding)
+      KeyBindingsWhitelist[TextureID] = KeyBinding;
+    end
+
+    function AC.FindKeyBinding (TextureID)
+      return KeyBindingsWhitelist[TextureID] or KeyBindings[TextureID] or false;
+    end
   end
