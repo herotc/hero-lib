@@ -21,6 +21,10 @@
   do
     local ActiveMitigationSpells = {
       Buff = {
+        -- PR Legion
+        Spell(191941), -- Darkstrikes (VotW - 1st)
+        Spell(204151), -- Darkstrikes (VotW - 1st)
+        -- T20 ToS
         Spell(239932) -- Felclaws (KJ)
       },
       Debuff = {
@@ -28,7 +32,15 @@
       },
       Cast = {
         -- PR Legion
+        197810, -- Wicked Slam (ARC - 3rd)
+        197418, -- Vengeful Shear (BRH - 2nd)
+        214003, -- Coup de Grace (BRH - Trash)
+        235751, -- Timber Smash (CotEN - 1st)
+        193668, -- Savage Blade (HoV - 4th)
+        227493, -- Mortal Strike (LOWR - 4th)
+        228852, -- Shared Suffering (LOWR - 4th)
         193211, -- Dark Slash (MoS - 1st)
+        200732, -- Molten Crash (NL - 4th)
         -- T20 ToS
         241635, -- Hammer of Creation (Maiden)
         241636, -- Hammer of Obliteration (Maiden)
