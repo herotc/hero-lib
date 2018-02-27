@@ -1032,7 +1032,6 @@ AethysCore.Enum.ItemRangeUnfiltered = {
       116335,
       116662,
       116915,
-      116996,
       118335,
       118465,
       118662,
