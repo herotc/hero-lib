@@ -34,6 +34,7 @@
         -- PR Legion
         197810, -- Wicked Slam (ARC - 3rd)
         197418, -- Vengeful Shear (BRH - 2nd)
+        198079, -- Hateful Gaze (BRH - 3rd)
         214003, -- Coup de Grace (BRH - Trash)
         235751, -- Timber Smash (CotEN - 1st)
         193668, -- Savage Blade (HoV - 4th)
@@ -48,6 +49,7 @@
         239932, -- Felclaws (KJ)
         -- T21 Antorus
         254919, -- Forging Strike (Kin'garoth)
+        244899, -- Fiery Strike (Coven)
         245458, -- Foe Breaker (Aggramar)
         248499, -- Sweeping Scythe (Argus)
         258039 -- Deadly Scythe (Argus)
