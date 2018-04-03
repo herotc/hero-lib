@@ -66,6 +66,20 @@
         BarNames = {
           [1] = {"BT4Button", 120},
         }
+      elseif _G.LUI and _G.LUI.db.children.Bars.profile.General.Enable then
+        -- LUI
+        BarNames = {
+          [1] = {"LUIBarBottom1Button", _G.LUI.db.children.Bars.profile.Bottombar1.NumButtons},
+          [2] = {"LUIBarBottom2Button", _G.LUI.db.children.Bars.profile.Bottombar2.NumButtons},
+          [3] = {"LUIBarBottom3Button", _G.LUI.db.children.Bars.profile.Bottombar3.NumButtons},
+          [4] = {"LUIBarBottom4Button", _G.LUI.db.children.Bars.profile.Bottombar4.NumButtons},
+          [5] = {"LUIBarBottom5Button", _G.LUI.db.children.Bars.profile.Bottombar5.NumButtons},
+          [6] = {"LUIBarBottom6Button", _G.LUI.db.children.Bars.profile.Bottombar6.NumButtons},
+          [7] = {"LUIBarLeft1Button", 12},
+          [8] = {"LUIBarLeft2Button", 12},
+          [9] = {"LUIBarRight1Button", 12},
+          [10] = {"LUIBarRight2Button", 12},
+        }
       elseif _G.ElvUI and _G.ElvUI[1].ActionBars then
         -- ElvUI
         BarNames = {
