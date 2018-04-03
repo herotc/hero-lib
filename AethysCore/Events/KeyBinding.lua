@@ -23,10 +23,14 @@
     local ButtonTexture;
     local ButtonHotKey = "";
     for i = 1, Bar[2] do
-      Button = _G[Bar[1] .. i];
+      ButtonName = Bar[1] .. i
+      Button = _G[ButtonName];
       if Button and Button.icon and Button.HotKey then
         ButtonTexture = Button.icon:GetTexture();
         ButtonHotKey = Button.HotKey:GetText();
+        if _G.Bartender4 and Button.config.hideElements.hotkey then
+          ButtonHotKey = Button.config.keyBoundTarget and GetBindingKey(Button.config.keyBoundTarget) or GetBindingKey("CLICK " .. ButtonName .. ":LeftButton")
+        end
         if Button.icon:IsShown() and ButtonTexture and ButtonHotKey and strbyte(ButtonHotKey) ~= 226 then
           if not KeyBindings[ButtonTexture] or Override then
             -- Numpad isn't shortened, so we have to do it manually
