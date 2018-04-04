@@ -2,7 +2,7 @@
 
 ## Title: Aethys |cFFA330C9Cache|r
 ## Author: Aethys
-## Version: 7.3.2.03
+## Version: 7.3.2.04
 ## Notes: Cache Library packaged with AethysCore and used by Aethys Addons. Can be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
