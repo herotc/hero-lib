@@ -32,10 +32,24 @@
           ButtonHotKey = Button.config.keyBoundTarget and GetBindingKey(Button.config.keyBoundTarget) or GetBindingKey("CLICK " .. ButtonName .. ":LeftButton")
         end
         if Button.icon:IsShown() and ButtonTexture and ButtonHotKey and strbyte(ButtonHotKey) ~= 226 then
-          if not KeyBindings[ButtonTexture] or Override then
-            -- Numpad isn't shortened, so we have to do it manually
-            KeyBindings[ButtonTexture] = stringgsub( ButtonHotKey, "Num Pad ", "N" );
-          end
+            --If button is a macro check that the macro casts a spell else ignore
+            local buttonActionType, buttonActionId = GetActionInfo(ActionButton_GetPagedID(Button))
+            if buttonActionType == "macro" then
+                --Item is a macro so check it plans to cast a spell
+                local _, _, macrospellid = GetMacroSpell(buttonActionId);
+                --If it casts a spell change buttonTexture to that spell texture else to nil
+                if macrospellid ~= nil then
+                    ButtonTexture = GetSpellTexture(macrospellid);
+                else
+                    ButtonTexture = nil;
+                end
+            end
+            if not KeyBindings[ButtonTexture] or Override then
+                if ButtonTexture ~= nil then
+                    -- Numpad isn't shortened, so we have to do it manually
+                    KeyBindings[ButtonTexture] = stringgsub( ButtonHotKey, "Num Pad ", "N" );
+                end
+            end
         end
       end
     end
