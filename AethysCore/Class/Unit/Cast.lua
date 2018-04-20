@@ -107,15 +107,15 @@
 
   -- Get when the cast, if there is any, started (in seconds).
   function Unit:CastStart ()
-    if self:IsCasting() then return self:CastingInfo(5)/1000; end
-    if self:IsChanneling() then return self:ChannelingInfo(5)/1000; end
+    if self:IsCasting() then return self:CastingInfo(4)/1000; end
+    if self:IsChanneling() then return self:ChannelingInfo(4)/1000; end
     return 0;
   end
 
   -- Get when the cast, if there is any, will end (in seconds).
   function Unit:CastEnd ()
-    if self:IsCasting() then return self:CastingInfo(6)/1000; end
-    if self:IsChanneling() then return self:ChannelingInfo(6)/1000; end
+    if self:IsCasting() then return self:CastingInfo(5)/1000; end
+    if self:IsChanneling() then return self:ChannelingInfo(5)/1000; end
     return 0;
   end
 
