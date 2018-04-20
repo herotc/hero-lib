@@ -140,6 +140,10 @@
     return Cache.Persistent.SpellLearned[self:Type()][self:ID()] or false;
   end
 
+  function Spell:Count()
+    return GetSpellCount(self:ID());
+  end
+
   --[[*
     * @function Spell:IsCastable
     * @desc Check if the spell Is Castable or not.
