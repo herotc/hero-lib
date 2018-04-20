@@ -201,7 +201,7 @@
       local Debuffs = {};
       for i = 1, AC.MAXIMUM do
         local Infos = {UnitDebuff(UnitID, i)};
-        if not Infos[11] then break; end
+        if not Infos[10] then break; end
         Debuffs[i] = Infos;
       end
       return Debuffs;
@@ -213,8 +213,8 @@
         local Debuffs = Cache.Get("UnitInfo", GUID, "Debuffs", _UnitDebuff);
         for i = 1, #Debuffs do
           local Debuff = Debuffs[i];
-          if Spell:ID() == Debuff[11] then
-            local Caster = Debuff[8];
+          if Spell:ID() == Debuff[10] then
+            local Caster = Debuff[7];
             if AnyCaster or Caster == "player" or Caster == "pet" then
               if Index then
                 if type(Index) == "number" then
