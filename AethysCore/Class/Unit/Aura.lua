@@ -28,7 +28,7 @@
       local Buffs = {};
       for i = 1, AC.MAXIMUM do
         local Infos = {UnitBuff(UnitID, i)};
-        if not Infos[11] then break; end
+        if not Infos[10] then break; end
         Buffs[i] = Infos;
       end
       return Buffs;
@@ -40,8 +40,8 @@
         local Buffs = Cache.Get("UnitInfo", GUID, "Buffs", _UnitBuff);
         for i = 1, #Buffs do
           local Buff = Buffs[i];
-          if Spell:ID() == Buff[11] then
-            local Caster = Buff[8];
+          if Spell:ID() == Buff[10] then
+            local Caster = Buff[7];
             if AnyCaster or Caster == "player" then
               if Index then
                 if type(Index) == "number" then
@@ -87,7 +87,7 @@
     * @returns {number}
     *]]
   function Unit:BuffRemains ( Spell, AnyCaster, Offset )
-    local ExpirationTime = self:Buff( Spell, 7, AnyCaster );
+    local ExpirationTime = self:Buff( Spell, 2, AnyCaster );
     if ExpirationTime then
       if Offset then
         ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
