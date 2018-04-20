@@ -256,20 +256,22 @@
       end
       for i = 1, CombatLogPrefixesCount do
         -- TODO : Optimize the str find
-        local Start, End = stringfind(SubEvent, CombatLogPrefixes[i]);
-        if Start and End then
-          -- TODO: Optimize the double str sub
-          local Prefix, Suffix = stringsub(SubEvent, Start, End), stringsub(SubEvent, End + 1);
-          if PrefixCombatEvents[Prefix] then
-            -- Unfiltered Combat Log with Prefix only
-            for _, Handler in pairs(PrefixCombatEvents[Prefix]) do
-              Handler(TimeStamp, SubEvent, ...);
+        if SubEvent then
+          local Start, End = stringfind(SubEvent, CombatLogPrefixes[i]);
+          if Start and End then
+            -- TODO: Optimize the double str sub
+            local Prefix, Suffix = stringsub(SubEvent, Start, End), stringsub(SubEvent, End + 1);
+            if PrefixCombatEvents[Prefix] then
+              -- Unfiltered Combat Log with Prefix only
+              for _, Handler in pairs(PrefixCombatEvents[Prefix]) do
+                Handler(TimeStamp, SubEvent, ...);
+              end
             end
-          end
-          if SuffixCombatEvents[Suffix] then
-            -- Unfiltered Combat Log with Suffix only
-            for _, Handler in pairs(SuffixCombatEvents[Suffix]) do
-              Handler(TimeStamp, SubEvent, ...);
+            if SuffixCombatEvents[Suffix] then
+              -- Unfiltered Combat Log with Suffix only
+              for _, Handler in pairs(SuffixCombatEvents[Suffix]) do
+                Handler(TimeStamp, SubEvent, ...);
+              end
             end
           end
         end
