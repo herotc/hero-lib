@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 
 ## Title: Aethys |cFFA330C9Core|r
 ## Author: Aethys
-## Version: 7.3.2.04
+## Version: 8.0.1.00
 ## Notes: Core Library used by Aethys Addons. Can be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
