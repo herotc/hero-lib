@@ -52,12 +52,14 @@
   -- Player On Cast Success Listener
   AC:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if TriggerGCD[SpellID] then
-        tableinsert(Prev.GCD, 1, SpellID);
-        Prev.OffGCD = {};
-        PrevGCDPredicted = 0;
-      elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
-        tableinsert(Prev.OffGCD, 1, SpellID);
+      if TriggerGCD[SpellID] ~= nil then
+        if TriggerGCD[SpellID] > 0 then
+          tableinsert(Prev.GCD, 1, SpellID);
+          Prev.OffGCD = {};
+          PrevGCDPredicted = 0;
+        else -- Prevents unwanted spells to be registered as OffGCD.
+          tableinsert(Prev.OffGCD, 1, SpellID);
+        end
       end
       RemoveOldRecords();
     end
@@ -82,11 +84,13 @@
   -- Pet On Cast Success Listener
   AC:RegisterForPetCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if TriggerGCD[SpellID] then
-        tableinsert(Prev.PetGCD, 1, SpellID);
-        Prev.PetOffGCD = {};
-      elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
-        tableinsert(Prev.PetOffGCD, 1, SpellID);
+      if TriggerGCD[SpellID] ~= nil then
+        if TriggerGCD[SpellID] > 0 then
+          tableinsert(Prev.PetGCD, 1, SpellID);
+          Prev.PetOffGCD = {};
+        else -- Prevents unwanted spells to be registered as OffGCD.
+          tableinsert(Prev.PetOffGCD, 1, SpellID);
+        end
       end
       RemoveOldRecords();
     end
@@ -103,7 +107,7 @@
         local SpellID = Spell:ID();
         local TriggerGCDInfo = BaseTriggerGCD[SpellID];
         if TriggerGCDInfo ~= nil then
-          RegisteredSpells[SpellID] = TriggerGCDInfo;
+          RegisteredSpells[SpellID] = (TriggerGCDInfo > 0);
         end
       end
     end
