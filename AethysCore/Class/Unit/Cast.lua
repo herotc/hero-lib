@@ -14,7 +14,7 @@
   -- Lua
   local unpack = unpack;
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -46,7 +46,7 @@
   -- Get if the unit is casting or not. Param to check if the unit is casting a specific spell or not
   function Unit:IsCasting (Spell)
     if Spell then
-      return self:CastingInfo(10) == Spell:ID() and true or false;
+      return self:CastingInfo(9) == Spell:ID() and true or false;
     else
       return self:CastingInfo(1) and true or false;
     end
@@ -86,7 +86,7 @@
     return nil;
   end
 
-  -- Get if the unit is xhanneling or not.
+  -- Get if the unit is channeling or not.
   function Unit:IsChanneling (Spell)
     if Spell then
       return self:ChannelName() == Spell:Name() and true or false;
@@ -102,7 +102,7 @@
 
   -- Get if the unit cast is interruptible if there is any.
   function Unit:IsInterruptible ()
-    return (self:CastingInfo(9) == false or self:ChannelingInfo(8) == false) and true or false;
+    return (self:CastingInfo(8) == false or self:ChannelingInfo(7) == false) and true or false;
   end
 
   -- Get when the cast, if there is any, started (in seconds).
@@ -143,7 +143,7 @@
     end
     return 0;
   end
-  
+
   -- Get the cost of the current cast
   function Unit:CastCost ()
     if self:CastID() and self:CastID() ~= -1 then
