@@ -221,7 +221,7 @@
   end
 
   -- OnEvent Frame Listener
-  EventFrame:SetScript("OnEvent", 
+  EventFrame:SetScript("OnEvent",
     function (self, Event, ...)
       for _, Handler in pairs(Events[Event]) do
         Handler(Event, ...);
@@ -230,52 +230,56 @@
   );
 
   -- Combat Log Event Unfiltered Listener
-  AC:RegisterForEvent(
-    function (Event, TimeStamp, SubEvent, ...)
-      if CombatEvents[SubEvent] then
-        -- Unfiltered Combat Log
-        for _, Handler in pairs(CombatEvents[SubEvent]) do
+  local function ListenerCombatLogEventUnfiltered(Event, TimeStamp, SubEvent, ...)
+    if CombatEvents[SubEvent] then
+      -- Unfiltered Combat Log
+      for _, Handler in pairs(CombatEvents[SubEvent]) do
+        Handler(TimeStamp, SubEvent, ...);
+      end
+    end
+    if SelfCombatEvents[SubEvent] then
+      -- Unfiltered Combat Log with SourceGUID == PlayerGUID filter
+      if select(2, ...) == Player:GUID() then
+        for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
           Handler(TimeStamp, SubEvent, ...);
         end
       end
-      if SelfCombatEvents[SubEvent] then
-        -- Unfiltered Combat Log with SourceGUID == PlayerGUID filter
-        if select(2, ...) == Player:GUID() then
-          for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
-            Handler(TimeStamp, SubEvent, ...);
-          end
+    end
+    if PetCombatEvents[SubEvent] then
+      -- Unfiltered Combat Log with SourceGUID == PetGUID filter
+      if select(2, ...) == Pet:GUID() then
+        for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
+          Handler(TimeStamp, SubEvent, ...);
         end
       end
-      if PetCombatEvents[SubEvent] then
-        -- Unfiltered Combat Log with SourceGUID == PetGUID filter
-        if select(2, ...) == Pet:GUID() then
-          for _, Handler in pairs(SelfCombatEvents[SubEvent]) do
-            Handler(TimeStamp, SubEvent, ...);
-          end
-        end
-      end
-      for i = 1, CombatLogPrefixesCount do
-        -- TODO : Optimize the str find
-        if SubEvent then
-          local Start, End = stringfind(SubEvent, CombatLogPrefixes[i]);
-          if Start and End then
-            -- TODO: Optimize the double str sub
-            local Prefix, Suffix = stringsub(SubEvent, Start, End), stringsub(SubEvent, End + 1);
-            if PrefixCombatEvents[Prefix] then
-              -- Unfiltered Combat Log with Prefix only
-              for _, Handler in pairs(PrefixCombatEvents[Prefix]) do
-                Handler(TimeStamp, SubEvent, ...);
-              end
+    end
+    for i = 1, CombatLogPrefixesCount do
+      -- TODO : Optimize the str find
+      if SubEvent then
+        local Start, End = stringfind(SubEvent, CombatLogPrefixes[i]);
+        if Start and End then
+          -- TODO: Optimize the double str sub
+          local Prefix, Suffix = stringsub(SubEvent, Start, End), stringsub(SubEvent, End + 1);
+          if PrefixCombatEvents[Prefix] then
+            -- Unfiltered Combat Log with Prefix only
+            for _, Handler in pairs(PrefixCombatEvents[Prefix]) do
+              Handler(TimeStamp, SubEvent, ...);
             end
-            if SuffixCombatEvents[Suffix] then
-              -- Unfiltered Combat Log with Suffix only
-              for _, Handler in pairs(SuffixCombatEvents[Suffix]) do
-                Handler(TimeStamp, SubEvent, ...);
-              end
+          end
+          if SuffixCombatEvents[Suffix] then
+            -- Unfiltered Combat Log with Suffix only
+            for _, Handler in pairs(SuffixCombatEvents[Suffix]) do
+              Handler(TimeStamp, SubEvent, ...);
             end
           end
         end
       end
+    end
+  end
+
+  AC:RegisterForEvent(
+    function (Event)
+      ListenerCombatLogEventUnfiltered(Event, CombatLogGetCurrentEventInfo())
     end
     , "COMBAT_LOG_EVENT_UNFILTERED"
   );
@@ -366,10 +370,10 @@
         wipe(Cache.Persistent.Texture.Item);
 
         -- Refresh Gear
-        if Event == "PLAYER_EQUIPMENT_CHANGED" 
+        if Event == "PLAYER_EQUIPMENT_CHANGED"
         or Event == "PLAYER_LOGIN" then
           AC.GetEquipment();
-          
+
           -- WoD (They are working but not used, so I'll comment them)
           --AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
           --AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
@@ -378,10 +382,10 @@
           AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
           AC.Tier21_2Pc, AC.Tier21_4Pc = AC.HasTier("T21");
         end
-    
+
         -- Refresh Artifact
         if Event == "PLAYER_LOGIN"
-        or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16) 
+        or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16)
         or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
           Spell:ArtifactScan();
         end
@@ -410,7 +414,7 @@
         if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
           return;
         end
-        
+
         -- TODO: FIXME workaround to prevent Lua errors when Blizz do some shenanigans with book in Arena/Timewalking
         if pcall(
           function ()
@@ -431,7 +435,7 @@
       , "CANCEL_GLYPH_CAST"
       , "ACTIVATE_GLYPH"
     );
-  
+
   -- Not Facing Unit Blacklist
     AC.UnitNotInFront = Player;
     AC.UnitNotInFrontTime = 0;
@@ -501,4 +505,4 @@
   --- End Combat Log Arguments
 
   -- Arguments Variables
-  
+
