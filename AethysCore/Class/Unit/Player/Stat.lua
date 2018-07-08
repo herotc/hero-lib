@@ -86,7 +86,7 @@
   end
 
   function Player:SpellHaste()
-    return (1 + (Player:HastePct() / 100));
+    return 1 / (1 + (Player:HastePct() / 100));
   end
 
   -- mastery
