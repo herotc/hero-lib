@@ -3,7 +3,7 @@
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
-  local Cache = AethysCache;
+  local Cache = HeroCache;
   -- Lua
   local error = error;
   local setmetatable = setmetatable;

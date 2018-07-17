@@ -7,7 +7,7 @@
 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## Dependencies: AethysCache
+## Dependencies: HeroCache
 ## SavedVariables: AethysCoreDB
 
 # WoW Lib Stuff

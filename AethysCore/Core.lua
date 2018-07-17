@@ -2,7 +2,7 @@
 --- ======= LOCALIZE =======
   -- Addon
   local addonName, AC = ...;
-  local Cache = AethysCache;
+  local Cache = HeroCache;
   -- Lua
   local gmatch = gmatch;
   local pairs = pairs;

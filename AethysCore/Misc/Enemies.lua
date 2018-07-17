@@ -3,7 +3,7 @@
   -- Addon
   local addonName, AC = ...;
   -- AethysCore
-  local Cache, Utils = AethysCache, AC.Utils;
+  local Cache, Utils = HeroCache, AC.Utils;
   local Unit = AC.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;

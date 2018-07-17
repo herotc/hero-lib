@@ -3,15 +3,15 @@
   -- Addon
   local addonName, Cache = ...;
   -- Lua
-  
+
   -- File Locals
-  if not AethysCacheDB then
-    AethysCacheDB = {};
-    AethysCacheDB.Enabled = true;
+  if not HeroCacheDB then
+    HeroCacheDB = {};
+    HeroCacheDB.Enabled = true;
   end
 --- ======= GLOBALIZE =======
   -- Addon
-  AethysCache = Cache;
+  HeroCache = Cache;
 
 
 --- ============================ CONTENT ============================
@@ -252,7 +252,7 @@ end
   --    return Cache.Get("SpellInfo", 53, "CostInfo",
   --                     function() return GetSpellPowerCost(53)[1] end) -- if you have a "fallback" value
   function Cache.Get (...)
-    if AethysCacheDB.Enabled then
+    if HeroCacheDB.Enabled then
       return CacheImpl.GetSet(...)
     else
       local last = select(select('#', ...), ...)
@@ -267,7 +267,7 @@ end
   -- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
   -- Typical usage is : return Cache.Set("SpellInfo", 53, "CostInfo", GetSpellPowerCost(53)[1]);
   function Cache.Set (...)
-    return AethysCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
+    return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
   end
 
   -- Wipe a table while keeping the structure
