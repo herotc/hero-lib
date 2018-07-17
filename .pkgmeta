@@ -4,6 +4,9 @@ move-folders:
  hero-lib/HeroCache: HeroCache
  AethysCore/AethysCore: AethysCore
 
+ignore:
+ - bfa-api-changes.txt
+
 enable-nolib-creation: no
 
 license-output: LICENSE
