@@ -1,15 +1,15 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Utils = AC.Utils;
+  local Utils = HL.Utils;
   -- Lua
   local stringformat = string.format;
   local strsplit = strsplit;
   -- File Locals
-  AC.GUI = {};
-  local GUI = AC.GUI;
+  HL.GUI = {};
+  local GUI = HL.GUI;
   local StringToNumberIfPossible = Utils.StringToNumberIfPossible;
   local SubStringCount = Utils.SubStringCount;
 

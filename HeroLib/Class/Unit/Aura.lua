@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local unpack = unpack;
   -- File Locals
@@ -26,7 +26,7 @@
     local UnitID;
     local function _UnitBuff ()
       local Buffs = {};
-      for i = 1, AC.MAXIMUM do
+      for i = 1, HL.MAXIMUM do
         local Infos = {UnitBuff(UnitID, i)};
         if not Infos[10] then break; end
         Buffs[i] = Infos;
@@ -90,9 +90,9 @@
     local ExpirationTime = self:Buff( Spell, 6, AnyCaster );
     if ExpirationTime then
       if Offset then
-        ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+        ExpirationTime = HL.OffsetRemains( ExpirationTime, Offset );
       end
-      local Remains = ExpirationTime - AC.GetTime();
+      local Remains = ExpirationTime - HL.GetTime();
       return Remains >= 0 and Remains or 0;
     else
       return 0;
@@ -199,7 +199,7 @@
     local UnitID;
     local function _UnitDebuff ()
       local Debuffs = {};
-      for i = 1, AC.MAXIMUM do
+      for i = 1, HL.MAXIMUM do
         local Infos = {UnitDebuff(UnitID, i)};
         if not Infos[10] then break; end
         Debuffs[i] = Infos;
@@ -263,9 +263,9 @@
     local ExpirationTime = self:Debuff( Spell, 6, AnyCaster );
     if ExpirationTime then
       if Offset then
-        ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
+        ExpirationTime = HL.OffsetRemains( ExpirationTime, Offset );
       end
-      local Remains = ExpirationTime - AC.GetTime();
+      local Remains = ExpirationTime - HL.GetTime();
       return Remains >= 0 and Remains or 0;
     else
       return 0;

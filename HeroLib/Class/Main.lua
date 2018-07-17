@@ -1,7 +1,7 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
   -- Lua
@@ -31,7 +31,7 @@
 --- ======= UNIT =======
 do
   local Unit = Class();
-  AC.Unit = Unit;
+  HL.Unit = Unit;
   function Unit:New ( UnitID )
     if type( UnitID ) ~= "string" then error( "Invalid UnitID." ); end
     self.UnitID = UnitID;
@@ -47,7 +47,7 @@ do
   local UnitIDs = {
     { "Arena", 5 },
     { "Boss", 4 },
-    { "Nameplate", AC.MAXIMUM },
+    { "Nameplate", HL.MAXIMUM },
     { "Party", 5 },
     { "Raid", 40 }
   };
@@ -64,7 +64,7 @@ end
 --- ======= SPELL =======
 do
   local Spell = Class();
-  AC.Spell = Spell;
+  HL.Spell = Spell;
   function Spell:New ( SpellID, SpellType )
     if type( SpellID ) ~= "number" then error( "Invalid SpellID." ); end
     if SpellType and type( SpellType ) ~= "string" then error( "Invalid Spell Type." ); end
@@ -122,7 +122,7 @@ end
 
 do
   local Item = Class();
-  AC.Item = Item;
+  HL.Item = Item;
   function Item:New ( ItemID, ItemSlotID )
     if type( ItemID ) ~= "number" then error( "Invalid ItemID." ); end
     if ItemSlotID and type( ItemSlotID ) ~= "table" then error( "Invalid ItemSlotID." ); end

@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local mathmax = math.max;
   local unpack = unpack;
@@ -66,7 +66,7 @@
       if CDTime == 0 then return 0; end
     end
     -- Compute the CD.
-    local CD = CDTime + CDValue - AC.GetTime() - (BypassRecovery and 0 or AC.RecoveryOffset());
+    local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset());
     -- Return the Spell CD.
     return CD > 0 and CD or 0;
   end
@@ -141,7 +141,7 @@
       end
     end
     if Offset then
-      return BypassRecovery and mathmax( AC.OffsetRemains( RechargeNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( Recharge, Offset ), 0 );
+      return BypassRecovery and mathmax( HL.OffsetRemains( RechargeNoRecovery, Offset ), 0 ) or mathmax(HL.OffsetRemains( Recharge, Offset ), 0 );
     else
       return BypassRecovery and RechargeNoRecovery or Recharge;
     end
@@ -185,7 +185,7 @@
       end
     end
     if Offset then
-      return BypassRecovery and mathmax( AC.OffsetRemains( ChargesFractionalNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( ChargesFractional, Offset ), 0 );
+      return BypassRecovery and mathmax( HL.OffsetRemains( ChargesFractionalNoRecovery, Offset ), 0 ) or mathmax(HL.OffsetRemains( ChargesFractional, Offset ), 0 );
     else
       return BypassRecovery and ChargesFractionalNoRecovery or ChargesFractional;
     end
@@ -227,7 +227,7 @@
       end
     end
     if Offset then
-      return BypassRecovery and mathmax( AC.OffsetRemains( FullRechargeTimeNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( FullRechargeTime, Offset ), 0 );
+      return BypassRecovery and mathmax( HL.OffsetRemains( FullRechargeTimeNoRecovery, Offset ), 0 ) or mathmax(HL.OffsetRemains( FullRechargeTime, Offset ), 0 );
     else
       return BypassRecovery and FullRechargeTimeNoRecovery or FullRechargeTime;
     end
@@ -269,7 +269,7 @@
       end
     end
     if Offset then
-      return BypassRecovery and mathmax( AC.OffsetRemains( CooldownNoRecovery, Offset ), 0 ) or mathmax(AC.OffsetRemains( Cooldown, Offset ), 0 );
+      return BypassRecovery and mathmax( HL.OffsetRemains( CooldownNoRecovery, Offset ), 0 ) or mathmax(HL.OffsetRemains( Cooldown, Offset ), 0 );
     else
       return BypassRecovery and CooldownNoRecovery or Cooldown;
     end

@@ -1,7 +1,7 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   local Cache = HeroCache;
   -- Lua
   local gmatch = gmatch;
@@ -17,35 +17,35 @@
 
 --- ======= GLOBALIZE =======
   -- Addon
-  HeroLib = AC;
-  AC.Enum = {}; -- Constant Infos Enum
-  AC.MAXIMUM = 40; -- Max # Buffs and Max # Nameplates.
+  HeroLib = HL;
+  HL.Enum = {}; -- Constant Infos Enum
+  HL.MAXIMUM = 40; -- Max # Buffs and Max # Nameplates.
 
 
 --- ============================ CONTENT ============================
   --- Build Infos
   local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2";
   -- version, build, date, tocversion
-  AC.BuildInfo = {GetBuildInfo()};
+  HL.BuildInfo = {GetBuildInfo()};
   -- Get the current build version.
-  function AC.BuildVersion ()
-    return AC.BuildInfo[1];
+  function HL.BuildVersion ()
+    return HL.BuildInfo[1];
   end
   -- Get if we are on the Live or not.
-  function AC.LiveRealm ()
-    return AC.BuildVersion() == LiveVersion;
+  function HL.LiveRealm ()
+    return HL.BuildVersion() == LiveVersion;
   end
   -- Get if we are on the PTR or not.
-  function AC.PTRRealm ()
-    return AC.BuildVersion() == PTRVersion;
+  function HL.PTRRealm ()
+    return HL.BuildVersion() == PTRVersion;
   end
   -- Get if we are on the Beta or not.
-  function AC.BetaRealm ()
-    return AC.BuildVersion() == BetaVersion;
+  function HL.BetaRealm ()
+    return HL.BuildVersion() == BetaVersion;
   end
 
   -- Get the GetTime and cache it.
-  function AC.GetTime (Reset)
+  function HL.GetTime (Reset)
     if not Cache.MiscInfo then Cache.MiscInfo = {}; end
     if not Cache.MiscInfo.GetTime or Reset then
       Cache.MiscInfo.GetTime = GetTime();
@@ -53,22 +53,22 @@
     return Cache.MiscInfo.GetTime;
   end
 
-  -- Print with AC Prefix
-  function AC.Print (...)
-    print("[|cFFFF6600Aethys Core|r]", ...);
+  -- Print with HL Prefix
+  function HL.Print (...)
+    print("[|cFFFF6600Hero Lib|r]", ...);
   end
 
   do
-    local Setting = AC.GUISettings.General;
-    -- Debug print with AC Prefix
-    function AC.Debug (...)
+    local Setting = HL.GUISettings.General;
+    -- Debug print with HL Prefix
+    function HL.Debug (...)
       if Setting.DebugMode then
         print("[|cFFFF6600AC Debug|r]", ...);
       end
     end
   end
 
-  AC.SpecID_ClassesSpecs = {
+  HL.SpecID_ClassesSpecs = {
     -- Death Knight
       [250]   = {"DeathKnight", "Blood"},
       [251]   = {"DeathKnight", "Frost"},

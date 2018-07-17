@@ -1,20 +1,20 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Pet = Unit.Pet;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local tableinsert = table.insert;
   -- File Locals
-  local TriggerGCD = AC.Enum.TriggerGCD; -- TriggerGCD table until it has been filtered.
+  local TriggerGCD = HL.Enum.TriggerGCD; -- TriggerGCD table until it has been filtered.
   local LastRecord = 15;
   local PrevGCDPredicted = 0;
   local Prev = {
@@ -50,7 +50,7 @@
   end
 
   -- Player On Cast Success Listener
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] ~= nil then
         if TriggerGCD[SpellID] then
@@ -65,7 +65,7 @@
     end
     , "SPELL_CAST_SUCCESS"
   )
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] then
         PrevGCDPredicted = SpellID;
@@ -73,7 +73,7 @@
     end
     , "SPELL_CAST_START"
   )
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if PrevGCDPredicted == SpellID then
         PrevGCDPredicted = 0;
@@ -82,7 +82,7 @@
     , "SPELL_CAST_FAILED"
   )
   -- Pet On Cast Success Listener
-  AC:RegisterForPetCombatEvent(
+  HL:RegisterForPetCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] ~= nil then
         if TriggerGCD[SpellID] then
@@ -100,9 +100,9 @@
   -- Filter the Enum TriggerGCD table to keep only registered spells for a given class (based on SpecID).
   function Player:FilterTriggerGCD (SpecID)
     local RegisteredSpells = {};
-    local BaseTriggerGCD = AC.Enum.TriggerGCD; -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
+    local BaseTriggerGCD = HL.Enum.TriggerGCD; -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
     -- Fetch registered spells during the init
-    for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
+    for Spec, Spells in pairs(HL.Spell[HL.SpecID_ClassesSpecs[SpecID][1]]) do
       for _, Spell in pairs(Spells) do
         local SpellID = Spell:ID();
         local TriggerGCDInfo = BaseTriggerGCD[SpellID];

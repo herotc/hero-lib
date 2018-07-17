@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local unpack = unpack;
@@ -32,22 +32,22 @@
 
   -- Get the Time since Last spell Cast.
   function Spell:TimeSinceLastCast ()
-    return AC.GetTime() - self.LastCastTime;
+    return HL.GetTime() - self.LastCastTime;
   end
 
   -- Get the Time since Last spell Display.
   function Spell:TimeSinceLastDisplay ()
-    return AC.GetTime() - self.LastDisplayTime;
+    return HL.GetTime() - self.LastDisplayTime;
   end
   
   -- Get the Time since Last Buff applied on the player.
   function Spell:TimeSinceLastAppliedOnPlayer ()
-    return AC.GetTime() - self.LastAppliedOnPlayerTime;
+    return HL.GetTime() - self.LastAppliedOnPlayerTime;
   end
 
   -- Get the Time since Last Buff removed from the player.
   function Spell:TimeSinceLastRemovedOnPlayer ()
-    return AC.GetTime() - self.LastRemovedFromPlayerTime;
+    return HL.GetTime() - self.LastRemovedFromPlayerTime;
   end
 
   -- Register the spell damage formula.
@@ -220,12 +220,12 @@
   end
 
   -- action.foo.tick_time
-  local TickTime = AC.Enum.TickTime;
+  local TickTime = HL.Enum.TickTime;
   function Spell:FilterTickTime (SpecID)
     local RegisteredSpells = {};
-    local BaseTickTime = AC.Enum.TickTime; 
+    local BaseTickTime = HL.Enum.TickTime; 
     -- Fetch registered spells during the init
-    for Spec, Spells in pairs(AC.Spell[AC.SpecID_ClassesSpecs[SpecID][1]]) do
+    for Spec, Spells in pairs(HL.Spell[HL.SpecID_ClassesSpecs[SpecID][1]]) do
       for _, Spell in pairs(Spells) do
         local SpellID = Spell:ID();
         local TickTimeInfo = BaseTickTime[SpellID][1];
@@ -251,7 +251,7 @@
   end
   
   -- Base Duration of a dot/hot/channel...
-  local SpellDuration = AC.Enum.SpellDuration;
+  local SpellDuration = HL.Enum.SpellDuration;
   function Spell:BaseDuration ()
     local Duration = SpellDuration[self.SpellID];
     if not Duration or Duration == 0 then return 0; end
@@ -272,7 +272,7 @@
     return BaseDuration * 0.3;
   end
 
-  local SpellGCD = AC.Enum.TriggerGCD;
+  local SpellGCD = HL.Enum.TriggerGCD;
   function Spell:GCD ()
     local Gcd = SpellGCD[self.SpellID]
     if not Gcd or Gcd == 0 then return 0; end

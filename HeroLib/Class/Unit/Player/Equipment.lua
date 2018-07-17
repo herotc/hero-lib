@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local select = select;
@@ -20,19 +20,19 @@
 
 --- ============================ CONTENT ============================
   -- Save the current player's equipment.
-  AC.Equipment = {};
-  function AC.GetEquipment ()
+  HL.Equipment = {};
+  function HL.GetEquipment ()
     local Item;
     for i = 1, 19 do
       Item = select(1, GetInventoryItemID("Player", i));
       -- If there is an item in that slot
       if Item ~= nil then
-        AC.Equipment[i] = Item;
+        HL.Equipment[i] = Item;
       end
     end
   end
 
-  -- Check player set bonuses (call AC.GetEquipment before to refresh the current gear)
+  -- Check player set bonuses (call HL.GetEquipment before to refresh the current gear)
   HasTierSets = {
     ["T18"] = {
       [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
@@ -110,7 +110,7 @@
       [12] = {[5] = 152118, [15] = 152119, [10] = 152120, [1] = 152121, [7] = 152122, [3] = 152123}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     }
   };
-  function AC.HasTier (Tier)
+  function HL.HasTier (Tier)
     -- Set Bonuses are disabled in Challenge Mode (Diff = 8) and in Proving Grounds (Map = 1148).
     local DifficultyID, _, _, _, _, MapID = select(3, GetInstanceInfo());
     if DifficultyID == 8 or MapID == 1148 then return false; end
@@ -119,7 +119,7 @@
       local Count = 0;
       local Item;
       for Slot, ItemID in pairs(HasTierSets[Tier][Cache.Persistent.Player.Class[3]]) do
-        Item = AC.Equipment[Slot];
+        Item = HL.Equipment[Slot];
         if Item and Item == ItemID then
           Count = Count + 1;
         end

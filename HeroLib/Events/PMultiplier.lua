@@ -1,15 +1,15 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Pet = Unit.Pet;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local tableinsert = table.insert;
@@ -48,18 +48,18 @@
   end
 
   -- PMultiplier OnCast Listener
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
       local ListenedSpell = ListenedSpells[SpellID];
       if ListenedSpell then
         local PMultiplier = ComputePMultiplier(ListenedSpell);
-        ListenedSpell.PMultiplier[DestGUID] = {PMultiplier = PMultiplier, Time = AC.GetTime(), Applied = false};
+        ListenedSpell.PMultiplier[DestGUID] = {PMultiplier = PMultiplier, Time = HL.GetTime(), Applied = false};
       end
     end
     , "SPELL_CAST_SUCCESS"
   );
   -- PMultiplier OnApply/OnRefresh Listener
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
       local ListenedAura = ListenedAuras[SpellID];
       if ListenedAura then
@@ -72,7 +72,7 @@
     , "SPELL_AURA_APPLIED"
     , "SPELL_AURA_REFRESH"
   );
-  AC:RegisterForSelfCombatEvent(
+  HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
       local ListenedAura = ListenedAuras[SpellID];
       if ListenedAura then
@@ -85,7 +85,7 @@
     , "SPELL_AURA_REMOVED"
   );
   -- PMultiplier OnRemove & OnUnitDeath Listener
-  AC:RegisterForCombatEvent(
+  HL:RegisterForCombatEvent(
     function (_, _, _, _, _, _, _, DestGUID)
       for SpellID, Spell in pairs(ListenedSpells) do
         if Spell.PMultiplier[DestGUID] then

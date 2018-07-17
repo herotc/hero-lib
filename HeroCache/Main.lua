@@ -41,8 +41,8 @@
   function Cache.Reset ()
     if not Cache.HasBeenReset then
       -- -- foreach method
-      -- for Key, Value in pairs(AC.Cache) do
-      --   wipe(AC.Cache[Key]);
+      -- for Key, Value in pairs(HL.Cache) do
+      --   wipe(HL.Cache[Key]);
       -- end
 
       wipe(Cache.APLVar);

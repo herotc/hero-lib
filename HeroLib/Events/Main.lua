@@ -1,15 +1,15 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Pet = Unit.Pet;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local select = select;
@@ -45,7 +45,7 @@
   -- Register a handler for an event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForEvent (Handler, ...)
+  function HL:RegisterForEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -61,7 +61,7 @@
   -- Register a handler for a combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForCombatEvent (Handler, ...)
+  function HL:RegisterForCombatEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -76,7 +76,7 @@
   -- Register a handler for a self combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForSelfCombatEvent (Handler, ...)
+  function HL:RegisterForSelfCombatEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -91,7 +91,7 @@
   -- Register a handler for a pet combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForPetCombatEvent (Handler, ...)
+  function HL:RegisterForPetCombatEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -106,7 +106,7 @@
   -- Register a handler for a combat event prefix.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForCombatPrefixEvent (Handler, ...)
+  function HL:RegisterForCombatPrefixEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -121,7 +121,7 @@
   -- Register a handler for a combat event suffix.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:RegisterForCombatSuffixEvent (Handler, ...)
+  function HL:RegisterForCombatSuffixEvent (Handler, ...)
     local EventsTable = {...};
     for i = 1, #EventsTable do
       local Event = EventsTable[i];
@@ -136,7 +136,7 @@
   -- Unregister a handler from an event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForEvent (Handler, Event)
+  function HL:UnregisterForEvent (Handler, Event)
     if Events[Event] then
       for Index, Function in pairs(Events[Event]) do
         if Function == Handler then
@@ -153,7 +153,7 @@
   -- Unregister a handler from a combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForCombatEvent (Handler, Event)
+  function HL:UnregisterForCombatEvent (Handler, Event)
     if CombatEvents[Event] then
       for Index, Function in pairs(CombatEvents[Event]) do
         if Function == Handler then
@@ -167,7 +167,7 @@
   -- Unregister a handler from a self combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForSelfCombatEvent (Handler, Event)
+  function HL:UnregisterForSelfCombatEvent (Handler, Event)
     if SelfCombatEvents[Event] then
       for Index, Function in pairs(SelfCombatEvents[Event]) do
         if Function == Handler then
@@ -181,7 +181,7 @@
   -- Unregister a handler from a pet combat event.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForPetCombatEvent (Handler, Event)
+  function HL:UnregisterForPetCombatEvent (Handler, Event)
     if PetCombatEvents[Event] then
       for Index, Function in pairs(PetCombatEvents[Event]) do
         if Function == Handler then
@@ -195,7 +195,7 @@
   -- Unregister a handler from a combat event prefix.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForCombatPrefixEvent (Handler, Event)
+  function HL:UnregisterForCombatPrefixEvent (Handler, Event)
     if PrefixCombatEvents[Event] then
       for Index, Function in pairs(PrefixCombatEvents[Event]) do
         if Function == Handler then
@@ -209,7 +209,7 @@
   -- Unregister a handler from a combat event suffix.
   -- @param Handler The handler function.
   -- @param Events The events name.
-  function AC:UnregisterForCombatSuffixEvent (Handler, Event)
+  function HL:UnregisterForCombatSuffixEvent (Handler, Event)
     if SuffixCombatEvents[Event] then
       for Index, Function in pairs(SuffixCombatEvents[Event]) do
         if Function == Handler then
@@ -277,7 +277,7 @@
     end
   end
 
-  AC:RegisterForEvent(
+  HL:RegisterForEvent(
     function (Event)
       ListenerCombatLogEventUnfiltered(Event, CombatLogGetCurrentEventInfo())
     end
@@ -285,13 +285,13 @@
   );
 
   -- Core Override System
-  function AC.AddCoreOverride (target, newfunction, specKey)
+  function HL.AddCoreOverride (target, newfunction, specKey)
     local loadOverrideFunc = assert(loadstring([[
       return function (func)
       ]]..target..[[ = func;
       end, ]]..target..[[
       ]]));
-    setfenv(loadOverrideFunc, {AC = AC, Player = Player, Spell = Spell, Item = Item, Target = Target, Unit = Unit, Pet = Pet})
+    setfenv(loadOverrideFunc, {HL = HL, Player = Player, Spell = Spell, Item = Item, Target = Target, Unit = Unit, Pet = Pet})
     local overrideFunc, oldfunction = loadOverrideFunc();
     if overrideDB[specKey] == nil then
       overrideDB[specKey] = {}
@@ -300,12 +300,12 @@
     tableinsert(restoreDB, {overrideFunc, oldfunction})
     return oldfunction;
   end
-  function AC.LoadRestores ()
+  function HL.LoadRestores ()
     for k, v in pairs(restoreDB) do
       v[1](v[2]);
     end
   end
-  function AC.LoadOverrides (specKey)
+  function HL.LoadOverrides (specKey)
     if type(overrideDB[specKey]) == "table" then
       for k, v in pairs(overrideDB[specKey]) do
         v[1](v[2]);
@@ -314,37 +314,37 @@
   end
 --- ======= NON-COMBATLOG =======
   -- PLAYER_REGEN_DISABLED
-    AC.CombatStarted = 0;
-    AC.CombatEnded = 1;
+    HL.CombatStarted = 0;
+    HL.CombatEnded = 1;
     -- Entering Combat
-    AC:RegisterForEvent(
+    HL:RegisterForEvent(
       function ()
-        AC.CombatStarted = AC.GetTime();
-        AC.CombatEnded = 0;
+        HL.CombatStarted = HL.GetTime();
+        HL.CombatEnded = 0;
       end
       , "PLAYER_REGEN_DISABLED"
     );
 
   -- PLAYER_REGEN_ENABLED
     -- Leaving Combat
-    AC:RegisterForEvent(
+    HL:RegisterForEvent(
       function ()
-        AC.CombatStarted = 0;
-        AC.CombatEnded = AC.GetTime();
+        HL.CombatStarted = 0;
+        HL.CombatEnded = HL.GetTime();
       end
       , "PLAYER_REGEN_ENABLED"
     );
 
   -- CHAT_MSG_ADDON
     -- DBM/BW Pull Timer
-    AC:RegisterForEvent(
+    HL:RegisterForEvent(
       function (Event, Prefix, Message)
         if Prefix == "D4" and stringfind(Message, "PT") then
-          AC.BossModTime = tonumber(stringsub(Message, 4, 5));
-          AC.BossModEndTime = AC.GetTime() + AC.BossModTime;
+          HL.BossModTime = tonumber(stringsub(Message, 4, 5));
+          HL.BossModEndTime = HL.GetTime() + HL.BossModTime;
         elseif Prefix == "BigWigs" and string.find(Message, "Pull") then
-          AC.BossModTime = tonumber(stringsub(Message, 8, 9));
-          AC.BossModEndTime = AC.GetTime() + AC.BossModTime;
+          HL.BossModTime = tonumber(stringsub(Message, 8, 9));
+          HL.BossModEndTime = HL.GetTime() + HL.BossModTime;
         end
       end
       , "CHAT_MSG_ADDON"
@@ -353,7 +353,7 @@
   -- OnSpecGearTalentUpdate
     -- Player Inspector
     -- TODO : Split based on events
-    AC:RegisterForEvent(
+    HL:RegisterForEvent(
       function (Event, Arg1)
         -- Prevent execute if not initiated by the player
         if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
@@ -372,15 +372,15 @@
         -- Refresh Gear
         if Event == "PLAYER_EQUIPMENT_CHANGED"
         or Event == "PLAYER_LOGIN" then
-          AC.GetEquipment();
+          HL.GetEquipment();
 
           -- WoD (They are working but not used, so I'll comment them)
-          --AC.Tier18_2Pc, AC.Tier18_4Pc = AC.HasTier("T18");
-          --AC.Tier18_ClassTrinket = AC.HasTier("T18_ClassTrinket");
+          --HL.Tier18_2Pc, HL.Tier18_4Pc = HL.HasTier("T18");
+          --HL.Tier18_ClassTrinket = HL.HasTier("T18_ClassTrinket");
           -- Legion
-          AC.Tier19_2Pc, AC.Tier19_4Pc = AC.HasTier("T19");
-          AC.Tier20_2Pc, AC.Tier20_4Pc = AC.HasTier("T20");
-          AC.Tier21_2Pc, AC.Tier21_4Pc = AC.HasTier("T21");
+          HL.Tier19_2Pc, HL.Tier19_4Pc = HL.HasTier("T19");
+          HL.Tier20_2Pc, HL.Tier20_4Pc = HL.HasTier("T20");
+          HL.Tier21_2Pc, HL.Tier21_4Pc = HL.HasTier("T21");
         end
 
         -- Refresh Artifact
@@ -392,11 +392,11 @@
 
         -- Load / Refresh Core Overrides
         if Event == "PLAYER_LOGIN" then
-          C_Timer.After(3, function() AC.LoadOverrides(Cache.Persistent.Player.Spec[1]) end) -- TODO: fix timing issue via event?
+          C_Timer.After(3, function() HL.LoadOverrides(Cache.Persistent.Player.Spec[1]) end) -- TODO: fix timing issue via event?
         end
         if Event == "PLAYER_SPECIALIZATION_CHANGED" then
-          AC.LoadRestores();
-          AC.LoadOverrides(Cache.Persistent.Player.Spec[1]);
+          HL.LoadRestores();
+          HL.LoadOverrides(Cache.Persistent.Player.Spec[1]);
         end
       end
       , "ZONE_CHANGED_NEW_AREA"
@@ -408,7 +408,7 @@
 
   -- Spell Book Scanner
     -- Checks the same event as Blizzard Spell Book, from SpellBookFrame_OnLoad in SpellBookFrame.lua
-    AC:RegisterForEvent(
+    HL:RegisterForEvent(
       function (Event, Arg1)
         -- Prevent execute if not initiated by the player
         if Event == "PLAYER_SPECIALIZATION_CHANGED" and Arg1 ~= "player" then
@@ -437,15 +437,15 @@
     );
 
   -- Not Facing Unit Blacklist
-    AC.UnitNotInFront = Player;
-    AC.UnitNotInFrontTime = 0;
-    AC.LastUnitCycled = Player;
-    AC.LastUnitCycledTime = 0;
-    AC:RegisterForEvent(
+    HL.UnitNotInFront = Player;
+    HL.UnitNotInFrontTime = 0;
+    HL.LastUnitCycled = Player;
+    HL.LastUnitCycledTime = 0;
+    HL:RegisterForEvent(
       function (Event, MessageType, Message)
         if MessageType == 50 and Message == SPELL_FAILED_UNIT_NOT_INFRONT then
-          AC.UnitNotInFront = AC.LastUnitCycled;
-          AC.UnitNotInFrontTime = AC.LastUnitCycledTime;
+          HL.UnitNotInFront = HL.LastUnitCycled;
+          HL.UnitNotInFrontTime = HL.LastUnitCycledTime;
         end
       end
       , "UI_ERROR_MESSAGE"

@@ -1,15 +1,15 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Pet = Unit.Pet;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local stringgsub = string.gsub;
   -- File Locals
@@ -122,7 +122,7 @@
     end
   end
 
-  AC:RegisterForEvent(
+  HL:RegisterForEvent(
     function ()
       C_Timer.After(0.001, 
         function() 
@@ -133,7 +133,7 @@
     , "UPDATE_SHAPESHIFT_FORM"
   );
   
-  AC:RegisterForEvent(
+  HL:RegisterForEvent(
     function ()
       FindKeyBindings();
     end
@@ -147,11 +147,11 @@
 
   do
     local KeyBindingsWhitelist = {};
-    function AC.WhitelistKeyBinding (TextureID, KeyBinding)
+    function HL.WhitelistKeyBinding (TextureID, KeyBinding)
       KeyBindingsWhitelist[TextureID] = KeyBinding;
     end
 
-    function AC.FindKeyBinding (TextureID)
+    function HL.FindKeyBinding (TextureID)
       return KeyBindingsWhitelist[TextureID] or KeyBindings[TextureID] or false;
     end
   end

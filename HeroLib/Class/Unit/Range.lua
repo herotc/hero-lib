@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local mathrandom = math.random;
   local pairs = pairs;
@@ -25,7 +25,7 @@
 --- ============================ CONTENT ============================
   --- IsInRange
   -- Run FilterItemRange() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with 2 players or in Orgrimmar)
-  function AC.ManuallyFilterItemRanges ()
+  function HL.ManuallyFilterItemRanges ()
     local IsInRangeTable = {
       Hostile = {
         RangeIndex = {},
@@ -85,7 +85,7 @@
     }
   };
   do
-    local Enum = AC.Enum.ItemRange;
+    local Enum = HL.Enum.ItemRange;
     local Hostile, Friendly = IsInRangeTable.Hostile, IsInRangeTable.Friendly;
 
     Hostile.RangeIndex = Enum.Hostile.RangeIndex;

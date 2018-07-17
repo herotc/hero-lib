@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local unpack = unpack;
   -- File Locals
@@ -127,7 +127,7 @@
   -- Get the remaining cast time, if there is any.
   function Unit:CastRemains ()
     if self:IsCasting() or self:IsChanneling() then
-      return self:CastEnd() - AC.GetTime();
+      return self:CastEnd() - HL.GetTime();
     end
     return 0;
   end
@@ -136,10 +136,10 @@
   -- By default for channeling, it returns total - progress, if ReverseChannel is true it'll return only progress.
   function Unit:CastPercentage (ReverseChannel)
     if self:IsCasting() then
-      return (AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
+      return (HL.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
     end
     if self:IsChanneling() then
-      return ReverseChannel and (AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100 or 100-(AC.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
+      return ReverseChannel and (HL.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100 or 100-(HL.GetTime() - self:CastStart())/(self:CastEnd() - self:CastStart())*100;
     end
     return 0;
   end

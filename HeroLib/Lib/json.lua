@@ -382,7 +382,7 @@ end
 -- return json
 
 --- ============================ OVERRIDE ============================
-local addonName, AC = ...;
-AC.Utils.JSON = json;
+local addonName, HL = ...;
+HL.Utils.JSON = json;
 
 -- return json commented

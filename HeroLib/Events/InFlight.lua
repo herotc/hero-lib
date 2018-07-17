@@ -1,12 +1,12 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
-  local Spell = AC.Spell;
+  local Spell = HL.Spell;
   -- Lua
   local pairs = pairs;
   -- File Locals
@@ -28,7 +28,7 @@ function Spell:RegisterInFlight (...)
   end
 end
 
-AC:RegisterForSelfCombatEvent(
+HL:RegisterForSelfCombatEvent(
   function (...)
     local spellID = select(12, ...)
     local TrackedSpell = TrackedSpells[spellID]
@@ -51,7 +51,7 @@ AC:RegisterForSelfCombatEvent(
   end
   , "SPELL_CAST_SUCCESS"
 );
-AC:RegisterForSelfCombatEvent(
+HL:RegisterForSelfCombatEvent(
   function (...)
     local DestGUID, _, _, _, spellID = select(8, ...)
     local TrackedSpell = TrackedSpells[spellID]
@@ -63,7 +63,7 @@ AC:RegisterForSelfCombatEvent(
   , "SPELL_MISSED"
 );
 -- Prevent InFlight getting stuck when target dies mid-flight
-AC:RegisterForCombatEvent(
+HL:RegisterForCombatEvent(
   function (...)
     local DestGUID = select(8, ...);
     for spellID, _ in pairs(TrackedSpells) do

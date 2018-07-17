@@ -1,12 +1,12 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
 
 
 --- ============================ CONTENT ============================
   -- All settings here should be moved into the GUI someday
-  AC.GUISettings = {
+  HL.GUISettings = {
     General = {
       -- Debug Mode
       DebugMode = false,
@@ -51,11 +51,11 @@
                 [115905] = true,
               --- Botanist Tel'Arn (Mythic Only)
                 -- Naturalist Tel'Arn
-                [109041] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+                [109041] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
                 -- Arcanist Tel'Arn
-                [109040] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+                [109040] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
                 -- Solarist Tel'Arn
-                [109038] = function () return AC.GetInstanceDifficulty() == 16 and true or false; end,
+                [109038] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
               --- Star Augur Etraeus
                 -- Voidling
                 [104688] = true,

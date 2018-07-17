@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local mathmin = math.min;
   local pairs = pairs;
@@ -24,7 +24,7 @@
 
 
 --- ============================ CONTENT ============================
-  AC.TTD = {
+  HL.TTD = {
     Settings = {
       -- Refresh time (seconds) : min=0.1,  max=2,    default = 0.1
       Refresh = 0.1,
@@ -45,11 +45,11 @@
     ExistingUnits = {}, -- Used to track GUIDs of currently existing units (to be compared with tracked units)
     Throttle = 0
   };
-  local TTD = AC.TTD;
-  function AC.TTDRefresh ()
+  local TTD = HL.TTD;
+  function HL.TTDRefresh ()
     -- This may not be needed if we don't have any units but caching them in case
     -- We do speeds it all up a little bit
-    local CurrentTime = AC.GetTime();
+    local CurrentTime = HL.GetTime();
     local HistoryCount = TTD.Settings.HistoryCount;
     local HistoryTime = TTD.Settings.HistoryTime;
     local Cache = TTD.Cache;
@@ -160,7 +160,7 @@
           -- Use best fit line to calculate estimated time to reach target health
           Seconds = (Percentage - a) / b;
           -- Subtract current time to obtain "time remaining"
-          Seconds = mathmin(7777, Seconds - (AC.GetTime() - UnitTable[2]));
+          Seconds = mathmin(7777, Seconds - (HL.GetTime() - UnitTable[2]));
           if Seconds < 0 then Seconds = 9999; end
         end
       end

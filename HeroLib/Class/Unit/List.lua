@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
   local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
   local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
   local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local type = type;
   -- File Locals
@@ -58,11 +58,11 @@
   -- Check if the unit is coded as blacklisted by the user or not.
   function Unit:IsUserBlacklisted ()
     local npcid = self:NPCID()
-    if AC.GUISettings.General.Blacklist.UserDefined[npcid] then
-      if type(AC.GUISettings.General.Blacklist.UserDefined[npcid]) == "boolean" then
+    if HL.GUISettings.General.Blacklist.UserDefined[npcid] then
+      if type(HL.GUISettings.General.Blacklist.UserDefined[npcid]) == "boolean" then
         return true;
       else
-        return AC.GUISettings.General.Blacklist.UserDefined[npcid](self);
+        return HL.GUISettings.General.Blacklist.UserDefined[npcid](self);
       end
     end
     return false;
@@ -71,11 +71,11 @@
   -- Check if the unit is coded as blacklisted for cycling by the user or not.
   function Unit:IsUserCycleBlacklisted ()
     local npcid = self:NPCID()
-    if AC.GUISettings.General.Blacklist.CycleUserDefined[npcid] then
-      if type(AC.GUISettings.General.Blacklist.CycleUserDefined[npcid]) == "boolean" then
+    if HL.GUISettings.General.Blacklist.CycleUserDefined[npcid] then
+      if type(HL.GUISettings.General.Blacklist.CycleUserDefined[npcid]) == "boolean" then
         return true;
       else
-        return AC.GUISettings.General.Blacklist.CycleUserDefined[npcid](self);
+        return HL.GUISettings.General.Blacklist.CycleUserDefined[npcid](self);
       end
     end
     return false;
@@ -126,7 +126,7 @@
   end
 
   function Unit:IsFacingBlacklisted ()
-    if self:IsUnit(AC.UnitNotInFront) and AC.GetTime()-AC.UnitNotInFrontTime <= Player:GCD()*AC.GUISettings.General.Blacklist.NotFacingExpireMultiplier then
+    if self:IsUnit(HL.UnitNotInFront) and HL.GetTime()-HL.UnitNotInFrontTime <= Player:GCD()*HL.GUISettings.General.Blacklist.NotFacingExpireMultiplier then
       return true;
     end
     return false;

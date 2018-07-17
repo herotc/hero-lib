@@ -1,14 +1,14 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
 
   -- File Locals
@@ -121,7 +121,7 @@
     -- Return 0 if the Item isn't in CD.
     if CDTime == 0 then return 0; end
     -- Compute the CD.
-    local CD = CDTime + CDValue - AC.GetTime() - (BypassRecovery and 0 or AC.RecoveryOffset());
+    local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset());
     -- Return the Item CD
     return CD > 0 and CD or 0;
   end
@@ -190,13 +190,13 @@
     if Cache.ItemInfo[self.ItemID].IsEquipped == nil then
       -- TODO: Plus this compatibility part.
       if Slot then
-        Cache.ItemInfo[self.ItemID].IsEquipped = AC.Equipment[Slot] == self.ItemID and true or false;
+        Cache.ItemInfo[self.ItemID].IsEquipped = HL.Equipment[Slot] == self.ItemID and true or false;
       else
         local ItemIsEquipped = false;
         -- Returns false for Legion Legendaries while in Instanced PvP. (Assuming 940 ilevel, 910 ones are meant to disappear)
         if not Player:IsInInstancedPvP() or not self:IsLegendary() or self:Level() ~= 940 then
           for i=0, #self.ItemSlotID do
-            if AC.Equipment[self.ItemSlotID[i]] == self.ItemID then
+            if HL.Equipment[self.ItemSlotID[i]] == self.ItemID then
               ItemIsEquipped = true;
               break;
             end

@@ -1,7 +1,7 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   local Cache = HeroCache;
   -- Lua
   local gmatch = gmatch;
@@ -17,7 +17,7 @@
 
 --- ======= GLOBALIZE =======
   -- Addon
-  AC.Utils = Utils;
+  HL.Utils = Utils;
 
 
 --- ============================ CONTENT ============================

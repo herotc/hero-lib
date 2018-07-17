@@ -1,14 +1,14 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
   local Cache = HeroCache;
-  local Unit = AC.Unit;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local mathmax = math.max;
   local select = select;
@@ -29,7 +29,7 @@
     -- isDynamicInstance - True for raid instances that can support multiple maxPlayers values (10 and 25) - eg. ToC, DS, ICC, etc (boolean)
     -- mapID - (number)
     -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
-  function AC.GetInstanceInfo (Index)
+  function HL.GetInstanceInfo (Index)
     if Index then
       local Result = select(Index, GetInstanceInfo());
       return Result;
@@ -64,48 +64,48 @@
     -- 22 - Not used.
     -- 23 - Mythic 5-player Instance.
     -- 24 - Timewalker 5-player Instance.
-  function AC.GetInstanceDifficulty ()
-    return AC.GetInstanceInfo(3);
+  function HL.GetInstanceDifficulty ()
+    return HL.GetInstanceInfo(3);
   end
 
   -- Get the Latency (it's updated every 30s).
   -- TODO: Cache it in Persistent Cache and update it only when it changes
-  function AC.Latency ()
+  function HL.Latency ()
     return select(4, GetNetStats());
   end
 
   -- Retrieve the Recovery Timer based on Settings.
   -- TODO: Optimize, to see how we'll implement it in the GUI.
-  function AC.RecoveryTimer ()
-    return AC.GUISettings.General.RecoveryMode == "GCD" and Player:GCDRemains()*1000 or AC.GUISettings.General.RecoveryTimer;
+  function HL.RecoveryTimer ()
+    return HL.GUISettings.General.RecoveryMode == "GCD" and Player:GCDRemains()*1000 or HL.GUISettings.General.RecoveryTimer;
   end
 
   -- Compute the Recovery Offset with Lag Compensation.
-  function AC.RecoveryOffset ()
-    return (AC.Latency() + AC.RecoveryTimer())/1000;
+  function HL.RecoveryOffset ()
+    return (HL.Latency() + HL.RecoveryTimer())/1000;
   end
 
   -- Get the time since combat has started.
-  function AC.CombatTime ()
-    return AC.CombatStarted ~= 0 and AC.GetTime()-AC.CombatStarted or 0;
+  function HL.CombatTime ()
+    return HL.CombatStarted ~= 0 and HL.GetTime()-HL.CombatStarted or 0;
   end
 
   -- Get the time since combat has ended.
-  function AC.OutOfCombatTime ()
-    return AC.CombatEnded ~= 0 and AC.GetTime()-AC.CombatEnded or 0;
+  function HL.OutOfCombatTime ()
+    return HL.CombatEnded ~= 0 and HL.GetTime()-HL.CombatEnded or 0;
   end
 
   -- Get the Boss Mod Pull Timer.
-  function AC.BMPullTime ()
-    if not AC.BossModTime or AC.BossModTime == 0 or AC.BossModEndTime-AC.GetTime() < 0 then
+  function HL.BMPullTime ()
+    if not HL.BossModTime or HL.BossModTime == 0 or HL.BossModEndTime-HL.GetTime() < 0 then
       return 60;
     else
-      return AC.BossModEndTime-AC.GetTime();
+      return HL.BossModEndTime-HL.GetTime();
     end
   end
 
   --[[*
-    * @mixin AC.OffsetRemains
+    * @mixin HL.OffsetRemains
     * @desc Apply an offset to an expiration time.
     *
     * @param {number} ExpirationTime - The expiration time to apply the offset on.
@@ -113,7 +113,7 @@
     *
     * @returns {number}
     *]]
-  function AC.OffsetRemains (ExpirationTime, Offset)
+  function HL.OffsetRemains (ExpirationTime, Offset)
     if type( Offset ) == "number" then
       ExpirationTime = ExpirationTime - Offset;
     elseif type( Offset ) == "string" then

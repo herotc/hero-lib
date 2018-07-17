@@ -1,14 +1,14 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, AC = ...;
+  local addonName, HL = ...;
   -- HeroLib
-  local Cache, Utils = HeroCache, AC.Utils;
-  local Unit = AC.Unit;
+  local Cache, Utils = HeroCache, HL.Utils;
+  local Unit = HL.Unit;
   local Player = Unit.Player;
   local Target = Unit.Target;
-  local Spell = AC.Spell;
-  local Item = AC.Item;
+  local Spell = HL.Spell;
+  local Item = HL.Item;
   -- Lua
   local pairs = pairs;
   local tableinsert = table.insert;
@@ -25,7 +25,7 @@
 
 --- ============================ CONTENT ============================
   -- Fill the Enemies Cache table.
-  function AC.GetEnemies ( Distance, AoESpell )
+  function HL.GetEnemies ( Distance, AoESpell )
     local DistanceType, Identifier = type(Distance), nil;
     -- Regular ranged distance check through IsItemInRange & Special distance check (like melee)
     if DistanceType == "number" or (DistanceType == "string" and Distance == 'Melee') then
