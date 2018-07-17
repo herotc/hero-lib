@@ -1,0 +1,74 @@
+## Interface: 80000
+
+## Title: Hero|cFFA330C9Lib|r
+## Author: HeroTC, Aethys
+## Version: 8.0.1.00
+## Notes: Core Library used by HeroTC Addons. Can be used by others 3rd-Party Addons.
+
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## Dependencies: HeroCache
+## SavedVariables: HeroLibDB
+
+# WoW Lib Stuff
+Lib\LibStub\LibStub.lua
+Lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
+
+# Utils
+Utils.lua
+Lib\json.lua
+
+# GUI
+GUI\Panels.lua
+
+# API
+Settings.lua
+Core.lua
+Deprecated.lua
+
+# Enum
+Enum\ItemRange.lua
+Enum\ProjectileSpeed.lua
+Enum\TriggerGCD.lua
+Enum\TickTime.lua
+Enum\SpellDuration.lua
+
+# Classes
+Class\Main.lua
+Class\Unit\Main.lua
+Class\Unit\Power.lua
+Class\Unit\Range.lua
+Class\Unit\Cast.lua
+Class\Unit\Aura.lua
+Class\Unit\Control.lua
+Class\Unit\TimeToDie.lua
+Class\Unit\List.lua
+Class\Unit\Player\Main.lua
+Class\Unit\Player\Power.lua
+Class\Unit\Player\Stat.lua
+Class\Unit\Player\Equipment.lua
+Class\Unit\Player\Aura.lua
+Class\Unit\Player\Instance.lua
+Class\Unit\Player\MythicDungeon.lua
+Class\Unit\Player\Tank.lua
+Class\Unit\Pet\Main.lua
+Class\Spell\Main.lua
+Class\Spell\Book.lua
+Class\Spell\Cooldown.lua
+Class\Spell\Travel.lua
+Class\Spell\Artifact.lua
+Class\Item.lua
+
+# Misc
+Misc\ToSort.lua
+Misc\Enemies.lua
+
+# Events
+Events\Main.lua
+Events\Spell.lua
+Events\PMultiplier.lua
+Events\Prev_Spell.lua
+Events\KeyBinding.lua
+Events\InFlight.lua
+
+Main.lua

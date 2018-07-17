@@ -1,8 +1,8 @@
-package-as: AethysCore
+package-as: HeroLib
 
 move-folders:
  hero-lib/HeroCache: HeroCache
- AethysCore/AethysCore: AethysCore
+ hero-lib/HeroLib: HeroLib
 
 ignore:
  - bfa-api-changes.txt
