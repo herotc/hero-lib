@@ -30,7 +30,7 @@
 
 
 --- ============================ CONTENT ============================
-  
+
   -- Init all the records at 0, so it saves one check on PrevGCD method.
   for i = 1, LastRecord do
     for _, Table in pairs(Prev) do
@@ -52,12 +52,14 @@
   -- Player On Cast Success Listener
   AC:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if TriggerGCD[SpellID] then
-        tableinsert(Prev.GCD, 1, SpellID);
-        Prev.OffGCD = {};
-        PrevGCDPredicted = 0;
-      elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
-        tableinsert(Prev.OffGCD, 1, SpellID);
+      if TriggerGCD[SpellID] ~= nil then
+        if TriggerGCD[SpellID] then
+          tableinsert(Prev.GCD, 1, SpellID);
+          Prev.OffGCD = {};
+          PrevGCDPredicted = 0;
+        else -- Prevents unwanted spells to be registered as OffGCD.
+          tableinsert(Prev.OffGCD, 1, SpellID);
+        end
       end
       RemoveOldRecords();
     end
@@ -82,11 +84,13 @@
   -- Pet On Cast Success Listener
   AC:RegisterForPetCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
-      if TriggerGCD[SpellID] then
-        tableinsert(Prev.PetGCD, 1, SpellID);
-        Prev.PetOffGCD = {};
-      elseif TriggerGCD[SpellID] == false then -- Prevents unwanted spells to be registered as OffGCD.
-        tableinsert(Prev.PetOffGCD, 1, SpellID);
+      if TriggerGCD[SpellID] ~= nil then
+        if TriggerGCD[SpellID] then
+          tableinsert(Prev.PetGCD, 1, SpellID);
+          Prev.PetOffGCD = {};
+        else -- Prevents unwanted spells to be registered as OffGCD.
+          tableinsert(Prev.PetOffGCD, 1, SpellID);
+        end
       end
       RemoveOldRecords();
     end
@@ -103,7 +107,7 @@
         local SpellID = Spell:ID();
         local TriggerGCDInfo = BaseTriggerGCD[SpellID];
         if TriggerGCDInfo ~= nil then
-          RegisteredSpells[SpellID] = TriggerGCDInfo;
+          RegisteredSpells[SpellID] = (TriggerGCDInfo > 0);
         end
       end
     end
@@ -137,7 +141,7 @@
     if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
     if Spell then
       return Prev.GCD[Index] == Spell:ID()
-    else 
+    else
       return Prev.GCD[Index];
     end
   end

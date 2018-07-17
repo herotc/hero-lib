@@ -271,3 +271,10 @@
     if not BaseDuration or BaseDuration == 0 then return 0; end
     return BaseDuration * 0.3;
   end
+
+  local SpellGCD = AC.Enum.TriggerGCD;
+  function Spell:GCD ()
+    local Gcd = SpellGCD[self.SpellID]
+    if not Gcd or Gcd == 0 then return 0; end
+    return Gcd / 1000;
+  end

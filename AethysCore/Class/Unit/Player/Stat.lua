@@ -12,9 +12,9 @@
   local Spell = AC.Spell;
   local Item = AC.Item;
   -- Lua
-  
+
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -44,7 +44,7 @@
       end
     end
   end
-  
+
   -- gcd.remains
   do
     local GCDSpell = Spell(61304);
@@ -58,6 +58,23 @@
     return UnitAttackPower(self.UnitID);
   end
 
+  function Player:AttackPowerDamageMod ( offHand )
+    local useOH = offHand or false;
+    local wdpsCoeff = 6;
+    local ap = Player:AttackPower();
+    local minDamage, maxDamage, minOffHandDamage, maxOffHandDamage, physicalBonusPos, physicalBonusNeg, percent = UnitDamage(self.UnitID);
+    local speed, offhandSpeed = UnitAttackSpeed(self.UnitID);
+    if useOH then
+      local wSpeed = offhandSpeed * (1 + Player:HastePct()/100);
+      local wdps = (minOffHandDamage + maxOffHandDamage) / wSpeed / percent - ap / wdpsCoeff;
+      return (ap + wdps * wdpsCoeff) * 0.5;
+    else
+      local wSpeed = speed * (1 + Player:HastePct()/100);
+      local wdps = (minDamage + maxDamage) / 2 / wSpeed / percent - ap / wdpsCoeff;
+      return ap + wdps * wdpsCoeff;
+    end
+  end
+
   -- crit_chance
   function Player:CritChancePct ()
     return GetCritChance();
@@ -67,9 +84,9 @@
   function Player:HastePct ()
     return GetHaste();
   end
-  
+
   function Player:SpellHaste()
-    return (1 + (Player:HastePct() / 100));
+    return 1 / (1 + (Player:HastePct() / 100));
   end
 
   -- mastery

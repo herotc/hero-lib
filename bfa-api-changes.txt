@@ -1,0 +1,8 @@
+Currently no args for Events like COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
+
+UNIT_POWER is renamed to UNIT_POWER_UPDATE
+
+UnitAura args changed, SpellID is now [10], Source is [7], sample output: https://i.imgur.com/laRg29Z.png
+
+UnitCastingInfo args changed, sample output: https://i.imgur.com/BVBhjkg.png
+

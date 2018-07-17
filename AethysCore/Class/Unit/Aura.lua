@@ -20,15 +20,15 @@
 --- ============================ CONTENT ============================
   -- buff.foo.up (does return the buff table and not only true/false)
   do
-    --  1     2     3      4        5          6             7           8           9                   10              11         12            13           14               15           16       17      18      19
-    -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
+    --  1      2     3      4            5           6             7           8           9                      10          11          12            13                14            15       16     17      18
+    -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
     local UnitBuff = UnitBuff;
     local UnitID;
     local function _UnitBuff ()
       local Buffs = {};
       for i = 1, AC.MAXIMUM do
         local Infos = {UnitBuff(UnitID, i)};
-        if not Infos[11] then break; end
+        if not Infos[10] then break; end
         Buffs[i] = Infos;
       end
       return Buffs;
@@ -40,8 +40,8 @@
         local Buffs = Cache.Get("UnitInfo", GUID, "Buffs", _UnitBuff);
         for i = 1, #Buffs do
           local Buff = Buffs[i];
-          if Spell:ID() == Buff[11] then
-            local Caster = Buff[8];
+          if Spell:ID() == Buff[10] then
+            local Caster = Buff[7];
             if AnyCaster or Caster == "player" then
               if Index then
                 if type(Index) == "number" then
@@ -87,7 +87,7 @@
     * @returns {number}
     *]]
   function Unit:BuffRemains ( Spell, AnyCaster, Offset )
-    local ExpirationTime = self:Buff( Spell, 7, AnyCaster );
+    local ExpirationTime = self:Buff( Spell, 6, AnyCaster );
     if ExpirationTime then
       if Offset then
         ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
@@ -122,12 +122,12 @@
 
   -- buff.foo.duration
   function Unit:BuffDuration (Spell, AnyCaster)
-    return self:Buff(Spell, 6, AnyCaster) or 0;
+    return self:Buff(Spell, 5, AnyCaster) or 0;
   end
 
   -- buff.foo.stack
   function Unit:BuffStack (Spell, AnyCaster)
-    return self:Buff(Spell, 4, AnyCaster) or 0;
+    return self:Buff(Spell, 3, AnyCaster) or 0;
   end
   
   --[[*
@@ -193,15 +193,15 @@
 
   -- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
   do
-    --  1     2     3      4         5          6             7          8           9                   10              11         12            13           14               15           16       17      18      19
-    -- name, rank, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
+    --  1     2      3         4          5           6           7           8                   9              10         11            12           13               14            15       16      17      18
+    -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
     local UnitDebuff = UnitDebuff;
     local UnitID;
     local function _UnitDebuff ()
       local Debuffs = {};
       for i = 1, AC.MAXIMUM do
         local Infos = {UnitDebuff(UnitID, i)};
-        if not Infos[11] then break; end
+        if not Infos[10] then break; end
         Debuffs[i] = Infos;
       end
       return Debuffs;
@@ -213,8 +213,8 @@
         local Debuffs = Cache.Get("UnitInfo", GUID, "Debuffs", _UnitDebuff);
         for i = 1, #Debuffs do
           local Debuff = Debuffs[i];
-          if Spell:ID() == Debuff[11] then
-            local Caster = Debuff[8];
+          if Spell:ID() == Debuff[10] then
+            local Caster = Debuff[7];
             if AnyCaster or Caster == "player" or Caster == "pet" then
               if Index then
                 if type(Index) == "number" then
@@ -260,7 +260,7 @@
     * @returns {number}
     *]]
   function Unit:DebuffRemains ( Spell, AnyCaster, Offset )
-    local ExpirationTime = self:Debuff( Spell, 7, AnyCaster );
+    local ExpirationTime = self:Debuff( Spell, 6, AnyCaster );
     if ExpirationTime then
       if Offset then
         ExpirationTime = AC.OffsetRemains( ExpirationTime, Offset );
@@ -295,12 +295,12 @@
 
   -- debuff.foo.duration or dot.foo.duration
   function Unit:DebuffDuration (Spell, AnyCaster)
-    return self:Debuff(Spell, 6, AnyCaster) or 0;
+    return self:Debuff(Spell, 5, AnyCaster) or 0;
   end
 
   -- debuff.foo.stack or dot.foo.stack
   function Unit:DebuffStack (Spell, AnyCaster)
-    return self:Debuff(Spell, 4, AnyCaster) or 0;
+    return self:Debuff(Spell, 3, AnyCaster) or 0;
   end
   
   --[[*
