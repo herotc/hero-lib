@@ -1,8 +1,8 @@
 package-as: HeroLib
 
 move-folders:
- hero-lib/HeroCache: HeroCache
- hero-lib/HeroLib: HeroLib
+ HeroLib/HeroCache: HeroCache
+ HeroLib/HeroLib: HeroLib
 
 ignore:
  - bfa-api-changes.txt
