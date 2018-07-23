@@ -12,13 +12,13 @@
   local Spell = HL.Spell;
   local Item = HL.Item;
   -- Lua
-  
+
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
-  
+
   -- Get if the player is mounted on a non-combat mount.
   function Player:IsMounted ()
     return IsMounted() and not self:IsOnCombatMount();
@@ -29,16 +29,13 @@
     -- BloodElf, Goblin, Orc, Tauren, Troll, Scourge
     -- Pandaren
   do
-    -- race, raceEn
-    local UnitRace = UnitRace; 
+    -- race, raceEn, raceId
+    local UnitRace = UnitRace;
     function Player:Race ()
-      local GUID = self:GUID();
-      if GUID then
-        return select(2, UnitRace(self.UnitID));
-      end
-      return nil;
+      local _, race = UnitRace(self.UnitID);
+      return race;
     end
-    
+
     -- Test if the unit is of race unit_race
     function Player:IsRace (unit_race)
       return unit_race and self:Race() == unit_race or false;
