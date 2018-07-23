@@ -103,7 +103,7 @@ HeroLib.Enum.ItemRange = {
     }
   },
   Friendly = {
-    RangeIndex = {"Melee", 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 80, 100},
+    RangeIndex = {"Melee", 5, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 80, 100},
     ItemRange = {
       Melee = {
         1251,
@@ -116,6 +116,9 @@ HeroLib.Enum.ItemRange = {
       [5] = {
         44576,
         52833
+      },
+      [8] = {
+        130260
       },
       [10] = {
         33461,
