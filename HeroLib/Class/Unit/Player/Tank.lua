@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
   
   -- File Locals
@@ -61,15 +61,15 @@
     function Player:ActiveMitigationNeeded ()
       if Player:IsTanking(Target) then
         if ActiveMitigationSpells.Cast[Target:CastID()] then
-          return true;
+          return true
         end
         for _, Buff in pairs(ActiveMitigationSpells.Buff) do
           if Target:Buff(Buff, nil, true) then
-            return true;
+            return true
           end
         end
       end
-      return false;
+      return false
     end
   end
 
@@ -79,13 +79,13 @@
         -- T21 Antorus
         Spell(243961) -- Misery (Varimathras)
       }
-    };
+    }
     function Player:HealingAbsorbed ()
       for _, Debuff in pairs(HealingAbsorbedSpells.Debuff) do
         if Player:Debuff(Debuff, nil, true) then
-          return true;
+          return true
         end
       end
-      return false;
+      return false
     end
   end

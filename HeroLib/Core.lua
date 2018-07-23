@@ -1,69 +1,69 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
-  local Cache = HeroCache;
+  local addonName, HL = ...
+  local Cache = HeroCache
   -- Lua
-  local gmatch = gmatch;
-  local pairs = pairs;
-  local print = print;
-  local stringupper = string.upper;
-  local tableinsert = table.insert;
-  local tonumber = tonumber;
-  local type = type;
-  local wipe = table.wipe;
+  local gmatch = gmatch
+  local pairs = pairs
+  local print = print
+  local stringupper = string.upper
+  local tableinsert = table.insert
+  local tonumber = tonumber
+  local type = type
+  local wipe = table.wipe
   -- File Locals
 
 
 --- ======= GLOBALIZE =======
   -- Addon
-  HeroLib = HL;
-  HL.Enum = {}; -- Constant Infos Enum
-  HL.MAXIMUM = 40; -- Max # Buffs and Max # Nameplates.
+  HeroLib = HL
+  HL.Enum = {} -- Constant Infos Enum
+  HL.MAXIMUM = 40 -- Max # Buffs and Max # Nameplates.
 
 
 --- ============================ CONTENT ============================
   --- Build Infos
-  local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2";
+  local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2"
   -- version, build, date, tocversion
-  HL.BuildInfo = {GetBuildInfo()};
+  HL.BuildInfo = {GetBuildInfo()}
   -- Get the current build version.
   function HL.BuildVersion ()
-    return HL.BuildInfo[1];
+    return HL.BuildInfo[1]
   end
   -- Get if we are on the Live or not.
   function HL.LiveRealm ()
-    return HL.BuildVersion() == LiveVersion;
+    return HL.BuildVersion() == LiveVersion
   end
   -- Get if we are on the PTR or not.
   function HL.PTRRealm ()
-    return HL.BuildVersion() == PTRVersion;
+    return HL.BuildVersion() == PTRVersion
   end
   -- Get if we are on the Beta or not.
   function HL.BetaRealm ()
-    return HL.BuildVersion() == BetaVersion;
+    return HL.BuildVersion() == BetaVersion
   end
 
   -- Get the GetTime and cache it.
   function HL.GetTime (Reset)
-    if not Cache.MiscInfo then Cache.MiscInfo = {}; end
+    if not Cache.MiscInfo then Cache.MiscInfo = {} end
     if not Cache.MiscInfo.GetTime or Reset then
-      Cache.MiscInfo.GetTime = GetTime();
+      Cache.MiscInfo.GetTime = GetTime()
     end
-    return Cache.MiscInfo.GetTime;
+    return Cache.MiscInfo.GetTime
   end
 
   -- Print with HL Prefix
   function HL.Print (...)
-    print("[|cFFFF6600Hero Lib|r]", ...);
+    print("[|cFFFF6600Hero Lib|r]", ...)
   end
 
   do
-    local Setting = HL.GUISettings.General;
+    local Setting = HL.GUISettings.General
     -- Debug print with HL Prefix
     function HL.Debug (...)
       if Setting.DebugMode then
-        print("[|cFFFF6600AC Debug|r]", ...);
+        print("[|cFFFF6600AC Debug|r]", ...)
       end
     end
   end
@@ -75,7 +75,7 @@
       [252]   = {"DeathKnight", "Unholy"},
     -- Demon Hunter
       [577]   = {"DemonHunter", "Havoc"},
-      [581]   = {"DemonHunter", "Vengeance"};
+      [581]   = {"DemonHunter", "Vengeance"},
     -- Druid
       [102]   = {"Druid", "Balance"},
       [103]   = {"Druid", "Feral"},
@@ -117,4 +117,4 @@
       [71]    = {"Warrior", "Arms"},
       [72]    = {"Warrior", "Fury"},
       [73]    = {"Warrior", "Protection"}
-  };
+  }

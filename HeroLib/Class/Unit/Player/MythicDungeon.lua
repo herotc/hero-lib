@@ -1,18 +1,18 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local pairs = pairs;
+  local pairs = pairs
   -- File Locals
   
 
@@ -52,13 +52,13 @@
       if Key == "PlayerBuff" then
         for i = 1, #Value do
           if Player:Buff(Value[i][1], nil, true) then
-            return Value[i][2];
+            return Value[i][2]
           end
         end
       elseif Key == "PlayerDebuff" then
         for i = 1, #Value do
           if Player:Debuff(Value[i][1], nil, true) then
-            return Value[i][2];
+            return Value[i][2]
           end
         end
       elseif Key == "EnemiesBuff" then
@@ -69,5 +69,5 @@
 
       end
     end
-    return "";
+    return ""
   end

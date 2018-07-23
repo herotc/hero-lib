@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
 
   -- File Locals
@@ -21,7 +21,7 @@
 
   -- Get if the player is mounted on a non-combat mount.
   function Player:IsMounted ()
-    return IsMounted() and not self:IsOnCombatMount();
+    return IsMounted() and not self:IsOnCombatMount()
   end
 
   -- Get the player race.
@@ -30,15 +30,15 @@
     -- Pandaren
   do
     -- race, raceEn, raceId
-    local UnitRace = UnitRace;
+    local UnitRace = UnitRace
     function Player:Race ()
-      local _, race = UnitRace(self.UnitID);
-      return race;
+      local _, race = UnitRace(self.UnitID)
+      return race
     end
 
     -- Test if the unit is of race unit_race
     function Player:IsRace (unit_race)
-      return unit_race and self:Race() == unit_race or false;
+      return unit_race and self:Race() == unit_race or false
     end
   end
 
@@ -77,20 +77,20 @@
         -- Nagrand
         Spell(164222),  -- Frostwolf War Wolf
         Spell(165803)   -- Telaari Talbuk
-    };
+    }
     function Player:IsOnCombatMount ()
       for i = 1, #CombatMountBuff do
         if self:Buff(CombatMountBuff[i], nil, true) then
-          return true;
+          return true
         end
       end
-      return false;
+      return false
     end
   end
 
   -- Get if the player is in a valid vehicle.
   function Player:IsInVehicle ()
-    return UnitInVehicle(self.UnitID) and not self:IsInWhitelistedVehicle();
+    return UnitInVehicle(self.UnitID) and not self:IsInWhitelistedVehicle()
   end
 
   do
@@ -117,23 +117,23 @@
           -- Karazhan
           116802  -- Rodent of Usual Size
       }
-    };
+    }
     function Player:IsInWhitelistedVehicle ()
       -- Spell
       for i = 1, #InVehicleWhitelist.Spell do
         if self:Debuff(InVehicleWhitelist.Spell[i], nil, true) then
-          return true;
+          return true
         end
       end
       -- PetMount
       if Pet:IsActive() then
         for i = 1, #InVehicleWhitelist.PetMount do
           if Pet:NPCID() == InVehicleWhitelist.PetMount[i] then
-            return true;
+            return true
           end
         end
       end
-      return false;
+      return false
     end
   end
 
@@ -142,18 +142,18 @@
       Debuff = {
         {Spell(240447), 1} -- Quake (M+ Affix)
       }
-    };
+    }
     function Player:ShouldStopCasting ()
       for i = 1, #StopCast.Debuff do
-        local Record = StopCast.Debuff[i];
-        local Debuff, Duration;
+        local Record = StopCast.Debuff[i]
+        local Debuff, Duration
         if type(Record) == "table" then
-          Debuff, Duration = Record[1], Record[2];
+          Debuff, Duration = Record[1], Record[2]
         else
-          Debuff = Record;
+          Debuff = Record
         end
         if self:Debuff(Debuff, nil, true) and (not Duration or self:DebuffRemains(Debuff, nil, true) <= Duration) then
-          return true;
+          return true
         end
       end
     end

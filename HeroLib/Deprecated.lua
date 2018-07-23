@@ -1,12 +1,12 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
-  local Cache = HeroCache;
+  local addonName, HL = ...
+  local Cache = HeroCache
   -- Lua
-  
+
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -16,26 +16,26 @@
   if HL.BuildVersion() == "7.2.0" then
     Enum.PowerType = {
       -- Classes
-      Mana = SPELL_POWER_MANA;
-      Rage = SPELL_POWER_RAGE;
-      Focus = SPELL_POWER_FOCUS;
-      Energy = SPELL_POWER_ENERGY;
-      ComboPoints = SPELL_POWER_COMBO_POINTS;
-      Runes = SPELL_POWER_RUNES;
-      RunicPower = SPELL_POWER_RUNIC_POWER;
-      SoulShards = SPELL_POWER_SOUL_SHARDS;
-      LunarPower = SPELL_POWER_LUNAR_POWER;
-      HolyPower = SPELL_POWER_HOLY_POWER;
-      Alternate = SPELL_POWER_ALTERNATE_POWER;
-      Maelstrom = SPELL_POWER_MAELSTROM;
-      Chi = SPELL_POWER_CHI;
-      Insanity = SPELL_POWER_INSANITY;
-      ArcaneCharges = SPELL_POWER_ARCANE_CHARGES;
-      Fury = SPELL_POWER_FURY;
-      Pain = SPELL_POWER_PAIN;
+      Mana = SPELL_POWER_MANA,
+      Rage = SPELL_POWER_RAGE,
+      Focus = SPELL_POWER_FOCUS,
+      Energy = SPELL_POWER_ENERGY,
+      ComboPoints = SPELL_POWER_COMBO_POINTS,
+      Runes = SPELL_POWER_RUNES,
+      RunicPower = SPELL_POWER_RUNIC_POWER,
+      SoulShards = SPELL_POWER_SOUL_SHARDS,
+      LunarPower = SPELL_POWER_LUNAR_POWER,
+      HolyPower = SPELL_POWER_HOLY_POWER,
+      Alternate = SPELL_POWER_ALTERNATE_POWER,
+      Maelstrom = SPELL_POWER_MAELSTROM,
+      Chi = SPELL_POWER_CHI,
+      Insanity = SPELL_POWER_INSANITY,
+      ArcaneCharges = SPELL_POWER_ARCANE_CHARGES,
+      Fury = SPELL_POWER_FURY,
+      Pain = SPELL_POWER_PAIN,
 
       -- Obsolete
-      Obsolete = SPELL_POWER_OBSOLETE;
-      Obsolete2 = SPELL_POWER_OBSOLETE2;
+      Obsolete = SPELL_POWER_OBSOLETE,
+      Obsolete2 = SPELL_POWER_OBSOLETE2
     }
   end

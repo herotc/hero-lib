@@ -1,17 +1,17 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache = HeroCache;
-  local Unit = HL.Unit;
-  local Player = Unit.Player;
-  local Target = Unit.Target;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache = HeroCache
+  local Unit = HL.Unit
+  local Player = Unit.Player
+  local Target = Unit.Target
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local mathmax = math.max;
-  local select = select;
+  local mathmax = math.max
+  local select = select
   -- File Locals
 
 
@@ -31,15 +31,15 @@
     -- instanceGroupSize - maxPlayers for fixed size raids, holds the actual raid size for the new flexible raid (between (8?)10 and 25) (number)
   function HL.GetInstanceInfo (Index)
     if Index then
-      local Result = select(Index, GetInstanceInfo());
-      return Result;
+      local Result = select(Index, GetInstanceInfo())
+      return Result
     end
-    return GetInstanceInfo();
+    return GetInstanceInfo()
   end
 
   -- Get the Instance Difficulty Infos
   -- @returns difficulty - Difficulty setting of the instance (number)
-    -- 0 - None; not in an Instance.
+    -- 0 - None not in an Instance.
     -- 1 - 5-player Instance.
     -- 2 - 5-player Heroic Instance.
     -- 3 - 10-player Raid Instance.
@@ -65,42 +65,42 @@
     -- 23 - Mythic 5-player Instance.
     -- 24 - Timewalker 5-player Instance.
   function HL.GetInstanceDifficulty ()
-    return HL.GetInstanceInfo(3);
+    return HL.GetInstanceInfo(3)
   end
 
   -- Get the Latency (it's updated every 30s).
   -- TODO: Cache it in Persistent Cache and update it only when it changes
   function HL.Latency ()
-    return select(4, GetNetStats());
+    return select(4, GetNetStats())
   end
 
   -- Retrieve the Recovery Timer based on Settings.
   -- TODO: Optimize, to see how we'll implement it in the GUI.
   function HL.RecoveryTimer ()
-    return HL.GUISettings.General.RecoveryMode == "GCD" and Player:GCDRemains()*1000 or HL.GUISettings.General.RecoveryTimer;
+    return HL.GUISettings.General.RecoveryMode == "GCD" and Player:GCDRemains()*1000 or HL.GUISettings.General.RecoveryTimer
   end
 
   -- Compute the Recovery Offset with Lag Compensation.
   function HL.RecoveryOffset ()
-    return (HL.Latency() + HL.RecoveryTimer())/1000;
+    return (HL.Latency() + HL.RecoveryTimer())/1000
   end
 
   -- Get the time since combat has started.
   function HL.CombatTime ()
-    return HL.CombatStarted ~= 0 and HL.GetTime()-HL.CombatStarted or 0;
+    return HL.CombatStarted ~= 0 and HL.GetTime()-HL.CombatStarted or 0
   end
 
   -- Get the time since combat has ended.
   function HL.OutOfCombatTime ()
-    return HL.CombatEnded ~= 0 and HL.GetTime()-HL.CombatEnded or 0;
+    return HL.CombatEnded ~= 0 and HL.GetTime()-HL.CombatEnded or 0
   end
 
   -- Get the Boss Mod Pull Timer.
   function HL.BMPullTime ()
     if not HL.BossModTime or HL.BossModTime == 0 or HL.BossModEndTime-HL.GetTime() < 0 then
-      return 60;
+      return 60
     else
-      return HL.BossModEndTime-HL.GetTime();
+      return HL.BossModEndTime-HL.GetTime()
     end
   end
 
@@ -115,27 +115,27 @@
     *]]
   function HL.OffsetRemains (ExpirationTime, Offset)
     if type( Offset ) == "number" then
-      ExpirationTime = ExpirationTime - Offset;
+      ExpirationTime = ExpirationTime - Offset
     elseif type( Offset ) == "string" then
-      local CastRemains = Player:CastRemains();
+      local CastRemains = Player:CastRemains()
 
       -- Since the GCD is triggered on the client, add a brief grace period to avoid flickering predictions
       -- TODO: This should probably be event-driven with CAST_ events controlling if the client-side GCD is ignored
       -- For now, we just hardcode a period of 1/8th of a second which should work in most cases barring extreme lag
-      local GCDRemains = Player:GCDRemains();
+      local GCDRemains = Player:GCDRemains()
       if Player:GCD() - GCDRemains < 0.125 then
-        GCDRemains = 0;
+        GCDRemains = 0
       end
 
       if Offset == "GCDRemains" then
-        ExpirationTime = ExpirationTime - GCDRemains;
+        ExpirationTime = ExpirationTime - GCDRemains
       elseif Offset == "CastRemains" then
-        ExpirationTime = ExpirationTime - CastRemains;
+        ExpirationTime = ExpirationTime - CastRemains
       elseif Offset == "Auto" then
-        ExpirationTime = ExpirationTime - mathmax( GCDRemains, CastRemains );
+        ExpirationTime = ExpirationTime - mathmax( GCDRemains, CastRemains )
       end
     else
-      error( "Invalid Offset." );
+      error( "Invalid Offset." )
     end
-    return ExpirationTime;
+    return ExpirationTime
   end

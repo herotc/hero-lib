@@ -1,22 +1,22 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local pairs = pairs;
-  local select = select;
-  local tablesort = table.sort;
+  local pairs = pairs
+  local select = select
+  local tablesort = table.sort
   -- WoW API
-  local UnitPower, UnitPowerMax, GetPowerRegen = UnitPower, UnitPowerMax, GetPowerRegen;
+  local UnitPower, UnitPowerMax, GetPowerRegen = UnitPower, UnitPowerMax, GetPowerRegen
   -- File Locals
 
 
@@ -26,45 +26,45 @@
   --- 0 | Mana Functions ---
   --------------------------
   do
-    local ManaPowerType = Enum.PowerType.Mana;
+    local ManaPowerType = Enum.PowerType.Mana
     -- mana.max
     function Player:ManaMax ()
-      return UnitPowerMax(self.UnitID, ManaPowerType);
+      return UnitPowerMax(self.UnitID, ManaPowerType)
     end
     -- Mana
     function Player:Mana ()
-      return UnitPower(self.UnitID, ManaPowerType);
+      return UnitPower(self.UnitID, ManaPowerType)
     end
     -- Mana.pct
     function Player:ManaPercentage ()
-      return (self:Mana() / self:ManaMax()) * 100;
+      return (self:Mana() / self:ManaMax()) * 100
     end
     -- Mana.deficit
     function Player:ManaDeficit ()
-      return self:ManaMax() - self:Mana();
+      return self:ManaMax() - self:Mana()
     end
     -- "Mana.deficit.pct"
     function Player:ManaDeficitPercentage ()
-      return (self:ManaDeficit() / self:ManaMax()) * 100;
+      return (self:ManaDeficit() / self:ManaMax()) * 100
     end
     -- mana.regen
     function Player:ManaRegen ()
-      return GetPowerRegen(self.UnitID);
+      return GetPowerRegen(self.UnitID)
     end
     -- Mana regen in a cast
     function Player:ManaCastRegen (CastTime)
-      if self:ManaRegen() == 0 then return -1; end
-      return self:ManaRegen() * CastTime;
+      if self:ManaRegen() == 0 then return -1 end
+      return self:ManaRegen() * CastTime
     end
     -- "remaining_cast_regen"
     function Player:ManaRemainingCastRegen (Offset)
-      if self:ManaRegen() == 0 then return -1; end
+      if self:ManaRegen() == 0 then return -1 end
       -- If we are casting, we check what we will regen until the end of the cast
       if self:IsCasting() then
-        return self:ManaRegen() * (self:CastRemains() + (Offset or 0));
+        return self:ManaRegen() * (self:CastRemains() + (Offset or 0))
       -- Else we'll use the remaining GCD as "CastTime"
       else
-        return self:ManaRegen() * (self:GCDRemains() + (Offset or 0));
+        return self:ManaRegen() * (self:GCDRemains() + (Offset or 0))
       end
     end
     -- Mana Predicted with current cast
@@ -78,15 +78,15 @@
     end
     -- Mana.pct Predicted with current cast
     function Player:ManaPercentageP ()
-      return (self:ManaP() / self:ManaMax()) * 100;
+      return (self:ManaP() / self:ManaMax()) * 100
     end
     -- Mana.deficit Predicted with current cast
     function Player:ManaDeficitP ()
-      return self:ManaMax() - self:ManaP();
+      return self:ManaMax() - self:ManaP()
     end
     -- "Mana.deficit.pct" Predicted with current cast
     function Player:ManaDeficitPercentageP ()
-      return (self:ManaDeficitP() / self:ManaMax()) * 100;
+      return (self:ManaDeficitP() / self:ManaMax()) * 100
     end
   end
 
@@ -97,23 +97,23 @@
     local RagePowerType = Enum.PowerType.Rage
     -- rage.max
     function Player:RageMax ()
-      return UnitPowerMax(self.UnitID, RagePowerType);
+      return UnitPowerMax(self.UnitID, RagePowerType)
     end
     -- rage
     function Player:Rage ()
-      return UnitPower(self.UnitID, RagePowerType);
+      return UnitPower(self.UnitID, RagePowerType)
     end
     -- rage.pct
     function Player:RagePercentage ()
-      return (self:Rage() / self:RageMax()) * 100;
+      return (self:Rage() / self:RageMax()) * 100
     end
     -- rage.deficit
     function Player:RageDeficit ()
-      return self:RageMax() - self:Rage();
+      return self:RageMax() - self:Rage()
     end
     -- "rage.deficit.pct"
     function Player:RageDeficitPercentage ()
-      return (self:RageDeficit() / self:RageMax()) * 100;
+      return (self:RageDeficit() / self:RageMax()) * 100
     end
   end
 
@@ -124,71 +124,71 @@
     local FocusPowerType = Enum.PowerType.Focus
     -- focus.max
     function Player:FocusMax ()
-      return UnitPowerMax(self.UnitID, FocusPowerType);
+      return UnitPowerMax(self.UnitID, FocusPowerType)
     end
     -- focus
     function Player:Focus ()
-      return UnitPower(self.UnitID, FocusPowerType);
+      return UnitPower(self.UnitID, FocusPowerType)
     end
     -- focus.regen
     function Player:FocusRegen ()
-      return GetPowerRegen(self.UnitID);
+      return GetPowerRegen(self.UnitID)
     end
     -- focus.pct
     function Player:FocusPercentage ()
-      return (self:Focus() / self:FocusMax()) * 100;
+      return (self:Focus() / self:FocusMax()) * 100
     end
     -- focus.deficit
     function Player:FocusDeficit ()
-      return self:FocusMax() - self:Focus();
+      return self:FocusMax() - self:Focus()
     end
     -- "focus.deficit.pct"
     function Player:FocusDeficitPercentage ()
-      return (self:FocusDeficit() / self:FocusMax()) * 100;
+      return (self:FocusDeficit() / self:FocusMax()) * 100
     end
     -- "focus.regen.pct"
     function Player:FocusRegenPercentage ()
-      return (self:FocusRegen() / self:FocusMax()) * 100;
+      return (self:FocusRegen() / self:FocusMax()) * 100
     end
     -- focus.time_to_max
     function Player:FocusTimeToMax ()
-      if self:FocusRegen() == 0 then return -1; end
-      return self:FocusDeficit() / self:FocusRegen();
+      if self:FocusRegen() == 0 then return -1 end
+      return self:FocusDeficit() / self:FocusRegen()
     end
     -- "focus.time_to_x"
     function Player:FocusTimeToX (Amount)
-      if self:FocusRegen() == 0 then return -1; end
-      return Amount > self:Focus() and (Amount - self:Focus()) / self:FocusRegen() or 0;
+      if self:FocusRegen() == 0 then return -1 end
+      return Amount > self:Focus() and (Amount - self:Focus()) / self:FocusRegen() or 0
     end
     -- "focus.time_to_x.pct"
     function Player:FocusTimeToXPercentage (Amount)
-      if self:FocusRegen() == 0 then return -1; end
-      return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) / self:FocusRegenPercentage() or 0;
+      if self:FocusRegen() == 0 then return -1 end
+      return Amount > self:FocusPercentage() and (Amount - self:FocusPercentage()) / self:FocusRegenPercentage() or 0
     end
     -- cast_regen
     function Player:FocusCastRegen (CastTime)
-      if self:FocusRegen() == 0 then return -1; end
-      return self:FocusRegen() * CastTime;
+      if self:FocusRegen() == 0 then return -1 end
+      return self:FocusRegen() * CastTime
     end
     -- "remaining_cast_regen"
     function Player:FocusRemainingCastRegen (Offset)
-      if self:FocusRegen() == 0 then return -1; end
+      if self:FocusRegen() == 0 then return -1 end
       -- If we are casting, we check what we will regen until the end of the cast
       if self:IsCasting() then
-        return self:FocusRegen() * (self:CastRemains() + (Offset or 0));
+        return self:FocusRegen() * (self:CastRemains() + (Offset or 0))
       -- Else we'll use the remaining GCD as "CastTime"
       else
-        return self:FocusRegen() * (self:GCDRemains() + (Offset or 0));
+        return self:FocusRegen() * (self:GCDRemains() + (Offset or 0))
       end
     end
     -- Get the Focus we will loose when our cast will end, if we cast.
     function Player:FocusLossOnCastEnd ()
-      return self:IsCasting() and Spell(self:CastID()):Cost() or 0;
+      return self:IsCasting() and Spell(self:CastID()):Cost() or 0
     end
     -- Predict the expected Focus at the end of the Cast/GCD.
     function Player:FocusPredicted (Offset)
-      if self:FocusRegen() == 0 then return -1; end
-      return self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd();
+      if self:FocusRegen() == 0 then return -1 end
+      return self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd()
     end
   end
 
@@ -196,79 +196,79 @@
   --- 3 | Energy Functions ---
   ----------------------------
   do
-    local EnergyPowerType = Enum.PowerType.Energy;
+    local EnergyPowerType = Enum.PowerType.Energy
     -- energy.max
     function Player:EnergyMax ()
-      return UnitPowerMax(self.UnitID, EnergyPowerType);
+      return UnitPowerMax(self.UnitID, EnergyPowerType)
     end
     -- energy
     function Player:Energy ()
-      return UnitPower(self.UnitID, EnergyPowerType);
+      return UnitPower(self.UnitID, EnergyPowerType)
     end
     -- energy.regen
     function Player:EnergyRegen ()
-      return GetPowerRegen(self.UnitID);
+      return GetPowerRegen(self.UnitID)
     end
     -- energy.pct
     function Player:EnergyPercentage ()
-      return (self:Energy() / self:EnergyMax()) * 100;
+      return (self:Energy() / self:EnergyMax()) * 100
     end
     -- energy.deficit
     function Player:EnergyDeficit ()
-      return self:EnergyMax() - self:Energy();
+      return self:EnergyMax() - self:Energy()
     end
     -- "energy.deficit.pct"
     function Player:EnergyDeficitPercentage ()
-      return (self:EnergyDeficit() / self:EnergyMax()) * 100;
+      return (self:EnergyDeficit() / self:EnergyMax()) * 100
     end
     -- "energy.regen.pct"
     function Player:EnergyRegenPercentage ()
-      return (self:EnergyRegen() / self:EnergyMax()) * 100;
+      return (self:EnergyRegen() / self:EnergyMax()) * 100
     end
     -- energy.time_to_max
     function Player:EnergyTimeToMax ()
-      if self:EnergyRegen() == 0 then return -1; end
-      return self:EnergyDeficit() / self:EnergyRegen();
+      if self:EnergyRegen() == 0 then return -1 end
+      return self:EnergyDeficit() / self:EnergyRegen()
     end
     -- "energy.time_to_x"
     function Player:EnergyTimeToX (Amount, Offset)
-      if self:EnergyRegen() == 0 then return -1; end
-      return Amount > self:Energy() and (Amount - self:Energy()) / (self:EnergyRegen() * (1 - (Offset or 0))) or 0;
+      if self:EnergyRegen() == 0 then return -1 end
+      return Amount > self:Energy() and (Amount - self:Energy()) / (self:EnergyRegen() * (1 - (Offset or 0))) or 0
     end
     -- "energy.time_to_x.pct"
     function Player:EnergyTimeToXPercentage (Amount)
-      if self:EnergyRegen() == 0 then return -1; end
-      return Amount > self:EnergyPercentage() and (Amount - self:EnergyPercentage()) / self:EnergyRegenPercentage() or 0;
+      if self:EnergyRegen() == 0 then return -1 end
+      return Amount > self:EnergyPercentage() and (Amount - self:EnergyPercentage()) / self:EnergyRegenPercentage() or 0
     end
     -- "energy.cast_regen"
     function Player:EnergyRemainingCastRegen (Offset)
-      if self:EnergyRegen() == 0 then return -1; end
+      if self:EnergyRegen() == 0 then return -1 end
       -- If we are casting, we check what we will regen until the end of the cast
       if self:IsCasting() or self:IsChanneling() then
-        return self:EnergyRegen() * (self:CastRemains() + (Offset or 0));
+        return self:EnergyRegen() * (self:CastRemains() + (Offset or 0))
       -- Else we'll use the remaining GCD as "CastTime"
       else
-        return self:EnergyRegen() * (self:GCDRemains() + (Offset or 0));
+        return self:EnergyRegen() * (self:GCDRemains() + (Offset or 0))
       end
     end
     -- Predict the expected Energy at the end of the Cast/GCD.
     function Player:EnergyPredicted (Offset)
-      if self:EnergyRegen() == 0 then return -1; end
-      return math.min(Player:EnergyMax(), self:Energy() + self:EnergyRemainingCastRegen(Offset));
+      if self:EnergyRegen() == 0 then return -1 end
+      return math.min(Player:EnergyMax(), self:Energy() + self:EnergyRemainingCastRegen(Offset))
     end
     -- Predict the expected Energy Deficit at the end of the Cast/GCD.
     function Player:EnergyDeficitPredicted (Offset)
-      if self:EnergyRegen() == 0 then return -1; end
-      return math.max(0, self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset));
+      if self:EnergyRegen() == 0 then return -1 end
+      return math.max(0, self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset))
     end
     -- Predict time to max energy at the end of Cast/GCD
     function Player:EnergyTimeToMaxPredicted ()
-      if self:EnergyRegen() == 0 then return -1; end
-        local EnergyDeficitPredicted = self:EnergyDeficitPredicted();
+      if self:EnergyRegen() == 0 then return -1 end
+        local EnergyDeficitPredicted = self:EnergyDeficitPredicted()
         if EnergyDeficitPredicted <= 0 then
-          return 0;
+          return 0
         end
-        return EnergyDeficitPredicted / self:EnergyRegen();
+        return EnergyDeficitPredicted / self:EnergyRegen()
     end
   end
 
@@ -276,18 +276,18 @@
   --- 4 | Combo Points Functions ---
   ----------------------------------
   do
-    local ComboPointsPowerType = Enum.PowerType.ComboPoints;
+    local ComboPointsPowerType = Enum.PowerType.ComboPoints
     -- combo_points.max
     function Player:ComboPointsMax ()
-      return UnitPowerMax(self.UnitID, ComboPointsPowerType);
+      return UnitPowerMax(self.UnitID, ComboPointsPowerType)
     end
     -- combo_points
     function Player:ComboPoints ()
-      return UnitPower(self.UnitID, ComboPointsPowerType);
+      return UnitPower(self.UnitID, ComboPointsPowerType)
     end
     -- combo_points.deficit
     function Player:ComboPointsDeficit ()
-      return self:ComboPointsMax() - self:ComboPoints();
+      return self:ComboPointsMax() - self:ComboPoints()
     end
   end
 
@@ -298,23 +298,23 @@
     local RunicPowerPowerType = Enum.PowerType.RunicPower
     -- runicpower.max
     function Player:RunicPowerMax ()
-      return UnitPowerMax(self.UnitID, RunicPowerPowerType);
+      return UnitPowerMax(self.UnitID, RunicPowerPowerType)
     end
     -- runicpower
     function Player:RunicPower ()
-      return UnitPower(self.UnitID, RunicPowerPowerType);
+      return UnitPower(self.UnitID, RunicPowerPowerType)
     end
     -- runicpower.pct
     function Player:RunicPowerPercentage ()
-      return (self:RunicPower() / self:RunicPowerMax()) * 100;
+      return (self:RunicPower() / self:RunicPowerMax()) * 100
     end
     -- runicpower.deficit
     function Player:RunicPowerDeficit ()
-      return self:RunicPowerMax() - self:RunicPower();
+      return self:RunicPowerMax() - self:RunicPower()
     end
     -- "runicpower.deficit.pct"
     function Player:RunicPowerDeficitPercentage ()
-      return (self:RunicPowerDeficit() / self:RunicPowerMax()) * 100;
+      return (self:RunicPowerDeficit() / self:RunicPowerMax()) * 100
     end
   end
 
@@ -322,43 +322,43 @@
   --- 6 | Runes Functions ---
   ---------------------------
   do
-    local GetRuneCooldown = GetRuneCooldown;
+    local GetRuneCooldown = GetRuneCooldown
     -- Computes any rune cooldown.
     local function ComputeRuneCooldown (Slot, BypassRecovery)
       -- Get rune cooldown infos
-      local CDTime, CDValue = GetRuneCooldown(Slot);
+      local CDTime, CDValue = GetRuneCooldown(Slot)
       -- Return 0 if the rune isn't in CD.
-      if CDTime == 0 then return 0; end
+      if CDTime == 0 then return 0 end
       -- Compute the CD.
-      local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset());
+      local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
       -- Return the Rune CD
-      return CD > 0 and CD or 0;
+      return CD > 0 and CD or 0
     end
     -- rune
     function Player:Runes ()
-      local Count = 0;
+      local Count = 0
       for i = 1, 6 do
         if ComputeRuneCooldown(i) == 0 then
-          Count = Count + 1;
+          Count = Count + 1
         end
       end
-      return Count;
+      return Count
     end
     -- rune.time_to_x
     function Player:RuneTimeToX (Value)
-      if type(Value) ~= "number" then error("Value must be a number."); end
-      if Value < 1 or Value > 6 then error("Value must be a number between 1 and 6."); end
-      local Runes = {};
+      if type(Value) ~= "number" then error("Value must be a number.") end
+      if Value < 1 or Value > 6 then error("Value must be a number between 1 and 6.") end
+      local Runes = {}
       for i = 1, 6 do
-        Runes[i] = ComputeRuneCooldown(i);
+        Runes[i] = ComputeRuneCooldown(i)
       end
-      tablesort(Runes, function(a, b) return a < b; end);
-      local Count = 1;
+      tablesort(Runes, function(a, b) return a < b end)
+      local Count = 1
       for _, CD in pairs(Runes) do
         if Count == Value then
-          return CD;
+          return CD
         end
-        Count = Count + 1;
+        Count = Count + 1
       end
     end
   end
@@ -368,18 +368,18 @@
   ------------------------
   do
     -- soul_shard.max
-    local SoulShardsPowerType = Enum.PowerType.SoulShards;
+    local SoulShardsPowerType = Enum.PowerType.SoulShards
     function Player:SoulShardsMax ()
-      return UnitPowerMax(self.UnitID, SoulShardsPowerType);
+      return UnitPowerMax(self.UnitID, SoulShardsPowerType)
     end
     -- soul_shard
-    local WarlockPowerBar_UnitPower = WarlockPowerBar_UnitPower;
+    local WarlockPowerBar_UnitPower = WarlockPowerBar_UnitPower
     function Player:SoulShards ()
-      return WarlockPowerBar_UnitPower(self.UnitID);
+      return WarlockPowerBar_UnitPower(self.UnitID)
     end
     -- soul_shard.deficit
     function Player:SoulShardsDeficit ()
-      return self:SoulShardsMax() - self:SoulShards();
+      return self:SoulShardsMax() - self:SoulShards()
     end
   end
 
@@ -390,24 +390,24 @@
     local LunarPowerPowerType = Enum.PowerType.LunarPower
     -- astral_power.max
     function Player:AstralPowerMax ()
-      return UnitPowerMax(self.UnitID, LunarPowerPowerType);
+      return UnitPowerMax(self.UnitID, LunarPowerPowerType)
     end
     -- astral_power
     function Player:AstralPower (OverrideFutureAstralPower)
-      return OverrideFutureAstralPower or UnitPower(self.UnitID, LunarPowerPowerType);
+      return OverrideFutureAstralPower or UnitPower(self.UnitID, LunarPowerPowerType)
     end
     -- astral_power.pct
     function Player:AstralPowerPercentage (OverrideFutureAstralPower)
-      return (self:AstralPower(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100;
+      return (self:AstralPower(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100
     end
     -- astral_power.deficit
     function Player:AstralPowerDeficit (OverrideFutureAstralPower)
       local AstralPower = self:AstralPower(OverrideFutureAstralPower)
-      return self:AstralPowerMax() - AstralPower;
+      return self:AstralPowerMax() - AstralPower
     end
     -- "astral_power.deficit.pct"
     function Player:AstralPowerDeficitPercentage (OverrideFutureAstralPower)
-      return (self:AstralPowerDeficit(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100;
+      return (self:AstralPowerDeficit(OverrideFutureAstralPower) / self:AstralPowerMax()) * 100
     end
   end
 
@@ -418,23 +418,23 @@
     local HolyPowerPowerType = Enum.PowerType.HolyPower
     -- holy_power.max
     function Player:HolyPowerMax ()
-      return UnitPowerMax(self.UnitID, HolyPowerPowerType);
+      return UnitPowerMax(self.UnitID, HolyPowerPowerType)
     end
     -- holy_power
     function Player:HolyPower ()
-      return UnitPower(self.UnitID, HolyPowerPowerType);
+      return UnitPower(self.UnitID, HolyPowerPowerType)
     end
     -- holy_power.pct
     function Player:HolyPowerPercentage ()
-      return (self:HolyPower() / self:HolyPowerMax()) * 100;
+      return (self:HolyPower() / self:HolyPowerMax()) * 100
     end
     -- holy_power.deficit
     function Player:HolyPowerDeficit ()
-      return self:HolyPowerMax() - self:HolyPower();
+      return self:HolyPowerMax() - self:HolyPower()
     end
     -- "holy_power.deficit.pct"
     function Player:HolyPowerDeficitPercentage ()
-      return (self:HolyPowerDeficit() / self:HolyPowerMax()) * 100;
+      return (self:HolyPowerDeficit() / self:HolyPowerMax()) * 100
     end
   end
 
@@ -443,23 +443,23 @@
   ------------------------------
   -- maelstrom.max
   function Player:MaelstromMax ()
-    return UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom);
+    return UnitPowerMax(self.UnitID, Enum.PowerType.Maelstrom)
   end
   -- maelstrom
   function Player:Maelstrom ()
-    return UnitPower(self.UnitID, Enum.PowerType.Maelstrom);
+    return UnitPower(self.UnitID, Enum.PowerType.Maelstrom)
   end
   -- maelstrom.pct
   function Player:MaelstromPercentage ()
-    return (self:Maelstrom() / self:MaelstromMax()) * 100;
+    return (self:Maelstrom() / self:MaelstromMax()) * 100
   end
   -- maelstrom.deficit
   function Player:MaelstromDeficit ()
-    return self:MaelstromMax() - self:Maelstrom();
+    return self:MaelstromMax() - self:Maelstrom()
   end
   -- "maelstrom.deficit.pct"
   function Player:MaelstromDeficitPercentage ()
-    return (self:MaelstromDeficit() / self:MaelstromMax()) * 100;
+    return (self:MaelstromDeficit() / self:MaelstromMax()) * 100
   end
 
   --------------------------------------
@@ -469,35 +469,35 @@
     local ChiPowerType = Enum.PowerType.Chi
     -- chi.max
     function Player:ChiMax ()
-      return UnitPowerMax(self.UnitID, ChiPowerType);
+      return UnitPowerMax(self.UnitID, ChiPowerType)
     end
     -- chi
     function Player:Chi ()
-      return UnitPower(self.UnitID, ChiPowerType);
+      return UnitPower(self.UnitID, ChiPowerType)
     end
     -- chi.pct
     function Player:ChiPercentage ()
-      return (self:Chi() / self:ChiMax()) * 100;
+      return (self:Chi() / self:ChiMax()) * 100
     end
     -- chi.deficit
     function Player:ChiDeficit ()
-      return self:ChiMax() - self:Chi();
+      return self:ChiMax() - self:Chi()
     end
     -- "chi.deficit.pct"
     function Player:ChiDeficitPercentage ()
-      return (self:ChiDeficit() / self:ChiMax()) * 100;
+      return (self:ChiDeficit() / self:ChiMax()) * 100
     end
     -- "stagger.max"
     function Player:StaggerMax ()
-      return self:MaxHealth();
+      return self:MaxHealth()
     end
     -- stagger_amount
     function Player:Stagger ()
-      return UnitStagger(self.UnitID);
+      return UnitStagger(self.UnitID)
     end
     -- stagger_percent
     function Player:StaggerPercentage ()
-      return (self:Stagger() / self:StaggerMax()) * 100;
+      return (self:Stagger() / self:StaggerMax()) * 100
     end
   end
 
@@ -508,28 +508,28 @@
     local InsanityPowerType = Enum.PowerType.Insanity
     -- insanity.max
     function Player:InsanityMax ()
-      return UnitPowerMax(self.UnitID, InsanityPowerType);
+      return UnitPowerMax(self.UnitID, InsanityPowerType)
     end
     -- insanity
     function Player:Insanity ()
-      return UnitPower(self.UnitID, InsanityPowerType);
+      return UnitPower(self.UnitID, InsanityPowerType)
     end
     -- insanity.pct
     function Player:InsanityPercentage ()
-      return (self:Insanity() / self:InsanityMax()) * 100;
+      return (self:Insanity() / self:InsanityMax()) * 100
     end
     -- insanity.deficit
     function Player:InsanityDeficit ()
-      return self:InsanityMax() - self:Insanity();
+      return self:InsanityMax() - self:Insanity()
     end
     -- "insanity.deficit.pct"
     function Player:InsanityDeficitPercentage ()
-      return (self:InsanityDeficit() / self:InsanityMax()) * 100;
+      return (self:InsanityDeficit() / self:InsanityMax()) * 100
     end
     -- Insanity Drain
     function Player:Insanityrain ()
       --TODO : calculate insanitydrain
-      return 1;
+      return 1
     end
   end
 
@@ -540,23 +540,23 @@
     local ArcaneChargesPowerType = Enum.PowerType.ArcaneCharges
     -- arcanecharges.max
     function Player:ArcaneChargesMax ()
-      return UnitPowerMax(self.UnitID, ArcaneChargesPowerType);
+      return UnitPowerMax(self.UnitID, ArcaneChargesPowerType)
     end
     -- arcanecharges
     function Player:ArcaneCharges ()
-      return UnitPower(self.UnitID, ArcaneChargesPowerType);
+      return UnitPower(self.UnitID, ArcaneChargesPowerType)
     end
     -- arcanecharges.pct
     function Player:ArcaneChargesPercentage ()
-      return (self:ArcaneCharges() / self:ArcaneChargesMax()) * 100;
+      return (self:ArcaneCharges() / self:ArcaneChargesMax()) * 100
     end
     -- arcanecharges.deficit
     function Player:ArcaneChargesDeficit ()
-      return self:ArcaneChargesMax() - self:ArcaneCharges();
+      return self:ArcaneChargesMax() - self:ArcaneCharges()
     end
     -- "arcanecharges.deficit.pct"
     function Player:ArcaneChargesDeficitPercentage ()
-      return (self:ArcaneChargesDeficit() / self:ArcaneChargesMax()) * 100;
+      return (self:ArcaneChargesDeficit() / self:ArcaneChargesMax()) * 100
     end
   end
 
@@ -567,23 +567,23 @@
     local FuryPowerType = Enum.PowerType.Fury
     -- fury.max
     function Player:FuryMax ()
-      return UnitPowerMax(self.UnitID, FuryPowerType);
+      return UnitPowerMax(self.UnitID, FuryPowerType)
     end
     -- fury
     function Player:Fury ()
-      return UnitPower(self.UnitID, FuryPowerType);
+      return UnitPower(self.UnitID, FuryPowerType)
     end
     -- fury.pct
     function Player:FuryPercentage ()
-      return (self:Fury() / self:FuryMax()) * 100;
+      return (self:Fury() / self:FuryMax()) * 100
     end
     -- fury.deficit
     function Player:FuryDeficit ()
-      return self:FuryMax() - self:Fury();
+      return self:FuryMax() - self:Fury()
     end
     -- "fury.deficit.pct"
     function Player:FuryDeficitPercentage ()
-      return (self:FuryDeficit() / self:FuryMax()) * 100;
+      return (self:FuryDeficit() / self:FuryMax()) * 100
     end
   end
 
@@ -594,22 +594,22 @@
     local PainPowerType = Enum.PowerType.Pain
     -- pain.max
     function Player:PainMax ()
-      return UnitPowerMax(self.UnitID, PainPowerType);
+      return UnitPowerMax(self.UnitID, PainPowerType)
     end
     -- pain
     function Player:Pain ()
-      return UnitPower(self.UnitID, PainPowerType);
+      return UnitPower(self.UnitID, PainPowerType)
     end
     -- pain.pct
     function Player:PainPercentage ()
-      return (self:Pain() / self:PainMax()) * 100;
+      return (self:Pain() / self:PainMax()) * 100
     end
     -- pain.deficit
     function Player:PainDeficit ()
-      return self:PainMax() - self:Pain();
+      return self:PainMax() - self:Pain()
     end
     -- "pain.deficit.pct"
     function Player:PainDeficitPercentage ()
-      return (self:PainDeficit() / self:PainMax()) * 100;
+      return (self:PainDeficit() / self:PainMax()) * 100
     end
   end

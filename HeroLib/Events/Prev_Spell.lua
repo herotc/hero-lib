@@ -1,32 +1,32 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache = HeroCache;
-  local Unit = HL.Unit;
-  local Player = Unit.Player;
-  local Pet = Unit.Pet;
-  local Target = Unit.Target;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache = HeroCache
+  local Unit = HL.Unit
+  local Player = Unit.Player
+  local Pet = Unit.Pet
+  local Target = Unit.Target
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local pairs = pairs;
-  local tableinsert = table.insert;
+  local pairs = pairs
+  local tableinsert = table.insert
   -- File Locals
-  local TriggerGCD = HL.Enum.TriggerGCD; -- TriggerGCD table until it has been filtered.
-  local LastRecord = 15;
-  local PrevGCDPredicted = 0;
+  local TriggerGCD = HL.Enum.TriggerGCD -- TriggerGCD table until it has been filtered.
+  local LastRecord = 15
+  local PrevGCDPredicted = 0
   local Prev = {
     GCD = {},
     OffGCD = {},
     PetGCD = {},
     PetOffGCD = {},
-  };
+  }
   local Custom = {
     Whitelist = {},
     Blacklist = {}
-  };
+  }
 
 
 --- ============================ CONTENT ============================
@@ -34,17 +34,17 @@
   -- Init all the records at 0, so it saves one check on PrevGCD method.
   for i = 1, LastRecord do
     for _, Table in pairs(Prev) do
-      tableinsert(Table, 0);
+      tableinsert(Table, 0)
     end
   end
 
   -- Clear Old Records
   local function RemoveOldRecords ()
     for _, Table in pairs(Prev) do
-      local n = #Table;
+      local n = #Table
       while n > LastRecord do
-        Table[n] = nil;
-        n = n - 1;
+        Table[n] = nil
+        n = n - 1
       end
     end
   end
@@ -54,21 +54,21 @@
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] ~= nil then
         if TriggerGCD[SpellID] then
-          tableinsert(Prev.GCD, 1, SpellID);
-          Prev.OffGCD = {};
-          PrevGCDPredicted = 0;
+          tableinsert(Prev.GCD, 1, SpellID)
+          Prev.OffGCD = {}
+          PrevGCDPredicted = 0
         else -- Prevents unwanted spells to be registered as OffGCD.
-          tableinsert(Prev.OffGCD, 1, SpellID);
+          tableinsert(Prev.OffGCD, 1, SpellID)
         end
       end
-      RemoveOldRecords();
+      RemoveOldRecords()
     end
     , "SPELL_CAST_SUCCESS"
   )
   HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] then
-        PrevGCDPredicted = SpellID;
+        PrevGCDPredicted = SpellID
       end
     end
     , "SPELL_CAST_START"
@@ -76,7 +76,7 @@
   HL:RegisterForSelfCombatEvent(
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if PrevGCDPredicted == SpellID then
-        PrevGCDPredicted = 0;
+        PrevGCDPredicted = 0
       end
     end
     , "SPELL_CAST_FAILED"
@@ -86,104 +86,104 @@
     function (_, _, _, _, _, _, _, _, _, _, _, SpellID)
       if TriggerGCD[SpellID] ~= nil then
         if TriggerGCD[SpellID] then
-          tableinsert(Prev.PetGCD, 1, SpellID);
-          Prev.PetOffGCD = {};
+          tableinsert(Prev.PetGCD, 1, SpellID)
+          Prev.PetOffGCD = {}
         else -- Prevents unwanted spells to be registered as OffGCD.
-          tableinsert(Prev.PetOffGCD, 1, SpellID);
+          tableinsert(Prev.PetOffGCD, 1, SpellID)
         end
       end
-      RemoveOldRecords();
+      RemoveOldRecords()
     end
     , "SPELL_CAST_SUCCESS"
   )
 
   -- Filter the Enum TriggerGCD table to keep only registered spells for a given class (based on SpecID).
   function Player:FilterTriggerGCD (SpecID)
-    local RegisteredSpells = {};
-    local BaseTriggerGCD = HL.Enum.TriggerGCD; -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
+    local RegisteredSpells = {}
+    local BaseTriggerGCD = HL.Enum.TriggerGCD -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
     -- Fetch registered spells during the init
     for Spec, Spells in pairs(HL.Spell[HL.SpecID_ClassesSpecs[SpecID][1]]) do
       for _, Spell in pairs(Spells) do
-        local SpellID = Spell:ID();
-        local TriggerGCDInfo = BaseTriggerGCD[SpellID];
+        local SpellID = Spell:ID()
+        local TriggerGCDInfo = BaseTriggerGCD[SpellID]
         if TriggerGCDInfo ~= nil then
-          RegisteredSpells[SpellID] = (TriggerGCDInfo > 0);
+          RegisteredSpells[SpellID] = (TriggerGCDInfo > 0)
         end
       end
     end
     -- Add Spells based on the Whitelist
     for SpellID, Value in pairs(Custom.Whitelist) do
-      RegisteredSpells[SpellID] = Value;
+      RegisteredSpells[SpellID] = Value
     end
     -- Remove Spells based on the Blacklist
     for i = 1, #Custom.Blacklist do
-      local SpellID = Custom.Blacklist[i];
+      local SpellID = Custom.Blacklist[i]
       if RegisteredSpells[SpellID] then
-        RegisteredSpells[SpellID] = nil;
+        RegisteredSpells[SpellID] = nil
       end
     end
-    TriggerGCD = RegisteredSpells;
+    TriggerGCD = RegisteredSpells
   end
 
   -- Add spells in the Trigger GCD Whitelist
   function Spell:AddToTriggerGCD (Value)
-    if type(Value) ~= "boolean" then error("You must give a boolean as argument."); end
-    Custom.Whitelist[self.SpellID] = Value;
+    if type(Value) ~= "boolean" then error("You must give a boolean as argument.") end
+    Custom.Whitelist[self.SpellID] = Value
   end
 
   -- Add spells in the Trigger GCD Blacklist
   function Spell:RemoveFromTriggerGCD ()
-    tableinsert(Custom.Blacklist, self.SpellID);
+    tableinsert(Custom.Blacklist, self.SpellID)
   end
 
   -- prev_gcd.x.foo
   function Player:PrevGCD (Index, Spell)
-    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked.") end
     if Spell then
       return Prev.GCD[Index] == Spell:ID()
     else
-      return Prev.GCD[Index];
+      return Prev.GCD[Index]
     end
   end
 
   -- Player:PrevGCD with cast start prediction
   function Player:PrevGCDP (Index, Spell, ForcePred)
-    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked.") end
     if PrevGCDPredicted > 0 and Index == 1 or ForcePred then
-      return PrevGCDPredicted == Spell:ID();
+      return PrevGCDPredicted == Spell:ID()
     elseif PrevGCDPredicted > 0 then
-      return Player:PrevGCD(Index - 1, Spell);
+      return Player:PrevGCD(Index - 1, Spell)
     else
-      return Player:PrevGCD(Index, Spell);
+      return Player:PrevGCD(Index, Spell)
     end
   end
 
   -- prev_off_gcd.x.foo
   function Player:PrevOffGCD (Index, Spell)
-    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked."); end
-    return Prev.OffGCD[Index] == Spell:ID();
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked.") end
+    return Prev.OffGCD[Index] == Spell:ID()
   end
 
   -- Player:PrevOffGCD with cast start prediction
   function Player:PrevOffGCDP (Index, Spell)
-    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked."); end
+    if Index > LastRecord then error("Only the last " .. (LastRecord)  .. " GCDs can be checked.") end
     if PrevGCDPredicted > 0 and Index == 1 then
-      return false;
+      return false
     elseif PrevGCDPredicted > 0 then
-      return Player:PrevOffGCD (Index - 1, Spell);
+      return Player:PrevOffGCD (Index - 1, Spell)
     else
-      return Player:PrevOffGCD (Index, Spell);
+      return Player:PrevOffGCD (Index, Spell)
     end
   end
 
   -- "pet.prev_gcd.x.foo"
   function Pet:PrevGCD (Index, Spell)
-    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked."); end
-    return Prev.PetGCD[Index] == Spell:ID();
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " GCDs can be checked.") end
+    return Prev.PetGCD[Index] == Spell:ID()
   end
 
   -- "pet.prev_off_gcd.x.foo"
   function Pet:PrevOffGCD (Index, Spell)
-    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked."); end
-    return Prev.PetOffGCD[Index] == Spell:ID();
+    if Index > LastRecord then error("Only the last " .. LastRecord  .. " OffGCDs can be checked.") end
+    return Prev.PetOffGCD[Index] == Spell:ID()
   end

@@ -1,33 +1,33 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache = HeroCache;
-  local Unit = HL.Unit;
-  local Player = Unit.Player;
-  local Pet = Unit.Pet;
-  local Target = Unit.Target;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache = HeroCache
+  local Unit = HL.Unit
+  local Player = Unit.Player
+  local Pet = Unit.Pet
+  local Target = Unit.Target
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local stringgsub = string.gsub;
+  local stringgsub = string.gsub
   -- File Locals
-  local KeyBindings = {};
-  local BarNames = {};
+  local KeyBindings = {}
+  local BarNames = {}
 
 --- ============================ CONTENT ============================
   -- Parse a given ActionBar for HotKeys
   local function ParseBar ( Bar, Override )
-    local Button;
-    local ButtonTexture;
-    local ButtonHotKey = "";
+    local Button
+    local ButtonTexture
+    local ButtonHotKey = ""
     for i = 1, Bar[2] do
       ButtonName = Bar[1] .. i
-      Button = _G[ButtonName];
+      Button = _G[ButtonName]
       if Button and Button.icon and Button.HotKey then
-        ButtonTexture = Button.icon:GetTexture();
-        ButtonHotKey = Button.HotKey:GetText();
+        ButtonTexture = Button.icon:GetTexture()
+        ButtonHotKey = Button.HotKey:GetText()
         if _G.Bartender4 and Button.config.hideElements.hotkey then
           ButtonHotKey = Button.config.keyBoundTarget and GetBindingKey(Button.config.keyBoundTarget) or GetBindingKey("CLICK " .. ButtonName .. ":LeftButton")
         end
@@ -36,18 +36,18 @@
             local buttonActionType, buttonActionId = GetActionInfo(ActionButton_GetPagedID(Button))
             if buttonActionType == "macro" then
                 --Item is a macro so check it plans to cast a spell
-                local _, _, macrospellid = GetMacroSpell(buttonActionId);
+                local _, _, macrospellid = GetMacroSpell(buttonActionId)
                 --If it casts a spell change buttonTexture to that spell texture else to nil
                 if macrospellid ~= nil then
-                    ButtonTexture = GetSpellTexture(macrospellid);
+                    ButtonTexture = GetSpellTexture(macrospellid)
                 else
-                    ButtonTexture = nil;
+                    ButtonTexture = nil
                 end
             end
             if not KeyBindings[ButtonTexture] or Override then
                 if ButtonTexture ~= nil then
                     -- Numpad isn't shortened, so we have to do it manually
-                    KeyBindings[ButtonTexture] = stringgsub( ButtonHotKey, "Num Pad ", "N" );
+                    KeyBindings[ButtonTexture] = stringgsub( ButtonHotKey, "Num Pad ", "N" )
                 end
             end
         end
@@ -113,29 +113,29 @@
           [4] = {"MultiBarLeftButton", 12},
           [5] = {"MultiBarBottomRightButton", 12},
           [6] = {"MultiBarBottomLeftButton", 12},
-        };
+        }
       end
     end
     --- Parse Bars
     for i = 1, #BarNames do
-      ParseBar(BarNames[i], true);
+      ParseBar(BarNames[i], true)
     end
   end
 
   HL:RegisterForEvent(
     function ()
-      C_Timer.After(0.001, 
-        function() 
-          FindKeyBindings(); 
+      C_Timer.After(0.001,
+        function()
+          FindKeyBindings()
         end
-      ); -- on a timer, because of Bar Update Delay
+      ) -- on a timer, because of Bar Update Delay
     end
     , "UPDATE_SHAPESHIFT_FORM"
-  );
-  
+  )
+
   HL:RegisterForEvent(
     function ()
-      FindKeyBindings();
+      FindKeyBindings()
     end
     , "ZONE_CHANGED_NEW_AREA"
     , "PLAYER_SPECIALIZATION_CHANGED"
@@ -143,15 +143,15 @@
     , "ACTIONBAR_SLOT_CHANGED"
     , "UPDATE_BINDINGS"
     , "LEARNED_SPELL_IN_TAB"
-  );
+  )
 
   do
-    local KeyBindingsWhitelist = {};
+    local KeyBindingsWhitelist = {}
     function HL.WhitelistKeyBinding (TextureID, KeyBinding)
-      KeyBindingsWhitelist[TextureID] = KeyBinding;
+      KeyBindingsWhitelist[TextureID] = KeyBinding
     end
 
     function HL.FindKeyBinding (TextureID)
-      return KeyBindingsWhitelist[TextureID] or KeyBindings[TextureID] or false;
+      return KeyBindingsWhitelist[TextureID] or KeyBindings[TextureID] or false
     end
   end

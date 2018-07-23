@@ -1,33 +1,33 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local pairs = pairs;
-  local select = select;
+  local pairs = pairs
+  local select = select
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
   -- Save the current player's equipment.
-  HL.Equipment = {};
+  HL.Equipment = {}
   function HL.GetEquipment ()
-    local Item;
+    local Item
     for i = 1, 19 do
-      Item = select(1, GetInventoryItemID("Player", i));
+      Item = select(1, GetInventoryItemID("Player", i))
       -- If there is an item in that slot
       if Item ~= nil then
-        HL.Equipment[i] = Item;
+        HL.Equipment[i] = Item
       end
     end
   end
@@ -35,7 +35,7 @@
   -- Check player set bonuses (call HL.GetEquipment before to refresh the current gear)
   HasTierSets = {
     ["T18"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3 end,                                       -- Return Function
       [1]  = {[5] = 124319, [10] = 124329, [1] = 124334, [7] = 124340, [3] = 124346},                 -- Warrior:      Chest, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 124318, [10] = 124328, [1] = 124333, [7] = 124339, [3] = 124345},                 -- Paladin:      Chest, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 124284, [10] = 124292, [1] = 124296, [7] = 124301, [3] = 124307},                 -- Hunter:       Chest, Hands, Head, Legs, Shoulder
@@ -50,7 +50,7 @@
       [12] = nil                                                                                      -- Demon Hunter: Chest, Hands, Head, Legs, Shoulder
     },
     ["T18_ClassTrinket"] = {
-      [0]  = function (Count) return Count > 0; end,                                                  -- Return Function
+      [0]  = function (Count) return Count > 0 end,                                                  -- Return Function
       [1]  = {[13] = 124523, [14] = 124523},                                                          -- Warrior:      Worldbreaker's Resolve
       [2]  = {[13] = 124518, [14] = 124518},                                                          -- Paladin:      Libram of Vindication
       [3]  = {[13] = 124515, [14] = 124515},                                                          -- Hunter:       Talisman of the Master Tracker
@@ -65,7 +65,7 @@
       [12] = {[13] = 139630, [14] = 139630}                                                           -- Demon Hunter: Etching of Sargeras
     },
     ["T19"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3 end,                                       -- Return Function
       [1]  = {[5] = 138351, [15] = 138374, [10] = 138354, [1] = 138357, [7] = 138360, [3] = 138363},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 138350, [15] = 138369, [10] = 138353, [1] = 138356, [7] = 138359, [3] = 138362},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 138339, [15] = 138368, [10] = 138340, [1] = 138342, [7] = 138344, [3] = 138347},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
@@ -80,7 +80,7 @@
       [12] = {[5] = 138376, [15] = 138375, [10] = 138377, [1] = 138378, [7] = 138379, [3] = 138380}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     },
     ["T20"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3 end,                                       -- Return Function
       [1]  = {[5] = 147187, [15] = 147188, [10] = 147189, [1] = 147190, [7] = 147191, [3] = 147192},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 147157, [15] = 147158, [10] = 147159, [1] = 147160, [7] = 147161, [3] = 147162},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 147139, [15] = 147140, [10] = 147141, [1] = 147142, [7] = 147143, [3] = 147144},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
@@ -95,7 +95,7 @@
       [12] = {[5] = 147127, [15] = 147128, [10] = 147129, [1] = 147130, [7] = 147131, [3] = 147132}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     },
     ["T21"] = {
-      [0]  = function (Count) return Count > 1, Count > 3; end,                                       -- Return Function
+      [0]  = function (Count) return Count > 1, Count > 3 end,                                       -- Return Function
       [1]  = {[5] = 152178, [15] = 152179, [10] = 152180, [1] = 152181, [7] = 152182, [3] = 152183},  -- Warrior:      Chest, Back, Hands, Head, Legs, Shoulder
       [2]  = {[5] = 152148, [15] = 152149, [10] = 152150, [1] = 152151, [7] = 152152, [3] = 152153},  -- Paladin:      Chest, Back, Hands, Head, Legs, Shoulder
       [3]  = {[5] = 152130, [15] = 152131, [10] = 152132, [1] = 152133, [7] = 152134, [3] = 152135},  -- Hunter:       Chest, Back, Hands, Head, Legs, Shoulder
@@ -109,23 +109,23 @@
       [11] = {[5] = 152124, [15] = 152125, [10] = 152126, [1] = 152127, [7] = 152128, [3] = 152129},  -- Druid:        Chest, Back, Hands, Head, Legs, Shoulder
       [12] = {[5] = 152118, [15] = 152119, [10] = 152120, [1] = 152121, [7] = 152122, [3] = 152123}   -- Demon Hunter: Chest, Back, Hands, Head, Legs, Shoulder
     }
-  };
+  }
   function HL.HasTier (Tier)
     -- Set Bonuses are disabled in Challenge Mode (Diff = 8) and in Proving Grounds (Map = 1148).
-    local DifficultyID, _, _, _, _, MapID = select(3, GetInstanceInfo());
-    if DifficultyID == 8 or MapID == 1148 then return false; end
+    local DifficultyID, _, _, _, _, MapID = select(3, GetInstanceInfo())
+    if DifficultyID == 8 or MapID == 1148 then return false end
     -- Check gear
     if HasTierSets[Tier][Cache.Persistent.Player.Class[3]] then
-      local Count = 0;
-      local Item;
+      local Count = 0
+      local Item
       for Slot, ItemID in pairs(HasTierSets[Tier][Cache.Persistent.Player.Class[3]]) do
-        Item = HL.Equipment[Slot];
+        Item = HL.Equipment[Slot]
         if Item and Item == ItemID then
-          Count = Count + 1;
+          Count = Count + 1
         end
       end
-      return HasTierSets[Tier][0](Count);
+      return HasTierSets[Tier][0](Count)
     else
-      return false;
+      return false
     end
   end

@@ -1,20 +1,20 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local type = type;
+  local type = type
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -28,7 +28,7 @@
       ----- Dungeons (7.0 Patch) -----
       --- Darkheart Thicket
         -- Strangling roots can't be hit while this buff is present
-        [100991] = function (self) return self:Buff(SpecialBlacklistDataSpells.D_DHT_Submerged, nil, true); end,
+        [100991] = function (self) return self:Buff(SpecialBlacklistDataSpells.D_DHT_Submerged, nil, true) end,
       --- Mythic+ Affixes
         -- Fel Explosives (7.2 Patch)
         [120651] = true,
@@ -39,20 +39,20 @@
       ----- Tomb of Sargeras (T20 - 7.2 Patch) -----
       --- Desolate Host
         -- Engine of Eradication cannot be hit in Spirit Realm.
-        [118460] = function (self) return Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true); end,
+        [118460] = function (self) return Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
         -- Soul Queen Dejahna cannot be hit outside Spirit Realm.
-        [118462] = function (self) return not Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true); end,
+        [118462] = function (self) return not Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
   }
   function Unit:IsBlacklisted ()
     local npcid = self:NPCID()
     if SpecialBlacklistData[npcid] then
       if type(SpecialBlacklistData[npcid]) == "boolean" then
-        return true;
+        return true
       else
-        return SpecialBlacklistData[npcid](self);
+        return SpecialBlacklistData[npcid](self)
       end
     end
-    return false;
+    return false
   end
 
   -- Check if the unit is coded as blacklisted by the user or not.
@@ -60,12 +60,12 @@
     local npcid = self:NPCID()
     if HL.GUISettings.General.Blacklist.UserDefined[npcid] then
       if type(HL.GUISettings.General.Blacklist.UserDefined[npcid]) == "boolean" then
-        return true;
+        return true
       else
-        return HL.GUISettings.General.Blacklist.UserDefined[npcid](self);
+        return HL.GUISettings.General.Blacklist.UserDefined[npcid](self)
       end
     end
-    return false;
+    return false
   end
 
   -- Check if the unit is coded as blacklisted for cycling by the user or not.
@@ -73,12 +73,12 @@
     local npcid = self:NPCID()
     if HL.GUISettings.General.Blacklist.CycleUserDefined[npcid] then
       if type(HL.GUISettings.General.Blacklist.CycleUserDefined[npcid]) == "boolean" then
-        return true;
+        return true
       else
-        return HL.GUISettings.General.Blacklist.CycleUserDefined[npcid](self);
+        return HL.GUISettings.General.Blacklist.CycleUserDefined[npcid](self)
       end
     end
-    return false;
+    return false
   end
 
   --- Check if the unit is coded as blacklisted for Marked for Death (Rogue) or not.
@@ -93,7 +93,7 @@
         [102558] = true,
         [97202] = true,
         -- Fenryr leaves the fight at 60%. We take 50% as check value since it doesn't get immune at 60%.
-        [95674] = function (self) return self:HealthPercentage() > 50 and true or false; end,
+        [95674] = function (self) return self:HealthPercentage() > 50 and true or false end,
 
       ----- Trial of Valor (T19 - 7.1 Patch) -----
       --- Odyn
@@ -112,22 +112,22 @@
         -- Carrion Worm : They doesn't die but leave the area at 10%.
         [88769] = true,
         [76057] = true
-  };
+  }
   function Unit:IsMfdBlacklisted ()
     local npcid = self:NPCID()
     if SpecialMfdBlacklistData[npcid] then
       if type(SpecialMfdBlacklistData[npcid]) == "boolean" then
-        return true;
+        return true
       else
-        return SpecialMfdBlacklistData[npcid](self);
+        return SpecialMfdBlacklistData[npcid](self)
       end
     end
-    return false;
+    return false
   end
 
   function Unit:IsFacingBlacklisted ()
     if self:IsUnit(HL.UnitNotInFront) and HL.GetTime()-HL.UnitNotInFrontTime <= Player:GCD()*HL.GUISettings.General.Blacklist.NotFacingExpireMultiplier then
-      return true;
+      return true
     end
-    return false;
+    return false
   end

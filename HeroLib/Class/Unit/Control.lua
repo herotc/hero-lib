@@ -1,16 +1,16 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
 
   -- File Locals
@@ -42,29 +42,29 @@
       -- General
       Spell(132168), -- Shockwave
       Spell(132169) -- Storm Bolt
-  };
+  }
   function Unit:IterateStunDebuffs ()
     for i = 1, #IsStunnedDebuff[1] do
       if self:Debuff(IsStunnedDebuff[1][i], nil, true) then
-        return true;
+        return true
       end
     end
-    return false;
+    return false
   end
   function Unit:IsStunned ()
-    local GUID = self:GUID();
+    local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID];
+      local UnitInfo = Cache.UnitInfo[GUID]
       if not UnitInfo then
-        UnitInfo = {};
-        Cache.UnitInfo[GUID] = UnitInfo;
+        UnitInfo = {}
+        Cache.UnitInfo[GUID] = UnitInfo
       end
       if UnitInfo.IsStunned == nil then
-        UnitInfo.IsStunned = self:IterateStunDebuffs();
+        UnitInfo.IsStunned = self:IterateStunDebuffs()
       end
-      return UnitInfo.IsStunned;
+      return UnitInfo.IsStunned
     end
-    return nil;
+    return nil
   end
 
   -- Get if an unit is not immune to stuns
@@ -77,25 +77,25 @@
     ["elite"] = false,
     ["worldboss"] = false,
     [""] = false
-  };
+  }
   function Unit:IsStunnable ()
     -- TODO: Add DR Check
-    local GUID = self:GUID();
+    local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID];
+      local UnitInfo = Cache.UnitInfo[GUID]
       if not UnitInfo then
-        UnitInfo = {};
-        Cache.UnitInfo[GUID] = UnitInfo;
+        UnitInfo = {}
+        Cache.UnitInfo[GUID] = UnitInfo
       end
       if UnitInfo.IsStunnable == nil then
-        UnitInfo.IsStunnable = IsStunnableClassification[self:Classification()];
+        UnitInfo.IsStunnable = IsStunnableClassification[self:Classification()]
       end
-      return UnitInfo.IsStunnable;
+      return UnitInfo.IsStunnable
     end
-    return nil;
+    return nil
   end
 
   -- Get if an unit can be stunned or not
   function Unit:CanBeStunned (IgnoreClassification)
-    return (IgnoreClassification or self:IsStunnable()) and not self:IsStunned() or false;
+    return (IgnoreClassification or self:IsStunnable()) and not self:IsStunned() or false
   end

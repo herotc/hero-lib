@@ -1,7 +1,7 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
 
 
 --- ============================ CONTENT ============================
@@ -24,20 +24,20 @@
         -- Custom List (User Defined), must be a valid Lua Boolean or Function as Value and have the NPCID as Key
         UserDefined = {
           -- Example with fake NPCID:
-          -- [123456] = true;
-          -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false; end
+          -- [123456] = true
+          -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false end
         },
         -- Custom Cycle List (User Defined), must be a valid Lua Boolean or Function as Value and have the NPCID as Key
         CycleUserDefined = {
           -- Example with fake NPCID:
-          -- [123456] = true;
-          -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false; end
+          -- [123456] = true
+          -- [123456] = function (self) return self:HealthPercentage() <= 80 and true or false end
 
           --- Legion
             ----- Trial of Valor (T19 - 7.1 Patch) -----
               --- Helya
                 -- Bilewater Slime
-                [114553] = function (self) return self:HealthPercentage() >= 65 and true or false; end,
+                [114553] = function (self) return self:HealthPercentage() >= 65 and true or false end,
                 -- Decaying Minion
                 [114568] = true,
                 -- Helarjar Mistwatcher
@@ -51,11 +51,11 @@
                 [115905] = true,
               --- Botanist Tel'Arn (Mythic Only)
                 -- Naturalist Tel'Arn
-                [109041] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
+                [109041] = function () return HL.GetInstanceDifficulty() == 16 and true or false end,
                 -- Arcanist Tel'Arn
-                [109040] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
+                [109040] = function () return HL.GetInstanceDifficulty() == 16 and true or false end,
                 -- Solarist Tel'Arn
-                [109038] = function () return HL.GetInstanceDifficulty() == 16 and true or false; end,
+                [109038] = function () return HL.GetInstanceDifficulty() == 16 and true or false end,
               --- Star Augur Etraeus
                 -- Voidling
                 [104688] = true,
@@ -72,4 +72,4 @@
         }
       }
     }
-  };
+  }

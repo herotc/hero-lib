@@ -1,24 +1,24 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
   -- Addon
-  local addonName, HL = ...;
+  local addonName, HL = ...
   -- HeroLib
-  local Cache, Utils = HeroCache, HL.Utils;
-  local Unit = HL.Unit;
-  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target;
-  local Focus, MouseOver = Unit.Focus, Unit.MouseOver;
-  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate;
-  local Party, Raid = Unit.Party, Unit.Raid;
-  local Spell = HL.Spell;
-  local Item = HL.Item;
+  local Cache, Utils = HeroCache, HL.Utils
+  local Unit = HL.Unit
+  local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
+  local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+  local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
+  local Party, Raid = Unit.Party, Unit.Raid
+  local Spell = HL.Spell
+  local Item = HL.Item
   -- Lua
-  local mathmin = math.min;
-  local pairs = pairs;
-  local select = select;
-  local tableinsert = table.insert;
-  local type = type;
-  local unpack = unpack;
-  local wipe = table.wipe;
+  local mathmin = math.min
+  local pairs = pairs
+  local select = select
+  local tableinsert = table.insert
+  local type = type
+  local unpack = unpack
+  local wipe = table.wipe
   -- File Locals
 
 
@@ -39,65 +39,65 @@
       Focus,
       MouseOver,
       unpack(Utils.MergeTable(Boss, Nameplate))
-    }; -- It's not possible to unpack multiple tables during the creation process, so we merge them before unpacking it (not efficient but done only 1 time)
+    }, -- It's not possible to unpack multiple tables during the creation process, so we merge them before unpacking it (not efficient but done only 1 time)
     -- TODO: Improve IterableUnits creation
     Units = {}, -- Used to track units
     ExistingUnits = {}, -- Used to track GUIDs of currently existing units (to be compared with tracked units)
     Throttle = 0
-  };
-  local TTD = HL.TTD;
+  }
+  local TTD = HL.TTD
   function HL.TTDRefresh ()
     -- This may not be needed if we don't have any units but caching them in case
     -- We do speeds it all up a little bit
-    local CurrentTime = HL.GetTime();
-    local HistoryCount = TTD.Settings.HistoryCount;
-    local HistoryTime = TTD.Settings.HistoryTime;
-    local Cache = TTD.Cache;
-    local IterableUnits = TTD.IterableUnits;
-    local Units = TTD.Units;
-    local ExistingUnits = TTD.ExistingUnits;
+    local CurrentTime = HL.GetTime()
+    local HistoryCount = TTD.Settings.HistoryCount
+    local HistoryTime = TTD.Settings.HistoryTime
+    local Cache = TTD.Cache
+    local IterableUnits = TTD.IterableUnits
+    local Units = TTD.Units
+    local ExistingUnits = TTD.ExistingUnits
 
-    wipe(ExistingUnits);
+    wipe(ExistingUnits)
 
-    local ThisUnit;
+    local ThisUnit
     for i = 1, #IterableUnits do
-      ThisUnit = IterableUnits[i];
+      ThisUnit = IterableUnits[i]
       if ThisUnit:Exists() then
-        local GUID = ThisUnit:GUID();
+        local GUID = ThisUnit:GUID()
         -- Check if we didn't already scanned this unit.
         if not ExistingUnits[GUID] then
-          ExistingUnits[GUID] = true;
-          local HealthPercentage = ThisUnit:HealthPercentage();
+          ExistingUnits[GUID] = true
+          local HealthPercentage = ThisUnit:HealthPercentage()
           -- Check if it's a valid unit
           if Player:CanAttack(ThisUnit) and HealthPercentage < 100 then
-            local UnitTable = Units[GUID];
+            local UnitTable = Units[GUID]
             -- Check if we have seen one time this unit, if we don't then initialize it.
             if not UnitTable or HealthPercentage > UnitTable[1][1][2] then
-              UnitTable = {{}, CurrentTime};
-              Units[GUID] = UnitTable;
+              UnitTable = {{}, CurrentTime}
+              Units[GUID] = UnitTable
             end
-            local Values = UnitTable[1];
-            local Time = CurrentTime - UnitTable[2];
+            local Values = UnitTable[1]
+            local Time = CurrentTime - UnitTable[2]
             -- Check if the % HP changed since the last check (or if there were none)
             if not Values or HealthPercentage ~= Values[2] then
-              local Value;
-              local LastIndex = #Cache;
+              local Value
+              local LastIndex = #Cache
               -- Check if we can re-use a table from the cache
               if LastIndex == 0 then
-                Value = {Time, HealthPercentage};
+                Value = {Time, HealthPercentage}
               else
-                Value = Cache[LastIndex];
-                Cache[LastIndex] = nil;
-                Value[1] = Time;
-                Value[2] = HealthPercentage;
+                Value = Cache[LastIndex]
+                Cache[LastIndex] = nil
+                Value[1] = Time
+                Value[2] = HealthPercentage
               end
-              tableinsert(Values, 1, Value);
-              local n = #Values;
+              tableinsert(Values, 1, Value)
+              local n = #Values
               -- Delete values that are no longer valid
               while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-                Cache[#Cache + 1] = Values[n];
-                Values[n] = nil;
-                n = n - 1;
+                Cache[#Cache + 1] = Values[n]
+                Values[n] = nil
+                n = n - 1
               end
             end
           end
@@ -109,7 +109,7 @@
     -- Ideally this should be event driven or done at least once a second if not less
     for Key in pairs(Units) do
       if not ExistingUnits[Key] then
-        Units[Key] = nil;
+        Units[Key] = nil
       end
     end
   end
@@ -124,10 +124,10 @@
     --  6666 : Dummy
     --    25 : A Player
   function Unit:TimeToX (Percentage, MinSamples)
-    if self:IsDummy() then return 6666; end
-    if self:IsAPlayer() and Player:CanAttack(self) then return 25; end
-    local Seconds = 8888;
-    local UnitTable = TTD.Units[self:GUID()];
+    if self:IsDummy() then return 6666 end
+    if self:IsAPlayer() and Player:CanAttack(self) then return 25 end
+    local Seconds = 8888
+    local UnitTable = TTD.Units[self:GUID()]
     -- Simple linear regression
     -- ( E(x^2)  E(x) )  ( a )  ( E(xy) )
     -- ( E(x)     n  )  ( b ) = ( E(y)  )
@@ -135,37 +135,37 @@
     -- Solve to find a and b, satisfying y = a + bx
     -- Matrix arithmetic has been expanded and solved to make the following operation as fast as possible
     if UnitTable then
-      local Values = UnitTable[1];
-      local n = #Values;
+      local Values = UnitTable[1]
+      local n = #Values
       if n > MinSamples then
-        local a, b = 0, 0;
-        local Ex2, Ex, Exy, Ey = 0, 0, 0, 0;
+        local a, b = 0, 0
+        local Ex2, Ex, Exy, Ey = 0, 0, 0, 0
 
-        local Value, x, y;
+        local Value, x, y
         for i = 1, n do
-          Value = Values[i];
-          x, y = Value[1], Value[2];
+          Value = Values[i]
+          x, y = Value[1], Value[2]
 
-          Ex2 = Ex2 + x * x;
-          Ex = Ex + x;
-          Exy = Exy + x * y;
-          Ey = Ey + y;
+          Ex2 = Ex2 + x * x
+          Ex = Ex + x
+          Exy = Exy + x * y
+          Ey = Ey + y
         end
         -- Invariant to find matrix inverse
-        local Invariant = 1 / ( Ex2*n - Ex*Ex );
+        local Invariant = 1 / ( Ex2*n - Ex*Ex )
         -- Solve for a and b
-        a = (-Ex * Exy * Invariant) + (Ex2 * Ey * Invariant);
-        b = (n * Exy * Invariant) - (Ex * Ey * Invariant);
+        a = (-Ex * Exy * Invariant) + (Ex2 * Ey * Invariant)
+        b = (n * Exy * Invariant) - (Ex * Ey * Invariant)
         if b ~= 0 then
           -- Use best fit line to calculate estimated time to reach target health
-          Seconds = (Percentage - a) / b;
+          Seconds = (Percentage - a) / b
           -- Subtract current time to obtain "time remaining"
-          Seconds = mathmin(7777, Seconds - (HL.GetTime() - UnitTable[2]));
-          if Seconds < 0 then Seconds = 9999; end
+          Seconds = mathmin(7777, Seconds - (HL.GetTime() - UnitTable[2]))
+          if Seconds < 0 then Seconds = 9999 end
         end
       end
     end
-    return Seconds;
+    return Seconds
   end
 
   -- Get the unit TTD Percentage
@@ -192,15 +192,15 @@
       --- Odyn
         -- Hyrja & Hymdall leaves the fight at 25% during first stage and 85%/90% during second stage (HM/MM).
         -- TODO : Put GetInstanceInfo into PersistentCache.
-        [114360] = function (self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90; end,
-        [114361] = function (self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90; end,
+        [114360] = function (self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90 end,
+        [114361] = function (self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90 end,
         -- Odyn leaves the fight at 10%.
         [114263] = 10,
       ----- Nighthold (T19 - 7.1.5 Patch) -----
       --- Elisande
         -- She leaves the fight two times at 10% then she normally dies.
         -- She looses 50% power per stage (100 -> 50 -> 0).
-        [106643] = function (self) return (self:Power() > 0 and 10) or 0; end,
+        [106643] = function (self) return (self:Power() > 0 and 10) or 0 end,
 
     --- Warlord of Draenor (WoD)
       ----- HellFire Citadel (T18 - 6.2 Patch) -----
@@ -213,48 +213,48 @@
         -- Carrion Worm : They doesn't die but leave the area at 10%.
         [88769] = 10,
         [76057] = 10
-  };
+  }
   function Unit:SpecialTTDPercentage (NPCID)
     if SpecialTTDPercentageData[NPCID] then
       if type(SpecialTTDPercentageData[NPCID]) == "number" then
-        return SpecialTTDPercentageData[NPCID];
+        return SpecialTTDPercentageData[NPCID]
       else
-        return SpecialTTDPercentageData[NPCID](self);
+        return SpecialTTDPercentageData[NPCID](self)
       end
     end
-    return 0;
+    return 0
   end
 
   -- Get the unit TimeToDie
   function Unit:TimeToDie (MinSamples)
-    local GUID = self:GUID();
+    local GUID = self:GUID()
     if GUID then
-      local MinSamples = MinSamples or 3;
-      local UnitInfo = Cache.UnitInfo[GUID];
+      local MinSamples = MinSamples or 3
+      local UnitInfo = Cache.UnitInfo[GUID]
       if not UnitInfo then
-        UnitInfo = {};
-        Cache.UnitInfo[GUID] = UnitInfo;
+        UnitInfo = {}
+        Cache.UnitInfo[GUID] = UnitInfo
       end
-      local TTD = UnitInfo.TTD;
+      local TTD = UnitInfo.TTD
       if not TTD then
-        TTD = {};
-        UnitInfo.TTD = TTD;
+        TTD = {}
+        UnitInfo.TTD = TTD
       end
       if not TTD[MinSamples] then
-        TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples);
+        TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples)
       end
-      return TTD[MinSamples];
+      return TTD[MinSamples]
     end
-    return 11111;
+    return 11111
   end
 
   -- Get if the unit meets the TimeToDie requirements.
   function Unit:FilteredTimeToDie (Operator, Value, Offset, ValueThreshold, MinSamples)
-    local TTD = self:TimeToDie(MinSamples);
-    return TTD < (ValueThreshold or 7777) and Utils.CompareThis(Operator, TTD+(Offset or 0), Value) or false;
+    local TTD = self:TimeToDie(MinSamples)
+    return TTD < (ValueThreshold or 7777) and Utils.CompareThis(Operator, TTD+(Offset or 0), Value) or false
   end
 
   -- Get if the Time To Die is Valid for an Unit (i.e. not returning a warning code).
   function Unit:TimeToDieIsNotValid (MinSamples)
-    return self:TimeToDie(MinSamples) >= 7777;
+    return self:TimeToDie(MinSamples) >= 7777
   end
