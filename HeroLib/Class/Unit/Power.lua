@@ -14,38 +14,26 @@
   -- Lua
   local select = select;
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
   -- Get the unit's power type
   function Unit:PowerType ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitPowerType(self.UnitID);
-    end
+    return UnitPowerType(self.UnitID);
   end
 
   -- power.max
   function Unit:PowerMax ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitPowerMax(self.UnitID, self:PowerType());
-    end
+    return UnitPowerMax(self.UnitID, self:PowerType());
   end
   -- power
   function Unit:Power ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitPower(self.UnitID, self:PowerType());
-    end
+    return UnitPower(self.UnitID, self:PowerType());
   end
   -- power.regen
   function Unit:PowerRegen ()
-    local GUID = self:GUID();
-    if GUID then
-      return select(2, GetPowerRegen(self.UnitID));
-    end
+    return GetPowerRegen(self.UnitID);
   end
   -- power.pct
   function Unit:PowerPercentage ()
