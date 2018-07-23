@@ -14,7 +14,7 @@
   -- Lua
   local tonumber = tonumber;
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -37,21 +37,13 @@
     -- name
     local UnitName = UnitName;
     function Unit:Name ()
-      local GUID = self:GUID();
-      if GUID then
-        return UnitName(self.UnitID);
-      end
-      return nil;
+      return UnitName(self.UnitID);
     end
   end
 
   -- Get if the unit Exists and is visible.
   function Unit:Exists ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
-    end
-    return nil;
+    return UnitExists(self.UnitID) and UnitIsVisible(self.UnitID);
   end
 
   -- Get the unit NPC ID.
@@ -74,11 +66,7 @@
 
   -- Get the level of the unit
   function Unit:Level()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitLevel(self.UnitID);
-    end
-    return nil;
+    return UnitLevel(self.UnitID);
   end
 
   -- Get if an unit with a given NPC ID is in the Boss list and has less HP than the given ones.
@@ -100,11 +88,7 @@
     -- canAttack
     local UnitCanAttack = UnitCanAttack;
     function Unit:CanAttack (Other)
-      local GUID, OtherGUID = self:GUID(), Other:GUID();
-      if GUID and OtherGUID then
-        return UnitCanAttack(self.UnitID, Other.UnitID);
-      end
-      return nil;
+      return UnitCanAttack(self.UnitID, Other.UnitID);
     end
   end
 
@@ -154,30 +138,18 @@
     -- isPlayer
     local UnitIsPlayer = UnitIsPlayer;
     function Unit:IsAPlayer ()
-      local GUID = self:GUID();
-      if GUID then
-        return UnitIsPlayer(self.UnitID);
-      end
-      return nil;
+      return UnitIsPlayer(self.UnitID);
     end
   end
 
   -- Get the unit Health.
   function Unit:Health ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitHealth(self.UnitID);
-    end
-    return -1;
+    return UnitHealth(self.UnitID) or -1;
   end
 
   -- Get the unit MaxHealth.
   function Unit:MaxHealth ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitHealthMax(self.UnitID);
-    end
-    return -1;
+    return UnitHealthMax(self.UnitID) or -1;
   end
 
   -- Get the unit Health Percentage
@@ -187,49 +159,29 @@
 
   -- Get if the unit Is Dead Or Ghost.
   function Unit:IsDeadOrGhost ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitIsDeadOrGhost(self.UnitID);
-    end
-    return nil;
+    return UnitIsDeadOrGhost(self.UnitID);
   end
 
   -- Get if the unit Affecting Combat.
   function Unit:AffectingCombat ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitAffectingCombat(self.UnitID);
-    end
-    return nil;
+    return UnitAffectingCombat(self.UnitID);
   end
 
   -- Get if two unit are the same.
   function Unit:IsUnit (Other)
-    local GUID, OtherGUID = self:GUID(), Other:GUID();
-    if GUID and OtherGUID then
-      return UnitIsUnit(self.UnitID, Other.UnitID);
-    end
-    return nil;
+    return UnitIsUnit(self.UnitID, Other.UnitID);
   end
 
   -- Get unit classification
   function Unit:Classification ()
-    local GUID = self:GUID();
-    if GUID then
-      return UnitClassification(self.UnitID);
-    end
-    return "";
+    return UnitClassification(self.UnitID) or "";
   end
 
   -- Get if we are Tanking or not the Unit.
   function Unit:IsTanking (Other, ThreatThreshold)
-    local GUID, OtherGUID = self:GUID(), Other:GUID();
-    if GUID and OtherGUID then
-      local ThreatThreshold = ThreatThreshold or 2;
-      local ThreatSituation = UnitThreatSituation(self.UnitID, Other.UnitID);
-      return ThreatSituation and ThreatSituation >= ThreatThreshold or false;
-    end
-    return nil;
+    local ThreatThreshold = ThreatThreshold or 2;
+    local ThreatSituation = UnitThreatSituation(self.UnitID, Other.UnitID);
+    return ThreatSituation and ThreatSituation >= ThreatThreshold or false;
   end
 
   function Unit:IsTankingAoE (Radius, ThreatSituation)
@@ -249,10 +201,6 @@
     -- speed, groundSpeed, flightSpeed, swimSpeed
     local GetUnitSpeed = GetUnitSpeed;
     function Unit:IsMoving ()
-      local GUID = self:GUID();
-      if GUID then
-        return GetUnitSpeed(self.UnitID) ~= 0;
-      end
-      return nil;
+      return GetUnitSpeed(self.UnitID) ~= 0;
     end
   end
