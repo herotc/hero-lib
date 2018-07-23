@@ -1,62 +1,62 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
-  -- Addon
-  local addonName, Cache = ...;
-  -- Lua
+-- Addon
+local addonName, Cache = ...;
+-- Lua
 
-  -- File Locals
-  if not HeroCacheDB then
-    HeroCacheDB = {};
-    HeroCacheDB.Enabled = true;
-  end
+-- File Locals
+if not HeroCacheDB then
+  HeroCacheDB = {};
+  HeroCacheDB.Enabled = true;
+end
 --- ======= GLOBALIZE =======
-  -- Addon
-  HeroCache = Cache;
+-- Addon
+HeroCache = Cache;
 
 
 --- ============================ CONTENT ============================
-  -- Defines our cached tables.
-  -- Temporary
-  Cache.APLVar = {};
-  Cache.Enemies = {};
-  Cache.EnemiesCount = {};
-  Cache.GUIDInfo = {};
-  Cache.MiscInfo = {};
-  Cache.SpellInfo = {};
-  Cache.ItemInfo = {};
-  Cache.UnitInfo = {};
-  -- Persistent
-  Cache.Persistent = {
-    Equipment = {},
-    Player = {
-      Class = {UnitClass("player")},
-      Spec = {}
-    },
-    SpellLearned = {Pet = {}, Player = {}},
-    Texture = {Spell = {}, Item = {}, Custom = {}}
-  };
+-- Defines our cached tables.
+-- Temporary
+Cache.APLVar = {};
+Cache.Enemies = {};
+Cache.EnemiesCount = {};
+Cache.GUIDInfo = {};
+Cache.MiscInfo = {};
+Cache.SpellInfo = {};
+Cache.ItemInfo = {};
+Cache.UnitInfo = {};
+-- Persistent
+Cache.Persistent = {
+  Equipment = {},
+  Player = {
+    Class = { UnitClass("player") },
+    Spec = {}
+  },
+  SpellLearned = { Pet = {}, Player = {} },
+  Texture = { Spell = {}, Item = {}, Custom = {} }
+};
 
-  -- Reset the cache.
-  Cache.HasBeenReset = false;
-  function Cache.Reset ()
-    if not Cache.HasBeenReset then
-      -- -- foreach method
-      -- for Key, Value in pairs(HL.Cache) do
-      --   wipe(HL.Cache[Key]);
-      -- end
+-- Reset the cache.
+Cache.HasBeenReset = false;
+function Cache.Reset()
+  if not Cache.HasBeenReset then
+    -- -- foreach method
+    -- for Key, Value in pairs(HL.Cache) do
+    --   wipe(HL.Cache[Key]);
+    -- end
 
-      wipe(Cache.APLVar);
-      wipe(Cache.Enemies);
-      wipe(Cache.EnemiesCount);
-      wipe(Cache.GUIDInfo);
-      wipe(Cache.MiscInfo);
-      wipe(Cache.SpellInfo);
-      wipe(Cache.ItemInfo);
-      wipe(Cache.UnitInfo);
+    wipe(Cache.APLVar);
+    wipe(Cache.Enemies);
+    wipe(Cache.EnemiesCount);
+    wipe(Cache.GUIDInfo);
+    wipe(Cache.MiscInfo);
+    wipe(Cache.SpellInfo);
+    wipe(Cache.ItemInfo);
+    wipe(Cache.UnitInfo);
 
-      Cache.HasBeenReset = true;
-    end
+    Cache.HasBeenReset = true;
   end
+end
 
 local MakeCache = nil
 do
@@ -93,7 +93,7 @@ do
     local checks = {}
     for i = 1, n - 1 do
       checks[i] = string.format("local c%d = c%d[%s] if not c%d then return nil end",
-                                i, i - 1, args[i], i)
+        i, i - 1, args[i], i)
     end
 
     return string.format([=[
@@ -102,9 +102,9 @@ return function(%s)
   %s
   return c%d[%s]
 end]=],
-    table.concat(args, ','),
-    table.concat(checks, '\n  '),
-    n - 1, args[#args])
+      table.concat(args, ','),
+      table.concat(checks, '\n  '),
+      n - 1, args[#args])
   end
 
   local function makeSetter(n)
@@ -117,7 +117,7 @@ end]=],
     local initializers = {}
     for i = 1, n - 1 do
       initializers[i] = string.format("local c%d = c%d[%s] if not c%d then c%d[%s] = { %s } return val end",
-                                      i, i - 1, args[i], i, i - 1, args[i], makeInitString(args, i + 1))
+        i, i - 1, args[i], i, i - 1, args[i], makeInitString(args, i + 1))
     end
 
     return string.format([=[
@@ -127,9 +127,9 @@ return function(val, %s)
   c%d[%s] = val
   return val
 end]=],
-    table.concat(args, ','),
-    table.concat(initializers, '\n  '),
-    n - 1, args[#args])
+      table.concat(args, ','),
+      table.concat(initializers, '\n  '),
+      n - 1, args[#args])
   end
 
   local function makeGetSetter(n)
@@ -137,7 +137,7 @@ end]=],
     local initializers = {}
     for i = 1, n - 1 do
       initializers[i] = string.format("local c%d = c%d[%s] if not c%d then local val = func() c%d[%s] = { %s } return val end",
-                                      i, i - 1, args[i], i, i - 1, args[i], makeInitString(args, i + 1))
+        i, i - 1, args[i], i, i - 1, args[i], makeInitString(args, i + 1))
     end
 
     return string.format([=[
@@ -151,17 +151,18 @@ return function(func, %s)
   end
   return val
 end]=],
-    table.concat(args, ','),
-    table.concat(initializers, '\n  '),
-    n - 1, args[#args], n - 1, args[#args])
+      table.concat(args, ','),
+      table.concat(initializers, '\n  '),
+      n - 1, args[#args], n - 1, args[#args])
   end
 
   local function initGlobal(func)
     return setmetatable({}, {
-        __index = function(tbl, key)
-          tbl[key] = loadstring(func(key))
-          return tbl[key]
-        end })
+      __index = function(tbl, key)
+        tbl[key] = loadstring(func(key))
+        return tbl[key]
+      end
+    })
   end
 
   -- 'global' arrays containing laodstring()ed functions
@@ -212,7 +213,8 @@ end]=],
         __index = function(tbl, key)
           tbl[key] = makeFunc(key)
           return tbl[key]
-        end })
+        end
+      })
     end
 
     local getters = init(cacheGetters)
@@ -220,64 +222,63 @@ end]=],
     local getsetters = init(cacheGetSetters)
     return {
       Get = function(...)
-        return getters[ select('#', ...) ](...)
+        return getters[select('#', ...)](...)
       end,
-
       Set = function(...)
         local n = select('#', ...)
         assert(n > 1, "setter expects at least 2 parameters")
-        return setters[ n - 1 ](select(n, ...), ...)
+        return setters[n - 1](select(n, ...), ...)
       end,
-
       GetSet = function(...)
         local n = select('#', ...)
         local last = select(n, ...)
         if n > 1 and type(last) == 'function' then
-          return getsetters[ n - 1 ](last, ...)
+          return getsetters[n - 1](last, ...)
         else
-          return getters[ n ](...)
+          return getters[n](...)
         end
       end,
     }
   end
 end
 
-  local CacheImpl = MakeCache(Cache)
+local CacheImpl = MakeCache(Cache)
 
-  -- Public function to try to get a value from the cache from a given path.
-  -- Returns the value or nil if it's not cached.
-  -- If the last argument is a function then the value is set to its return if it's nil.
-  -- Typical usage is:
-  --    return Cache.Get("SpellInfo", 53, "CostInfo") -- if you need only the cached value
-  --    return Cache.Get("SpellInfo", 53, "CostInfo",
-  --                     function() return GetSpellPowerCost(53)[1] end) -- if you have a "fallback" value
-  function Cache.Get (...)
-    if HeroCacheDB.Enabled then
-      return CacheImpl.GetSet(...)
+-- Public function to try to get a value from the cache from a given path.
+-- Returns the value or nil if it's not cached.
+-- If the last argument is a function then the value is set to its return if it's nil.
+-- Typical usage is:
+--    return Cache.Get("SpellInfo", 53, "CostInfo") -- if you need only the cached value
+--    return Cache.Get("SpellInfo", 53, "CostInfo",
+--                     function() return GetSpellPowerCost(53)[1] end) -- if you have a "fallback" value
+function Cache.Get(...)
+  if HeroCacheDB.Enabled then
+    return CacheImpl.GetSet(...)
+  else
+    local last = select(select('#', ...), ...)
+    if type(last) == 'function' then
+      return last()
     else
-      local last = select(select('#', ...), ...)
-      if type(last) == 'function' then
-        return last()
-      else
-        return nil
-      end
+      return nil
     end
   end
-  -- Public function to assign a value in the cache from a given path.
-  -- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
-  -- Typical usage is : return Cache.Set("SpellInfo", 53, "CostInfo", GetSpellPowerCost(53)[1]);
-  function Cache.Set (...)
-    return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
-  end
+end
 
-  -- Wipe a table while keeping the structure
-  -- i.e. wipe every sub-table as long it doesn't contain a table
-  function Cache.WipeTableRecursively (Table)
-    for Key, Value in pairs(Table) do
-      if type(Value) == "table" then
-        Cache.WipeTableRecursively(Value);
-      else
-        wipe(Table);
-      end
+-- Public function to assign a value in the cache from a given path.
+-- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
+-- Typical usage is : return Cache.Set("SpellInfo", 53, "CostInfo", GetSpellPowerCost(53)[1]);
+function Cache.Set(...)
+  return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
+end
+
+-- Wipe a table while keeping the structure
+-- i.e. wipe every sub-table as long it doesn't contain a table
+function Cache.WipeTableRecursively(Table)
+  for Key, Value in pairs(Table) do
+    if type(Value) == "table" then
+      Cache.WipeTableRecursively(Value);
+    else
+      wipe(Table);
     end
   end
+end
