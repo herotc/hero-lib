@@ -19,7 +19,7 @@
   local tostring = tostring;
   local type = type;
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -72,6 +72,7 @@
     FriendlyTable.ItemRange = Utils.JSON.encode(FriendlyTable.ItemRange);
     FriendlyTable.RangeIndex = Utils.JSON.encode(FriendlyTable.RangeIndex);
     HeroLibDB = IsInRangeTable;
+    print('Manual filter done.')
   end
   -- IsInRangeTable generated manually by FilterItemRange
   local IsInRangeTable = {
