@@ -72,7 +72,7 @@
     local GUID = self:GUID();
     if GUID then
       if not Cache.UnitInfo[GUID] or not Cache.UnitInfo[GUID].Channeling then
-        self:GetChannelingInfo(GUIDv);
+        self:GetChannelingInfo(GUID);
       end
       local UnitInfo = Cache.UnitInfo[GUID]
       if Index then
