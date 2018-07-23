@@ -6,7 +6,7 @@ local addonName, Cache = ...;
 
 -- File Locals
 if not HeroCacheDB then
-  HeroCacheDB = {};
+  _G.HeroCacheDB = {};
   HeroCacheDB.Enabled = true;
 end
 --- ======= GLOBALIZE =======
@@ -58,7 +58,7 @@ function Cache.Reset()
   end
 end
 
-local MakeCache = nil
+local MakeCache
 do
   local select = select
 

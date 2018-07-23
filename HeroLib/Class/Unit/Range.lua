@@ -71,7 +71,7 @@ function HL.ManuallyFilterItemRanges()
   HostileTable.RangeIndex = Utils.JSON.encode(HostileTable.RangeIndex)
   FriendlyTable.ItemRange = Utils.JSON.encode(FriendlyTable.ItemRange)
   FriendlyTable.RangeIndex = Utils.JSON.encode(FriendlyTable.RangeIndex)
-  HeroLibDB = IsInRangeTable
+  _G.HeroLibDB = IsInRangeTable
   print('Manual filter done.')
 end
 

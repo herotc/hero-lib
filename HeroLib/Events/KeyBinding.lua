@@ -23,7 +23,7 @@ local function ParseBar(Bar, Override)
   local ButtonTexture
   local ButtonHotKey = ""
   for i = 1, Bar[2] do
-    ButtonName = Bar[1] .. i
+    local ButtonName = Bar[1] .. i
     Button = _G[ButtonName]
     if Button and Button.icon and Button.HotKey then
       ButtonTexture = Button.icon:GetTexture()

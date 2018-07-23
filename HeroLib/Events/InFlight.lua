@@ -14,7 +14,7 @@ local TrackedSpells = {}
 
 --- ============================ CONTENT ============================
 function Spell:RegisterInFlight(...)
-  Arg = { ... }
+  local Arg = { ... }
   TrackedSpells[self.SpellID] = {
     Inflight = false,
     DestGUID = nil,

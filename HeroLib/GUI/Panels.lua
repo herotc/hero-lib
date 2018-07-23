@@ -192,6 +192,7 @@ local function CreateSlider(Parent, Setting, Values, Text, Tooltip, Action, Opti
   Label:SetJustifyH("LEFT")
   Label:SetText("|c00dfb802" .. Text .. "|r")
 
+  local UpdateSetting
   if Optionals and Optionals["ReloadRequired"] then
     UpdateSetting = function(self)
       local Value = self:GetValue()
