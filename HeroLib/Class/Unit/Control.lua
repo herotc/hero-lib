@@ -12,9 +12,9 @@
   local Spell = HL.Spell;
   local Item = HL.Item;
   -- Lua
-  
+
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -54,7 +54,11 @@
   function Unit:IsStunned ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+      local UnitInfo = Cache.UnitInfo[GUID];
+      if not UnitInfo then
+        UnitInfo = {};
+        Cache.UnitInfo[GUID] = UnitInfo;
+      end
       if UnitInfo.IsStunned == nil then
         UnitInfo.IsStunned = self:IterateStunDebuffs();
       end
@@ -78,7 +82,11 @@
     -- TODO: Add DR Check
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+      local UnitInfo = Cache.UnitInfo[GUID];
+      if not UnitInfo then
+        UnitInfo = {};
+        Cache.UnitInfo[GUID] = UnitInfo;
+      end
       if UnitInfo.IsStunnable == nil then
         UnitInfo.IsStunnable = IsStunnableClassification[self:Classification()];
       end

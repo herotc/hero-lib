@@ -15,7 +15,7 @@
   local mathmax = math.max;
   local unpack = unpack;
   -- File Locals
-  
+
 
 
 --- ============================ CONTENT ============================
@@ -43,7 +43,10 @@
   -- Get the CooldownInfo (from GetSpellCooldown) and cache it.
   function Spell:CooldownInfo ()
     local SpellInfo = Cache.SpellInfo[self.SpellID];
-    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    if not SpellInfo then
+      SpellInfo = {};
+      Cache.SpellInfo[self.SpellID] = SpellInfo;
+    end
     if not Cache.SpellInfo[self.SpellID].CooldownInfo then
       -- start, duration, enable, modRate
       Cache.SpellInfo[self.SpellID].CooldownInfo = {GetSpellCooldown(self.SpellID)};
@@ -73,7 +76,7 @@
   function Spell:ComputeChargesCooldown (BypassRecovery)
     return self:ComputeCooldown(BypassRecovery, "Charges");
   end
-  
+
   -- action.foo.cooldown
   function Spell:Cooldown ()
     return self:ChargesInfo(4);
@@ -83,7 +86,7 @@
   function Spell:Charges ()
     return self:ChargesInfo(1);
   end
-  
+
   --[[*
     * @function Spell:ChargesP
     * @override Spell:Charges
@@ -105,13 +108,13 @@
   function Spell:MaxCharges ()
     return self:ChargesInfo(2);
   end
-  
+
   -- action.foo.usable_in
   function Spell:UsableIn ()
     if self:Charges() > 0 then return 0 end;
     return self:Recharge();
   end
-  
+
   --[[*
     * @function Spell:UsableInP
     * @override Spell:UsableIn
@@ -129,7 +132,10 @@
   -- action.foo.recharge_time or cooldown.foo.recharge_time
   function Spell:Recharge (BypassRecovery, Offset)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
-    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    if not SpellInfo then
+      SpellInfo = {};
+      Cache.SpellInfo[self.SpellID] = SpellInfo;
+    end
     local Recharge = Cache.SpellInfo[self.SpellID].Recharge;
     local RechargeNoRecovery = Cache.SpellInfo[self.SpellID].RechargeNoRecovery;
     if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].Recharge)
@@ -146,7 +152,7 @@
       return BypassRecovery and RechargeNoRecovery or Recharge;
     end
   end
-  
+
   --[[*
     * @function Spell:RechargeP
     * @override Spell:Recharge
@@ -164,7 +170,10 @@
   -- TODO : Changes function to avoid using the cache directly
   function Spell:ChargesFractional (BypassRecovery, Offset)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
-    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    if not SpellInfo then
+      SpellInfo = {};
+      Cache.SpellInfo[self.SpellID] = SpellInfo;
+    end
     local ChargesFractional = Cache.SpellInfo[self.SpellID].ChargesFractional;
     local ChargesFractionalNoRecovery = Cache.SpellInfo[self.SpellID].ChargesFractionalNoRecovery;
     if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].ChargesFractional)
@@ -190,7 +199,7 @@
       return BypassRecovery and ChargesFractionalNoRecovery or ChargesFractional;
     end
   end
-  
+
   --[[*
     * @function Spell:ChargesFractionalP
     * @override Spell:ChargesFractional
@@ -207,7 +216,10 @@
   -- action.foo.full_recharge_time or cooldown.foo.charges_full_recharge_time
   function Spell:FullRechargeTime (BypassRecovery, Offset)
     local SpellInfo = Cache.SpellInfo[self.SpellID];
-    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    if not SpellInfo then
+      SpellInfo = {};
+      Cache.SpellInfo[self.SpellID] = SpellInfo;
+    end
     local FullRechargeTime = Cache.SpellInfo[self.SpellID].FullRechargeTime;
     local FullRechargeTimeNoRecovery = Cache.SpellInfo[self.SpellID].FullRechargeTimeNoRecovery;
     if (not BypassRecovery and not Cache.SpellInfo[self.SpellID].FullRechargeTime)
@@ -220,7 +232,7 @@
         end
       else
         if BypassRecovery then
-          FullRechargeTimeNoRecovery = (self:MaxCharges() - self:ChargesFractional(BypassRecovery)) * self:ChargesInfo(4) 
+          FullRechargeTimeNoRecovery = (self:MaxCharges() - self:ChargesFractional(BypassRecovery)) * self:ChargesInfo(4)
         else
           FullRechargeTime = (self:MaxCharges() - self:ChargesFractional()) * self:ChargesInfo(4)
         end
@@ -232,7 +244,7 @@
       return BypassRecovery and FullRechargeTimeNoRecovery or FullRechargeTime;
     end
   end
-  
+
   --[[*
     * @function Spell:FullRechargeTimeP
     * @override Spell:FullRechargeTime
@@ -244,7 +256,7 @@
     *]]
   function Spell:FullRechargeTimeP (BypassRecovery, Offset)
     return self:FullRechargeTime(BypassRecovery, Offset or "Auto");
-  end  
+  end
 
   --[[*
     * @function Spell:CooldownRemains
@@ -258,7 +270,10 @@
     *]]
   function Spell:CooldownRemains ( BypassRecovery, Offset )
     local SpellInfo = Cache.SpellInfo[self.SpellID];
-    if not SpellInfo then SpellInfo = {}; Cache.SpellInfo[self.SpellID] = SpellInfo; end
+    if not SpellInfo then
+      SpellInfo = {};
+      Cache.SpellInfo[self.SpellID] = SpellInfo;
+    end
     local Cooldown = Cache.SpellInfo[self.SpellID].Cooldown;
     local CooldownNoRecovery = Cache.SpellInfo[self.SpellID].CooldownNoRecovery;
     if ( not BypassRecovery and not Cooldown ) or ( BypassRecovery and not CooldownNoRecovery ) then

@@ -231,9 +231,15 @@
     if GUID then
       local MinSamples = MinSamples or 3;
       local UnitInfo = Cache.UnitInfo[GUID];
-      if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+      if not UnitInfo then
+        UnitInfo = {};
+        Cache.UnitInfo[GUID] = UnitInfo;
+      end
       local TTD = UnitInfo.TTD;
-      if not TTD then TTD = {}; UnitInfo.TTD = TTD; end
+      if not TTD then
+        TTD = {};
+        UnitInfo.TTD = TTD;
+      end
       if not TTD[MinSamples] then
         TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples);
       end

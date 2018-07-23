@@ -50,7 +50,11 @@
   function Unit:NPCID ()
     local GUID = self:GUID();
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+      local UnitInfo = Cache.UnitInfo[GUID];
+      if not UnitInfo then
+        UnitInfo = {};
+        Cache.UnitInfo[GUID] = UnitInfo;
+      end
       if not UnitInfo.NPCID then
         local type, _, _, _, _, npcid = strsplit('-', GUID);
         if type == "Creature" or type == "Pet" or type == "Vehicle" then

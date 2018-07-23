@@ -20,7 +20,11 @@
 --- ============================ CONTENT ============================
   -- Get all the casting infos from an unit and put it into the Cache.
   function Unit:GetCastingInfo (GUID)
-    local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+    local UnitInfo = Cache.UnitInfo[GUID];
+    if not UnitInfo then
+      UnitInfo = {};
+      Cache.UnitInfo[GUID] = UnitInfo;
+    end
     -- name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID
     UnitInfo.Casting = {UnitCastingInfo(self.UnitID)};
   end
@@ -63,7 +67,11 @@
 
   --- Get all the Channeling Infos from an unit and put it into the Cache.
   function Unit:GetChannelingInfo (GUID)
-    local UnitInfo = Cache.UnitInfo[GUID]; if not UnitInfo then UnitInfo = {}; Cache.UnitInfo[GUID] = UnitInfo; end
+    local UnitInfo = Cache.UnitInfo[GUID];
+    if not UnitInfo then
+      UnitInfo = {};
+      Cache.UnitInfo[GUID] = UnitInfo;
+    end
     UnitInfo.Channeling = {UnitChannelInfo(self.UnitID)};
   end
 
