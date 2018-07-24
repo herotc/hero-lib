@@ -373,15 +373,16 @@ HL:RegisterForEvent(function(Event, Arg1)
   end
 
   -- Refresh Artifact
-  if Event == "PLAYER_LOGIN"
-    or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16)
-    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-    Spell:ArtifactScan()
-  end
+  --if Event == "PLAYER_LOGIN"
+  --  or (Event == "PLAYER_EQUIPMENT_CHANGED" and Arg1 == 16)
+  --  or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+  --  Spell:ArtifactScan()
+  --end
 
   -- Load / Refresh Core Overrides
   if Event == "PLAYER_LOGIN" then
     C_Timer.After(3, function() HL.LoadOverrides(Cache.Persistent.Player.Spec[1]) end) -- TODO: fix timing issue via event?
+    Unit.Player:Cache()
   end
   if Event == "PLAYER_SPECIALIZATION_CHANGED" then
     HL.LoadRestores()
@@ -418,6 +419,88 @@ HL:RegisterForEvent(function(Event, MessageType, Message)
     HL.UnitNotInFrontTime = HL.LastUnitCycledTime
   end
 end, "UI_ERROR_MESSAGE")
+
+--- ========================= UNIT UPDATE FUNCTIONS ============================
+
+-- Name Plate Added
+HL:RegisterForEvent(function(Event, UnitId)
+  Unit["Nameplate"][UnitId]:Cache()
+end, "NAME_PLATE_UNIT_ADDED")
+
+-- Name Plate Removed
+HL:RegisterForEvent(function(Event, UnitId)
+  Unit["Nameplate"][UnitId]:Init()
+end, "NAME_PLATE_UNIT_REMOVED")
+
+-- Player Target Updated
+HL:RegisterForEvent(function()
+  Unit.Target:Cache()
+end, "PLAYER_TARGET_CHANGED")
+
+-- Player Focus Target Updated
+HL:RegisterForEvent(function()
+  Unit.Focus:Cache()
+end, "PLAYER_FOCUS_CHANGED")
+
+-- Player Mouseover Updated
+HL:RegisterForEvent(function(Event)
+  if Event == "UPDATE_MOUSEOVER_UNIT" then
+    Unit.MouseOver:Cache()
+  elseif Unit.MouseOver:GUID() then
+    Unit.MouseOver:Init()
+  end
+end, "UPDATE_MOUSEOVER_UNIT", "CURSOR_UPDATE")
+
+-- Arena Unit Updated
+HL:RegisterForEvent(function(Event, UnitId)
+  local ArenaUnit = Unit["Arena"][UnitId]
+  if ArenaUnit then
+    ArenaUnit:Cache()
+  end
+end, "ARENA_OPPONENT_UPDATE")
+
+-- Boss Unit Updated
+HL:RegisterForEvent(function()
+  local Units = Unit["Boss"]
+  for _, BossUnit in pairs(Units) do
+    BossUnit:Cache()
+  end
+end, "INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+
+-- Party/Raid Unit Updated
+HL:RegisterForEvent(function()
+  local Units = Unit["Party"]
+  for _, PartyUnit in pairs(Units) do
+    PartyUnit:Cache()
+  end
+  Units = Unit["Raid"]
+  for _, RaidUnit in pairs(Units) do
+    RaidUnit:Cache()
+  end
+end, "GROUP_ROSTER_UPDATE")
+-- TODO: Need to maybe also update friendly units with:
+-- PARTY_MEMBER_ENABLE
+-- PARTY_MEMBER_DISABLE
+
+-- General Unit Target Updated
+-- Not really sure we need this event... haven't actually seen it fire yet. But just in case...
+HL:RegisterForEvent(function(Event, UnitId)
+  if UnitId == Unit.Target:ID() then
+    Unit.Target:Cache()
+    --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Unit.Target.UnitExists )
+  elseif UnitId == Unit.Focus:ID() then
+    Unit.Focus:Cache()
+    --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Unit.Focus.UnitExists )
+  else
+    local FoundUnit = Unit["Boss"][UnitId] or Unit["Party"][UnitId] or Unit["Raid"][UnitId] or Unit["Nameplate"][UnitId]
+    if FoundUnit then
+      FoundUnit:Cache()
+      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. (FoundUnit.UnitExists and "true" or "false") )
+    else
+      --HL.Print("Unit " .. UnitId .. " ???")
+    end
+  end
+end, "UNIT_TARGETABLE_CHANGED")
 
 
 --- ======= COMBATLOG =======
