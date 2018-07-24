@@ -15,7 +15,34 @@ local Item = HL.Item
 local tonumber = tonumber
 -- File Locals
 
+-- Blizzard API Mappings
+local UnitGUID = UnitGUID
+local UnitName = UnitName
+local UnitExists = UnitExists
+local UnitIsVisible = UnitIsVisible
+local UnitLevel = UnitLevel
+local UnitCanAttack = UnitCanAttack
+local UnitIsPlayer = UnitIsPlayer
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitAffectingCombat = UnitAffectingCombat
+local UnitIsUnit = UnitIsUnit
+local UnitClassification = UnitClassification
+local UnitThreatSituation = UnitThreatSituation
+local GetUnitSpeed = GetUnitSpeed
 
+function Unit:Cache()
+  self.UnitExists = UnitExists(self.UnitID) or false
+  self.UnitGUID = UnitGUID(self.UnitID)
+  self.UnitName = UnitName(self.UnitID)
+  self.UnitCanBeAttacked = UnitCanAttack("Player", self.UnitID) or false
+  self.UnitNPCID = self:NPCID()
+  -- Level?
+  -- IsDummy?
+  -- IsAPlayer?
+  -- Classification?
+end
 
 --- ============================ CONTENT ============================
 -- Get the unit ID.
@@ -24,30 +51,35 @@ function Unit:ID()
 end
 
 -- Get the unit GUID.
-do
-  -- guid
-  local UnitGUID = UnitGUID
-  function Unit:GUID()
-    return UnitGUID(self.UnitID)
+function Unit:GUID()
+  if self.UseCache then
+    return self.UnitGUID
   end
+  return UnitGUID(self.UnitID)
 end
 
 -- Get the unit Name.
-do
-  -- name
-  local UnitName = UnitName
-  function Unit:Name()
-    return UnitName(self.UnitID)
+function Unit:Name()
+  if self.UseCache then
+    return self.UnitName
   end
+  return UnitName(self.UnitID)
 end
 
 -- Get if the unit Exists and is visible.
 function Unit:Exists()
+  if self.UseCache then
+    return self.UnitExists and UnitIsVisible(self.UnitID)
+  end
   return UnitExists(self.UnitID) and UnitIsVisible(self.UnitID)
 end
 
 -- Get the unit NPC ID.
 function Unit:NPCID()
+  if self.UseCache and self.UnitNPCID then
+    return self.UnitNPCID
+  end
+
   local GUID = self:GUID()
   if GUID then
     local UnitInfo = Cache.UnitInfo[GUID]
@@ -88,12 +120,11 @@ function Unit:IsInBossList(NPCID, HP)
 end
 
 -- Get if the unit CanAttack the other one.
-do
-  -- canAttack
-  local UnitCanAttack = UnitCanAttack
-  function Unit:CanAttack(Other)
-    return UnitCanAttack(self.UnitID, Other.UnitID)
+function Unit:CanAttack(Other)
+  if self.UnitID == "Player" and Other.UseCache then
+    return Other.UnitCanBeAttacked
   end
+  return UnitCanAttack(self.UnitID, Other.UnitID)
 end
 
 local DummyUnits = {
@@ -138,12 +169,8 @@ function Unit:IsDummy()
 end
 
 -- Get if the unit is a Player or not.
-do
-  -- isPlayer
-  local UnitIsPlayer = UnitIsPlayer
-  function Unit:IsAPlayer()
-    return UnitIsPlayer(self.UnitID)
-  end
+function Unit:IsAPlayer()
+  return UnitIsPlayer(self.UnitID)
 end
 
 -- Get the unit Health.
@@ -201,10 +228,6 @@ function Unit:IsTankingAoE(Radius, ThreatSituation)
 end
 
 -- Get if the unit is moving or not.
-do
-  -- speed, groundSpeed, flightSpeed, swimSpeed
-  local GetUnitSpeed = GetUnitSpeed
-  function Unit:IsMoving()
-    return GetUnitSpeed(self.UnitID) ~= 0
-  end
+function Unit:IsMoving()
+  return GetUnitSpeed(self.UnitID) ~= 0
 end

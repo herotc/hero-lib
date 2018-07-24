@@ -33,32 +33,45 @@ end
 do
   local Unit = Class()
   HL.Unit = Unit
-  function Unit:New(UnitID)
+  function Unit:New(UnitID, UseCache)
     if type(UnitID) ~= "string" then error("Invalid UnitID.") end
     self.UnitID = UnitID
+    self.UseCache = UseCache or false
+    self:Init()
+  end
+
+  function Unit:Init()
+    self.UnitExists = false
+    self.UnitGUID = nil
+    self.UnitNPCID = nil
+    self.UnitName = nil
+    self.UnitCanBeAttacked = false
   end
 
   -- Unique Units
-  Unit.Player = Unit("Player")
+  Unit.Player = Unit("Player", true)
   Unit.Pet = Unit("Pet")
-  Unit.Target = Unit("Target")
-  Unit.Focus = Unit("Focus")
-  Unit.MouseOver = Unit("MouseOver")
+  Unit.Target = Unit("Target", true)
+  Unit.Focus = Unit("Focus", true)
+  Unit.MouseOver = Unit("MouseOver", true)
   Unit.Vehicle = Unit("Vehicle")
   -- Iterable Units
   local UnitIDs = {
-    { "Arena", 5 },
-    { "Boss", 4 },
-    { "Nameplate", HL.MAXIMUM },
-    { "Party", 5 },
-    { "Raid", 40 }
+    -- Type,        Count,      UseCache
+    { "Arena",      5,          true    },
+    { "Boss",       4,          true    },
+    { "Nameplate",  HL.MAXIMUM, true    },
+    { "Party",      5,          true    },
+    { "Raid",       40,         true    }
   }
   for _, UnitID in pairs(UnitIDs) do
     local UnitType = UnitID[1]
     local UnitCount = UnitID[2]
+    local UnitUseCache = UnitID[3]
     Unit[UnitType] = {}
     for i = 1, UnitCount do
-      Unit[UnitType][i] = Unit(stringformat("%s%d", UnitType, i))
+      local UnitKey = stringformat("%s%d", UnitType, i)
+      Unit[UnitType][UnitKey:lower()] = Unit(UnitKey, UnitUseCache)
     end
   end
 end
