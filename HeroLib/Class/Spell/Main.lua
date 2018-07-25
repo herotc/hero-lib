@@ -151,7 +151,7 @@ function Spell:IsUsableP(Offset)
 end
 
 -- Only checks IsUsableP against the primary resource for pooling
-function Spell:IsUsablePP(Offset)
+function Spell:IsUsablePPool(Offset)
   local CostInfos = GetSpellPowerCost(self.SpellID)
   if #CostInfos > 0 then
     local CostInfo = CostInfos[1]
