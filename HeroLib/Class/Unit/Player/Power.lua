@@ -700,3 +700,44 @@ do
     return (self:PainDeficit() / self:PainMax()) * 100
   end
 end
+
+------------------------------
+--- Predicted Resource Map ---
+------------------------------
+
+do
+  Player.PredictedResourceMap = {
+    -- Mana
+    [0] = function() return Player:ManaP() end,
+    -- Rage
+    [1] = function() return Player:Rage() end,
+    -- Focus
+    [2] = function() return Player:FocusPredicted() end,
+    -- Energy
+    [3] = function() return Player:EnergyPredicted() end,
+    -- ComboPoints
+    [4] = function() return Player:ComboPoints() end,
+    -- Runes
+    [5] = function() return Player:Runes() end,
+    -- Runic Power
+    [6] = function() return Player:RunicPower() end,
+    -- Soul Shards
+    [7] = function() return Player:SoulShards() end,
+    -- Astral Power
+    [8] = function() return Player:AstralPower() end,
+    -- Holy Power
+    [9] = function() return Player:HolyPower() end,
+    -- Maelstrom
+    [11] = function() return Player:Maelstrom() end,
+    -- Chi
+    [12] = function() return Player:Chi() end,
+    -- Insanity
+    [13] = function() return Player:Insanity() end,
+    -- Arcane Charges
+    [16] = function() return Player:ArcaneCharges() end,
+    -- Fury
+    [17] = function() return Player:Fury() end,
+    -- Pain
+    [18] = function() return Player:Pain() end,
+  }
+end
