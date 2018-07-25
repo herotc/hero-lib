@@ -135,6 +135,32 @@ function Spell:IsUsable()
   return IsUsableSpell(self.SpellID)
 end
 
+-- Check if the spell is Usable (by resources) in predicted mode
+function Spell:IsUsableP(Offset)
+  local CostInfos = GetSpellPowerCost(self.SpellID)
+  local Usable = true
+  if #CostInfos > 0 then
+    local i = 1
+    while ( Usable == true ) and ( i <= #CostInfos ) do
+        local CostInfo = CostInfos[i]
+        if ( Player.PredictedResourceMap[CostInfo.type]() < ( CostInfo.minCost + ( Offset and Offset or 0 ) ) ) then Usable = false end
+        i = i + 1
+    end
+  end
+  return Usable
+end
+
+-- Only checks IsUsableP against the primary resource for pooling
+function Spell:IsUsablePP(Offset)
+  local CostInfos = GetSpellPowerCost(self.SpellID)
+  if #CostInfos > 0 then
+    local CostInfo = CostInfos[1]
+    return ( Player.PredictedResourceMap[CostInfo.type]() >= ( CostInfo.minCost + ( Offset and Offset or 0 ) ) )
+  else
+    return true
+  end
+end
+
 -- Check if the spell is in the Spell Learned Cache.
 function Spell:IsLearned()
   return Cache.Persistent.SpellLearned[self:Type()][self:ID()] or false
