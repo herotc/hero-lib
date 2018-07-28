@@ -350,7 +350,7 @@ HL:RegisterForEvent(function(Event, Arg1)
   end
 
   -- Refresh Player
-  local PrevSpec = Cache.Persistent.Player.Spec[1]
+  --local PrevSpec = Cache.Persistent.Player.Spec[1]
   Cache.Persistent.Player.Class = { UnitClass("player") }
   Cache.Persistent.Player.Spec = { GetSpecializationInfo(GetSpecialization()) }
 
@@ -381,10 +381,12 @@ HL:RegisterForEvent(function(Event, Arg1)
 
   -- Load / Refresh Core Overrides
   if Event == "PLAYER_LOGIN" then
-    C_Timer.After(3, function() HL.LoadOverrides(Cache.Persistent.Player.Spec[1]) end) -- TODO: fix timing issue via event?
-    Unit.Player:Cache()
-  end
-  if Event == "PLAYER_SPECIALIZATION_CHANGED" then
+    -- TODO: fix timing issue via event?
+    C_Timer.After(3, function()
+      HL.LoadOverrides(Cache.Persistent.Player.Spec[1])
+      Player:Cache()
+    end)
+  elseif Event == "PLAYER_SPECIALIZATION_CHANGED" then
     HL.LoadRestores()
     HL.LoadOverrides(Cache.Persistent.Player.Spec[1])
   end
@@ -422,86 +424,106 @@ end, "UI_ERROR_MESSAGE")
 
 --- ========================= UNIT UPDATE FUNCTIONS ============================
 
--- Name Plate Added
-HL:RegisterForEvent(function(Event, UnitId)
-  Unit["Nameplate"][UnitId]:Cache()
-end, "NAME_PLATE_UNIT_ADDED")
+-- Nameplate Updated
+do
+  local NameplateUnits = Unit["Nameplate"]
+  -- Name Plate Added
+  HL:RegisterForEvent(function(Event, UnitId)
+    NameplateUnits[UnitId]:Cache()
+  end, "NAME_PLATE_UNIT_ADDED")
 
--- Name Plate Removed
-HL:RegisterForEvent(function(Event, UnitId)
-  Unit["Nameplate"][UnitId]:Init()
-end, "NAME_PLATE_UNIT_REMOVED")
+  -- Name Plate Removed
+  HL:RegisterForEvent(function(Event, UnitId)
+    NameplateUnits[UnitId]:Init()
+  end, "NAME_PLATE_UNIT_REMOVED")
+end
 
 -- Player Target Updated
 HL:RegisterForEvent(function()
-  Unit.Target:Cache()
+  Target:Cache()
 end, "PLAYER_TARGET_CHANGED")
 
 -- Player Focus Target Updated
-HL:RegisterForEvent(function()
-  Unit.Focus:Cache()
-end, "PLAYER_FOCUS_CHANGED")
+do
+  local Focus = Unit.Focus
+  HL:RegisterForEvent(function()
+    Focus:Cache()
+  end, "PLAYER_FOCUS_CHANGED")
+end
 
 -- Player Mouseover Updated
-HL:RegisterForEvent(function(Event)
-  if Event == "UPDATE_MOUSEOVER_UNIT" then
-    Unit.MouseOver:Cache()
-  elseif Unit.MouseOver:GUID() then
-    Unit.MouseOver:Init()
-  end
-end, "UPDATE_MOUSEOVER_UNIT", "CURSOR_UPDATE")
+do
+  local MouseOver = Unit.MouseOver
+  HL:RegisterForEvent(function(Event)
+    if Event == "UPDATE_MOUSEOVER_UNIT" then
+      MouseOver:Cache()
+    elseif MouseOver:GUID() then
+      MouseOver:Init()
+    end
+  end, "UPDATE_MOUSEOVER_UNIT", "CURSOR_UPDATE")
+end
 
 -- Arena Unit Updated
-HL:RegisterForEvent(function(Event, UnitId)
-  local ArenaUnit = Unit["Arena"][UnitId]
-  if ArenaUnit then
-    ArenaUnit:Cache()
-  end
-end, "ARENA_OPPONENT_UPDATE")
+do
+  local ArenaUnits = Unit["Arena"]
+  HL:RegisterForEvent(function(Event, UnitId)
+    local ArenaUnit = ArenaUnits[UnitId]
+    if ArenaUnit then
+      ArenaUnit:Cache()
+    end
+  end, "ARENA_OPPONENT_UPDATE")
+end
 
 -- Boss Unit Updated
-HL:RegisterForEvent(function()
-  local Units = Unit["Boss"]
-  for _, BossUnit in pairs(Units) do
-    BossUnit:Cache()
-  end
-end, "INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+do
+  local BossUnits = Unit["Boss"]
+  HL:RegisterForEvent(function()
+    for _, BossUnit in pairs(BossUnits) do
+      BossUnit:Cache()
+    end
+  end, "INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+end
 
 -- Party/Raid Unit Updated
-HL:RegisterForEvent(function()
-  local Units = Unit["Party"]
-  for _, PartyUnit in pairs(Units) do
-    PartyUnit:Cache()
-  end
-  Units = Unit["Raid"]
-  for _, RaidUnit in pairs(Units) do
-    RaidUnit:Cache()
-  end
-end, "GROUP_ROSTER_UPDATE")
--- TODO: Need to maybe also update friendly units with:
--- PARTY_MEMBER_ENABLE
--- PARTY_MEMBER_DISABLE
+do
+  local PartyUnits = Unit["Party"]
+  local RaidUnits = Unit["Raid"]
+  HL:RegisterForEvent(function()
+    for _, PartyUnit in pairs(PartyUnits) do
+      PartyUnit:Cache()
+    end
+    for _, RaidUnit in pairs(RaidUnits) do
+      RaidUnit:Cache()
+    end
+  end, "GROUP_ROSTER_UPDATE")
+  -- TODO: Need to maybe also update friendly units with:
+  -- PARTY_MEMBER_ENABLE
+  -- PARTY_MEMBER_DISABLE
+end
 
 -- General Unit Target Updated
 -- Not really sure we need this event... haven't actually seen it fire yet. But just in case...
-HL:RegisterForEvent(function(Event, UnitId)
-  if UnitId == Unit.Target:ID() then
-    Unit.Target:Cache()
-    --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Unit.Target.UnitExists )
-  elseif UnitId == Unit.Focus:ID() then
-    Unit.Focus:Cache()
-    --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Unit.Focus.UnitExists )
-  else
-    local FoundUnit = Unit["Boss"][UnitId] or Unit["Party"][UnitId] or Unit["Raid"][UnitId] or Unit["Nameplate"][UnitId]
-    if FoundUnit then
-      FoundUnit:Cache()
-      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. (FoundUnit.UnitExists and "true" or "false") )
+do
+  local Focus = Unit.Focus
+  local BossUnits, PartyUnits, RaidUnits, NameplateUnits = Unit["Boss"], Unit["Party"], Unit["Raid"], Unit["Nameplate"]
+  HL:RegisterForEvent(function(Event, UnitId)
+    if UnitId == Target:ID() then
+      Target:Cache()
+      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Target.UnitExists )
+    elseif UnitId == Focus:ID() then
+      Focus:Cache()
+      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Focus.UnitExists )
     else
-      --HL.Print("Unit " .. UnitId .. " ???")
+      local FoundUnit = BossUnits[UnitId] or PartyUnits[UnitId] or RaidUnits[UnitId] or NameplateUnits[UnitId]
+      if FoundUnit then
+        FoundUnit:Cache()
+        --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. (FoundUnit.UnitExists and "true" or "false") )
+      else
+        --HL.Print("Unit " .. UnitId .. " ???")
+      end
     end
-  end
-end, "UNIT_TARGETABLE_CHANGED")
-
+  end, "UNIT_TARGETABLE_CHANGED")
+end
 
 --- ======= COMBATLOG =======
 --- Combat Log Arguments
