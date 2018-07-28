@@ -143,7 +143,7 @@ function Spell:IsUsableP(Offset)
     local i = 1
     while ( Usable == true ) and ( i <= #CostInfos ) do
         local CostInfo = CostInfos[i]
-        if ( Player.PredictedResourceMap[CostInfo.type]() < ( CostInfo.minCost + ( Offset and Offset or 0 ) ) ) then Usable = false end
+        if ( Player.PredictedResourceMap[CostInfo.type]() < ( ( (self.CustomCost and self.CustomCost[CostInfo.type]) and self.CustomCost[CostInfo.type]() or CostInfo.minCost ) + ( Offset and Offset or 0 ) ) ) then Usable = false end
         i = i + 1
     end
   end
@@ -155,7 +155,7 @@ function Spell:IsUsablePPool(Offset)
   local CostInfos = GetSpellPowerCost(self.SpellID)
   if #CostInfos > 0 then
     local CostInfo = CostInfos[1]
-    return ( Player.PredictedResourceMap[CostInfo.type]() >= ( CostInfo.minCost + ( Offset and Offset or 0 ) ) )
+    return ( Player.PredictedResourceMap[CostInfo.type]() >= ( ( (self.CustomCost and self.CustomCost[CostInfo.type]) and self.CustomCost[CostInfo.type]() or CostInfo.minCost ) + ( Offset and Offset or 0 ) ) )
   else
     return true
   end
