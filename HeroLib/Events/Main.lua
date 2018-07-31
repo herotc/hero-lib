@@ -522,7 +522,7 @@ do
         --HL.Print("Unit " .. UnitId .. " ???")
       end
     end
-  end, "UNIT_TARGETABLE_CHANGED")
+  end, "UNIT_TARGETABLE_CHANGED", "UNIT_FACTION")
 end
 
 --- ======= COMBATLOG =======
