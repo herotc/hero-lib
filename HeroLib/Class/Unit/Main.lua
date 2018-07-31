@@ -36,7 +36,7 @@ function Unit:Cache()
   self.UnitExists = UnitExists(self.UnitID) or false
   self.UnitGUID = UnitGUID(self.UnitID)
   self.UnitName = UnitName(self.UnitID)
-  self.UnitCanBeAttacked = UnitCanAttack("Player", self.UnitID) or false
+  self.UnitCanBeAttacked = UnitCanAttack("player", self.UnitID) or false
   self.UnitNPCID = self:NPCID()
   -- Level?
   -- IsDummy?
@@ -121,7 +121,7 @@ end
 
 -- Get if the unit CanAttack the other one.
 function Unit:CanAttack(Other)
-  if self.UnitID == "Player" and Other.UseCache then
+  if self.UnitID == "player" and Other.UseCache then
     return Other.UnitCanBeAttacked
   end
   return UnitCanAttack(self.UnitID, Other.UnitID)

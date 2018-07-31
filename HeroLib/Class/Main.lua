@@ -49,12 +49,12 @@ do
   end
 
   -- Unique Units
-  Unit.Player = Unit("Player", true)
-  Unit.Pet = Unit("Pet")
-  Unit.Target = Unit("Target", true)
-  Unit.Focus = Unit("Focus", true)
-  Unit.MouseOver = Unit("MouseOver", true)
-  Unit.Vehicle = Unit("Vehicle")
+  Unit.Player = Unit("player", true)
+  Unit.Pet = Unit("pet")
+  Unit.Target = Unit("target", true)
+  Unit.Focus = Unit("focus", true)
+  Unit.MouseOver = Unit("mouseover", true)
+  Unit.Vehicle = Unit("vehicle")
   -- Iterable Units
   local UnitIDs = {
     -- Type,        Count,      UseCache
@@ -84,7 +84,7 @@ do
     if type(SpellID) ~= "number" then error("Invalid SpellID.") end
     if SpellType and type(SpellType) ~= "string" then error("Invalid Spell Type.") end
     self.SpellID = SpellID
-    self.SpellType = SpellType or "Player" -- For Pet, put "Pet". Default is "Player".
+    self.SpellType = SpellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
     self.LastCastTime = 0
     self.LastDisplayTime = 0
     self.LastHitTime = 0

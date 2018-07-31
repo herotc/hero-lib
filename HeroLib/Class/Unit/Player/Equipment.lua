@@ -24,7 +24,7 @@ HL.Equipment = {}
 function HL.GetEquipment()
   local Item
   for i = 1, 19 do
-    Item = select(1, GetInventoryItemID("Player", i))
+    Item = select(1, GetInventoryItemID("player", i))
     -- If there is an item in that slot
     if Item ~= nil then
       HL.Equipment[i] = Item
