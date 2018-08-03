@@ -26,6 +26,15 @@ function Utils.UpperCaseFirst(ThisString)
   return (ThisString:gsub("^%l", stringupper))
 end
 
+function Utils.ValueIsInTable(Table, SearchValue)
+  for _, Value in pairs(Table) do
+    if Value == SearchValue then
+      return true
+    end
+  end
+  return false
+end
+
 -- Merge two tables
 function Utils.MergeTable(T1, T2)
   local Table = {}
