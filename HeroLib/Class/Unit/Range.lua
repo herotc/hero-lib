@@ -24,55 +24,111 @@ local type = type
 
 --- ============================ CONTENT ============================
 --- IsInRange
--- Run FilterItemRange() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with 2 players or in Orgrimmar)
-function HL.ManuallyFilterItemRanges()
-  local IsInRangeTable = {
-    Hostile = {
-      RangeIndex = {},
-      ItemRange = {}
-    },
-    Friendly = {
-      RangeIndex = {},
-      ItemRange = {}
+-- Run ManuallyFilterItemRanges() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with dummies like the ones in Orgrimmar)
+-- Keep running this function until you get the message in the chat saying that the filtering is done.
+-- Due to some issues with the Blizzard API we need to do multiple iterations on different frame (ideally do one call each 3-5secs)
+function HL.ManuallyFilterItemRanges(LastPass)
+  -- Reset (in case you spammed it too much!)
+  if HL.ManualIsInRangeTableIterations then
+    local Iterations = HL.ManualIsInRangeTableIterations
+    if Iterations.Current == Iterations.Last then
+      HL.Print('ManuallyFilterItemRanges reset !')
+      HL.ManualIsInRangeTable = nil
+    end
+  end
+
+  -- Init
+  if not HL.ManualIsInRangeTable then
+    HL.Print('ManuallyFilterItemRanges initialized...')
+    HL.ManualIsInRangeTable = {
+      Hostile = {
+        RangeIndex = {},
+        ItemRange = {}
+      },
+      Friendly = {
+        RangeIndex = {},
+        ItemRange = {}
+      }
     }
-  }
-  -- Filter items that can only be casted on an unit. (i.e. blacklist ground targeted aoe items)
+    HL.ManualIsInRangeTableIterations = {
+      Current = 0,
+      Last = 15
+    }
+  end
+
+  -- Locals
+  local IsInRangeTable = HL.ManualIsInRangeTable
+  local Iterations = HL.ManualIsInRangeTableIterations
   local HostileTable, FriendlyTable = IsInRangeTable.Hostile, IsInRangeTable.Friendly
+  local HTItemRange, HTRangeIndex = HostileTable.ItemRange, HostileTable.RangeIndex
+  local FTItemRange, FTRangeIndex = FriendlyTable.ItemRange, FriendlyTable.RangeIndex
   local TUnitID, FUnitID = Target.UnitID, Focus.UnitID
-  for Type, Ranges in pairs(HeroLib.Enum.ItemRangeUnfiltered) do
-    for Range, Items in pairs(Ranges) do
-      if Type == "Melee" and Range == 5 then
-        Range = "Melee"
-      else
-        -- We are going to encode it as json afterwards, so we convert it to string here.
-        Range = tostring(Range)
-      end
-      local ValidItems = {}
-      for i = 1, #Items do
-        local Item = Items[i]
-        if IsItemInRange(Item, TUnitID) then
-          if not HostileTable.ItemRange[Range] then
-            HostileTable.ItemRange[Range] = {}
-            tableinsert(HostileTable.RangeIndex, Range)
-          end
-          tableinsert(HostileTable.ItemRange[Range], Item)
+  local IsItemInRange = IsItemInRange
+  local ValueIsInTable = Utils.ValueIsInTable
+
+  -- Inside a given frame, we do 5 iterations.
+  for i = 1, 5 do
+    -- Filter items that can only be casted on an unit. (i.e. blacklist ground targeted aoe items)
+    for Type, Ranges in pairs(HL.Enum.ItemRangeUnfiltered) do
+      for Range, ItemIDs in pairs(Ranges) do
+        -- RangeIndex
+        if Type == "Melee" and Range == 5 then
+          -- Special case for melees
+          Range = "Melee"
+        else
+          -- The parser assume a string that's why we convert it to a string
+          Range = tostring(Range)
         end
-        if IsItemInRange(Item, FUnitID) then
-          if not FriendlyTable.ItemRange[Range] then
-            FriendlyTable.ItemRange[Range] = {}
-            tableinsert(FriendlyTable.RangeIndex, Range)
+
+        for i = 1, #ItemIDs do
+          local ItemID = ItemIDs[i]
+
+          -- Hostile filter
+          if IsItemInRange(ItemID, TUnitID) then
+            -- Make the Range table if it doesn't exist yet
+            if not HTItemRange[Range] then
+              HTItemRange[Range] = {}
+              tableinsert(HTRangeIndex, Range)
+            end
+            -- Check if the item isn't already inserted since we do multiple passes then insert it
+            if not ValueIsInTable(HTItemRange[Range], ItemID) then
+              tableinsert(HTItemRange[Range], ItemID)
+            end
           end
-          tableinsert(FriendlyTable.ItemRange[Range], Item)
+
+          -- Friendly filter
+          if IsItemInRange(ItemID, FUnitID) then
+            -- Make the Range table if it doesn't exist yet
+            if not FTItemRange[Range] then
+              FTItemRange[Range] = {}
+              tableinsert(FTRangeIndex, Range)
+            end
+            -- Check if the item isn't already inserted since we do multiple passes
+            if not ValueIsInTable(FTItemRange[Range], ItemID) then
+              tableinsert(FTItemRange[Range], ItemID)
+            end
+          end
         end
       end
     end
   end
-  HostileTable.ItemRange = Utils.JSON.encode(HostileTable.ItemRange)
-  HostileTable.RangeIndex = Utils.JSON.encode(HostileTable.RangeIndex)
-  FriendlyTable.ItemRange = Utils.JSON.encode(FriendlyTable.ItemRange)
-  FriendlyTable.RangeIndex = Utils.JSON.encode(FriendlyTable.RangeIndex)
-  _G.HeroLibDB = IsInRangeTable
-  print('Manual filter done.')
+
+  -- Increment the pass counter
+  Iterations.Current = Iterations.Current + 1
+
+  if Iterations.Current == Iterations.Last then
+    -- Encode in JSON the content (JSON is used since it's easier to work with)
+    HostileTable.ItemRange = Utils.JSON.encode(HTItemRange)
+    HostileTable.RangeIndex = Utils.JSON.encode(HTRangeIndex)
+    FriendlyTable.ItemRange = Utils.JSON.encode(FTItemRange)
+    FriendlyTable.RangeIndex = Utils.JSON.encode(FTRangeIndex)
+
+    -- Pass it to SavedVariables
+    _G.HeroLibDB = IsInRangeTable
+    HL.Print('ManuallyFilterItemRanges done.')
+  else
+    HL.Print('ManuallyFilterItemRanges still needs ' .. Iterations.Last - Iterations.Current .. ' iteration(s).')
+  end
 end
 
 -- IsInRangeTable generated manually by FilterItemRange
