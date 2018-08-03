@@ -373,7 +373,11 @@ do
     Spell(2825), -- Bloodlust
     Spell(32182), -- Heroism
     Spell(160452), -- Netherwinds
-    Spell(80353) -- Time Warp
+    Spell(80353), -- Time Warp
+    Spell(178207), -- Drums of Fury
+    Spell(35475), -- Drums of War
+    Spell(230935), -- Drums of Montain
+    Spell(256740) -- Drums of Maelstrom
   }
   local ThisUnit, _Remains
   local function _HasHeroism()
