@@ -509,17 +509,17 @@ do
   HL:RegisterForEvent(function(Event, UnitId)
     if UnitId == Target:ID() then
       Target:Cache()
-      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Target.UnitExists )
+      --HL.Print(Event .. " Unit " .. UnitId .. " Updated, Exists: " .. Target.UnitExists )
     elseif UnitId == Focus:ID() then
       Focus:Cache()
-      --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. Focus.UnitExists )
+      --HL.Print(Event .. " Unit " .. UnitId .. " Updated, Exists: " .. Focus.UnitExists )
     else
-      local FoundUnit = BossUnits[UnitId] or PartyUnits[UnitId] or RaidUnits[UnitId] or NameplateUnits[UnitId]
+      local FoundUnit = PartyUnits[UnitId] or RaidUnits[UnitId] or BossUnits[UnitId] or NameplateUnits[UnitId]
       if FoundUnit then
         FoundUnit:Cache()
-        --HL.Print("Unit " .. UnitId .. " Updated, Exists: " .. (FoundUnit.UnitExists and "true" or "false") )
+        --HL.Print(Event .. " Unit " .. UnitId .. " Updated, Exists: " .. (FoundUnit.UnitExists and "true" or "false") )
       else
-        --HL.Print("Unit " .. UnitId .. " ???")
+        --HL.Print(Event .. " Unit " .. UnitId .. " ???")
       end
     end
   end, "UNIT_TARGETABLE_CHANGED", "UNIT_FACTION")
