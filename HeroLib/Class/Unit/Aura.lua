@@ -370,7 +370,7 @@ function Unit:DebuffRefreshableCP(Spell, AnyCaster, Offset)
 end
 
 -- dot.foo.ticks_remain
-function Unit:DotTicksRemainP(Spell)
+function Unit:DebuffTicksRemainP(Spell)
   local Remains = self:DebuffRemainsP(Spell)
   if Remains == 0 then
     return 0
