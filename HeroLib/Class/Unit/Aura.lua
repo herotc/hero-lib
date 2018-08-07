@@ -369,6 +369,16 @@ function Unit:DebuffRefreshableCP(Spell, AnyCaster, Offset)
   return self:DebuffRefreshableP(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
 end
 
+-- dot.foo.ticks_remain
+function Unit:DotTicksRemainP(Spell)
+  local Remains = self:DebuffRemainsP(Spell)
+  if Remains == 0 then
+    return 0
+  else
+    return math.ceil(Remains / Spell:TickTime())
+  end
+end
+
 -- buff.bloodlust.up
 do
   local HeroismBuff = {
