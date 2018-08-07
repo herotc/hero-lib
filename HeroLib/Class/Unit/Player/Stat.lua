@@ -64,7 +64,7 @@ function Player:AttackPowerDamageMod(offHand)
   local ap = Player:AttackPower()
   local minDamage, maxDamage, minOffHandDamage, maxOffHandDamage, physicalBonusPos, physicalBonusNeg, percent = UnitDamage(self.UnitID)
   local speed, offhandSpeed = UnitAttackSpeed(self.UnitID)
-  if useOH then
+  if useOH and offhandSpeed then
     local wSpeed = offhandSpeed * (1 + Player:HastePct() / 100)
     local wdps = (minOffHandDamage + maxOffHandDamage) / wSpeed / percent - ap / wdpsCoeff
     return (ap + wdps * wdpsCoeff) * 0.5
