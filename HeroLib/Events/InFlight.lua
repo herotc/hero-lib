@@ -6,11 +6,13 @@ local addonName, HL = ...
 local Cache = HeroCache
 local Unit = HL.Unit
 local Player = Unit.Player
+local Target = Unit.Target
 local Spell = HL.Spell
 -- Lua
 local pairs = pairs
 -- File Locals
 local TrackedSpells = {}
+local EffectMap = {}
 
 --- ============================ CONTENT ============================
 function Spell:RegisterInFlight(...)
@@ -19,20 +21,22 @@ function Spell:RegisterInFlight(...)
     Inflight = false,
     DestGUID = nil,
     Count = 0,
-    Auras = {}
+    Auras = {},
   }
   for _, v in pairs(Arg) do
     if v.SpellID then
       TrackedSpells[self.SpellID].Auras[v] = false
     end
   end
+  if self.EffectID then EffectMap[self.EffectID] = self.SpellID end
 end
 
 HL:RegisterForSelfCombatEvent(function(...)
   local spellID = select(12, ...)
   local TrackedSpell = TrackedSpells[spellID]
   if TrackedSpell then
-    TrackedSpell.DestGUID = select(8, ...)
+    local DestGUID = select(8, ...)
+    if DestGUID == "" then TrackedSpell.DestGUID = Target:GUID() else TrackedSpell.DestGUID = DestGUID end
     TrackedSpell.Count = TrackedSpell.Count + 1
     TrackedSpell.Inflight = true
     for k, _ in pairs(TrackedSpell.Auras) do
@@ -49,7 +53,7 @@ HL:RegisterForSelfCombatEvent(function(...)
 end, "SPELL_CAST_SUCCESS")
 HL:RegisterForSelfCombatEvent(function(...)
   local DestGUID, _, _, _, spellID = select(8, ...)
-  local TrackedSpell = TrackedSpells[spellID]
+  local TrackedSpell = EffectMap[spellID] and TrackedSpells[EffectMap[spellID]] or TrackedSpells[spellID]
   if TrackedSpell and DestGUID == TrackedSpell.DestGUID then
     TrackedSpell.Inflight = false
   end
