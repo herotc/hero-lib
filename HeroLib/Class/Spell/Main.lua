@@ -274,7 +274,7 @@ function Spell:TickTime()
   local BaseTickTime = self:BaseTickTime()
   if not BaseTickTime or BaseTickTime == 0 then return 0 end
   local Hasted = TickTime[self.SpellID][2]
-  if Hasted then return BaseTickTime / Player:SpellHaste() end
+  if Hasted then return BaseTickTime * Player:SpellHaste() end
   return BaseTickTime
 end
 
