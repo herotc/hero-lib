@@ -195,6 +195,16 @@ function Unit:BuffRefreshableCP(Spell, AnyCaster, Offset)
   return self:BuffRefreshableP(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
 end
 
+-- hot.foo.ticks_remain
+function Unit:BuffTicksRemainP(Spell)
+  local Remains = self:BuffRemainsP(Spell)
+  if Remains == 0 then
+    return 0
+  else
+    return math.ceil(Remains / Spell:TickTime())
+  end
+end
+
 -- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
 do
   --  1     2      3         4          5           6           7           8                   9              10         11            12           13               14            15       16      17      18
