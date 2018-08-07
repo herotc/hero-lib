@@ -90,6 +90,9 @@ end
 function Unit:BuffRemains(Spell, AnyCaster, Offset)
   local ExpirationTime = self:Buff(Spell, 6, AnyCaster)
   if ExpirationTime then
+    if ExpirationTime == 0 then
+      return 9999
+    end
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
     end

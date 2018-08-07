@@ -83,7 +83,7 @@ do
         local Buffs = IsStealthedBuff[i]
         for j = 1, #Buffs do
           local Buff = Buffs[j]
-          if ThisUnit:Buff(Buff) then
+          if ThisUnit:BuffP(Buff) then
             return _Remains and (ThisUnit:BuffRemainsP(Buff) >= 0 and ThisUnit:BuffRemainsP(Buff) or 60) or true
           end
         end
