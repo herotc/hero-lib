@@ -212,6 +212,11 @@ function Spell:IsReady(Range, AoESpell, ThisUnit)
   return self:IsCastable(Range, AoESpell, ThisUnit) and self:IsUsable()
 end
 
+-- Check if the spell Is CastableP and UsableP or not.
+function Spell:IsReadyP(Range, AoESpell, ThisUnit)
+  return self:IsCastableP(Range, AoESpell, ThisUnit) and self:IsUsableP()
+end
+
 -- action.foo.cast_time
 function Spell:CastTime()
   if not self:InfoID(4) then
