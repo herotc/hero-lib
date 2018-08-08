@@ -428,6 +428,11 @@ do
     return WarlockPowerBar_UnitPower(self.UnitID)
   end
 
+  -- soul shards predicted, customize in spec overrides
+  function Player:SoulShardsP()
+    return WarlockPowerBar_UnitPower(self.UnitID)
+  end
+
   -- soul_shard.deficit
   function Player:SoulShardsDeficit()
     return self:SoulShardsMax() - self:SoulShards()
@@ -722,7 +727,7 @@ do
     -- Runic Power
     [6] = function() return Player:RunicPower() end,
     -- Soul Shards
-    [7] = function() return Player:SoulShards() end,
+    [7] = function() return Player:SoulShardsP() end,
     -- Astral Power
     [8] = function() return Player:AstralPower() end,
     -- Holy Power
