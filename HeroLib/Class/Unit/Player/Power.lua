@@ -216,7 +216,23 @@ do
   -- Predict the expected Focus at the end of the Cast/GCD.
   function Player:FocusPredicted(Offset)
     if self:FocusRegen() == 0 then return -1 end
-    return self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd()
+    return math.min(Player:FocusMax(), self:Focus() + self:FocusRemainingCastRegen(Offset) - self:FocusLossOnCastEnd())
+  end
+
+  -- Predict the expected Focus Deficit at the end of the Cast/GCD.
+  function Player:FocusDeficitPredicted(Offset)
+    if self:FocusRegen() == 0 then return -1 end
+    return Player:FocusMax() - self:FocusPredicted(Offset);
+  end
+
+  -- Predict time to max Focus at the end of Cast/GCD
+  function Player:FocusTimeToMaxPredicted()
+    if self:FocusRegen() == 0 then return -1 end
+    local FocusDeficitPredicted = self:FocusDeficitPredicted()
+    if FocusDeficitPredicted <= 0 then
+      return 0
+    end
+    return FocusDeficitPredicted / self:FocusRegen()
   end
 end
 
