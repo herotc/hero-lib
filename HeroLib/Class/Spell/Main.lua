@@ -201,9 +201,9 @@ end
 function Spell:IsCastableP(Range, AoESpell, ThisUnit, BypassRecovery, Offset)
   if Range then
     local RangeUnit = ThisUnit or Target
-    return self:IsLearned() and self:CooldownRemainsP(BypassRecovery, Offset or "Auto") == 0 and RangeUnit:IsInRange(Range, AoESpell)
+    return self:IsLearned() and self:CooldownRemainsP(BypassRecovery or true, Offset or "Auto") == 0 and RangeUnit:IsInRange(Range, AoESpell)
   else
-    return self:IsLearned() and self:CooldownRemainsP(BypassRecovery, Offset or "Auto") == 0
+    return self:IsLearned() and self:CooldownRemainsP(BypassRecovery or true, Offset or "Auto") == 0
   end
 end
 

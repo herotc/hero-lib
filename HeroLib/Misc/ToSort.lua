@@ -118,15 +118,7 @@ function HL.OffsetRemains(ExpirationTime, Offset)
     ExpirationTime = ExpirationTime - Offset
   elseif type(Offset) == "string" then
     local CastRemains = Player:CastRemains()
-
-    -- Since the GCD is triggered on the client, add a brief grace period to avoid flickering predictions
-    -- TODO: This should probably be event-driven with CAST_ events controlling if the client-side GCD is ignored
-    -- For now, we just hardcode a period of 1/8th of a second which should work in most cases barring extreme lag
     local GCDRemains = Player:GCDRemains()
-    if Player:GCD() - GCDRemains < 0.125 then
-      GCDRemains = 0
-    end
-
     if Offset == "GCDRemains" then
       ExpirationTime = ExpirationTime - GCDRemains
     elseif Offset == "CastRemains" then

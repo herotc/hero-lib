@@ -302,7 +302,7 @@ end
   * @returns {number}
   *]]
 function Spell:CooldownRemainsP(BypassRecovery, Offset)
-  return self:CooldownRemains(BypassRecovery, Offset or "Auto")
+  return self:CooldownRemains(BypassRecovery or true, Offset or "Auto")
 end
 
 -- cooldown.foo.up
