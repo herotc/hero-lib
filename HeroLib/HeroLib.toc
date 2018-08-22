@@ -57,6 +57,7 @@ Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
 Class\Spell\Travel.lua
 Class\Spell\Artifact.lua
+Class\Spell\Azerite.lua
 Class\Item.lua
 
 # Misc

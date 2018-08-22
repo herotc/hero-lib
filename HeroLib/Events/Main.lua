@@ -379,6 +379,14 @@ HL:RegisterForEvent(function(Event, Arg1)
   --  Spell:ArtifactScan()
   --end
 
+  --Refresh Azerite
+  if Event == "PLAYER_LOGIN"
+   or Event == "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED"
+   or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 == 1 or Arg1 == 3 or Arg1 == 5))
+   or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+   Spell:AzeriteScan()
+  end
+
   -- Load / Refresh Core Overrides
   if Event == "PLAYER_LOGIN" then
     -- TODO: fix timing issue via event?
@@ -408,7 +416,7 @@ HL:RegisterForEvent(function(Event, Arg1)
     wipe(Cache.Persistent.SpellLearned.Pet)
     Spell:BookScan()
   end
-end, "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH")
+end, "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH", "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED")
 
 -- Not Facing Unit Blacklist
 HL.UnitNotInFront = Player
