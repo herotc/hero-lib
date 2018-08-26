@@ -395,8 +395,16 @@ HL:RegisterForEvent(function(Event, Arg1)
     end)
     Player:Cache()
   elseif Event == "PLAYER_SPECIALIZATION_CHANGED" then
-    HL.LoadRestores()
-    HL.LoadOverrides(Cache.Persistent.Player.Spec[1])
+    local UpdateOverrides
+    UpdateOverrides = function()
+      if Cache.Persistent.Player.Spec[1] ~= nil then
+        HL.LoadRestores()
+        HL.LoadOverrides(Cache.Persistent.Player.Spec[1])
+      else
+        C_Timer.After(2, UpdateOverrides)
+      end
+    end
+    UpdateOverrides()
   end
 end, "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN")
 
