@@ -391,9 +391,8 @@ HL:RegisterForEvent(function(Event, Arg1)
   if Event == "PLAYER_LOGIN" then
     -- TODO: fix timing issue via event?
     C_Timer.After(3, function()
-      HL.LoadOverrides(Cache.Persistent.Player.Spec[1])
+      Player:Cache()
     end)
-    Player:Cache()
   elseif Event == "PLAYER_SPECIALIZATION_CHANGED" then
     local UpdateOverrides
     UpdateOverrides = function()
