@@ -393,6 +393,7 @@ HL:RegisterForEvent(function(Event, Arg1)
     C_Timer.After(3, function()
       Player:Cache()
     end)
+    Player:Cache()
   elseif Event == "PLAYER_SPECIALIZATION_CHANGED" then
     local UpdateOverrides
     UpdateOverrides = function()
