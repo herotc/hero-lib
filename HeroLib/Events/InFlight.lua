@@ -57,7 +57,7 @@ HL:RegisterForSelfCombatEvent(function(...)
   if TrackedSpell and DestGUID == TrackedSpell.DestGUID then
     TrackedSpell.Inflight = false
   end
-end, "SPELL_DAMAGE", "SPELL_MISSED")
+end, "SPELL_DAMAGE", "SPELL_MISSED", "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH")
 -- Prevent InFlight getting stuck when target dies mid-flight
 HL:RegisterForCombatEvent(function(...)
   local DestGUID = select(8, ...)
