@@ -45,7 +45,7 @@ do
       Spell(58984) -- Shadowmeld
     }
   }
-  local ThisUnit, _Abilities, _Special, _Remains
+  local ThisUnit, _Abilities, _Special, _Remains, _Predict
   local function _IsStealthed()
     if Spell.Rogue then
       local Assassination, Outlaw, Subtlety = Spell.Rogue.Assassination, Spell.Rogue.Outlaw, Spell.Rogue.Subtlety
@@ -83,8 +83,10 @@ do
         local Buffs = IsStealthedBuff[i]
         for j = 1, #Buffs do
           local Buff = Buffs[j]
-          if ThisUnit:BuffP(Buff) then
+          if _Predict and ThisUnit:BuffP(Buff) then
             return _Remains and (ThisUnit:BuffRemainsP(Buff) >= 0 and ThisUnit:BuffRemainsP(Buff) or 60) or true
+          elseif not _Predict and ThisUnit:Buff(Buff) then
+            return _Remains and (ThisUnit:BuffRemains(Buff) >= 0 and ThisUnit:BuffRemains(Buff) or 60) or true
           end
         end
       end
@@ -94,8 +96,14 @@ do
 
   function Player:IsStealthed(Abilities, Special, Remains)
     local Key = tostring(Abilites) .. "-" .. tostring(Special) .. "-" .. tostring(Remains)
-    ThisUnit, _Abilities, _Special, _Remains = self, Abilities, Special, Remains
+    ThisUnit, _Abilities, _Special, _Remains, _Predict = self, Abilities, Special, Remains, false
     return Cache.Get("MiscInfo", "IsStealthed", Key, _IsStealthed)
+  end
+
+  function Player:IsStealthedP(Abilities, Special, Remains)
+    local Key = tostring(Abilites) .. "-" .. tostring(Special) .. "-" .. tostring(Remains)
+    ThisUnit, _Abilities, _Special, _Remains, _Predict = self, Abilities, Special, Remains, true
+    return Cache.Get("MiscInfo", "IsStealthedP", Key, _IsStealthed)
   end
 end
 function Player:IsStealthedRemains(Abilities, Special)
