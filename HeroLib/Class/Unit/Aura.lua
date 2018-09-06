@@ -96,6 +96,9 @@ function Unit:BuffRemains(Spell, AnyCaster, Offset)
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
     end
+    if Spell:ID() == 115192 then
+      ExpirationTime = ExpirationTime - 0.3
+    end
     local Remains = ExpirationTime - HL.GetTime()
     return Remains >= 0 and Remains or 0
   else
