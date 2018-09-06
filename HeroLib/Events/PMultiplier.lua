@@ -108,7 +108,7 @@ function Spell:RegisterPMultiplier(...)
   -- Get the SpellID to check on AURA_APPLIED/AURA_REFRESH, should be specified as first arg or it'll take the current spell object.
   local SpellAura = self.SpellID
   if Args[1].SpellID then
-    SpellAura = table.remove(Args, 1)
+    SpellAura = table.remove(Args, 1).SpellID
   end
 
   ListenedAuras[SpellAura] = self.SpellID
