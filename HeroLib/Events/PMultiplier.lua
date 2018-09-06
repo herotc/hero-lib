@@ -70,7 +70,7 @@ HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, DestGUID, _, _, _, S
   if ListenedAura then
     local ListenedSpell = ListenedSpells[ListenedAura]
     if ListenedSpell and ListenedSpell.PMultiplier[DestGUID] then
-      ListenedSpell.PMultiplier[DestGUID] = nil
+      ListenedSpell.PMultiplier[DestGUID].Applied = false
     end
   end
 end, "SPELL_AURA_REMOVED")
