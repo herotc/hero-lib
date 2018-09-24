@@ -36,7 +36,7 @@ local function ParseBar(Bar, Override)
         local buttonActionType, buttonActionId = GetActionInfo(ActionButton_GetPagedID(Button))
         if buttonActionType == "macro" then
           --Item is a macro so check it plans to cast a spell
-          local _, _, macrospellid = GetMacroSpell(buttonActionId)
+          local macrospellid = GetMacroSpell(buttonActionId)
           --If it casts a spell change buttonTexture to that spell texture else to nil
           if macrospellid ~= nil then
             ButtonTexture = GetSpellTexture(macrospellid)
