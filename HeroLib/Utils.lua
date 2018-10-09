@@ -53,7 +53,9 @@ local CompareThisTable = {
   ["<"] = function(A, B) return A < B end,
   [">="] = function(A, B) return A >= B end,
   ["<="] = function(A, B) return A <= B end,
-  ["=="] = function(A, B) return A == B end
+  ["=="] = function(A, B) return A == B end,
+  ["min"] = function(A, B) return A < B end,
+  ["max"] = function(A, B) return A > B end,
 }
 function Utils.CompareThis(Operator, A, B)
   return CompareThisTable[Operator](A, B)
