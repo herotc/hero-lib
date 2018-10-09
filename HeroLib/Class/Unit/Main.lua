@@ -110,9 +110,8 @@ function Unit:IsInBossList(NPCID, HP)
   local NPCID = NPCID or self:NPCID()
   local HP = HP or 100
   local ThisUnit
-  for i = 1, #Boss do
-    ThisUnit = Boss[i]
-    if ThisUnit:NPCID() == NPCID and ThisUnit:HealthPercentage() <= HP then
+  for _, ThisUnit in pairs(Boss) do
+    if ThisUnit:Exists() and ThisUnit:NPCID() == NPCID and ThisUnit:HealthPercentage() <= HP then
       return true
     end
   end
