@@ -33,6 +33,7 @@ local UnitThreatSituation = UnitThreatSituation
 local GetUnitSpeed = GetUnitSpeed
 
 function Unit:Cache()
+  self.UseCache = false
   self.UnitExists = UnitExists(self.UnitID) or false
   self.UnitGUID = UnitGUID(self.UnitID)
   self.UnitName = UnitName(self.UnitID)
@@ -42,6 +43,7 @@ function Unit:Cache()
   -- IsDummy?
   -- IsAPlayer?
   -- Classification?
+  self.UseCache = true
 end
 
 --- ============================ CONTENT ============================
