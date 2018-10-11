@@ -311,3 +311,13 @@ function Spell:GCD()
   if not Gcd or Gcd == 0 then return 0 end
   return Gcd / 1000
 end
+
+-- active_dot.foo
+function Spell:ActiveDot()
+  if not Cache.Enemies[50] then HL.GetEnemies(50) end
+  local Active = 0
+  for _, Enemy in pairs(Cache.Enemies[50]) do
+    if Enemy:DebuffP(self) then Active = Active + 1 end
+  end
+  return Active
+end
