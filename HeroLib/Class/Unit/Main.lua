@@ -34,21 +34,15 @@ local GetUnitSpeed = GetUnitSpeed
 
 function Unit:Cache()
   local _UseCache = self.UseCache
-  if _UseCache then
-    self.UseCache = false
-  end
   self.UnitExists = UnitExists(self.UnitID) or false
   self.UnitGUID = UnitGUID(self.UnitID)
   self.UnitName = UnitName(self.UnitID)
   self.UnitCanBeAttacked = UnitCanAttack("player", self.UnitID) or false
-  self.UnitNPCID = self:NPCID()
+  self.UnitNPCID = self:NPCID(true)
   -- Level?
   -- IsDummy?
   -- IsAPlayer?
   -- Classification?
-  if _UseCache then
-    self.UseCache = true
-  end
 end
 
 --- ============================ CONTENT ============================
@@ -82,8 +76,8 @@ function Unit:Exists()
 end
 
 -- Get the unit NPC ID.
-function Unit:NPCID()
-  if self.UseCache and self.UnitNPCID then
+function Unit:NPCID(BypassCache)
+  if not BypassCache and self.UseCache and self.UnitNPCID then
     return self.UnitNPCID
   end
 
