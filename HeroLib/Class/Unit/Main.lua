@@ -130,7 +130,12 @@ end
 local DummyUnits = {
   -- City (SW, Orgri, ...)
   [31146] = true, -- Raider's Training Dummy
+  [31144] = true, -- Training Dummy
+  [32666] = true, -- Training Dummy
+  [32667] = true, -- Training Dummy
   [46647] = true, -- Training Dummy
+  -- MoP Shrine of Two Moons
+  [67127] = true, -- Training Dummy
   -- WoD Alliance Garrison
   [87317] = true, -- Mage Tower Damage Training Dummy
   [87318] = true, -- Mage Tower Damage Dungeoneer's Training Dummy (& Garrison)
@@ -143,25 +148,30 @@ local DummyUnits = {
   [87762] = true, -- Mage Tower Damage Raider's Training Dummy
   [88288] = true, -- Tanking Dungeoneer's Training Dummy
   [88289] = true, -- Healing Training Dummy ----> FRIENDLY
-  -- Rogue Class Order Hall
+  -- Legion Rogue Class Order Hall
   [92164] = true, -- Training Dummy
   [92165] = true, -- Dungeoneer's Training Dummy
   [92166] = true, -- Raider's Training Dummy
-  -- Priest Class Order Hall
+  -- Legion Priest Class Order Hall
   [107555] = true, -- Bound void Wraith
   [107556] = true, -- Bound void Walker
-  -- Druid Class Order Hall
+  -- Legion Druid Class Order Hall
   [113964] = true, -- Raider's Training Dummy
   [113966] = true, -- Dungeoneer's Training Dummy
-  -- Warlock Class Order Hall
+  -- Legion Warlock Class Order Hall
   [102052] = true, -- Rebellious imp
   [102048] = true, -- Rebellious Felguard
   [102045] = true, -- Rebellious WrathGuard
   [101956] = true, -- Rebellious Fel Lord
-  -- Mage Class Order Hall
+  -- Legion Mage Class Order Hall
   [103397] = true, -- Greater Bullwark Construct
   [103404] = true, -- Bullwark Construct
-  [103402] = true -- Lesser Bullwark Construct
+  [103402] = true, -- Lesser Bullwark Construct
+  -- BfA Dazar'Alor
+  [144081] = true, -- Training Dummy
+  [144082] = true, -- Training Dummy
+  [144085] = true, -- Training Dummy
+  [144086] = true -- Raider's Training Dummy
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
