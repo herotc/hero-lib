@@ -53,7 +53,7 @@ do
   Unit.Pet = Unit("pet")
   Unit.Target = Unit("target", true)
   Unit.Focus = Unit("focus", true)
-  Unit.MouseOver = Unit("mouseover", true)
+  Unit.MouseOver = Unit("mouseover")
   Unit.Vehicle = Unit("vehicle")
   -- Iterable Units
   local UnitIDs = {

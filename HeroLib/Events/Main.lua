@@ -467,18 +467,6 @@ do
   end, "PLAYER_FOCUS_CHANGED")
 end
 
--- Player Mouseover Updated
-do
-  local MouseOver = Unit.MouseOver
-  HL:RegisterForEvent(function(Event)
-    if Event == "UPDATE_MOUSEOVER_UNIT" then
-      MouseOver:Cache()
-    elseif MouseOver:GUID() then
-      MouseOver:Init()
-    end
-  end, "UPDATE_MOUSEOVER_UNIT", "CURSOR_UPDATE")
-end
-
 -- Arena Unit Updated
 do
   local ArenaUnits = Unit["Arena"]
