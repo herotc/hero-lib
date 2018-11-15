@@ -66,7 +66,7 @@ do
   local GetInstanceInfo = GetInstanceInfo
   local function _GetInstanceInfo() return { GetInstanceInfo() } end
 
-  function Player:InstanceInfo()
+  function Player:InstanceInfo(Index)
     local GUID = self:GUID()
     if GUID then
       local Infos = Cache.Get("UnitInfo", GUID, "InstanceInfo", _GetInstanceInfo)
