@@ -240,7 +240,7 @@ function Spell:CostInfo(Index, Key)
   if not Key or type(Key) ~= "string" then error("Invalid Key.") end
   -- {hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec}
   local PowerCost = GetSpellPowerCost(self.SpellID)
-  return PowerCost[Index] and PowerCost[Index][Key] and PowerCost[Index][Key] or nil
+  return PowerCost and PowerCost[Index] and PowerCost[Index][Key] and PowerCost[Index][Key] or nil
 end
 
 -- action.foo.cost
