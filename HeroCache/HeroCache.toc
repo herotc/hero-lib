@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 80100
 
 ## Title: Hero|cFFA330C9Cache|r
 ## Author: HeroTC, Aethys
