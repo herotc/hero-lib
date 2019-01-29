@@ -399,7 +399,7 @@ do
   end
 
   -- rune
-  function Player:Runes()
+  function Player:Rune()
     local Count = 0
     for i = 1, 6 do
       if ComputeRuneCooldown(i) == 0 then
