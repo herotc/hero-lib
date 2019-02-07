@@ -223,12 +223,12 @@ local function CreateButton(Parent, Setting, Text, Tooltip, Action, Width, Heigh
   if Width then
     Button:SetWidth(Width)
   else
-    Button:SetWidth(20)
+    Button:SetWidth(150)
   end
   if Height then
     Button:SetHeight(Height)
   else
-    Button:SetHeight(150)
+    Button:SetHeight(20)
   end
 
   -- Frame init
