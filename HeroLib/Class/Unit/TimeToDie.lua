@@ -79,7 +79,7 @@ function HL.TTDRefresh()
           local Values = UnitTable[1]
           local Time = CurrentTime - UnitTable[2]
           -- Check if the % HP changed since the last check (or if there were none)
-          if not Values or HealthPercentage ~= Values[2] then
+          if #Values == 0 or HealthPercentage ~= Values[1][2] then
             local Value
             local LastIndex = #Cache
             -- Check if we can re-use a table from the cache
