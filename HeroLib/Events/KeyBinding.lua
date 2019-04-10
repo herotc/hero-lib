@@ -97,12 +97,12 @@ local function FindKeyBindings()
     elseif _G.ElvUI and _G.ElvUI[1].ActionBars then
       -- ElvUI
       BarNames = {
-        [1] = { "ElvUI_Bar1Button", _G.ElvUI[1].ActionBars.db.bar1.buttons },
-        [2] = { "ElvUI_Bar2Button", _G.ElvUI[1].ActionBars.db.bar2.buttons },
-        [3] = { "ElvUI_Bar3Button", _G.ElvUI[1].ActionBars.db.bar3.buttons },
-        [4] = { "ElvUI_Bar4Button", _G.ElvUI[1].ActionBars.db.bar4.buttons },
-        [5] = { "ElvUI_Bar5Button", _G.ElvUI[1].ActionBars.db.bar5.buttons },
-        [6] = { "ElvUI_Bar6Button", _G.ElvUI[1].ActionBars.db.bar6.buttons },
+        [1] = { "ElvUI_Bar1Button", _G.ElvUI[1].db.actionbar.bar1.buttons },
+        [2] = { "ElvUI_Bar2Button", _G.ElvUI[1].db.actionbar.bar2.buttons },
+        [3] = { "ElvUI_Bar3Button", _G.ElvUI[1].db.actionbar.bar3.buttons },
+        [4] = { "ElvUI_Bar4Button", _G.ElvUI[1].db.actionbar.bar4.buttons },
+        [5] = { "ElvUI_Bar5Button", _G.ElvUI[1].db.actionbar.bar5.buttons },
+        [6] = { "ElvUI_Bar6Button", _G.ElvUI[1].db.actionbar.bar6.buttons },
       }
     else
       -- Default UI
