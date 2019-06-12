@@ -97,7 +97,8 @@ end
 -- Make a dropdown
 local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   -- Constructor
-  local Dropdown = CreateFrame("Button", "$parent_" .. Setting, Parent, "L_UIDropDownMenuTemplate")
+  --local Dropdown = CreateFrame("Button", "$parent_" .. Setting, Parent, "L_UIDropDownMenuTemplate")
+  local Dropdown = L_Create_UIDropDownMenu("$parent_" .. Setting, Parent)
   Parent[Setting] = Dropdown
   Dropdown.SettingTable, Dropdown.SettingKey = FindSetting(Parent.SettingsTable, strsplit(".", Setting))
   Dropdown.SavedVariablesTable, Dropdown.SavedVariablesKey = Parent.SavedVariablesTable, Setting
