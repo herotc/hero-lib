@@ -62,7 +62,6 @@ Class\Item.lua
 
 # Misc
 Misc\ToSort.lua
-Misc\Enemies.lua
 
 # Events
 Events\Main.lua
@@ -71,5 +70,8 @@ Events\PMultiplier.lua
 Events\Prev_Spell.lua
 Events\KeyBinding.lua
 Events\InFlight.lua
+
+# Enemy Tracking
+Misc\Enemies.lua
 
 Main.lua
