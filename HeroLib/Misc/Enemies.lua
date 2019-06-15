@@ -111,7 +111,7 @@ do
     end
   end
 
-  HL:RegisterForSelfCombatEvent(UpdateAbilityCache, "SPELL_DAMAGE");
+  HL:RegisterForSelfCombatEvent(UpdateAbilityCache, "SPELL_DAMAGE", "SPELL_PERIODIC_DAMAGE");
   HL:RegisterForPetCombatEvent(UpdateAbilityCache, "SPELL_DAMAGE");
 end
 
@@ -183,7 +183,7 @@ local function UpdateSplashCount(UpdateUnit, SplashRange)
 
   --Prevent calling Get Enemies twice
   if not EnemiesCount[MaxRange] then
-    CountEnemies(MaxRange);
+    UpdateEnemiesCount(MaxRange);
   end
 
   -- Use the Enemies Cache as the starting point
