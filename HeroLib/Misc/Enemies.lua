@@ -182,12 +182,12 @@ local function UpdateSplashCount(UpdateUnit, SplashRange)
   local MinRange = EffectiveRangeSanitizer(Distance-SplashRange);
 
   --Prevent calling Get Enemies twice
-  if not EnemiesCount[MaxRange] then
-    UpdateEnemiesCount(MaxRange);
+  if not EnemiesCount[SplashRange] then
+    UpdateEnemiesCount(SplashRange);
   end
 
   -- Use the Enemies Cache as the starting point
-  local TotalEnemies = Enemies[MaxRange]
+  local TotalEnemies = Enemies[SplashRange]
   local CurrentCount = 0
   for _, Enemy in pairs(TotalEnemies) do
     --Units that are outside of the parameters or havent been seen lately get removed
