@@ -8,6 +8,7 @@ local Cache = HeroCache
 local error = error
 local setmetatable = setmetatable
 local stringformat = string.format
+local tableinsert = table.insert
 -- File Locals
 
 
@@ -90,6 +91,33 @@ do
     self.LastHitTime = 0
     self.LastAppliedOnPlayerTime = 0
     self.LastRemovedFromPlayerTime = 0
+  end
+end
+
+do
+  local MultiSpell = Class()
+  HL.MultiSpell = MultiSpell
+  function MultiSpell:New(...)
+    local Arg = {...}
+    self.SpellTable = {}
+    for _, Spell in pairs(Arg) do
+      if type(Spell) == "number" then
+        Spell = HL.Spell(Spell)
+      end
+      if type(Spell.SpellID) ~= "number" then error("Invalid SpellID.") end
+      tableinsert(self.SpellTable, Spell)
+    end
+    function MultiSpell:Update()
+      for i, Spell in pairs(self.SpellTable) do
+        if Spell:IsLearned() or (i == #self.SpellTable) then
+          Spell.Update = self.Update
+          setmetatable(self, {__index = Spell})
+          break
+        end
+      end
+    end
+    self:AddToMultiSpells()
+    self:Update()
   end
 end
 

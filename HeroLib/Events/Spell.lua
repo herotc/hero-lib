@@ -9,6 +9,7 @@ local Player = Unit.Player
 local Pet = Unit.Pet
 local Target = Unit.Target
 local Spell = HL.Spell
+local MultiSpell = HL.MultiSpell
 local Item = HL.Item
 -- Lua
 local pairs = pairs
@@ -20,8 +21,7 @@ local Custom = {
   Whitelist = {},
   Blacklist = {}
 }
-
-
+local MultiSpells = {}
 --- ============================ CONTENT ============================
 
 -- Player On Cast Success Listener
@@ -106,3 +106,13 @@ end
 function Spell:RemoveFromListenedSpells()
   tableinsert(Custom.Blacklist, self.SpellID)
 end
+
+function MultiSpell:AddToMultiSpells()
+  tableinsert(MultiSpells, self)
+end
+
+HL:RegisterForEvent(function(Event, Arg1)
+  for _, MultiSpell in pairs(MultiSpells) do
+    MultiSpell:Update()
+  end
+end, "PLAYER_LOGIN", "SPELLS_CHANGED")
