@@ -74,6 +74,12 @@ do
       return self:ManaRegen() * (self:GCDRemains() + (Offset or 0))
     end
   end
+  
+  -- mana.time_to_max
+  function Player:ManaTimeToMax()
+    if self:ManaRegen() == 0 then return -1 end
+    return self:ManaDeficit() / self:ManaRegen()
+  end
 
   -- Mana Predicted with current cast
   function Player:ManaP()
