@@ -135,6 +135,7 @@ function Unit:TimeToX(Percentage, MinSamples)
   -- Solve to find a and b, satisfying y = a + bx
   -- Matrix arithmetic has been expanded and solved to make the following operation as fast as possible
   if UnitTable then
+    local MinSamples = MinSamples or 3
     local Values = UnitTable[1]
     local n = #Values
     if n > MinSamples then

@@ -41,7 +41,31 @@ do
     self:Init()
   end
 
+  local UnitGUIDMap = {}
+  HL.UnitGUIDMap = UnitGUIDMap
+  function Unit:RemoveUnitGUIDMapEntry()
+    if UnitGUIDMap[self.UnitGUID] and UnitGUIDMap[self.UnitGUID][self.UnitID] then
+      UnitGUIDMap[self.UnitGUID][self.UnitID] = nil;
+      if next(UnitGUIDMap[self.UnitGUID]) == nil then
+        UnitGUIDMap[self.UnitGUID] = nil
+      end
+    end
+  end
+
+  function Unit:AddUnitGUIDMapEntry()
+    if not self.UnitGUID or not self.UnitID then
+      return
+    end
+    if not UnitGUIDMap[self.UnitGUID] then
+      UnitGUIDMap[self.UnitGUID] = {}
+    end
+    if not UnitGUIDMap[self.UnitGUID][self.UnitID] then
+      UnitGUIDMap[self.UnitGUID][self.UnitID] = self
+    end
+  end
+
   function Unit:Init()
+    self:RemoveUnitGUIDMapEntry()
     self.UnitExists = false
     self.UnitGUID = nil
     self.UnitNPCID = nil

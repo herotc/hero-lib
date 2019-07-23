@@ -4,7 +4,7 @@
 local addonName, HL = ...
 -- HeroLib
 local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
+local Unit, UnitGUIDMap = HL.Unit, HL.UnitGUIDMap
 local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
 local Focus, MouseOver = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
@@ -33,12 +33,15 @@ local UnitThreatSituation = UnitThreatSituation
 local GetUnitSpeed = GetUnitSpeed
 
 function Unit:Cache()
-  local _UseCache = self.UseCache
+  self:RemoveUnitGUIDMapEntry()
   self.UnitExists = UnitExists(self.UnitID) or false
   self.UnitGUID = UnitGUID(self.UnitID)
   self.UnitName = UnitName(self.UnitID)
   self.UnitCanBeAttacked = UnitCanAttack("player", self.UnitID) or false
   self.UnitNPCID = self:NPCID(true)
+  if self.UnitGUID and self.UnitID then
+    self:AddUnitGUIDMapEntry()
+  end
   -- Level?
   -- IsDummy?
   -- IsAPlayer?

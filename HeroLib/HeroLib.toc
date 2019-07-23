@@ -70,6 +70,7 @@ Events\PMultiplier.lua
 Events\Prev_Spell.lua
 Events\KeyBinding.lua
 Events\InFlight.lua
+Events\Aura.lua
 
 # Enemy Tracking
 Misc\Enemies.lua
