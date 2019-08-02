@@ -93,6 +93,12 @@ HL:RegisterForEvent(function()
   ScanAurasOnUnit(Target)
 end, "PLAYER_TARGET_CHANGED")
 
+-- Unregister all tracked spells
+function HL.UnregisterAuraTracking()
+  HL.Debug("ClearAuraTracking()")
+  ListenedAuras = {}
+end
+
 -- Register a spell to watch the aura status across multiple target units
 function Spell:RegisterAuraTracking()
   if ListenedAuras[self.SpellID] then

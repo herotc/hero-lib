@@ -260,6 +260,15 @@ function HL.RegisterNucleusAbility(AbilityId, AbilityRange, AbilityTimeout)
   end
 end
 
+function HL.UnregisterNucleusAbilities()
+  HL.Debug("UnregisterNucleusAbilities()")
+  HL.RangeTracker = {
+    AbilityTimeout = 1,
+    NucleusAbilities = {},
+    SplashableCount = {}
+  }
+end
+
 --- ============================ CONTENT ============================
 -- Fill the Enemies Cache table.
 function HL.GetEnemies(Distance, AoESpell, UseSplashData, SplashTargetUnit)
