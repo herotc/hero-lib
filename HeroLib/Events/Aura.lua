@@ -95,7 +95,7 @@ end, "PLAYER_TARGET_CHANGED")
 
 -- Unregister all tracked spells
 function HL.UnregisterAuraTracking()
-  HL.Debug("ClearAuraTracking()")
+  HL.Debug("UnregisterAuraTracking()")
   ListenedAuras = {}
 end
 

@@ -66,7 +66,7 @@ do
   -- Debug print with HL Prefix
   function HL.Debug(...)
     if Setting.DebugMode then
-      print("[|cFFFF6600AC Debug|r]", ...)
+      print("[|cFFFF6600Hero Lib Debug|r]", ...)
     end
   end
 end
