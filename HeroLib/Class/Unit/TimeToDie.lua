@@ -249,13 +249,37 @@ function Unit:TimeToDie(MinSamples)
   return 11111
 end
 
+-- Get the boss unit TimeToDie
+function Unit:BossTimeToDie(MinSamples)
+  if self:IsInBossList() or self:IsDummy() then
+    return self:TimeToDie(MinSamples)
+  end
+  return 11111
+end
+
 -- Get if the unit meets the TimeToDie requirements.
 function Unit:FilteredTimeToDie(Operator, Value, Offset, ValueThreshold, MinSamples)
   local TTD = self:TimeToDie(MinSamples)
   return TTD < (ValueThreshold or 7777) and Utils.CompareThis(Operator, TTD + (Offset or 0), Value) or false
 end
 
+-- Get if the boss unit meets the TimeToDie requirements.
+function Unit:BossFilteredTimeToDie(Operator, Value, Offset, ValueThreshold, MinSamples)
+  if self:IsInBossList() or self:IsDummy() then
+    return self:FilteredTimeToDie(Operator, Value, Offset, ValueThreshold, MinSamples)
+  end
+  return false
+end
+
 -- Get if the Time To Die is Valid for an Unit (i.e. not returning a warning code).
 function Unit:TimeToDieIsNotValid(MinSamples)
   return self:TimeToDie(MinSamples) >= 7777
+end
+
+-- Get if the Time To Die is Valid for a boss Unit (i.e. not returning a warning code or not being a boss).
+function Unit:BossTimeToDieIsNotValid(MinSamples)
+  if self:IsInBossList() then
+    return self:TimeToDieIsNotValid(MinSamples)
+  end
+  return true
 end
