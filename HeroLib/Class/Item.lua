@@ -212,3 +212,8 @@ end
 function Item:LastCastTime()
   return self.LastCastTime
 end
+
+-- Get whether an item is equipped and ready to be used
+function Item:IsEquipReady()
+  return (self:IsEquipped() and self:IsReady())
+end
