@@ -96,7 +96,8 @@ function Unit:BuffRemains(Spell, AnyCaster, Offset)
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
     end
-    if Spell:ID() == 115192 then
+    -- Stealth-like buffs (Subterfurge and Master Assassin) are delayed but within aura latency
+    if Spell:ID() == 115192 or Spell:ID() == 256735 then
       ExpirationTime = ExpirationTime - 0.3
     end
     local Remains = ExpirationTime - HL.GetTime()
