@@ -152,15 +152,9 @@ end
 
 -- Get the cost of the current cast
 function Unit:CastCost()
-  if self:CastID() and self:CastID() ~= -1 then
-    if not Cache.SpellInfo[self:CastID()] then Cache.SpellInfo[self:CastID()] = {} end
-    if not Cache.SpellInfo[self:CastID()].CostInfo then
-      -- hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec
-      Cache.SpellInfo[self:CastID()].CostInfo = GetSpellPowerCost(self:CastID())
-    end
-    if Cache.SpellInfo[self:CastID()].CostInfo[1] then
-      return Cache.SpellInfo[self:CastID()].CostInfo[1]["cost"]
-    end
+  local CastID = self:CastID()
+  if CastID and CastID ~= -1 then
+    return Spell(CastID):CostInfo(1, "cost")
   end
   return 0
 end

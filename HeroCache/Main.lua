@@ -248,8 +248,8 @@ local CacheImpl = MakeCache(Cache)
 -- Returns the value or nil if it's not cached.
 -- If the last argument is a function then the value is set to its return if it's nil.
 -- Typical usage is:
---    return Cache.Get("SpellInfo", 53, "CostInfo") -- if you need only the cached value
---    return Cache.Get("SpellInfo", 53, "CostInfo",
+--    return Cache.Get("SpellInfo", 53, "CostTable") -- if you need only the cached value
+--    return Cache.Get("SpellInfo", 53, "CostTable",
 --                     function() return GetSpellPowerCost(53)[1] end) -- if you have a "fallback" value
 function Cache.Get(...)
   if HeroCacheDB.Enabled then
@@ -266,7 +266,7 @@ end
 
 -- Public function to assign a value in the cache from a given path.
 -- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
--- Typical usage is : return Cache.Set("SpellInfo", 53, "CostInfo", GetSpellPowerCost(53)[1]);
+-- Typical usage is : return Cache.Set("SpellInfo", 53, "CostTable", GetSpellPowerCost(53)[1]);
 function Cache.Set(...)
   return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
 end
