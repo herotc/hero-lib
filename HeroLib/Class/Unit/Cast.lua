@@ -142,10 +142,12 @@ end
 -- By default for channeling, it returns total - progress, if ReverseChannel is true it'll return only progress.
 function Unit:CastPercentage(ReverseChannel)
   if self:IsCasting() then
-    return (HL.GetTime() - self:CastStart()) / (self:CastEnd() - self:CastStart()) * 100
+    local CastStart = self:CastStart()
+    return (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
   end
   if self:IsChanneling() then
-    return ReverseChannel and (HL.GetTime() - self:CastStart()) / (self:CastEnd() - self:CastStart()) * 100 or 100 - (HL.GetTime() - self:CastStart()) / (self:CastEnd() - self:CastStart()) * 100
+    local CastStart = self:CastStart()
+    return ReverseChannel and (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100 or 100 - (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
   end
   return 0
 end

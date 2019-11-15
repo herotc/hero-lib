@@ -70,19 +70,21 @@ function Spell:Info(Type, Index)
   else
     error("Spell Info Type Missing.")
   end
-  if Identifier then
-    if not Cache.SpellInfo[Identifier] then Cache.SpellInfo[Identifier] = {} end
-    if not Cache.SpellInfo[Identifier].Info then
-      Cache.SpellInfo[Identifier].Info = { GetSpellInfo(Identifier) }
-    end
-    if Index then
-      return Cache.SpellInfo[Identifier].Info[Index]
-    else
-      return unpack(Cache.SpellInfo[Identifier].Info)
-    end
-  else
-    error("Identifier Not Found.")
+  if not Identifier then error("Identifier Not Found.") end
+
+  local SpellInfo = Cache.SpellInfo[Identifier]
+  if not SpellInfo then
+    Cache.SpellInfo[Identifier] = {}
+    SpellInfo = Cache.SpellInfo[Identifier]
   end
+
+  local Info = Cache.SpellInfo[Identifier].Info
+  if not Info then
+    Cache.SpellInfo[Identifier].Info = { GetSpellInfo(Identifier) }
+    Info = Cache.SpellInfo[Identifier].Info
+  end
+
+  return Index and Info[Index] or unpack(Info)
 end
 
 -- Get the spell Info from the spell ID.
@@ -221,35 +223,33 @@ end
 
 -- action.foo.cast_time
 function Spell:CastTime()
-  if not self:InfoID(4) then
-    return 0
-  else
-    return self:InfoID(4) / 1000
-  end
+  local CastTime = self:InfoID(4)
+
+  return CastTime and self:InfoID(4) / 1000 or 0
 end
 
 -- action.foo.execute_time
 function Spell:ExecuteTime()
-  if self:CastTime() > Player:GCD() then
-    return self:CastTime()
-  else
-    return Player:GCD()
+  local CastTime = self:CastTime()
+  local GCD = Player:GCD()
 
+  return CastTime > GCD and CastTime or GCD
+end
 
 -- Get the CostTable using GetSpellPowerCost.
 function Spell:CostTable()
   local SpellID = self.SpellID
   local SpellInfo = Cache.SpellInfo[SpellID]
   if not SpellInfo then
-    Cache.SpellInfo[SpellID] = {}
-    SpellInfo = Cache.SpellInfo[SpellID]
+    SpellInfo = {}
+    Cache.SpellInfo[SpellID] = SpellInfo
   end
 
   local CostTable = SpellInfo.CostTable
   if not CostTable then
     -- {hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec}
-    SpellInfo.CostTable = GetSpellPowerCost(SpellID)
-    CostTable = SpellInfo.CostTable
+    CostTable = GetSpellPowerCost(SpellID)
+    SpellInfo.CostTable = CostTable
   end
 
   return CostTable
@@ -268,7 +268,8 @@ end
 function Spell:Cost(Index)
   local Index = Index or 1
   local Cost = self:CostInfo(Index, "cost")
-  return Cost and Cost or 0
+
+  return Cost or 0
 end
 
 -- action.foo.tick_time
