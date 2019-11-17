@@ -90,15 +90,19 @@ function Unit:NPCID(BypassCache)
       UnitInfo = {}
       Cache.UnitInfo[GUID] = UnitInfo
     end
-    if not UnitInfo.NPCID then
+
+    local NPCID = UnitInfo.NPCID
+    if not NPCID then
       local type, _, _, _, _, npcid = strsplit('-', GUID)
       if type == "Creature" or type == "Pet" or type == "Vehicle" then
-        UnitInfo.NPCID = tonumber(npcid)
+        NPCID = tonumber(npcid)
       else
-        UnitInfo.NPCID = -2
+        NPCID = -2
       end
+      UnitInfo.NPCID = NPCID
     end
-    return UnitInfo.NPCID
+
+    return NPCID
   end
   return -1
 end

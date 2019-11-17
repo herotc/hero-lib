@@ -31,16 +31,23 @@ do
   function Player:GCD()
     local GUID = self:GUID()
     if GUID then
-      local UnitInfo = Cache.UnitInfo[GUID] if not UnitInfo then UnitInfo = {} Cache.UnitInfo[GUID] = UnitInfo end
-      if not UnitInfo.GCD then
+      local UnitInfo = Cache.UnitInfo[GUID]
+      if not UnitInfo then
+        UnitInfo = {}
+        Cache.UnitInfo[GUID] = UnitInfo
+      end
+
+      local GCD = UnitInfo.GCD
+      if not GCD then
         if GCD_OneSecond[Cache.Persistent.Player.Spec[1]] then
-          UnitInfo.GCD = 1
+          GCD = 1
         else
           local GCD_Value = 1.5 / (1 + self:HastePct() / 100)
-          UnitInfo.GCD = GCD_Value > 0.75 and GCD_Value or 0.75
+          GCD = GCD_Value > 0.75 and GCD_Value or 0.75
         end
+        UnitInfo.GCD = GCD
       end
-      return UnitInfo.GCD
+      return GCD
     end
   end
 end

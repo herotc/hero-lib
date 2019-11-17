@@ -13,6 +13,9 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local unpack = unpack
+-- WoW API
+local UnitBuff = UnitBuff
+local UnitDebuff = UnitDebuff
 -- File Locals
 
 
@@ -22,7 +25,6 @@ local unpack = unpack
 do
   --  1      2     3      4            5           6             7           8           9                      10          11          12            13                14            15       16     17      18
   -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-  local UnitBuff = UnitBuff
   local UnitID
   local function _UnitBuff()
     local Buffs = {}
@@ -34,30 +36,24 @@ do
     return Buffs
   end
 
-  function Unit:Buff(Spell, Index, AnyCaster)
+  function Unit:Buff(ThisSpell, Index, AnyCaster)
     local GUID = self:GUID()
-    if GUID then
-      UnitID = self.UnitID
-      local Buffs = Cache.Get("UnitInfo", GUID, "Buffs", _UnitBuff)
-      for i = 1, #Buffs do
-        local Buff = Buffs[i]
-        if Spell:ID() == Buff[10] then
-          local Caster = Buff[7]
-          if AnyCaster or Caster == "player" then
-            if Index then
-              if type(Index) == "number" then
-                return Buff[Index]
-              else
-                return unpack(Buff)
-              end
-            else
-              return true
-            end
-          end
+    if not GUID then return false end
+
+    UnitID = self.UnitID
+    local SpellID = ThisSpell:ID()
+    local Buffs = Cache.Get("UnitInfo", GUID, "Buffs", _UnitBuff)
+    for i = 1, #Buffs do
+      local Buff = Buffs[i]
+      if SpellID == Buff[10] then
+        local Caster = Buff[7]
+        if AnyCaster or Caster == "player" then
+          if not Index then return true end
+          if type(Index) == "number" then return Buff[Index] end
+          return unpack(Buff)
         end
       end
     end
-    return false
   end
 end
 
@@ -66,14 +62,14 @@ end
   * @desc Get if the buff is down.
   * @simc buff.foo.down
   *
-  * @param {object} Spell - Spell to check.
+  * @param {object} ThisSpell - Spell to check.
   * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
   * @param {boolean} [AnyCaster] - Check from any caster ?
   *
   * @returns {boolean}
   *]]
-function Unit:BuffDown(Spell, Index, AnyCaster)
-  return (not self:Buff(Spell, Index, AnyCaster))
+function Unit:BuffDown(ThisSpell, Index, AnyCaster)
+  return (not self:Buff(ThisSpell, Index, AnyCaster))
 end
 
 --[[*
@@ -81,23 +77,26 @@ end
   * @desc Get the remaining time, if there is any, on a buff.
   * @simc buff.foo.remains
   *
-  * @param {object} Spell - Spell to check.
+  * @param {object} ThisSpell - Spell to check.
   * @param {boolean} [AnyCaster] - Check from any caster ?
   * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
   *
   * @returns {number}
   *]]
-function Unit:BuffRemains(Spell, AnyCaster, Offset)
-  local ExpirationTime = self:Buff(Spell, 6, AnyCaster)
+function Unit:BuffRemains(ThisSpell, AnyCaster, Offset)
+  local ExpirationTime = self:Buff(ThisSpell, 6, AnyCaster)
   if ExpirationTime then
     if ExpirationTime == 0 then
       return 9999
     end
+
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
     end
+
     -- Stealth-like buffs (Subterfurge and Master Assassin) are delayed but within aura latency
-    if Spell:ID() == 115192 or Spell:ID() == 256735 then
+    local SpellID = ThisSpell:ID()
+    if SpellID == 115192 or SpellID == 256735 then
       ExpirationTime = ExpirationTime - 0.3
     end
     local Remains = ExpirationTime - GetTime()
@@ -116,26 +115,26 @@ end
   *
   * @returns {number}
   *]]
-function Unit:BuffRemainsP(Spell, AnyCaster, Offset)
-  return self:BuffRemains(Spell, AnyCaster, Offset or "Auto")
+function Unit:BuffRemainsP(ThisSpell, AnyCaster, Offset)
+  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto")
 end
 
-function Unit:BuffP(Spell, AnyCaster, Offset)
-  return self:BuffRemains(Spell, AnyCaster, Offset or "Auto") > 0
+function Unit:BuffP(ThisSpell, AnyCaster, Offset)
+  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto") > 0
 end
 
-function Unit:BuffDownP(Spell, AnyCaster, Offset)
-  return self:BuffRemains(Spell, AnyCaster, Offset or "Auto") == 0
+function Unit:BuffDownP(ThisSpell, AnyCaster, Offset)
+  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto") == 0
 end
 
 -- buff.foo.duration
-function Unit:BuffDuration(Spell, AnyCaster)
-  return self:Buff(Spell, 5, AnyCaster) or 0
+function Unit:BuffDuration(ThisSpell, AnyCaster)
+  return self:Buff(ThisSpell, 5, AnyCaster) or 0
 end
 
 -- buff.foo.stack
-function Unit:BuffStack(Spell, AnyCaster)
-  return self:Buff(Spell, 3, AnyCaster) or 0
+function Unit:BuffStack(ThisSpell, AnyCaster)
+  return self:Buff(ThisSpell, 3, AnyCaster) or 0
 end
 
 --[[*
@@ -147,17 +146,17 @@ end
   *
   * @returns {number}
   *]]
-function Unit:BuffStackP(Spell, AnyCaster, Offset)
-  if self:BuffRemainsP(Spell, AnyCaster, Offset) then
-    return self:BuffStack(Spell, AnyCaster)
+function Unit:BuffStackP(ThisSpell, AnyCaster, Offset)
+  if self:BuffRemainsP(ThisSpell, AnyCaster, Offset) then
+    return self:BuffStack(ThisSpell, AnyCaster)
   else
     return 0
   end
 end
 
 -- buff.foo.refreshable (doesn't exists on SimC atm tho)
-function Unit:BuffRefreshable(Spell, PandemicThreshold, AnyCaster, Offset)
-  return self:BuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold
+function Unit:BuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset)
+  return self:BuffRemains(ThisSpell, AnyCaster, Offset) <= PandemicThreshold
 end
 
 --[[*
@@ -169,8 +168,8 @@ end
   *
   * @returns {number}
   *]]
-function Unit:BuffRefreshableP(Spell, PandemicThreshold, AnyCaster, Offset)
-  return self:BuffRefreshable(Spell, PandemicThreshold, AnyCaster, Offset or "Auto")
+function Unit:BuffRefreshableP(ThisSpell, PandemicThreshold, AnyCaster, Offset)
+  return self:BuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset or "Auto")
 end
 
 --[[*
@@ -182,8 +181,8 @@ end
   *
   * @returns {number}
   *]]
-function Unit:BuffRefreshableC(Spell, AnyCaster, Offset)
-  return self:BuffRefreshable(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
+function Unit:BuffRefreshableC(ThisSpell, AnyCaster, Offset)
+  return self:BuffRefreshable(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
 end
 
 --[[*
@@ -195,17 +194,17 @@ end
   *
   * @returns {number}
   *]]
-function Unit:BuffRefreshableCP(Spell, AnyCaster, Offset)
-  return self:BuffRefreshableP(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
+function Unit:BuffRefreshableCP(ThisSpell, AnyCaster, Offset)
+  return self:BuffRefreshableP(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
 end
 
 -- hot.foo.ticks_remain
-function Unit:BuffTicksRemainP(Spell)
-  local Remains = self:BuffRemainsP(Spell)
+function Unit:BuffTicksRemainP(ThisSpell)
+  local Remains = self:BuffRemainsP(ThisSpell)
   if Remains == 0 then
     return 0
   else
-    return math.ceil(Remains / Spell:TickTime())
+    return math.ceil(Remains / ThisSpell:TickTime())
   end
 end
 
@@ -213,7 +212,6 @@ end
 do
   --  1     2      3         4          5           6           7           8                   9              10         11            12           13               14            15       16      17      18
   -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-  local UnitDebuff = UnitDebuff
   local UnitID
   local function _UnitDebuff()
     local Debuffs = {}
@@ -225,25 +223,19 @@ do
     return Debuffs
   end
 
-  function Unit:Debuff(Spell, Index, AnyCaster)
+  function Unit:Debuff(ThisSpell, Index, AnyCaster)
     local GUID = self:GUID()
     if GUID then
       UnitID = self.UnitID
       local Debuffs = Cache.Get("UnitInfo", GUID, "Debuffs", _UnitDebuff)
       for i = 1, #Debuffs do
         local Debuff = Debuffs[i]
-        if Spell:ID() == Debuff[10] then
+        if ThisSpell:ID() == Debuff[10] then
           local Caster = Debuff[7]
           if AnyCaster or Caster == "player" or Caster == "pet" then
-            if Index then
-              if type(Index) == "number" then
-                return Debuff[Index]
-              else
-                return unpack(Debuff)
-              end
-            else
-              return true
-            end
+            if not Index then return true end
+            if type(Index) == "number" then return Debuff[Index] end
+            return unpack(Debuff)
           end
         end
       end
@@ -257,14 +249,14 @@ end
   * @desc Get if the debuff is down.
   * @simc debuff.foo.down
   *
-  * @param {object} Spell - Spell to check.
+  * @param {object} ThisSpell - Spell to check.
   * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
   * @param {boolean} [AnyCaster] - Check from any caster ?
   *
   * @returns {boolean}
   *]]
-function Unit:DebuffDown(Spell, Index, AnyCaster)
-  return (not self:Debuff(Spell, Index, AnyCaster))
+function Unit:DebuffDown(ThisSpell, Index, AnyCaster)
+  return (not self:Debuff(ThisSpell, Index, AnyCaster))
 end
 
 --[[*
@@ -272,14 +264,14 @@ end
   * @desc Get the remaining time, if there is any, on a debuff.
   * @simc debuff.foo.remains, dot.foo.remains
   *
-  * @param {object} Spell - Spell to check.
+  * @param {object} ThisSpell - Spell to check.
   * @param {boolean} [AnyCaster] - Check from any caster ?
   * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
   *
   * @returns {number}
   *]]
-function Unit:DebuffRemains(Spell, AnyCaster, Offset)
-  local ExpirationTime = self:Debuff(Spell, 6, AnyCaster)
+function Unit:DebuffRemains(ThisSpell, AnyCaster, Offset)
+  local ExpirationTime = self:Debuff(ThisSpell, 6, AnyCaster)
   if ExpirationTime then
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
@@ -300,26 +292,26 @@ end
   *
   * @returns {number}
   *]]
-function Unit:DebuffRemainsP(Spell, AnyCaster, Offset)
-  return self:DebuffRemains(Spell, AnyCaster, Offset or "Auto")
+function Unit:DebuffRemainsP(ThisSpell, AnyCaster, Offset)
+  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto")
 end
 
-function Unit:DebuffP(Spell, AnyCaster, Offset)
-  return self:DebuffRemains(Spell, AnyCaster, Offset or "Auto") > 0
+function Unit:DebuffP(ThisSpell, AnyCaster, Offset)
+  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto") > 0
 end
 
-function Unit:DebuffDownP(Spell, AnyCaster, Offset)
-  return self:DebuffRemains(Spell, AnyCaster, Offset or "Auto") == 0
+function Unit:DebuffDownP(ThisSpell, AnyCaster, Offset)
+  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto") == 0
 end
 
 -- debuff.foo.duration or dot.foo.duration
-function Unit:DebuffDuration(Spell, AnyCaster)
-  return self:Debuff(Spell, 5, AnyCaster) or 0
+function Unit:DebuffDuration(ThisSpell, AnyCaster)
+  return self:Debuff(ThisSpell, 5, AnyCaster) or 0
 end
 
 -- debuff.foo.stack or dot.foo.stack
-function Unit:DebuffStack(Spell, AnyCaster)
-  return self:Debuff(Spell, 3, AnyCaster) or 0
+function Unit:DebuffStack(ThisSpell, AnyCaster)
+  return self:Debuff(ThisSpell, 3, AnyCaster) or 0
 end
 
 --[[*
@@ -331,17 +323,17 @@ end
   *
   * @returns {number}
   *]]
-function Unit:DebuffStackP(Spell, AnyCaster, Offset)
-  if self:DebuffP(Spell, AnyCaster, Offset) then
-    return self:DebuffStack(Spell, AnyCaster)
+function Unit:DebuffStackP(ThisSpell, AnyCaster, Offset)
+  if self:DebuffP(ThisSpell, AnyCaster, Offset) then
+    return self:DebuffStack(ThisSpell, AnyCaster)
   else
     return 0
   end
 end
 
 -- debuff.foo.refreshable or dot.foo.refreshable
-function Unit:DebuffRefreshable(Spell, PandemicThreshold, AnyCaster, Offset)
-  return self:DebuffRemains(Spell, AnyCaster, Offset) <= PandemicThreshold
+function Unit:DebuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset)
+  return self:DebuffRemains(ThisSpell, AnyCaster, Offset) <= PandemicThreshold
 end
 
 --[[*
@@ -353,8 +345,8 @@ end
   *
   * @returns {number}
   *]]
-function Unit:DebuffRefreshableP(Spell, PandemicThreshold, AnyCaster, Offset)
-  return self:DebuffRefreshable(Spell, PandemicThreshold, AnyCaster, Offset or "Auto")
+function Unit:DebuffRefreshableP(ThisSpell, PandemicThreshold, AnyCaster, Offset)
+  return self:DebuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset or "Auto")
 end
 
 --[[*
@@ -366,8 +358,8 @@ end
   *
   * @returns {number}
   *]]
-function Unit:DebuffRefreshableC(Spell, AnyCaster, Offset)
-  return self:DebuffRefreshable(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
+function Unit:DebuffRefreshableC(ThisSpell, AnyCaster, Offset)
+  return self:DebuffRefreshable(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
 end
 
 --[[*
@@ -379,17 +371,17 @@ end
   *
   * @returns {number}
   *]]
-function Unit:DebuffRefreshableCP(Spell, AnyCaster, Offset)
-  return self:DebuffRefreshableP(Spell, Spell:PandemicThreshold(), AnyCaster, Offset)
+function Unit:DebuffRefreshableCP(ThisSpell, AnyCaster, Offset)
+  return self:DebuffRefreshableP(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
 end
 
 -- dot.foo.ticks_remain
-function Unit:DebuffTicksRemainP(Spell)
-  local Remains = self:DebuffRemainsP(Spell)
+function Unit:DebuffTicksRemainP(ThisSpell)
+  local Remains = self:DebuffRemainsP(ThisSpell)
   if Remains == 0 then
     return 0
   else
-    return math.ceil(Remains / Spell:TickTime())
+    return math.ceil(Remains / ThisSpell:TickTime())
   end
 end
 

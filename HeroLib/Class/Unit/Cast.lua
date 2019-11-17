@@ -33,10 +33,11 @@ end
 function Unit:CastingInfo(Index)
   local GUID = self:GUID()
   if GUID then
-    if not Cache.UnitInfo[GUID] or not Cache.UnitInfo[GUID].Casting then
-      self:GetCastingInfo(GUID)
-    end
     local UnitInfo = Cache.UnitInfo[GUID]
+    if not UnitInfo or not UnitInfo.Casting then
+      self:GetCastingInfo(GUID)
+      UnitInfo = Cache.UnitInfo[GUID]
+    end
     if Index then
       return UnitInfo.Casting[Index]
     else
@@ -79,10 +80,11 @@ end
 function Unit:ChannelingInfo(Index)
   local GUID = self:GUID()
   if GUID then
-    if not Cache.UnitInfo[GUID] or not Cache.UnitInfo[GUID].Channeling then
-      self:GetChannelingInfo(GUID)
-    end
     local UnitInfo = Cache.UnitInfo[GUID]
+    if not UnitInfo or not UnitInfo.Channeling then
+      self:GetChannelingInfo(GUID)
+      UnitInfo = Cache.UnitInfo[GUID]
+    end
     if Index then
       return UnitInfo.Channeling[Index]
     else
