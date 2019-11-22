@@ -191,8 +191,8 @@ local function UpdateSplashCount(UpdateUnit, SplashRange)
   local CurrentCount = 0
   for _, Enemy in pairs(TotalEnemies) do
     --Units that are outside of the parameters or havent been seen lately get removed
-    if NumericRange(Enemy:MaxDistanceToPlayer()) > MinRange
-    and NumericRange(Enemy:MinDistanceToPlayer()) < MaxRange
+    if NumericRange(Enemy:MaxDistanceToPlayer(true)) >= MinRange
+    and NumericRange(Enemy:MinDistanceToPlayer(true)) < MaxRange
     and RecentlyDamagedIn(Enemy:GUID(), SplashRange) then
       CurrentCount = CurrentCount + 1
     end
