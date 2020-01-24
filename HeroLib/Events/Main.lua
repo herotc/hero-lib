@@ -386,6 +386,13 @@ HL:RegisterForEvent(function(Event, Arg1)
    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
    Spell:AzeriteScan()
   end
+  if Event == "PLAYER_LOGIN"
+   or Event == "AZERITE_ESSENCE_CHANGED"
+   or Event == "AZERITE_ESSENCE_ACTIVATED"
+   or Event == "AZERITE_ESSENCE_UPDATE"
+   or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+   Spell:AzeriteEssenceScan()
+  end
 
   -- Load / Refresh Core Overrides
   if Event == "PLAYER_LOGIN" then

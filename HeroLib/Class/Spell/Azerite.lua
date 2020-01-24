@@ -15,7 +15,7 @@ local pairs = pairs
 local wipe = table.wipe
 -- File Locals
 local AzeritePowers = {}
-
+local AzeriteEssences = {}
 
 --- ============================ CONTENT ============================
 -- Get every traits informations and stores them.
@@ -61,4 +61,52 @@ end
 -- azerite.foo.enabled
 function Spell:AzeriteEnabled()
   return self:AzeriteRank() > 0
+end
+
+-- Build a table of equipped Azerite Essences
+function Spell:AzeriteEssenceScan()
+  AzeriteEssences = {}
+  local milestones = C_AzeriteEssence.GetMilestones()
+  if not milestones then return end
+  for _, milestone in pairs(milestones) do
+    if milestone.unlocked then
+      local slotID = milestone.slot
+      if slotID ~= nil then
+        local essenceID = C_AzeriteEssence.GetMilestoneEssence(milestone.ID)
+        if essenceID ~= nil and essenceID ~= "" then
+          local essenceInfo = C_AzeriteEssence.GetEssenceInfo(essenceID)
+          AzeriteEssences[slotID] = essenceInfo
+        end
+      end
+    end
+  end
+end
+
+-- Return Azerite Essence data to profiles when requested
+function Spell:MajorEssence()
+  return AzeriteEssences[0]
+end
+
+function Spell:MinorEssences()
+  local returnTable = {}
+  for k, v in pairs(AzeriteEssences) do
+    if (k ~= 0 and v ~= nil) then
+      table.insert(returnTable, v)
+    end
+  end
+  return returnTable
+end
+
+function Spell:MajorEssenceID()
+  return AzeriteEssences[0].ID
+end
+
+function Spell:EssenceRank(ID)
+  for essenceSlot, essenceInfo in pairs(AzeriteEssences) do
+    for k, v in pairs(essenceInfo) do
+      if k == "ID" and v == ID then
+        return AzeriteEssences[essenceSlot].rank
+      end
+    end
+  end
 end
