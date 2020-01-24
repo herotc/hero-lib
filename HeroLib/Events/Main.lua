@@ -389,7 +389,6 @@ HL:RegisterForEvent(function(Event, Arg1)
   if Event == "PLAYER_LOGIN"
    or Event == "AZERITE_ESSENCE_CHANGED"
    or Event == "AZERITE_ESSENCE_ACTIVATED"
-   or Event == "AZERITE_ESSENCE_UPDATE"
    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
    Spell:AzeriteEssenceScan()
   end
@@ -413,7 +412,7 @@ HL:RegisterForEvent(function(Event, Arg1)
     end
     UpdateOverrides()
   end
-end, "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN")
+end, "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN", "AZERITE_ESSENCE_ACTIVATED", "AZERITE_ESSENCE_CHANGED")
 
 -- Spell Book Scanner
 -- Checks the same event as Blizzard Spell Book, from SpellBookFrame_OnLoad in SpellBookFrame.lua
