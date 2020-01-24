@@ -91,6 +91,10 @@ function Spell:MajorEssenceID()
   return AzeriteEssences[0].ID
 end
 
+function Spell:MajorEssenceName()
+  return AzeriteEssences[0].Name
+end
+
 function Spell:MinorEssences()
   local returnTable = {}
   for essenceSlot, essenceInfo in pairs(AzeriteEssences) do
@@ -101,15 +105,23 @@ function Spell:MinorEssences()
   return returnTable
 end
 
-function Spell:EssenceEnabled(ID)
-  for _, essenceInfo in pairs(AzeriteEssences) do
-    for k, v in pairs(essenceInfo) do
-      if k == "ID" and v == ID then
-        return true
+function Spell:EssenceEnabled(ID, major)
+  if major then
+    if AzeriteEssences[0].ID == ID then return true end
+  else
+    for _, essenceInfo in pairs(AzeriteEssences) do
+      for k, v in pairs(essenceInfo) do
+        if k == "ID" and v == ID then
+          return true
+        end
       end
     end
   end
   return false
+end
+
+function Spell:MajorEssenceEnabled(ID)
+  return Spell:EssenceEnabled(ID, true)
 end
 
 function Spell:EssenceRank(ID)
