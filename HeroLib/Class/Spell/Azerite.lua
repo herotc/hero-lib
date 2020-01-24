@@ -87,18 +87,29 @@ function Spell:MajorEssence()
   return AzeriteEssences[0]
 end
 
+function Spell:MajorEssenceID()
+  return AzeriteEssences[0].ID
+end
+
 function Spell:MinorEssences()
   local returnTable = {}
-  for k, v in pairs(AzeriteEssences) do
-    if (k ~= 0 and v ~= nil) then
-      table.insert(returnTable, v)
+  for essenceSlot, essenceInfo in pairs(AzeriteEssences) do
+    if (essenceSlot ~= 0 and essenceInfo ~= nil) then
+      table.insert(returnTable, essenceInfo)
     end
   end
   return returnTable
 end
 
-function Spell:MajorEssenceID()
-  return AzeriteEssences[0].ID
+function Spell:EssenceEnabled(ID)
+  for _, essenceInfo in pairs(AzeriteEssences) do
+    for k, v in pairs(essenceInfo) do
+      if k == "ID" and v == ID then
+        return true
+      end
+    end
+  end
+  return false
 end
 
 function Spell:EssenceRank(ID)
