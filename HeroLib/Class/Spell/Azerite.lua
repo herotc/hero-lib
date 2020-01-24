@@ -132,4 +132,5 @@ function Spell:EssenceRank(ID)
       end
     end
   end
+  return 0
 end
