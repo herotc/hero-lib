@@ -102,12 +102,12 @@ function Spell:MinorEssences()
       table.insert(returnTable, essenceInfo)
     end
   end
-  return returnTable
+  return returnTable and returnTable or 0
 end
 
 function Spell:EssenceEnabled(ID, major)
   if major then
-    if AzeriteEssences[0].ID == ID then return true end
+    if AzeriteEssences[0] and AzeriteEssences[0].ID == ID then return true end
   else
     for _, essenceInfo in pairs(AzeriteEssences) do
       for k, v in pairs(essenceInfo) do
