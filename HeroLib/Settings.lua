@@ -66,7 +66,14 @@ HL.GUISettings = {
         [115902] = true,
         --- Fallen Avatar
         -- Maiden of Valor
-        [120437] = true
+        [120437] = true,
+        ----- Ny'alotha (T25 - 8.3 Patch) -----
+        --- Shad'har
+        -- Living Miasma
+        [157229] = true,
+        ----- Corrupted Gear (8.3 Patch) -----
+        -- Thing From Beyond
+        [160966] = true
       }
     }
   }
