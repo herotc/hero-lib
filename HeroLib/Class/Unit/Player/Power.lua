@@ -74,11 +74,17 @@ do
       return self:ManaRegen() * (self:GCDRemains() + (Offset or 0))
     end
   end
-  
-  -- mana.time_to_max
+
+  -- "mana.time_to_max"
   function Player:ManaTimeToMax()
     if self:ManaRegen() == 0 then return -1 end
     return self:ManaDeficit() / self:ManaRegen()
+  end
+
+  -- "mana.time_to_x"
+  function Player:ManaTimeToX(Amount)
+    if self:ManaRegen() == 0 then return -1 end
+    return Amount > self:Mana() and (Amount - self:Mana()) / self:ManaRegen() or 0
   end
 
   -- Mana Predicted with current cast
@@ -766,5 +772,46 @@ do
     [17] = function() return Player:Fury() end,
     -- Pain
     [18] = function() return Player:Pain() end,
+  }
+end
+
+------------------------------
+--- Time To X Resource Map ---
+------------------------------
+
+do
+  Player.TimeToXResourceMap = {
+    -- Mana
+    [0] = function(Value) return Player:ManaTimeToX(Value) end,
+    -- Rage
+    [1] = function() return nil end,
+    -- Focus
+    [2] = function(Value) return Player:FocusTimeToX(Value) end,
+    -- Energy
+    [3] = function(Value) return Player:EnergyTimeToX(Value) end,
+    -- ComboPoints
+    [4] = function() return nil end,
+    -- Runes
+    [5] = function() return nil end,
+    -- Runic Power
+    [6] = function(Value) return Player:RuneTimeToX(Value) end,
+    -- Soul Shards
+    [7] = function() return nil end,
+    -- Astral Power
+    [8] = function() return nil end,
+    -- Holy Power
+    [9] = function() return nil end,
+    -- Maelstrom
+    [11] = function() return nil end,
+    -- Chi
+    [12] = function() return nil end,
+    -- Insanity
+    [13] = function() return nil end,
+    -- Arcane Charges
+    [16] = function() return nil end,
+    -- Fury
+    [17] = function() return nil end,
+    -- Pain
+    [18] = function() return nil end,
   }
 end
