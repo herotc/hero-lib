@@ -153,6 +153,24 @@ function Spell:ActiveCount()
   return Count
 end
 
+-- Returns an array of the units with this aura across all active targets
+-- Only works with spells using Spell:RegisterAuraTracking()
+function Spell:ActiveUnits()
+  local Aura = ListenedAuras[self.SpellID]
+  local Units = {}
+  if Aura then
+    for AuraUnitGUID, _ in pairs(Aura.Units) do
+      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
+      if AuraUnit then
+        tableinsert(Units, AuraUnit)
+      end
+    end
+  else
+    error(SpellRegisterError(Spell))
+  end
+  return Units
+end
+
 -- Returns if an instance of this debuff is present on any active target
 -- Only works with spells using Spell:RegisterAuraTracking()
 function Spell:AnyDebuffP(Offset)
