@@ -21,16 +21,17 @@ local select = select
 -- Save the current player's equipment.
 HL.Equipment = {}
 function HL.GetEquipment()
-  local Item
+  local ItemID
   HL.OnUseTrinkets = {}
   for i = 1, 19 do
-    Item = select(1, GetInventoryItemID("player", i))
+    ItemID = select(1, GetInventoryItemID("player", i))
     -- If there is an item in that slot
-    if Item ~= nil then
-      HL.Equipment[i] = Item
+    if ItemID ~= nil then
+      HL.Equipment[i] = ItemID
       if (i == 13 or i == 14) then
-        if (HL.Item(Item):IsUsable()) then
-          table.insert(HL.OnUseTrinkets, Item)
+        local TrinketItem = HL.Item(ItemID, {i})
+        if (TrinketItem:IsUsable()) then
+          table.insert(HL.OnUseTrinkets, TrinketItem)
         end
       end
     end
@@ -138,15 +139,15 @@ end
 -- Function to be called against SimC's use_items
 function HL.UseTrinkets(excludes)
   local isExcluded = false
-  for _, itemID in ipairs(HL.OnUseTrinkets) do
-    if (Item(itemID):IsReady()) then
+  for _, ItemObj in ipairs(HL.OnUseTrinkets) do
+    if (ItemObj:IsReady()) then
       for _, excludedID in ipairs(excludes) do
-        if (itemID == excludedID) then
+        if (ItemObj:ID() == excludedID) then
           isExcluded = true
         end
       end
       if (not isExcluded) then
-        return itemID
+        return ItemObj
       end
     end
   end
