@@ -17,17 +17,22 @@ local select = select
 -- File Locals
 
 
-
 --- ============================ CONTENT ============================
 -- Save the current player's equipment.
 HL.Equipment = {}
 function HL.GetEquipment()
   local Item
+  HL.OnUseTrinkets = {}
   for i = 1, 19 do
     Item = select(1, GetInventoryItemID("player", i))
     -- If there is an item in that slot
     if Item ~= nil then
       HL.Equipment[i] = Item
+      if (i == 13 or i == 14) then
+        if (HL.Item(Item):IsUsable()) then
+          table.insert(HL.OnUseTrinkets, Item)
+        end
+      end
     end
   end
 end
