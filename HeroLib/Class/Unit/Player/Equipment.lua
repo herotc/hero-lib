@@ -134,3 +134,21 @@ function HL.HasTier(Tier)
     return false
   end
 end
+
+-- Function to be called against SimC's use_items
+function HL.UseTrinkets(excludes)
+  local isExcluded = false
+  for _, itemID in ipairs(HL.OnUseTrinkets) do
+    if (Item(itemID):IsReady()) then
+      for _, excludedID in ipairs(excludes) do
+        if (itemID == excludedID) then
+          isExcluded = true
+        end
+      end
+      if (not isExcluded) then
+        return itemID
+      end
+    end
+  end
+  return false
+end
