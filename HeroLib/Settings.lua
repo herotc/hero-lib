@@ -74,6 +74,11 @@ HL.GUISettings = {
         ----- Corrupted Gear (8.3 Patch) -----
         -- Thing From Beyond
         [160966] = true
+      },
+      -- Custom Use Trinket Ignore List
+      TrinketUserDefined = {
+        -- Humming Black Dragonscale
+        [174044] = true
       }
     }
   }
