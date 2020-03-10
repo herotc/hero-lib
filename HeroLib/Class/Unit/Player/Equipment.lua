@@ -138,10 +138,16 @@ end
 
 -- Function to be called against SimC's use_items
 function HL.UseTrinkets(excludes)
+  local globalExcludes = { 174044 }
   local isExcluded = false
   for _, ItemObj in ipairs(HL.OnUseTrinkets) do
     if (ItemObj:IsReady()) then
       for _, excludedID in ipairs(excludes) do
+        if (ItemObj:ID() == excludedID) then
+          isExcluded = true
+        end
+      end
+      for _, excludedID in ipairs(globalExcludes) do
         if (ItemObj:ID() == excludedID) then
           isExcluded = true
         end
