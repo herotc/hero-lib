@@ -13,9 +13,13 @@ local Spell = HL.Spell
 -- Lua
 local pairs = pairs
 local wipe = table.wipe
+local mathmax = math.max
+local mathmin = math.min
 -- File Locals
 local AzeritePowers = {}
 local AzeriteEssences = {}
+local AzeriteNeckItemLevel
+local AzeriteEssenceScaling = HL.Enum.AzeriteEssenceScaling
 
 --- ============================ CONTENT ============================
 -- Get every traits informations and stores them.
@@ -27,6 +31,8 @@ do
   for _, ID in pairs(AzeriteItemSlotIDs) do
     AzeriteItems[ID] = Item:CreateFromEquipmentSlot(ID)
   end
+  local HeartOfAzerothItem = Item:CreateFromEquipmentSlot(2)
+
   function Spell:AzeriteScan()
     AzeritePowers = {}
     for _, item in pairs(AzeriteItems) do
@@ -49,6 +55,7 @@ do
         end
       end
     end
+    AzeriteNeckItemLevel = HeartOfAzerothItem:GetCurrentItemLevel()
   end
 end
 
@@ -133,4 +140,14 @@ function Spell:EssenceRank(ID)
     end
   end
   return 0
+end
+
+function Spell:EssenceScaling()
+  -- Cap between neck levels to a reasonable value
+  local AzeriteNeckItemLevel = mathmax(mathmin(AzeriteNeckItemLevel, 523), 483)
+  local ScaleFactor = AzeriteEssenceScaling[AzeriteNeckItemLevel]
+  if not ScaleFactor then
+    ScaleFactor = AzeriteEssenceScaling[483]
+  end
+  return ScaleFactor
 end
