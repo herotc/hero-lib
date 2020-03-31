@@ -174,7 +174,12 @@ local DummyUnits = {
   [144081] = true, -- Training Dummy
   [144082] = true, -- Training Dummy
   [144085] = true, -- Training Dummy
-  [144086] = true -- Raider's Training Dummy
+  [144086] = true, -- Raider's Training Dummy
+  -- BfA Boralus
+  [126781] = true, -- Training Dummy
+  [131983] = true, -- Raider's Training Dummy
+  [131989] = true, -- Training Dummy
+  [131992] = true  -- Dungeoneer's Training Dummy
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
