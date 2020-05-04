@@ -21,7 +21,8 @@ local type = type
 -- Check if the unit is coded as blacklisted or not.
 local SpecialBlacklistDataSpells = {
   D_DHT_Submerged = Spell(220519),
-  R_TOS_SpiritRealm = Spell(235621)
+  R_TOS_SpiritRealm = Spell(235621),
+  R_NYA_VoidInfusedIchor = Spell(308377)
 }
 local SpecialBlacklistData = {
   --- Legion
@@ -42,6 +43,9 @@ local SpecialBlacklistData = {
   [118460] = function(self) return Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
   -- Soul Queen Dejahna cannot be hit outside Spirit Realm.
   [118462] = function(self) return not Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
+  ----- Ny'alotha (8.3 Patch) -----
+  -- Drestagath heals all damage unless you have the Void Infused Ichor debuff
+  [157602] = function(self) return not (Player:IsTanking(self) or Player:DebuffP(SpecialBlacklistDataSpells.R_NYA_VoidInfusedIchor)) end,
 }
 function Unit:IsBlacklisted()
   local npcid = self:NPCID()
