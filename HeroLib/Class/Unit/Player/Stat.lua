@@ -51,6 +51,14 @@ do
   function Player:GCDRemains()
     return GCDSpell:CooldownRemains(true)
   end
+  
+  function Player:GCDStartTime()
+    local GCDStartTime, GCDDuration = GCDSpell:CooldownInfo()
+    if GCDDuration > 0 then
+      return GCDStartTime
+    end
+    return 0
+  end
 end
 
 -- attack_power
