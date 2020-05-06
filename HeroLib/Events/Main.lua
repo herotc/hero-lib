@@ -538,16 +538,24 @@ end
 --- ======= COMBATLOG =======
 --- Combat Log Arguments
 ------- Base -------
--- 1        2         3           4           5           6              7             8         9        10           11
+-- 1          2      3           4           5           6            7                8         9         10         11
 -- TimeStamp, Event, HideCaster, SourceGUID, SourceName, SourceFlags, SourceRaidFlags, DestGUID, DestName, DestFlags, DestRaidFlags
 
 ------- Prefixes -------
 --- SWING
 -- N/A
 
---- SPELL & SPELL_PACIODIC
+--- SPELL & SPELL_PERIODIC
 -- 12        13          14
 -- SpellID, SpellName, SpellSchool
+
+--- SPELL_ABSORBED* - When absorbed damage originated from a spell, will have additional 3 columns with spell info.
+-- 12                13                14                 15                     16       17         18           19
+-- AbsorbSourceGUID, AbsorbSourceName, AbsorbSourceFlags, AbsorbSourceRaidFlags, SpellID, SpellName, SpellSchool, Amount
+
+--- SPELL_ABSORBED
+-- 12             13               14                 15                16                17                 18                     19       20         21           22
+-- AbsorbSpellId, AbsorbSpellName, AbsorbSpellSchool, AbsorbSourceGUID, AbsorbSourceName, AbsorbSourceFlags, AbsorbSourceRaidFlags, SpellID, SpellName, SpellSchool, Amount
 
 ------- Suffixes -------
 --- _CAST_START & _CAST_SUCCESS & _SUMMON & _RESURRECT
@@ -562,23 +570,23 @@ end
 -- AuraType
 
 --- _AURA_APPLIED_DOSE
--- 15       16
+-- 15        16
 -- AuraType, Charges
 
 --- _INTERRUPT
--- 15            16             17
+-- 15            16              17
 -- ExtraSpellID, ExtraSpellName, ExtraSchool
 
 --- _HEAL
--- 15         16         17        18
+-- 15      16           17        18
 -- Amount, Overhealing, Absorbed, Critical
 
 --- _DAMAGE
--- 15       16       17       18        19       20        21        22        23
+-- 15      16        17      18        19       20        21        22        23
 -- Amount, Overkill, School, Resisted, Blocked, Absorbed, Critical, Glancing, Crushing
 
 --- _MISSED
--- 15        16           17
+-- 15        16         17
 -- MissType, IsOffHand, AmountMissed
 
 ------- Special -------
