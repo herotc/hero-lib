@@ -66,6 +66,7 @@ HL.GUISettings = {
         [115902] = true,
         --- Fallen Avatar
         -- Maiden of Valor
+        [120437] = true,
         ----- BfA Dungeons -----
         -- Mechagon Workshop - Shield Generator
         [151579] = true,
