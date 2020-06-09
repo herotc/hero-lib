@@ -12,6 +12,7 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local mathmax = math.max
 local mathmin = math.min
 local pairs = pairs
 local select = select
@@ -283,3 +284,45 @@ function Unit:BossTimeToDieIsNotValid(MinSamples)
   end
   return true
 end
+
+-- Returns the max fight length of boss units, or the current selected target if no boss units
+function HL.FightRemains(Range)
+  local BossExists, MaxTimeToDie
+  for _, BossUnit in pairs(Boss) do
+    if BossUnit:Exists() then
+      BossExists = true
+      if not BossUnit:TimeToDieIsNotValid() then
+        MaxTimeToDie = mathmax(MaxTimeToDie, BossUnit:TimeToDie())
+      end
+    end
+  end
+
+  if BossExists then
+    -- If we have a boss list but no valid boss time, return invalid
+    return MaxTimeToDie or 11111
+  end
+
+  -- If we specify an AoE range, iterate through all the targets in the specified range
+  if Range then
+    for _, CycleUnit in pairs(Cache.Enemies[Range]) do
+      if not CycleUnit:IsUserCycleBlacklisted() and (CycleUnit:AffectingCombat() or CycleUnit:IsDummy()) and not CycleUnit:TimeToDieIsNotValid() then
+        MaxTimeToDie = mathmax(MaxTimeToDie, CycleUnit:TimeToDie())
+      end
+    end
+    if MaxTimeToDie then
+      return MaxTimeToDie
+    end
+  end
+
+  return Target:TimeToDie()
+end
+
+-- Returns if the current fight length meets the requirements.
+function HL.FilteredFightRemains(Range, Operator, Value, CheckIfValid)
+  local FightRemains = HL.FightRemains(Range)
+  if CheckIfValid and FightRemains >= 7777 then
+    return false
+  end
+  return Utils.CompareThis(Operator, FightRemains, Value) or false
+end
+
