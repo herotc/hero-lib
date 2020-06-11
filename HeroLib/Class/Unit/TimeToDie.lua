@@ -286,18 +286,18 @@ function Unit:BossTimeToDieIsNotValid(MinSamples)
 end
 
 -- Returns the max fight length of boss units, or the current selected target if no boss units
-function HL.FightRemains(Range)
+function HL.FightRemains(Range, BossOnly)
   local BossExists, MaxTimeToDie
   for _, BossUnit in pairs(Boss) do
     if BossUnit:Exists() then
       BossExists = true
       if not BossUnit:TimeToDieIsNotValid() then
-        MaxTimeToDie = mathmax(MaxTimeToDie, BossUnit:TimeToDie())
+        MaxTimeToDie = mathmax(MaxTimeToDie or 0, BossUnit:TimeToDie())
       end
     end
   end
 
-  if BossExists then
+  if BossExists or BossOnly then
     -- If we have a boss list but no valid boss time, return invalid
     return MaxTimeToDie or 11111
   end
@@ -306,7 +306,7 @@ function HL.FightRemains(Range)
   if Range then
     for _, CycleUnit in pairs(Cache.Enemies[Range]) do
       if not CycleUnit:IsUserCycleBlacklisted() and (CycleUnit:AffectingCombat() or CycleUnit:IsDummy()) and not CycleUnit:TimeToDieIsNotValid() then
-        MaxTimeToDie = mathmax(MaxTimeToDie, CycleUnit:TimeToDie())
+        MaxTimeToDie = mathmax(MaxTimeToDie or 0, CycleUnit:TimeToDie())
       end
     end
     if MaxTimeToDie then
@@ -317,12 +317,27 @@ function HL.FightRemains(Range)
   return Target:TimeToDie()
 end
 
+-- Returns the max fight length of boss units, 11111 if not a boss fight
+function HL.BossFightRemains()
+  return HL.FightRemains(nil, true)
+end
+
+-- Get if the Time To Die is Valid for a boss fight remains
+function HL.BossFightRemainsIsNotValid()
+  return HL.BossFightRemains() >= 7777
+end
+
 -- Returns if the current fight length meets the requirements.
-function HL.FilteredFightRemains(Range, Operator, Value, CheckIfValid)
-  local FightRemains = HL.FightRemains(Range)
+function HL.FilteredFightRemains(Range, Operator, Value, CheckIfValid, BossOnly)
+  local FightRemains = HL.FightRemains(Range, BossOnly)
   if CheckIfValid and FightRemains >= 7777 then
     return false
   end
   return Utils.CompareThis(Operator, FightRemains, Value) or false
+end
+
+-- Returns if the current boss fight length meets the requirements, 11111 if not a boss fight.
+function HL.BossFilteredFightRemains(Operator, Value, CheckIfValid)
+  return HL.FilteredFightRemains(nil, Operator, Value, CheckIfValid, true)
 end
 
