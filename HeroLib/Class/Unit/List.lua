@@ -25,6 +25,11 @@ local SpecialBlacklistDataSpells = {
   R_NYA_VoidInfusedIchor = Spell(308377)
 }
 local SpecialBlacklistData = {
+  --- BfA
+  ----- Corruptions -----
+  -- Thing From Beyond (Appears to have 2 IDs)
+  [160966] = true,
+  [161895] = true,
   --- Legion
   ----- Dungeons (7.0 Patch) -----
   --- Darkheart Thicket
