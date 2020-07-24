@@ -197,7 +197,7 @@ function Unit:IsInRange(Distance, AoESpell)
       -- Distance check through IsSpellInRange (works only for targeted spells only)
     elseif DistanceType == "table" then
       Identifier = tostring(Distance:ID())
-      IsInRange = IsSpellInRange(Distance:Name(), self.UnitID) == 1
+      IsInRange = IsSpellInRange(Distance:BookIndex(), self.UnitID) == 1
     else
       error("Invalid Distance.")
     end
