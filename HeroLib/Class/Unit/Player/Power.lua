@@ -751,7 +751,7 @@ do
     -- ComboPoints
     [4] = function() return Player:ComboPoints() end,
     -- Runes
-    [5] = function() return Player:Runes() end,
+    [5] = function() return Player:Rune() end,
     -- Runic Power
     [6] = function() return Player:RunicPower() end,
     -- Soul Shards
