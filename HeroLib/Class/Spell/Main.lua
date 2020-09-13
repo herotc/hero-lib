@@ -12,6 +12,13 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetTime = GetTime
+local GetSpellInfo = GetSpellInfo
+local IsSpellKnown = IsSpellKnown
+local IsPlayerSpell = IsPlayerSpell
+local IsUsableSpell = IsUsableSpell
+local GetSpellCount = GetSpellCount
+local GetSpellPowerCost = GetSpellPowerCost
 local pairs = pairs
 local unpack = unpack
 local wipe = table.wipe
@@ -32,22 +39,22 @@ end
 
 -- Get the Time since Last spell Cast.
 function Spell:TimeSinceLastCast()
-  return HL.GetTime() - self.LastCastTime
+  return GetTime() - self.LastCastTime
 end
 
 -- Get the Time since Last spell Display.
 function Spell:TimeSinceLastDisplay()
-  return HL.GetTime() - self.LastDisplayTime
+  return GetTime() - self.LastDisplayTime
 end
 
 -- Get the Time since Last Buff applied on the player.
 function Spell:TimeSinceLastAppliedOnPlayer()
-  return HL.GetTime() - self.LastAppliedOnPlayerTime
+  return GetTime() - self.LastAppliedOnPlayerTime
 end
 
 -- Get the Time since Last Buff removed from the player.
 function Spell:TimeSinceLastRemovedOnPlayer()
-  return HL.GetTime() - self.LastRemovedFromPlayerTime
+  return GetTime() - self.LastRemovedFromPlayerTime
 end
 
 -- Register the spell damage formula.
@@ -290,6 +297,16 @@ function Spell:FilterTickTime(SpecID)
   TickTime = RegisteredSpells
 end
 
+-- active_dot.foo
+function Spell:ActiveDot()
+  if not Cache.Enemies[50] then HL.GetEnemies(50) end
+  local Active = 0
+  for _, Enemy in pairs(Cache.Enemies[50]) do
+    if Enemy:DebuffP(self) then Active = Active + 1 end
+  end
+  return Active
+end
+
 function Spell:BaseTickTime()
   local Tick = TickTime[self.SpellID]
   if not Tick or Tick == 0 then return 0 end
@@ -332,14 +349,4 @@ function Spell:GCD()
   local Gcd = SpellGCD[self.SpellID]
   if not Gcd or Gcd == 0 then return 0 end
   return Gcd / 1000
-end
-
--- active_dot.foo
-function Spell:ActiveDot()
-  if not Cache.Enemies[50] then HL.GetEnemies(50) end
-  local Active = 0
-  for _, Enemy in pairs(Cache.Enemies[50]) do
-    if Enemy:DebuffP(self) then Active = Active + 1 end
-  end
-  return Active
 end

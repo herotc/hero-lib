@@ -24,7 +24,7 @@ HL.MAXIMUM = 40 -- Max # Buffs and Max # Nameplates.
 
 --- ============================ CONTENT ============================
 --- Build Infos
-local LiveVersion, PTRVersion, BetaVersion = "7.3.0", "7.3.0", "7.3.2"
+local LiveVersion, PTRVersion, BetaVersion = "8.3.7", "9.0.1", "9.0.2"
 -- version, build, date, tocversion
 HL.BuildInfo = { GetBuildInfo() }
 -- Get the current build version.
@@ -45,15 +45,6 @@ end
 -- Get if we are on the Beta or not.
 function HL.BetaRealm()
   return HL.BuildVersion() == BetaVersion
-end
-
--- Get the GetTime and cache it.
-function HL.GetTime(Reset)
-  if not Cache.MiscInfo then Cache.MiscInfo = {} end
-  if not Cache.MiscInfo.GetTime or Reset then
-    Cache.MiscInfo.GetTime = GetTime()
-  end
-  return Cache.MiscInfo.GetTime
 end
 
 -- Print with HL Prefix

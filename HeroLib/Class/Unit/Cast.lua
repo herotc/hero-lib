@@ -133,7 +133,7 @@ end
 -- Get the remaining cast time, if there is any.
 function Unit:CastRemains()
   if self:IsCasting() or self:IsChanneling() then
-    return self:CastEnd() - HL.GetTime()
+    return self:CastEnd() - GetTime()
   end
   return 0
 end
@@ -143,11 +143,11 @@ end
 function Unit:CastPercentage(ReverseChannel)
   if self:IsCasting() then
     local CastStart = self:CastStart()
-    return (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
+    return (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
   end
   if self:IsChanneling() then
     local CastStart = self:CastStart()
-    return ReverseChannel and (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100 or 100 - (HL.GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
+    return ReverseChannel and (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100 or 100 - (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
   end
   return 0
 end

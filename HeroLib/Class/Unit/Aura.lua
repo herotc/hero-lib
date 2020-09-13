@@ -100,7 +100,7 @@ function Unit:BuffRemains(Spell, AnyCaster, Offset)
     if Spell:ID() == 115192 or Spell:ID() == 256735 then
       ExpirationTime = ExpirationTime - 0.3
     end
-    local Remains = ExpirationTime - HL.GetTime()
+    local Remains = ExpirationTime - GetTime()
     return Remains >= 0 and Remains or 0
   else
     return 0
@@ -284,7 +284,7 @@ function Unit:DebuffRemains(Spell, AnyCaster, Offset)
     if Offset then
       ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
     end
-    local Remains = ExpirationTime - HL.GetTime()
+    local Remains = ExpirationTime - GetTime()
     return Remains >= 0 and Remains or 0
   else
     return 0

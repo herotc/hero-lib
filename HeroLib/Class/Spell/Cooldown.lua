@@ -12,6 +12,8 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetSpellCharges = GetSpellCharges -- charges, maxCharges, chargeStart, chargeDuration, chargeModRate
+local GetSpellCooldown = GetSpellCooldown -- start, duration, enable, modRate
 local mathmax = math.max
 local unpack = unpack
 -- File Locals
@@ -21,8 +23,6 @@ local unpack = unpack
 --- ============================ CONTENT ============================
 -- Get the ChargesInfo (from GetSpellCharges) and cache it.
 do
-  -- charges, maxCharges, chargeStart, chargeDuration, chargeModRate
-  local GetSpellCharges = GetSpellCharges
   local SpellID
   local function _GetSpellCharges() return { GetSpellCharges(SpellID) } end
 
@@ -53,7 +53,6 @@ function Spell:CooldownInfo()
 
   local CooldownInfo = SpellInfo.CooldownInfo
   if not CooldownInfo then
-    -- start, duration, enable, modRate
     CooldownInfo = { GetSpellCooldown(self.SpellID) }
     SpellInfo.CooldownInfo = CooldownInfo
   end
@@ -76,7 +75,7 @@ function Spell:ComputeCooldown(BypassRecovery, Type)
     if CDTime == 0 then return 0 end
   end
   -- Compute the CD.
-  local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
+  local CD = CDTime + CDValue - GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
   -- Return the Spell CD.
   return CD > 0 and CD or 0
 end

@@ -44,5 +44,5 @@ end
 
 -- action.foo.in_flight
 function Spell:IsInFlight()
-  return HL.GetTime() < self.LastHitTime
+  return GetTime() < self.LastHitTime
 end

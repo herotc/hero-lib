@@ -50,7 +50,7 @@ local TTD = HL.TTD
 function HL.TTDRefresh()
   -- This may not be needed if we don't have any units but caching them in case
   -- We do speeds it all up a little bit
-  local CurrentTime = HL.GetTime()
+  local CurrentTime = GetTime()
   local HistoryCount = TTD.Settings.HistoryCount
   local HistoryTime = TTD.Settings.HistoryTime
   local Cache = TTD.Cache
@@ -162,7 +162,7 @@ function Unit:TimeToX(Percentage, MinSamples)
         -- Use best fit line to calculate estimated time to reach target health
         Seconds = (Percentage - a) / b
         -- Subtract current time to obtain "time remaining"
-        Seconds = mathmin(7777, Seconds - (HL.GetTime() - UnitTable[2]))
+        Seconds = mathmin(7777, Seconds - (GetTime() - UnitTable[2]))
         if Seconds < 0 then Seconds = 9999 end
       end
     end

@@ -52,7 +52,7 @@ HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, DestGUID, _, _, _, S
   local ListenedSpell = ListenedSpells[SpellID]
   if ListenedSpell then
     local PMultiplier = ComputePMultiplier(ListenedSpell)
-    ListenedSpell.PMultiplier[DestGUID] = { PMultiplier = PMultiplier, Time = HL.GetTime(), Applied = false }
+    ListenedSpell.PMultiplier[DestGUID] = { PMultiplier = PMultiplier, Time = GetTime(), Applied = false }
   end
 end, "SPELL_CAST_SUCCESS")
 -- PMultiplier OnApply/OnRefresh Listener

@@ -135,7 +135,7 @@ function Unit:IsMfdBlacklisted()
 end
 
 function Unit:IsFacingBlacklisted()
-  if self:IsUnit(HL.UnitNotInFront) and HL.GetTime() - HL.UnitNotInFrontTime <= Player:GCD() * HL.GUISettings.General.Blacklist.NotFacingExpireMultiplier then
+  if self:IsUnit(HL.UnitNotInFront) and GetTime() - HL.UnitNotInFrontTime <= Player:GCD() * HL.GUISettings.General.Blacklist.NotFacingExpireMultiplier then
     return true
   end
   return false

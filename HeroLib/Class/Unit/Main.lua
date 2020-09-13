@@ -12,26 +12,26 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetUnitSpeed = GetUnitSpeed
 local tonumber = tonumber
--- File Locals
-
--- Blizzard API Mappings
-local UnitGUID = UnitGUID
-local UnitName = UnitName
-local UnitExists = UnitExists
-local UnitIsVisible = UnitIsVisible
-local UnitLevel = UnitLevel
+local UnitAffectingCombat = UnitAffectingCombat
 local UnitCanAttack = UnitCanAttack
-local UnitIsPlayer = UnitIsPlayer
+local UnitClassification = UnitClassification
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitAffectingCombat = UnitAffectingCombat
+local UnitIsPlayer = UnitIsPlayer
 local UnitIsUnit = UnitIsUnit
-local UnitClassification = UnitClassification
+local UnitIsVisible = UnitIsVisible
+local UnitLevel = UnitLevel
+local UnitName = UnitName
 local UnitThreatSituation = UnitThreatSituation
-local GetUnitSpeed = GetUnitSpeed
+-- File Locals
 
+
+--- ============================ CONTENT ============================
 function Unit:Cache()
   self:RemoveUnitGUIDMapEntry()
   self.UnitExists = UnitExists(self.UnitID) or false
@@ -48,7 +48,6 @@ function Unit:Cache()
   -- Classification?
 end
 
---- ============================ CONTENT ============================
 -- Get the unit ID.
 function Unit:ID()
   return self.UnitID

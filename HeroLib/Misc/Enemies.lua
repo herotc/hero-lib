@@ -9,7 +9,7 @@ local Player = Unit.Player
 local Target = Unit.Target
 local Spell = HL.Spell
 local Item = HL.Item
-local GetTime = HL.GetTime
+local GetTime = GetTime
 local RangeIndex = HL.Enum.ItemRange.Hostile.RangeIndex
 -- Lua
 local pairs = pairs

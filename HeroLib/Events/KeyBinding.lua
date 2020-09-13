@@ -75,7 +75,8 @@ local function FindKeyBindings()
   -- Where Slot is the SlotIndex in 1..132
   -- and j is the bar index in 1..12 for MULTIACTIONBARs
   -- See: http://wowwiki.wikia.com/wiki/ActionSlot
-  -- BT stands for Bartender, it needs a special handling.
+  -- BT (stands for Bartender), LUI and ElvUI needs a special handling.
+  -- Dominos does not need a special handling (it uses Default UI bars)
 
   --- Populate Bar Names
   do
@@ -126,16 +127,17 @@ local function FindKeyBindings()
   end
 end
 
-HL:RegisterForEvent(function()
-  C_Timer.After(0.001,
-    function()
-      FindKeyBindings()
-    end) -- on a timer, because of Bar Update Delay
-end, "UPDATE_SHAPESHIFT_FORM")
+HL:RegisterForEvent(
+  function()
+    C_Timer.After(0.001, function() FindKeyBindings() end) -- on a timer, because of Bar Update Delay
+  end,
+  "UPDATE_SHAPESHIFT_FORM"
+)
 
-HL:RegisterForEvent(function()
-  FindKeyBindings()
-end, "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "ACTIONBAR_SLOT_CHANGED", "UPDATE_BINDINGS", "LEARNED_SPELL_IN_TAB")
+HL:RegisterForEvent(
+  function() FindKeyBindings() end,
+  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "ACTIONBAR_SLOT_CHANGED", "UPDATE_BINDINGS", "LEARNED_SPELL_IN_TAB"
+)
 
 do
   local KeyBindingsWhitelist = {}

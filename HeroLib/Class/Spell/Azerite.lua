@@ -11,10 +11,20 @@ local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
 local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 -- Lua
-local pairs = pairs
-local wipe = table.wipe
+local C_AzeriteEmpoweredItem = C_AzeriteEmpoweredItem
+local C_AzeriteEssence = C_AzeriteEssence
+local GetAllTierInfo = C_AzeriteEmpoweredItem.GetAllTierInfo
+local GetEssenceInfo = C_AzeriteEssence.GetEssenceInfo
+local GetMilestoneEssence = C_AzeriteEssence.GetMilestoneEssence
+local GetMilestones = C_AzeriteEssence.GetMilestones
+local GetPowerInfo = C_AzeriteEmpoweredItem.GetPowerInfo
+local IsAzeriteEmpoweredItem =C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem
+local IsPowerSelected = C_AzeriteEmpoweredItem.IsPowerSelected
+local Item = Item
 local mathmax = math.max
 local mathmin = math.min
+local pairs = pairs
+local wipe = table.wipe
 -- File Locals
 local AzeritePowers = {}
 local AzeriteEssences = {}
@@ -24,10 +34,8 @@ local AzeriteEssenceScaling = HL.Enum.AzeriteEssenceScaling
 --- ============================ CONTENT ============================
 -- Get every traits informations and stores them.
 do
-  local AzeriteItemSlotIDs    = {1,3,5}
-  local AzeriteEmpoweredItem  = _G.C_AzeriteEmpoweredItem
+  local AzeriteItemSlotIDs    = { 1,3,5 }
   local AzeriteItems          = {}
-  local Item                  = Item
   for _, ID in pairs(AzeriteItemSlotIDs) do
     AzeriteItems[ID] = Item:CreateFromEquipmentSlot(ID)
   end
@@ -38,12 +46,12 @@ do
     for _, item in pairs(AzeriteItems) do
       if not item:IsItemEmpty() then
         local itemLoc = item:GetItemLocation()
-        if AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLoc) then
-          local tierInfos = AzeriteEmpoweredItem.GetAllTierInfo(itemLoc)
+        if IsAzeriteEmpoweredItem(itemLoc) then
+          local tierInfos = GetAllTierInfo(itemLoc)
           for _, tierInfo in pairs(tierInfos) do
             for _, powerId in pairs(tierInfo.azeritePowerIDs) do
-              if AzeriteEmpoweredItem.IsPowerSelected(itemLoc, powerId) then
-                local spellID = C_AzeriteEmpoweredItem.GetPowerInfo(powerId).spellID
+              if IsPowerSelected(itemLoc, powerId) then
+                local spellID = GetPowerInfo(powerId).spellID
                 if AzeritePowers[spellID] then
                   AzeritePowers[spellID] = AzeritePowers[spellID] + 1
                 else
@@ -73,15 +81,15 @@ end
 -- Build a table of equipped Azerite Essences
 function Spell:AzeriteEssenceScan()
   AzeriteEssences = {}
-  local milestones = C_AzeriteEssence.GetMilestones()
+  local milestones = GetMilestones()
   if not milestones then return end
   for _, milestone in pairs(milestones) do
     if milestone.unlocked then
       local slotID = milestone.slot
       if slotID ~= nil then
-        local essenceID = C_AzeriteEssence.GetMilestoneEssence(milestone.ID)
+        local essenceID = GetMilestoneEssence(milestone.ID)
         if essenceID ~= nil and essenceID ~= "" then
-          local essenceInfo = C_AzeriteEssence.GetEssenceInfo(essenceID)
+          local essenceInfo = GetEssenceInfo(essenceID)
           AzeriteEssences[slotID] = essenceInfo
         end
       end

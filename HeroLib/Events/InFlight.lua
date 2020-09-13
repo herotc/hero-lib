@@ -51,6 +51,7 @@ HL:RegisterForSelfCombatEvent(function(...)
     end)
   end
 end, "SPELL_CAST_SUCCESS")
+
 HL:RegisterForSelfCombatEvent(function(...)
   local DestGUID, _, _, _, spellID = select(8, ...)
   local TrackedSpell = EffectMap[spellID] and TrackedSpells[EffectMap[spellID]] or TrackedSpells[spellID]
@@ -58,6 +59,7 @@ HL:RegisterForSelfCombatEvent(function(...)
     TrackedSpell.Inflight = false
   end
 end, "SPELL_DAMAGE", "SPELL_MISSED", "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH")
+
 -- Prevent InFlight getting stuck when target dies mid-flight
 HL:RegisterForCombatEvent(function(...)
   local DestGUID = select(8, ...)

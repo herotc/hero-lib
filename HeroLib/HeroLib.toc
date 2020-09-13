@@ -57,7 +57,6 @@ Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
 Class\Spell\Travel.lua
-Class\Spell\Artifact.lua
 Class\Spell\Azerite.lua
 Class\Item.lua
 
@@ -66,12 +65,14 @@ Misc\ToSort.lua
 
 # Events
 Events\Main.lua
-Events\Spell.lua
-Events\PMultiplier.lua
-Events\Prev_Spell.lua
-Events\KeyBinding.lua
-Events\InFlight.lua
+Events\Unit.lua
+Events\Player.lua
 Events\Aura.lua
+Events\PMultiplier.lua
+Events\Spell.lua
+Events\Prev_Spell.lua
+Events\InFlight.lua
+Events\KeyBinding.lua
 
 # Enemy Tracking
 Misc\Enemies.lua

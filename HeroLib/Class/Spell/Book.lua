@@ -14,8 +14,14 @@ local Item = HL.Item
 -- Lua
 local select = select
 -- WoW API
-local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo
 local BOOKTYPE_PET, BOOKTYPE_SPELL = BOOKTYPE_PET, BOOKTYPE_SPELL
+local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
+local GetNumFlyouts, GetFlyoutID = GetNumFlyouts, GetFlyoutID
+local GetNumSpellTabs = GetNumSpellTabs
+local GetSpellBookItemInfo = GetSpellBookItemInfo
+local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo
+local HasPetSpells = HasPetSpells
+local IsTalentSpell = IsTalentSpell
 -- File Locals
 
 
@@ -60,7 +66,6 @@ function Spell:BookScan(BlankScan)
     local NumPetSpells = HasPetSpells()
     if NumPetSpells then
       local SpellLearned = SpellLearned.Pet
-      local IsTalentSpell = IsTalentSpell
       for i = 1, NumPetSpells do
         local CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET))
         if CurrentSpellID then
@@ -78,7 +83,6 @@ function Spell:BookScan(BlankScan)
   do
     local SpellLearned = SpellLearned.Player
 
-    local GetSpellBookItemInfo = GetSpellBookItemInfo
     for i = 1, GetNumSpellTabs() do
       local Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i))
       -- GetSpellTabInfo has been updated, it now returns the OffSpec ID.
@@ -96,7 +100,6 @@ function Spell:BookScan(BlankScan)
     end
 
     -- Flyout Spells
-    local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
     for i = 1, GetNumFlyouts() do
       local FlyoutID = GetFlyoutID(i)
       local NumSlots, IsKnown = select(3, GetFlyoutInfo(FlyoutID))

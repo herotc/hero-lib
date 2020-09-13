@@ -58,18 +58,18 @@ end
 
 -- Player On Cast Success Listener
 HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-  HL.Timer.LastCastSuccess = HL.GetTime()
+  HL.Timer.LastCastSuccess = GetTime()
   if TriggerGCD[SpellID] ~= nil then
     if TriggerGCD[SpellID] then
-      -- HL.Print(HL.GetTime() .. " Self SPELL_CAST_SUCCESS " .. SpellID)
+      -- HL.Print(GetTime() .. " Self SPELL_CAST_SUCCESS " .. SpellID)
       tableinsert(Prev.GCD, 1, SpellID)
-      PrevGCDCastTime = HL.GetTime()
+      PrevGCDCastTime = GetTime()
       Prev.OffGCD = {}
       PrevOffGCDCastTime = 0
       PrevGCDPredicted = 0
     else -- Prevents unwanted spells to be registered as OffGCD.
       tableinsert(Prev.OffGCD, 1, SpellID)
-      PrevOffGCDCastTime = HL.GetTime()
+      PrevOffGCDCastTime = GetTime()
       PrevGCDCastTime = 0
     end
   end
@@ -179,7 +179,7 @@ function Player:SetPrevSuggestedSpell(SuggestedSpell)
       return
     end
     PrevSuggested.Spell = SuggestedSpell
-    PrevSuggested.Time = HL.GetTime()
+    PrevSuggested.Time = GetTime()
   end
 end
 

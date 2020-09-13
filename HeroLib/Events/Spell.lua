@@ -29,8 +29,8 @@ HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
   for i = 1, #PlayerSpecs do
     local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
     if ListenedSpell then
-      ListenedSpell.LastCastTime = HL.GetTime()
-      ListenedSpell.LastHitTime = HL.GetTime() + ListenedSpell:TravelTime()
+      ListenedSpell.LastCastTime = GetTime()
+      ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
     end
   end
 end, "SPELL_CAST_SUCCESS")
@@ -40,8 +40,8 @@ HL:RegisterForPetCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
   for i = 1, #PlayerSpecs do
     local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
     if ListenedSpell then
-      ListenedSpell.LastCastTime = HL.GetTime()
-      ListenedSpell.LastHitTime = HL.GetTime() + ListenedSpell:TravelTime()
+      ListenedSpell.LastCastTime = GetTime()
+      ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
     end
   end
 end, "SPELL_CAST_SUCCESS")
@@ -51,7 +51,7 @@ HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
   for i = 1, #PlayerSpecs do
     local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
     if ListenedSpell then
-      ListenedSpell.LastAppliedOnPlayerTime = HL.GetTime()
+      ListenedSpell.LastAppliedOnPlayerTime = GetTime()
     end
   end
 end, "SPELL_AURA_APPLIED")
@@ -61,7 +61,7 @@ HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
   for i = 1, #PlayerSpecs do
     local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
     if ListenedSpell then
-      ListenedSpell.LastRemovedFromPlayerTime = HL.GetTime()
+      ListenedSpell.LastRemovedFromPlayerTime = GetTime()
     end
   end
 end, "SPELL_AURA_REMOVED")

@@ -405,7 +405,7 @@ do
     -- Return 0 if the rune isn't in CD.
     if CDTime == 0 then return 0 end
     -- Compute the CD.
-    local CD = CDTime + CDValue - HL.GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
+    local CD = CDTime + CDValue - GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
     -- Return the Rune CD
     return CD > 0 and CD or 0
   end

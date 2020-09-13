@@ -21,7 +21,6 @@ local ListenedAuras = {}
 
 
 --- ============================ CONTENT ============================
-
 local function AddAuraToUnit(SpellID, UnitGUID)
   local Aura = ListenedAuras[SpellID]
   if Aura then

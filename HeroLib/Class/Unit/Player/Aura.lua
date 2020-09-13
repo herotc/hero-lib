@@ -106,6 +106,7 @@ do
     return Cache.Get("MiscInfo", "IsStealthedP", Key, _IsStealthed)
   end
 end
+
 function Player:IsStealthedRemains(Abilities, Special)
   return self:IsStealthed(Abilities, Special, true)
 end
