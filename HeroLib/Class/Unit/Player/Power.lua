@@ -12,11 +12,13 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local Enum = Enum
+local GetPowerRegen = GetPowerRegen
+local GetTime =GetTime
 local pairs = pairs
-local select = select
 local tablesort = table.sort
--- WoW API
-local UnitPower, UnitPowerMax, GetPowerRegen = UnitPower, UnitPowerMax, GetPowerRegen
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 -- File Locals
 
 
@@ -367,6 +369,7 @@ end
 ---------------------------------
 do
   local RunicPowerPowerType = Enum.PowerType.RunicPower
+
   -- runicpower.max
   function Player:RunicPowerMax()
     return UnitPowerMax(self.UnitID, RunicPowerPowerType)
@@ -398,6 +401,7 @@ end
 ---------------------------
 do
   local GetRuneCooldown = GetRuneCooldown
+
   -- Computes any rune cooldown.
   local function ComputeRuneCooldown(Slot, BypassRecovery)
     -- Get rune cooldown infos
@@ -405,7 +409,7 @@ do
     -- Return 0 if the rune isn't in CD.
     if CDTime == 0 then return 0 end
     -- Compute the CD.
-    local CD = CDTime + CDValue - GetTime() - (BypassRecovery and 0 or HL.RecoveryOffset())
+    local CD = CDTime + CDValue - GetTime() - HL.RecoveryOffset(BypassRecovery)
     -- Return the Rune CD
     return CD > 0 and CD or 0
   end
@@ -444,14 +448,15 @@ end
 --- 7 | Soul Shards  ---
 ------------------------
 do
-  -- soul_shard.max
+  local WarlockPowerBar_UnitPower = WarlockPowerBar_UnitPower
   local SoulShardsPowerType = Enum.PowerType.SoulShards
+
+  -- soul_shard.max
   function Player:SoulShardsMax()
     return UnitPowerMax(self.UnitID, SoulShardsPowerType)
   end
 
   -- soul_shard
-  local WarlockPowerBar_UnitPower = WarlockPowerBar_UnitPower
   function Player:SoulShards()
     return WarlockPowerBar_UnitPower(self.UnitID)
   end
@@ -472,6 +477,7 @@ end
 ------------------------
 do
   local LunarPowerPowerType = Enum.PowerType.LunarPower
+
   -- astral_power.max
   function Player:AstralPowerMax()
     return UnitPowerMax(self.UnitID, LunarPowerPowerType)
@@ -504,6 +510,7 @@ end
 --------------------------------
 do
   local HolyPowerPowerType = Enum.PowerType.HolyPower
+
   -- holy_power.max
   function Player:HolyPowerMax()
     return UnitPowerMax(self.UnitID, HolyPowerPowerType)
@@ -563,6 +570,8 @@ end
 --------------------------------------
 do
   local ChiPowerType = Enum.PowerType.Chi
+  local UnitStagger = UnitStagger
+
   -- chi.max
   function Player:ChiMax()
     return UnitPowerMax(self.UnitID, ChiPowerType)
@@ -609,6 +618,7 @@ end
 ------------------------------
 do
   local InsanityPowerType = Enum.PowerType.Insanity
+
   -- insanity.max
   function Player:InsanityMax()
     return UnitPowerMax(self.UnitID, InsanityPowerType)
@@ -646,6 +656,7 @@ end
 -----------------------------------
 do
   local ArcaneChargesPowerType = Enum.PowerType.ArcaneCharges
+
   -- arcanecharges.max
   function Player:ArcaneChargesMax()
     return UnitPowerMax(self.UnitID, ArcaneChargesPowerType)
@@ -677,6 +688,7 @@ end
 ---------------------------
 do
   local FuryPowerType = Enum.PowerType.Fury
+
   -- fury.max
   function Player:FuryMax()
     return UnitPowerMax(self.UnitID, FuryPowerType)
@@ -708,6 +720,7 @@ end
 ---------------------------
 do
   local PainPowerType = Enum.PowerType.Pain
+
   -- pain.max
   function Player:PainMax()
     return UnitPowerMax(self.UnitID, PainPowerType)
@@ -750,9 +763,9 @@ do
     [3] = function() return Player:EnergyPredicted() end,
     -- ComboPoints
     [4] = function() return Player:ComboPoints() end,
-    -- Runes
-    [5] = function() return Player:Rune() end,
     -- Runic Power
+    [5] = function() return Player:Rune() end,
+    -- Runes
     [6] = function() return Player:RunicPower() end,
     -- Soul Shards
     [7] = function() return Player:SoulShardsP() end,
@@ -791,9 +804,9 @@ do
     [3] = function(Value) return Player:EnergyTimeToX(Value) end,
     -- ComboPoints
     [4] = function() return nil end,
-    -- Runes
-    [5] = function() return nil end,
     -- Runic Power
+    [5] = function() return nil end,
+    -- Runes
     [6] = function(Value) return Player:RuneTimeToX(Value) end,
     -- Soul Shards
     [7] = function() return nil end,

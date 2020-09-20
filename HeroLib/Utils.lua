@@ -77,6 +77,16 @@ function Utils.SubStringCount(String, SubString)
   return Count
 end
 
+-- cf. http://lua-users.org/wiki/StringRecipes
+-- Determines whether a string begins with the characters of a specified string.
+function Utils.StartsWith(String, StartString)
+  return String:sub(1, #StartString) == StartString
+end
+-- Determines whether a string ends with the characters of a specified string.
+function Utils.EndsWith(String, EndString)
+  return EndString == "" or String:sub(-#EndString) == EndString
+end
+
 -- Revert a table index
 function Utils.RevertTableIndex(Table)
   local NewTable = {}

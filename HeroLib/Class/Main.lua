@@ -6,6 +6,8 @@ local addonName, HL = ...
 local Cache = HeroCache
 -- Lua
 local error = error
+local GetItemInfo = GetItemInfo
+local GetSpellInfo = GetSpellInfo
 local setmetatable = setmetatable
 local stringformat = string.format
 local tableinsert = table.insert
@@ -108,8 +110,16 @@ do
   function Spell:New(SpellID, SpellType)
     if type(SpellID) ~= "number" then error("Invalid SpellID.") end
     if SpellType and type(SpellType) ~= "string" then error("Invalid Spell Type.") end
+
+    -- Attributes
+    local SpellName, _, _, _, MinimumRange, MaximumRange = GetSpellInfo(SpellID)
     self.SpellID = SpellID
     self.SpellType = SpellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
+    self.SpellName = SpellName
+    self.MinimumRange = MinimumRange
+    self.MaximumRange = MaximumRange
+    self.IsMelee = MinimumRange == 0 and MaximumRange == 0
+    -- Variables
     self.LastCastTime = 0
     self.LastDisplayTime = 0
     self.LastHitTime = 0
@@ -118,12 +128,15 @@ do
   end
 end
 
+-- TODO: Refactor to merge it into Spell
 do
   local MultiSpell = Class()
   HL.MultiSpell = MultiSpell
+
   function MultiSpell:New(...)
     local Arg = {...}
     self.SpellTable = {}
+
     for _, Spell in pairs(Arg) do
       if type(Spell) == "number" then
         Spell = HL.Spell(Spell)
@@ -131,6 +144,7 @@ do
       if type(Spell.SpellID) ~= "number" then error("Invalid SpellID.") end
       tableinsert(self.SpellTable, Spell)
     end
+
     function MultiSpell:Update()
       for i, Spell in pairs(self.SpellTable) do
         if Spell:IsLearned() or (i == #self.SpellTable) then
@@ -140,61 +154,63 @@ do
         end
       end
     end
+
     self:AddToMultiSpells()
     self:Update()
   end
 end
 
 --- ======= ITEM =======
-local itemSlotTable = {
-  -- Source: http://wowwiki.wikia.com/wiki/ItemEquipLoc
-  ["INVTYPE_AMMO"] = { 0 },
-  ["INVTYPE_HEAD"] = { 1 },
-  ["INVTYPE_NECK"] = { 2 },
-  ["INVTYPE_SHOULDER"] = { 3 },
-  ["INVTYPE_BODY"] = { 4 },
-  ["INVTYPE_CHEST"] = { 5 },
-  ["INVTYPE_ROBE"] = { 5 },
-  ["INVTYPE_WAIST"] = { 6 },
-  ["INVTYPE_LEGS"] = { 7 },
-  ["INVTYPE_FEET"] = { 8 },
-  ["INVTYPE_WRIST"] = { 9 },
-  ["INVTYPE_HAND"] = { 10 },
-  ["INVTYPE_FINGER"] = { 11, 12 },
-  ["INVTYPE_TRINKET"] = { 13, 14 },
-  ["INVTYPE_CLOAK"] = { 15 },
-  ["INVTYPE_WEAPON"] = { 16, 17 },
-  ["INVTYPE_SHIELD"] = { 17 },
-  ["INVTYPE_2HWEAPON"] = { 16 },
-  ["INVTYPE_WEAPONMAINHAND"] = { 16 },
-  ["INVTYPE_WEAPONOFFHAND"] = { 17 },
-  ["INVTYPE_HOLDABLE"] = { 17 },
-  ["INVTYPE_RANGED"] = { 18 },
-  ["INVTYPE_THROWN"] = { 18 },
-  ["INVTYPE_RANGEDRIGHT"] = { 18 },
-  ["INVTYPE_RELIC"] = { 18 },
-  ["INVTYPE_TABARD"] = { 19 },
-  ["INVTYPE_BAG"] = { 20, 21, 22, 23 },
-  ["INVTYPE_QUIVER"] = { 20, 21, 22, 23 }
-}
-
-local function usableSlotID(itemEquipLoc)
-  return itemSlotTable[itemEquipLoc] or nil
-end
-
-local function defaultItemSlotID(ItemID)
-  -- http://wowwiki.wikia.com/wiki/API_GetItemInfo: 9th slot is itemEquipLoc
-  return select(9, GetItemInfo(ItemID)) or nil
-end
-
 do
+  local ItemSlotTable = {
+    -- Source: http://wowwiki.wikia.com/wiki/ItemEquipLoc
+    [""] = nil, -- "" value is the value of ItemEquipLoc if not equippable
+    ["INVTYPE_AMMO"] = { 0 },
+    ["INVTYPE_HEAD"] = { 1 },
+    ["INVTYPE_NECK"] = { 2 },
+    ["INVTYPE_SHOULDER"] = { 3 },
+    ["INVTYPE_BODY"] = { 4 },
+    ["INVTYPE_CHEST"] = { 5 },
+    ["INVTYPE_ROBE"] = { 5 },
+    ["INVTYPE_WAIST"] = { 6 },
+    ["INVTYPE_LEGS"] = { 7 },
+    ["INVTYPE_FEET"] = { 8 },
+    ["INVTYPE_WRIST"] = { 9 },
+    ["INVTYPE_HAND"] = { 10 },
+    ["INVTYPE_FINGER"] = { 11, 12 },
+    ["INVTYPE_TRINKET"] = { 13, 14 },
+    ["INVTYPE_CLOAK"] = { 15 },
+    ["INVTYPE_WEAPON"] = { 16, 17 },
+    ["INVTYPE_SHIELD"] = { 17 },
+    ["INVTYPE_2HWEAPON"] = { 16 },
+    ["INVTYPE_WEAPONMAINHAND"] = { 16 },
+    ["INVTYPE_WEAPONOFFHAND"] = { 17 },
+    ["INVTYPE_HOLDABLE"] = { 17 },
+    ["INVTYPE_RANGED"] = { 18 },
+    ["INVTYPE_THROWN"] = { 18 },
+    ["INVTYPE_RANGEDRIGHT"] = { 18 },
+    ["INVTYPE_RELIC"] = { 18 },
+    ["INVTYPE_TABARD"] = { 19 },
+    ["INVTYPE_BAG"] = { 20, 21, 22, 23 },
+    ["INVTYPE_QUIVER"] = { 20, 21, 22, 23 },
+  }
+
   local Item = Class()
   HL.Item = Item
-  function Item:New(ItemID, ItemSlotID)
+
+  function Item:New(ItemID, ItemSlotIDs)
     if type(ItemID) ~= "number" then error("Invalid ItemID.") end
-    if ItemSlotID and type(ItemSlotID) ~= "table" then error("Invalid ItemSlotID.") end
+    if ItemSlotIDs and type(ItemSlotIDs) ~= "table" then error("Invalid ItemSlotIDs.") end
+
+    -- Attributes
+    local ItemName, _, ItemRarity, ItemLevel, ItemMinLevel, _, _, _, ItemEquipLoc = GetItemInfo(ItemID)
     self.ItemID = ItemID
-    self.ItemSlotID = ItemSlotID or usableSlotID(defaultItemSlotID(ItemID)) or { 0 }
+    self.ItemName = ItemName
+    self.ItemRarity = ItemRarity
+    self.ItemLevel = ItemLevel
+    self.ItemMinLevel = ItemMinLevel
+    self.ItemSlotIDs = ItemSlotIDs or ItemSlotTable[ItemEquipLoc]
+    -- Variables
     self.LastCastTime = 0
     self.LastDisplayTime = 0
     self.LastHitTime = 0

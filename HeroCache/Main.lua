@@ -3,7 +3,7 @@
 -- Addon
 local addonName, Cache = ...;
 -- Lua
-
+local wipe = wipe
 -- File Locals
 if not HeroCacheDB then
   _G.HeroCacheDB = {};
@@ -18,8 +18,7 @@ HeroCache = Cache;
 -- Defines our cached tables.
 -- Temporary
 Cache.APLVar = {};
-Cache.Enemies = {};
-Cache.EnemiesCount = {};
+Cache.Enemies = { Melee = {}, Ranged = {}, Spell = {} };
 Cache.GUIDInfo = {};
 Cache.MiscInfo = {};
 Cache.SpellInfo = {};
@@ -32,6 +31,7 @@ Cache.Persistent = {
     Class = { UnitClass("player") },
     Spec = {}
   },
+  BookIndex = { Pet = {}, Player = {} },
   SpellLearned = { Pet = {}, Player = {} },
   Texture = { Spell = {}, Item = {}, Custom = {} }
 };
@@ -40,14 +40,10 @@ Cache.Persistent = {
 Cache.HasBeenReset = false;
 function Cache.Reset()
   if not Cache.HasBeenReset then
-    -- -- foreach method
-    -- for Key, Value in pairs(HL.Cache) do
-    --   wipe(HL.Cache[Key]);
-    -- end
-
     wipe(Cache.APLVar);
-    wipe(Cache.Enemies);
-    wipe(Cache.EnemiesCount);
+    wipe(Cache.Enemies.Melee);
+    wipe(Cache.Enemies.Ranged);
+    wipe(Cache.Enemies.Spell);
     wipe(Cache.GUIDInfo);
     wipe(Cache.MiscInfo);
     wipe(Cache.SpellInfo);
@@ -269,16 +265,4 @@ end
 -- Typical usage is : return Cache.Set("SpellInfo", 53, "CostTable", GetSpellPowerCost(53)[1]);
 function Cache.Set(...)
   return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
-end
-
--- Wipe a table while keeping the structure
--- i.e. wipe every sub-table as long it doesn't contain a table
-function Cache.WipeTableRecursively(Table)
-  for Key, Value in pairs(Table) do
-    if type(Value) == "table" then
-      Cache.WipeTableRecursively(Value);
-    else
-      wipe(Table);
-    end
-  end
 end

@@ -11,6 +11,12 @@ local Target = Unit.Target
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local C_Timer = C_Timer
+local GetActionInfo = GetActionInfo
+local GetBindingKey = GetBindingKey
+local GetMacroSpell = GetMacroSpell
+local GetSpellTexture = GetSpellTexture
+local strbyte = strbyte
 local stringgsub = string.gsub
 -- File Locals
 local KeyBindings = {}
@@ -19,24 +25,24 @@ local BarNames = {}
 --- ============================ CONTENT ============================
 -- Parse a given ActionBar for HotKeys
 local function ParseBar(Bar, Override)
-  local Button
-  local ButtonTexture
-  local ButtonHotKey = ""
   for i = 1, Bar[2] do
     local ButtonName = Bar[1] .. i
-    Button = _G[ButtonName]
+    local Button = _G[ButtonName]
     if Button and Button.icon and Button.HotKey then
-      ButtonTexture = Button.icon:GetTexture()
-      ButtonHotKey = Button.HotKey:GetText()
+      local ButtonTexture = Button.icon:GetTexture()
+      local ButtonHotKey = Button.HotKey:GetText()
+
       if _G.Bartender4 and Button.config.hideElements.hotkey then
         ButtonHotKey = Button.config.keyBoundTarget and GetBindingKey(Button.config.keyBoundTarget) or GetBindingKey("CLICK " .. ButtonName .. ":LeftButton")
       end
+
       if Button.icon:IsShown() and ButtonTexture and ButtonHotKey and strbyte(ButtonHotKey) ~= 226 then
-        --If button is a macro check that the macro casts a spell else ignore
+        -- If button is a macro check that the macro casts a spell else ignore
+        local buttonActionType, buttonActionId
         if _G.ElvUI or _G.Bartender4 then
-          local buttonActionType, buttonActionId = GetActionInfo(Button._state_action)
+          buttonActionType, buttonActionId = GetActionInfo(Button._state_action)
         else
-          local buttonActionType, buttonActionId = GetActionInfo(Button:GetPagedID())
+          buttonActionType, buttonActionId = GetActionInfo(Button:GetPagedID())
         end
         if buttonActionType == "macro" then
           --Item is a macro so check it plans to cast a spell
@@ -48,6 +54,7 @@ local function ParseBar(Bar, Override)
             ButtonTexture = nil
           end
         end
+
         if not KeyBindings[ButtonTexture] or Override then
           if ButtonTexture ~= nil then
             -- Numpad isn't shortened, so we have to do it manually

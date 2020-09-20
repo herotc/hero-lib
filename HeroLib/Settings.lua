@@ -10,9 +10,6 @@ HL.GUISettings = {
   General = {
     -- Debug Mode
     DebugMode = false,
-    -- Recovery Timer
-    RecoveryMode = "GCD", -- "GCD" to always display the next ability, "Custom" for Custom RecoveryTimer
-    RecoveryTimer = 950,
     -- Reduce CPU Usage (decrease a little bit Rotation potential performance but saves FPS)
     ReduceCPULoad = false,
     ReduceCPULoadOffset = 0.034, -- Default:34ms | It'll be added to the default 66ms, can be positive or negative

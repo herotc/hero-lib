@@ -21,76 +21,17 @@ local ListenedAuras = {}
 
 
 --- ============================ CONTENT ============================
-local function AddAuraToUnit(SpellID, UnitGUID)
-  local Aura = ListenedAuras[SpellID]
-  if Aura then
-    if not Aura.Units[UnitGUID] then
-      Aura.Units[UnitGUID] = true
-      -- HL.Print("AddAuraToUnit " .. SpellID .. " " .. UnitGUID)
-    else
-      -- HL.Print("AddAuraToUnit Refresh " .. SpellID .. " " .. UnitGUID)
-      -- Refresh
-    end
+-- Register a spell to watch the aura status across multiple target units
+function Spell:RegisterAuraTracking()
+  local SpellID = self:ID()
+
+  if ListenedAuras[SpellID] then
+    error("Attempted to register spell " .. SpellID .. " multiple times, aborting!")
   end
+
+  ListenedAuras[SpellID] = { Spell = self, Units = {} }
+  HL.Debug("RegisterAuraTracking " .. SpellID)
 end
-
-local function RemoveAuraFromUnit(SpellID, UnitGUID)
-  local Aura = ListenedAuras[SpellID]
-  if Aura and Aura.Units[UnitGUID] then
-    Aura.Units[UnitGUID] = nil
-  end
-end
-
-local function RemoveAurasFromUnit(UnitGUID)
-  for _, Aura in pairs(ListenedAuras) do
-    if Aura.Units[UnitGUID] then
-      Aura.Units[UnitGUID] = nil
-      -- HL.Print("RemoveAurasFromUnit " .. Aura.Spell:Name() .. " " .. UnitGUID)
-    end
-  end
-end
-
-local function ScanAurasOnUnit(ScanUnit)
-  local UnitGUID = ScanUnit:GUID()
-  if ScanUnit and UnitGUID then
-    for _, Aura in pairs(ListenedAuras) do
-      if ScanUnit:Debuff(Aura.Spell) then
-        if not Aura.Units[UnitGUID] then
-          Aura.Units[UnitGUID] = true
-          -- HL.Print("ScanAurasForUnit - Adding " .. Aura.Spell:Name() .. " to unit " .. ScanUnit:GUID())
-        end
-      else
-        if Aura.Units[UnitGUID] then
-          Aura.Units[UnitGUID] = nil
-          -- HL.Print("ScanAurasForUnit - Removing " .. Aura.Spell:Name() .. " from unit " .. ScanUnit:GUID())
-        end
-      end
-    end
-  else
-    -- HL.Print("ScanAurasForUnit - Invalid Unit")
-  end
-end
-
--- PMultiplier OnApply/OnRefresh Listener
-HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
-  AddAuraToUnit(SpellID, DestGUID)
-end, "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH", "SPELL_AURA_APPLIED_DOSE")
-
-HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
-  RemoveAuraFromUnit(SpellID, DestGUID)
-end, "SPELL_AURA_REMOVED")
-
-HL:RegisterForCombatEvent(function(_, _, _, _, _, _, _, DestGUID)
-  RemoveAurasFromUnit(DestGUID)
-end, "UNIT_DIED", "UNIT_DESTROYED")
-
-HL:RegisterForEvent(function(_, UnitId)
-  ScanAurasOnUnit(Nameplates[UnitId])
-end, "NAME_PLATE_UNIT_ADDED")
-
-HL:RegisterForEvent(function()
-  ScanAurasOnUnit(Target)
-end, "PLAYER_TARGET_CHANGED")
 
 -- Unregister all tracked spells
 function HL.UnregisterAuraTracking()
@@ -98,175 +39,253 @@ function HL.UnregisterAuraTracking()
   ListenedAuras = {}
 end
 
--- Register a spell to watch the aura status across multiple target units
-function Spell:RegisterAuraTracking()
-  if ListenedAuras[self.SpellID] then
-    error("Attempted to register spell " .. self.SpellID .. " multiple times, aborting!")
-    return
-  end
-  ListenedAuras[self.SpellID] = {
-    Spell = self,
-    Units = {}
-  }
-  HL.Debug("RegisterAuraTracking " .. self.SpellID)
-end
+-- AddAuraToUnit
+HL:RegisterForSelfCombatEvent(
+  function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
+    local Aura = ListenedAuras[SpellID]
+    if not Aura then return end
 
-local function GetAuraUnit(Units, UnitGUID)
-  if UnitGUIDMap[UnitGUID] then
-    -- Just return the first valid entry, as they should all point to the same object
-    for _, AuraUnit in pairs(UnitGUIDMap[UnitGUID]) do
-      if AuraUnit then
-        return AuraUnit
+    local AuraUnits = Aura.Units
+    if not AuraUnits[DestGUID] then
+      AuraUnits[DestGUID] = true
+      -- HL.Print("AddAuraToUnit " .. SpellID .. " " .. DestGUID)
+    else
+      -- HL.Print("AddAuraToUnit Refresh " .. SpellID .. " " .. DestGUID)
+      -- Refresh
+    end
+  end,
+  "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH", "SPELL_AURA_APPLIED_DOSE"
+)
+
+-- RemoveAuraFromUnit
+HL:RegisterForSelfCombatEvent(
+  function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
+    local Aura = ListenedAuras[SpellID]
+    if not Aura then return end
+
+    local AuraUnits = Aura.Units
+    if AuraUnits[DestGUID] then
+      AuraUnits[DestGUID] = nil
+      -- HL.Print("RemoveAuraFromUnit " .. Aura.Spell:Name() .. " " .. DestGUID)
+    end
+  end,
+  "SPELL_AURA_REMOVED"
+)
+
+-- RemoveAurasFromUnit
+HL:RegisterForCombatEvent(
+  function(_, _, _, _, _, _, _, DestGUID)
+    for _, Aura in pairs(ListenedAuras) do
+      local AuraUnits = Aura.Units
+      if AuraUnits[DestGUID] then
+        AuraUnits[DestGUID] = nil
+        -- HL.Print("RemoveAurasFromUnit " .. Aura.Spell:Name() .. " " .. DestGUID)
+      end
+    end
+  end,
+  "UNIT_DIED", "UNIT_DESTROYED"
+)
+
+-- ScanAurasOnUnit
+do
+  local function ScanAurasOnUnit(ThisUnit)
+    local GUID = ThisUnit:GUID()
+    if not GUID then
+      -- HL.Print("ScanAurasForUnit - Invalid Unit")
+      return
+    end
+
+    for _, Aura in pairs(ListenedAuras) do
+      local ThisSpell = Aura.Spell
+      local AuraUnits = Aura.Units
+      if ThisUnit:DebuffUp(ThisSpell, nil, true) or ThisUnit:BuffUp(ThisSpell, nil, true) then
+        if not AuraUnits[GUID] then
+          AuraUnits[GUID] = true
+          -- HL.Print("ScanAurasForUnit - Adding " .. Aura.Spell:Name() .. " to unit " .. GUID)
+        end
+      else
+        if AuraUnits[GUID] then
+          AuraUnits[GUID] = nil
+          -- HL.Print("ScanAurasForUnit - Removing " .. Aura.Spell:Name() .. " from unit " .. GUID)
+        end
       end
     end
   end
-  -- Purge stale entry from the table
-  -- HL.Print("GetAuraUnit - Purging Unit " .. UnitGUID)
-  Units[UnitGUID] = nil
-  return nil
+
+  HL:RegisterForEvent(function(_, UnitID) ScanAurasOnUnit(Nameplates[UnitID]) end, "NAME_PLATE_UNIT_ADDED")
+  HL:RegisterForEvent(function() ScanAurasOnUnit(Target) end, "PLAYER_TARGET_CHANGED")
 end
 
-local function SpellRegisterError(ErrorSpell)
-  local SpellName = ErrorSpell:Name()
-  if SpellName then
-    return "You forgot to register the spell: " .. SpellName .. " in RegisterAura handler."
-  else
-    return "You forgot to register the spell: " .. ErrorSpell.SpellID .. " in RegisterAura handler."
+do
+  local function SpellRegisterError(ErrorSpell)
+    return "You forgot to register the spell: " .. ErrorSpell:Name() or ErrorSpell:ID() .. " in RegisterAura handler."
   end
-end
 
--- Returns the total count this aura across all active targets
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:ActiveCount()
-  local Count = 0
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      if GetAuraUnit(Aura.Units, AuraUnitGUID) then
+  local function GetAuraUnit(Units, GUID)
+    if UnitGUIDMap[GUID] then
+      -- Just return the first valid entry, as they should all point to the same object
+      for _, AuraUnit in pairs(UnitGUIDMap[GUID]) do
+        if AuraUnit then
+          return AuraUnit
+        end
+      end
+    end
+
+    -- Purge stale entry from the table
+    Units[GUID] = nil
+    -- HL.Print("GetAuraUnit - Purging Unit " .. UnitGUID)
+
+    return nil
+  end
+
+  -- active_dot.foo
+  -- Returns the total count this aura across all active targets
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:AuraActiveCount()
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local Count = 0
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      if GetAuraUnit(AuraUnits, AuraUnitGUID) then
         Count = Count + 1
       end
     end
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return Count
-end
 
--- Returns an array of the units with this aura across all active targets
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:ActiveUnits()
-  local Aura = ListenedAuras[self.SpellID]
-  local Units = {}
-  if Aura then
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
+    return Count
+  end
+
+  -- Returns an array of the units with this aura across all active targets
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:AuraActiveUnits()
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local Units = {}
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
       if AuraUnit then
         tableinsert(Units, AuraUnit)
       end
     end
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return Units
-end
 
--- Returns if an instance of this debuff is present on any active target
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:AnyDebuffP(Offset)
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
-      if AuraUnit and AuraUnit:DebuffP(self, nil, Offset) then
+    return Units
+  end
+
+  -- Returns if an instance of this debuff is present on any active target
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:AnyBuffUp(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
+      if AuraUnit and AuraUnit:Buff(self, nil, BypassRecovery) then
         return true
       end
     end
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return false
-end
 
--- Returns the maximum duration of this debuff that is present on any active target
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:MaxDebuffRemainsP(Offset)
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
-    local MaxRemains = 0
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
-      if AuraUnit then
-        MaxRemains = math.max(MaxRemains, AuraUnit:DebuffRemainsP(self, nil, Offset))
+    return false
+  end
+
+  -- Returns if an instance of this debuff is present on any active target
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:AnyDebuffUp(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
+      if AuraUnit and AuraUnit:Debuff(self, nil, BypassRecovery) then
+        return true
       end
     end
-    return MaxRemains
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return 0
-end
 
--- Returns the unit which has the maximum duration instance of this debuff
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:MaxDebuffRemainsPUnit()
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
-    local MaxRemains, MaxRemainsUnit = 0, nil
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
+    return false
+  end
+
+  -- Returns the maximum duration of this debuff that is present on any active target
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:MaxDebuffRemains(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local MaxRemains = 0
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
       if AuraUnit then
-        local UnitRemains = AuraUnit:DebuffRemainsP(self, nil, Offset)
+        MaxRemains = math.max(MaxRemains, AuraUnit:DebuffRemains(self, nil, BypassRecovery))
+      end
+    end
+
+    return MaxRemains
+  end
+
+  -- Returns the unit which has the maximum duration instance of this debuff
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:MaxDebuffRemainsUnit(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local MaxRemains, MaxRemainsUnit = 0, nil
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
+      if AuraUnit then
+        local UnitRemains = AuraUnit:DebuffRemains(self, nil, BypassRecovery)
         if UnitRemains > MaxRemains then
           MaxRemains = UnitRemains
           MaxRemainsUnit = AuraUnit
         end
       end
     end
-    return MaxRemainsUnit
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return nil
-end
 
--- Returns the maximum stack count of this debuff that is present on any active target
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:MaxDebuffStackP()
-  local MaxStack = 0
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
+    return MaxRemainsUnit
+  end
+
+  -- Returns the maximum stack count of this debuff that is present on any active target
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:MaxDebuffStack(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
+    local MaxStack = 0
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
       if AuraUnit then
-        MaxStack = math.max(MaxStack, AuraUnit:DebuffStackP(self))
+        MaxStack = math.max(MaxStack, AuraUnit:DebuffStack(self, nil, BypassRecovery))
       end
     end
-  else
-    error(SpellRegisterError(Spell))
-  end
-  return MaxStack
-end
 
--- Returns the unit which has the maximum stack count instance of this debuff
--- Only works with spells using Spell:RegisterAuraTracking()
-function Spell:MaxDebuffStackPUnit()
-  local Aura = ListenedAuras[self.SpellID]
-  if Aura then
+    return MaxStack
+  end
+
+  -- Returns the unit which has the maximum stack count instance of this debuff
+  -- Only works with spells using Spell:RegisterAuraTracking()
+  function Spell:MaxDebuffStackUnit(BypassRecovery)
+    local Aura = ListenedAuras[self:ID()]
+    if not Aura then error(SpellRegisterError(self)) end
+
     local MaxStack, MaxStackUnit = 0, nil
-    for AuraUnitGUID, _ in pairs(Aura.Units) do
-      local AuraUnit = GetAuraUnit(Aura.Units, AuraUnitGUID)
+    local AuraUnits = Aura.Units
+    for AuraUnitGUID, _ in pairs(AuraUnits) do
+      local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
       if AuraUnit then
-        local UnitStack = AuraUnit:DebuffStackP(self)
+        local UnitStack = AuraUnit:DebuffStack(self, nil, BypassRecovery)
         if UnitStack > MaxStack then
           MaxStack = UnitStack
           MaxStackUnit = AuraUnit
         end
       end
     end
+
     return MaxStackUnit
-  else
-    error(SpellRegisterError(Spell))
   end
-  return nil
 end
 

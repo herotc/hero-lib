@@ -12,6 +12,7 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetTime = GetTime
 local mathmax = math.max
 local mathmin = math.min
 local pairs = pairs
@@ -20,12 +21,13 @@ local tableinsert = table.insert
 local type = type
 local unpack = unpack
 local wipe = table.wipe
+local GetInstanceInfo = GetInstanceInfo
 -- File Locals
 
 
 
 --- ============================ CONTENT ============================
-HL.TTD = {
+local TTD = {
   Settings = {
     -- Refresh time (seconds) : min=0.1,  max=2,    default = 0.1
     Refresh = 0.1,
@@ -46,14 +48,15 @@ HL.TTD = {
   ExistingUnits = {}, -- Used to track GUIDs of currently existing units (to be compared with tracked units)
   Throttle = 0
 }
-local TTD = HL.TTD
+HL.TTD = TTD
+
 function HL.TTDRefresh()
   -- This may not be needed if we don't have any units but caching them in case
   -- We do speeds it all up a little bit
   local CurrentTime = GetTime()
   local HistoryCount = TTD.Settings.HistoryCount
   local HistoryTime = TTD.Settings.HistoryTime
-  local Cache = TTD.Cache
+  local TTDCache = TTD.Cache
   local IterableUnits = TTD.IterableUnits
   local Units = TTD.Units
   local ExistingUnits = TTD.ExistingUnits
@@ -82,13 +85,13 @@ function HL.TTDRefresh()
           -- Check if the % HP changed since the last check (or if there were none)
           if not Values or HealthPercentage ~= Values[2] then
             local Value
-            local LastIndex = #Cache
+            local LastIndex = #TTDCache
             -- Check if we can re-use a table from the cache
             if LastIndex == 0 then
               Value = { Time, HealthPercentage }
             else
-              Value = Cache[LastIndex]
-              Cache[LastIndex] = nil
+              Value = TTDCache[LastIndex]
+              TTDCache[LastIndex] = nil
               Value[1] = Time
               Value[2] = HealthPercentage
             end
@@ -96,7 +99,7 @@ function HL.TTDRefresh()
             local n = #Values
             -- Delete values that are no longer valid
             while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-              Cache[#Cache + 1] = Values[n]
+              TTDCache[#Cache + 1] = Values[n]
               Values[n] = nil
               n = n - 1
             end
@@ -143,10 +146,9 @@ function Unit:TimeToX(Percentage, MinSamples)
       local a, b = 0, 0
       local Ex2, Ex, Exy, Ey = 0, 0, 0, 0
 
-      local Value, x, y
       for i = 1, n do
-        Value = Values[i]
-        x, y = Value[1], Value[2]
+        local Value = Values[i]
+        local x, y = Value[1], Value[2]
 
         Ex2 = Ex2 + x * x
         Ex = Ex + x
@@ -194,8 +196,8 @@ local SpecialTTDPercentageData = {
   --- Odyn
   -- Hyrja & Hymdall leaves the fight at 25% during first stage and 85%/90% during second stage (HM/MM).
   -- TODO : Put GetInstanceInfo into PersistentCache.
-  [114360] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90 end,
-  [114361] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (select(3, GetInstanceInfo()) == 16 and 85) or 90 end,
+  [114360] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
+  [114361] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
   -- Odyn leaves the fight at 10%.
   [114263] = 10,
   ----- Nighthold (T19 - 7.1.5 Patch) -----
@@ -217,37 +219,38 @@ local SpecialTTDPercentageData = {
   [76057] = 10
 }
 function Unit:SpecialTTDPercentage(NPCID)
-  if SpecialTTDPercentageData[NPCID] then
-    if type(SpecialTTDPercentageData[NPCID]) == "number" then
-      return SpecialTTDPercentageData[NPCID]
-    else
-      return SpecialTTDPercentageData[NPCID](self)
-    end
+  local SpecialTTDPercentage = SpecialTTDPercentageData[NPCID]
+  if not SpecialTTDPercentage then return 0 end
+
+  if type(SpecialTTDPercentage) == "number" then
+    return SpecialTTDPercentage
   end
-  return 0
+
+  return SpecialTTDPercentage(self)
 end
 
 -- Get the unit TimeToDie
 function Unit:TimeToDie(MinSamples)
   local GUID = self:GUID()
-  if GUID then
-    local MinSamples = MinSamples or 3
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo then
-      UnitInfo = {}
-      Cache.UnitInfo[GUID] = UnitInfo
-    end
-    local TTD = UnitInfo.TTD
-    if not TTD then
-      TTD = {}
-      UnitInfo.TTD = TTD
-    end
-    if not TTD[MinSamples] then
-      TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples)
-    end
-    return TTD[MinSamples]
+  if not GUID then return 11111 end
+
+  local MinSamples = MinSamples or 3
+  local UnitInfo = Cache.UnitInfo[GUID]
+  if not UnitInfo then
+    UnitInfo = {}
+    Cache.UnitInfo[GUID] = UnitInfo
   end
-  return 11111
+
+  local TTD = UnitInfo.TTD
+  if not TTD then
+    TTD = {}
+    UnitInfo.TTD = TTD
+  end
+  if not TTD[MinSamples] then
+    TTD[MinSamples] = self:TimeToX(self:SpecialTTDPercentage(self:NPCID()), MinSamples)
+  end
+
+  return TTD[MinSamples]
 end
 
 -- Get the boss unit TimeToDie
@@ -255,12 +258,14 @@ function Unit:BossTimeToDie(MinSamples)
   if self:IsInBossList() or self:IsDummy() then
     return self:TimeToDie(MinSamples)
   end
+
   return 11111
 end
 
 -- Get if the unit meets the TimeToDie requirements.
 function Unit:FilteredTimeToDie(Operator, Value, Offset, ValueThreshold, MinSamples)
   local TTD = self:TimeToDie(MinSamples)
+
   return TTD < (ValueThreshold or 7777) and Utils.CompareThis(Operator, TTD + (Offset or 0), Value) or false
 end
 
@@ -269,6 +274,7 @@ function Unit:BossFilteredTimeToDie(Operator, Value, Offset, ValueThreshold, Min
   if self:IsInBossList() or self:IsDummy() then
     return self:FilteredTimeToDie(Operator, Value, Offset, ValueThreshold, MinSamples)
   end
+
   return false
 end
 
@@ -282,11 +288,12 @@ function Unit:BossTimeToDieIsNotValid(MinSamples)
   if self:IsInBossList() then
     return self:TimeToDieIsNotValid(MinSamples)
   end
+
   return true
 end
 
 -- Returns the max fight length of boss units, or the current selected target if no boss units
-function HL.FightRemains(Range, BossOnly)
+function HL.FightRemains(Enemies, BossOnly)
   local BossExists, MaxTimeToDie
   for _, BossUnit in pairs(Boss) do
     if BossUnit:Exists() then
@@ -303,8 +310,8 @@ function HL.FightRemains(Range, BossOnly)
   end
 
   -- If we specify an AoE range, iterate through all the targets in the specified range
-  if Range then
-    for _, CycleUnit in pairs(Cache.Enemies[Range]) do
+  if Enemies then
+    for _, CycleUnit in pairs(Enemies) do
       if not CycleUnit:IsUserCycleBlacklisted() and (CycleUnit:AffectingCombat() or CycleUnit:IsDummy()) and not CycleUnit:TimeToDieIsNotValid() then
         MaxTimeToDie = mathmax(MaxTimeToDie or 0, CycleUnit:TimeToDie())
       end
@@ -328,11 +335,12 @@ function HL.BossFightRemainsIsNotValid()
 end
 
 -- Returns if the current fight length meets the requirements.
-function HL.FilteredFightRemains(Range, Operator, Value, CheckIfValid, BossOnly)
-  local FightRemains = HL.FightRemains(Range, BossOnly)
+function HL.FilteredFightRemains(Enemies, Operator, Value, CheckIfValid, BossOnly)
+  local FightRemains = HL.FightRemains(Enemies, BossOnly)
   if CheckIfValid and FightRemains >= 7777 then
     return false
   end
+
   return Utils.CompareThis(Operator, FightRemains, Value) or false
 end
 

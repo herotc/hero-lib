@@ -12,7 +12,10 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-local select = select
+local GetPowerRegen = GetPowerRegen
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
+local UnitPowerType = UnitPowerType
 -- File Locals
 
 
@@ -20,22 +23,30 @@ local select = select
 --- ============================ CONTENT ============================
 -- Get the unit's power type
 function Unit:PowerType()
-  return UnitPowerType(self.UnitID)
+  local UnitID = self:ID()
+
+  return UnitPowerType(UnitID)
 end
 
 -- power.max
 function Unit:PowerMax()
-  return UnitPowerMax(self.UnitID, self:PowerType())
+  local UnitID = self:ID()
+
+  return UnitPowerMax(UnitID, self:PowerType())
 end
 
 -- power
 function Unit:Power()
-  return UnitPower(self.UnitID, self:PowerType())
+  local UnitID = self:ID()
+
+  return UnitPower(UnitID, self:PowerType())
 end
 
 -- power.regen
 function Unit:PowerRegen()
-  return GetPowerRegen(self.UnitID)
+  local UnitID = self:ID()
+
+  return GetPowerRegen(UnitID)
 end
 
 -- power.pct

@@ -12,7 +12,15 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-
+local CR_VERSATILITY_DAMAGE_DONE = CR_VERSATILITY_DAMAGE_DONE
+local GetCombatRatingBonus = GetCombatRatingBonus
+local GetCritChance = GetCritChance
+local GetHaste = GetHaste
+local GetMasteryEffect = GetMasteryEffect
+local GetVersatilityBonus = GetVersatilityBonus
+local UnitAttackPower = UnitAttackPower
+local UnitAttackSpeed = UnitAttackSpeed
+local UnitDamage = UnitDamage
 -- File Locals
 
 
@@ -26,7 +34,7 @@ do
     [260] = true, -- Outlaw
     [261] = true, -- Subtlety
     [268] = true, -- Brewmaster
-    [269] = true -- Windwalker
+    [269] = true, -- Windwalker
   }
   function Player:GCD()
     local GUID = self:GUID()
@@ -58,13 +66,11 @@ do
   function Player:GCDRemains()
     return GCDSpell:CooldownRemains(true)
   end
-  
+
   function Player:GCDStartTime()
-    local GCDStartTime, GCDDuration = GCDSpell:CooldownInfo()
-    if GCDDuration > 0 then
-      return GCDStartTime
-    end
-    return 0
+    local StartTime = GCDSpell:CooldownInfo()
+
+    return StartTime
   end
 end
 

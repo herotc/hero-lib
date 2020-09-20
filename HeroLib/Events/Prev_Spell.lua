@@ -14,6 +14,7 @@ local Item = HL.Item
 local pairs = pairs
 local tableinsert = table.insert
 local mathmax = math.max
+local GetTime = GetTime
 -- File Locals
 local TriggerGCD = HL.Enum.TriggerGCD -- TriggerGCD table until it has been filtered.
 local LastRecord = 15
@@ -57,48 +58,60 @@ local function RemoveOldRecords()
 end
 
 -- Player On Cast Success Listener
-HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-  HL.Timer.LastCastSuccess = GetTime()
-  if TriggerGCD[SpellID] ~= nil then
-    if TriggerGCD[SpellID] then
-      -- HL.Print(GetTime() .. " Self SPELL_CAST_SUCCESS " .. SpellID)
-      tableinsert(Prev.GCD, 1, SpellID)
-      PrevGCDCastTime = GetTime()
-      Prev.OffGCD = {}
-      PrevOffGCDCastTime = 0
-      PrevGCDPredicted = 0
-    else -- Prevents unwanted spells to be registered as OffGCD.
-      tableinsert(Prev.OffGCD, 1, SpellID)
-      PrevOffGCDCastTime = GetTime()
-      PrevGCDCastTime = 0
+HL:RegisterForSelfCombatEvent(
+  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+    HL.Timer.LastCastSuccess = GetTime()
+    if TriggerGCD[SpellID] ~= nil then
+      if TriggerGCD[SpellID] then
+        -- HL.Print(GetTime() .. " Self SPELL_CAST_SUCCESS " .. SpellID)
+        tableinsert(Prev.GCD, 1, SpellID)
+        PrevGCDCastTime = GetTime()
+        Prev.OffGCD = {}
+        PrevOffGCDCastTime = 0
+        PrevGCDPredicted = 0
+      else -- Prevents unwanted spells to be registered as OffGCD.
+        tableinsert(Prev.OffGCD, 1, SpellID)
+        PrevOffGCDCastTime = GetTime()
+        PrevGCDCastTime = 0
+      end
     end
-  end
-  RemoveOldRecords()
-end, "SPELL_CAST_SUCCESS")
+    RemoveOldRecords()
+  end,
+  "SPELL_CAST_SUCCESS"
+)
 
-HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-  if TriggerGCD[SpellID] then
-    PrevGCDPredicted = SpellID
-  end
-end, "SPELL_CAST_START")
-HL:RegisterForSelfCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-  if PrevGCDPredicted == SpellID then
-    PrevGCDPredicted = 0
-  end
-end, "SPELL_CAST_FAILED")
+HL:RegisterForSelfCombatEvent(
+  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+    if TriggerGCD[SpellID] then
+      PrevGCDPredicted = SpellID
+    end
+  end,
+  "SPELL_CAST_START"
+)
+HL:RegisterForSelfCombatEvent(
+  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+    if PrevGCDPredicted == SpellID then
+      PrevGCDPredicted = 0
+    end
+  end,
+  "SPELL_CAST_FAILED"
+)
 
 -- Pet On Cast Success Listener
-HL:RegisterForPetCombatEvent(function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-  if TriggerGCD[SpellID] ~= nil then
-    if TriggerGCD[SpellID] then
-      tableinsert(Prev.PetGCD, 1, SpellID)
-      Prev.PetOffGCD = {}
-    else -- Prevents unwanted spells to be registered as OffGCD.
-      tableinsert(Prev.PetOffGCD, 1, SpellID)
+HL:RegisterForPetCombatEvent(
+  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+    if TriggerGCD[SpellID] ~= nil then
+      if TriggerGCD[SpellID] then
+        tableinsert(Prev.PetGCD, 1, SpellID)
+        Prev.PetOffGCD = {}
+      else -- Prevents unwanted spells to be registered as OffGCD.
+        tableinsert(Prev.PetOffGCD, 1, SpellID)
+      end
     end
-  end
-  RemoveOldRecords()
-end, "SPELL_CAST_SUCCESS")
+    RemoveOldRecords()
+  end,
+  "SPELL_CAST_SUCCESS"
+)
 
 -- Filter the Enum TriggerGCD table to keep only registered spells for a given class (based on SpecID).
 function Player:FilterTriggerGCD(SpecID)

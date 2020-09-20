@@ -11,14 +11,14 @@ local Target = Unit.Target
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local CreateFrame = CreateFrame
 local pairs = pairs
 local select = select
-local stringsub = string.sub
 local stringfind = string.find
+local stringsub = string.sub
 local tableinsert = table.insert
 local tableremove = table.remove
-local tonumber = tonumber
-local wipe = table.wipe
 -- File Locals
 local EventFrame = CreateFrame("Frame", "HeroLib_EventFrame", UIParent)
 local Handlers = {} -- All Events
@@ -36,8 +36,6 @@ local CombatPrefixes = {
   "SWING"
 }
 local CombatPrefixesCount = #CombatPrefixes
-local restoreDB = {}
-local overrideDB = {}
 
 
 --- ============================ CONTENT ============================
@@ -279,37 +277,6 @@ end
 HL:RegisterForEvent(function(Event)
   ListenerCombatLogEventUnfiltered(Event, CombatLogGetCurrentEventInfo())
 end, "COMBAT_LOG_EVENT_UNFILTERED")
-
--- Core Override System
-function HL.AddCoreOverride(target, newfunction, specKey)
-  local loadOverrideFunc = assert(loadstring([[
-      return function (func)
-      ]] .. target .. [[ = func
-      end, ]] .. target .. [[
-      ]]))
-  setfenv(loadOverrideFunc, { HL = HL, Player = Player, Spell = Spell, Item = Item, Target = Target, Unit = Unit, Pet = Pet })
-  local overrideFunc, oldfunction = loadOverrideFunc()
-  if overrideDB[specKey] == nil then
-    overrideDB[specKey] = {}
-  end
-  tableinsert(overrideDB[specKey], { overrideFunc, newfunction })
-  tableinsert(restoreDB, { overrideFunc, oldfunction })
-  return oldfunction
-end
-
-function HL.LoadRestores()
-  for k, v in pairs(restoreDB) do
-    v[1](v[2])
-  end
-end
-
-function HL.LoadOverrides(specKey)
-  if type(overrideDB[specKey]) == "table" then
-    for k, v in pairs(overrideDB[specKey]) do
-      v[1](v[2])
-    end
-  end
-end
 
 --- ======= COMBATLOG =======
 --- Combat Log Arguments

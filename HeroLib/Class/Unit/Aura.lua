@@ -12,441 +12,209 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-local unpack = unpack
--- WoW API
-local UnitBuff = UnitBuff
-local UnitDebuff = UnitDebuff
+local UnitAura = UnitAura -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3, ..., value11
+local GetTime = GetTime
 -- File Locals
 
 
 
 --- ============================ CONTENT ============================
--- buff.foo.up (does return the buff table and not only true/false)
-do
-  --  1      2     3      4            5           6             7           8           9                      10          11          12            13                14            15       16     17      18
-  -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-  local UnitID
-  local function _UnitBuff()
-    local Buffs = {}
-    for i = 1, HL.MAXIMUM do
-      local Infos = { UnitBuff(UnitID, i) }
-      if not Infos[10] then break end
-      Buffs[i] = Infos
-    end
-    return Buffs
-  end
+-- Note: BypassRecovery is a common arg of this module because by default, in order to improve the prediction, we take in account the remaining time of the GCD or the current cast (whichever is higher).
+--       Although sometimes we might want to ignore this and return the "raw" value, which this arg is for.
 
-  function Unit:Buff(ThisSpell, Index, AnyCaster)
-    local GUID = self:GUID()
-    if not GUID then return false end
+-- Get the AuraInfo (from UnitAura).
+-- Only returns Stack, Duration, ExpirationTime, Index by default. Except if the Full argument is truthy then it is the UnitAura call that is returned.
+function Unit:AuraInfo(ThisSpell, Filter, Full)
+  local GUID = self:GUID()
+  if not GUID then return end
 
-    UnitID = self.UnitID
-    local SpellID = ThisSpell:ID()
-    local Buffs = Cache.Get("UnitInfo", GUID, "Buffs", _UnitBuff)
-    for i = 1, #Buffs do
-      local Buff = Buffs[i]
-      if SpellID == Buff[10] then
-        local Caster = Buff[7]
-        if AnyCaster or Caster == "player" then
-          if not Index then return true end
-          if type(Index) == "number" then return Buff[Index] end
-          return unpack(Buff)
-        end
-      end
+  local UnitID = self:ID()
+  local SpellID = ThisSpell:ID()
+
+  local Index = 1
+  while true do
+    local _, _, AuraStack, _, AuraDuration, AuraExpirationTime, _, _, _, AuraSpellID = UnitAura(UnitID, Index, Filter)
+
+    -- Returns no value if the aura was not found.
+    if not AuraSpellID then return end
+
+    -- Returns the info once we match the spell ids.
+    if AuraSpellID == SpellID then
+      return (Full and UnitAura(UnitID, Index, Filter)) or AuraStack, AuraDuration, AuraExpirationTime, Index
     end
+
+    Index = Index + 1
   end
 end
 
---[[*
-  * @function Unit:BuffDown
-  * @desc Get if the buff is down.
-  * @simc buff.foo.down
-  *
-  * @param {object} ThisSpell - Spell to check.
-  * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
-  * @param {boolean} [AnyCaster] - Check from any caster ?
-  *
-  * @returns {boolean}
-  *]]
-function Unit:BuffDown(ThisSpell, Index, AnyCaster)
-  return (not self:Buff(ThisSpell, Index, AnyCaster))
+-- Get the BuffInfo (from AuraInfo).
+function Unit:BuffInfo(ThisSpell, AnyCaster, Full)
+  local Filter = AnyCaster and "HELPFUL" or "HELPFUL|PLAYER"
+
+  return self:AuraInfo(ThisSpell, Filter, Full)
 end
 
---[[*
-  * @function Unit:BuffRemains
-  * @desc Get the remaining time, if there is any, on a buff.
-  * @simc buff.foo.remains
-  *
-  * @param {object} ThisSpell - Spell to check.
-  * @param {boolean} [AnyCaster] - Check from any caster ?
-  * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffRemains(ThisSpell, AnyCaster, Offset)
-  local ExpirationTime = self:Buff(ThisSpell, 6, AnyCaster)
-  if ExpirationTime then
-    if ExpirationTime == 0 then
-      return 9999
-    end
+-- buff.foo.stack
+function Unit:BuffStack(ThisSpell, AnyCaster, BypassRecovery)
+  -- In the case we are using the prediction, we have to check if the buff will still be there before considering its stacks.
+  if not BypassRecovery and self:BuffDown(ThisSpell, AnyCaster, BypassRecovery) then return 0 end
 
-    if Offset then
-      ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
-    end
+  local Stack = self:BuffInfo(ThisSpell, AnyCaster)
 
-    -- Stealth-like buffs (Subterfurge and Master Assassin) are delayed but within aura latency
-    local SpellID = ThisSpell:ID()
-    if SpellID == 115192 or SpellID == 256735 then
-      ExpirationTime = ExpirationTime - 0.3
-    end
-    local Remains = ExpirationTime - GetTime()
-    return Remains >= 0 and Remains or 0
-  else
-    return 0
-  end
-end
-
---[[*
-  * @function Unit:BuffRemainsP
-  * @override Unit:BuffRemains
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffRemainsP(ThisSpell, AnyCaster, Offset)
-  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto")
-end
-
-function Unit:BuffP(ThisSpell, AnyCaster, Offset)
-  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto") > 0
-end
-
-function Unit:BuffDownP(ThisSpell, AnyCaster, Offset)
-  return self:BuffRemains(ThisSpell, AnyCaster, Offset or "Auto") == 0
+  return Stack or 0
 end
 
 -- buff.foo.duration
 function Unit:BuffDuration(ThisSpell, AnyCaster)
-  return self:Buff(ThisSpell, 5, AnyCaster) or 0
+  local _, Duration = self:BuffInfo(ThisSpell, AnyCaster)
+
+  return Duration or 0
 end
 
--- buff.foo.stack
-function Unit:BuffStack(ThisSpell, AnyCaster)
-  return self:Buff(ThisSpell, 3, AnyCaster) or 0
-end
+-- buff.foo.remains
+function Unit:BuffRemains(ThisSpell, AnyCaster, BypassRecovery)
+  local _, _, ExpirationTime = self:BuffInfo(ThisSpell, AnyCaster)
+  if not ExpirationTime then return 0 end
+  if ExpirationTime == 0 then return 9999 end
 
---[[*
-  * @function Unit:BuffStackP
-  * @override Unit:BuffStack
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffStackP(ThisSpell, AnyCaster, Offset)
-  if self:BuffRemainsP(ThisSpell, AnyCaster, Offset) then
-    return self:BuffStack(ThisSpell, AnyCaster)
-  else
-    return 0
+  -- TODO: Why this is here ?
+  -- Stealth-like buffs (Subterfurge and Master Assassin) are delayed but within aura latency
+  local SpellID = ThisSpell:ID()
+  if SpellID == 115192 or SpellID == 256735 then
+    ExpirationTime = ExpirationTime - 0.3
   end
+
+  local Remains = ExpirationTime - GetTime() - HL.RecoveryOffset(BypassRecovery)
+
+  return Remains >= 0 and Remains or 0
 end
 
--- buff.foo.refreshable (doesn't exists on SimC atm tho)
-function Unit:BuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset)
-  return self:BuffRemains(ThisSpell, AnyCaster, Offset) <= PandemicThreshold
+-- buff.foo.up
+function Unit:BuffUp(ThisSpell, AnyCaster, BypassRecovery)
+  return self:BuffRemains(ThisSpell, AnyCaster, BypassRecovery) > 0
 end
 
---[[*
-  * @function Unit:BuffRefreshableP
-  * @override Unit:BuffRefreshable
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffRefreshableP(ThisSpell, PandemicThreshold, AnyCaster, Offset)
-  return self:BuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset or "Auto")
+-- buff.foo.down
+function Unit:BuffDown(ThisSpell, AnyCaster, BypassRecovery)
+  return not self:BuffUp(ThisSpell, AnyCaster, BypassRecovery)
 end
 
---[[*
-  * @function Unit:BuffRefreshableC
-  * @override Unit:BuffRefreshable
-  * @desc Automaticaly calculates the pandemicThreshold from enum table.
-  *
-  * @param
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffRefreshableC(ThisSpell, AnyCaster, Offset)
-  return self:BuffRefreshable(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
-end
+-- "buff.foo.refreshable" (doesn't exists on SimC), automaticaly calculates the PandemicThreshold from HeroDBC spell data.
+function Unit:BuffRefreshable(ThisSpell, AnyCaster, BypassRecovery)
+  local PandemicThreshold = ThisSpell:PandemicThreshold()
 
---[[*
-  * @function Unit:BuffRefreshableCP
-  * @override Unit:BuffRefreshableP
-  * @desc Automaticaly calculates the pandemicThreshold from enum table with prediction.
-  *
-  * @param
-  *
-  * @returns {number}
-  *]]
-function Unit:BuffRefreshableCP(ThisSpell, AnyCaster, Offset)
-  return self:BuffRefreshableP(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
+  return self:BuffRemains(ThisSpell, AnyCaster, BypassRecovery) <= PandemicThreshold
 end
 
 -- hot.foo.ticks_remain
-function Unit:BuffTicksRemainP(ThisSpell)
-  local Remains = self:BuffRemainsP(ThisSpell)
-  if Remains == 0 then
-    return 0
-  else
-    return math.ceil(Remains / ThisSpell:TickTime())
-  end
+function Unit:BuffTicksRemain(ThisSpell, AnyCaster, BypassRecovery)
+  local Remains = self:BuffRemains(ThisSpell, AnyCaster, BypassRecovery)
+  if Remains == 0 then return 0 end
+
+  return math.ceil(Remains / ThisSpell:TickTime())
 end
 
--- debuff.foo.up or dot.foo.up (does return the debuff table and not only true/false)
-do
-  --  1     2      3         4          5           6           7           8                   9              10         11            12           13               14            15       16      17      18
-  -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3
-  local UnitID
-  local function _UnitDebuff()
-    local Debuffs = {}
-    for i = 1, HL.MAXIMUM do
-      local Infos = { UnitDebuff(UnitID, i) }
-      if not Infos[10] then break end
-      Debuffs[i] = Infos
-    end
-    return Debuffs
-  end
+-- Get the DebuffInfo (from AuraInfo).
+function Unit:DebuffInfo(ThisSpell, AnyCaster, Full)
+  local Filter = AnyCaster and "HARMFUL" or "HARMFUL|PLAYER"
 
-  function Unit:Debuff(ThisSpell, Index, AnyCaster)
-    local GUID = self:GUID()
-    if GUID then
-      UnitID = self.UnitID
-      local Debuffs = Cache.Get("UnitInfo", GUID, "Debuffs", _UnitDebuff)
-      for i = 1, #Debuffs do
-        local Debuff = Debuffs[i]
-        if ThisSpell:ID() == Debuff[10] then
-          local Caster = Debuff[7]
-          if AnyCaster or Caster == "player" or Caster == "pet" then
-            if not Index then return true end
-            if type(Index) == "number" then return Debuff[Index] end
-            return unpack(Debuff)
-          end
-        end
-      end
-    end
-    return false
-  end
+  return self:AuraInfo(ThisSpell, Filter, Full)
 end
 
---[[*
-  * @function Unit:DebuffDown
-  * @desc Get if the debuff is down.
-  * @simc debuff.foo.down
-  *
-  * @param {object} ThisSpell - Spell to check.
-  * @param {number|array} [Index] - The index of the attribute to retrieve when calling the spell info.
-  * @param {boolean} [AnyCaster] - Check from any caster ?
-  *
-  * @returns {boolean}
-  *]]
-function Unit:DebuffDown(ThisSpell, Index, AnyCaster)
-  return (not self:Debuff(ThisSpell, Index, AnyCaster))
+-- debuff.foo.stack & dot.foo.stack
+function Unit:DebuffStack(ThisSpell, AnyCaster, BypassRecovery)
+  -- In the case we are using the prediction, we have to check if the debuff will still be there before considering its stacks.
+  if not BypassRecovery and self:DebuffDown(ThisSpell, AnyCaster, BypassRecovery) then return 0 end
+
+  local Stack = self:DebuffInfo(ThisSpell, AnyCaster)
+
+  return Stack or 0
 end
 
---[[*
-  * @function Unit:DebuffRemains
-  * @desc Get the remaining time, if there is any, on a debuff.
-  * @simc debuff.foo.remains, dot.foo.remains
-  *
-  * @param {object} ThisSpell - Spell to check.
-  * @param {boolean} [AnyCaster] - Check from any caster ?
-  * @param {string|number} [Offset] - The offset to apply, can be a string for a known method or directly the offset value in seconds.
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffRemains(ThisSpell, AnyCaster, Offset)
-  local ExpirationTime = self:Debuff(ThisSpell, 6, AnyCaster)
-  if ExpirationTime then
-    if Offset then
-      ExpirationTime = HL.OffsetRemains(ExpirationTime, Offset)
-    end
-    local Remains = ExpirationTime - GetTime()
-    return Remains >= 0 and Remains or 0
-  else
-    return 0
-  end
-end
-
---[[*
-  * @function Unit:DebuffRemainsP
-  * @override Unit:DebuffRemains
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffRemainsP(ThisSpell, AnyCaster, Offset)
-  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto")
-end
-
-function Unit:DebuffP(ThisSpell, AnyCaster, Offset)
-  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto") > 0
-end
-
-function Unit:DebuffDownP(ThisSpell, AnyCaster, Offset)
-  return self:DebuffRemains(ThisSpell, AnyCaster, Offset or "Auto") == 0
-end
-
--- debuff.foo.duration or dot.foo.duration
+-- debuff.foo.duration & dot.foo.duration
 function Unit:DebuffDuration(ThisSpell, AnyCaster)
-  return self:Debuff(ThisSpell, 5, AnyCaster) or 0
+  local _, Duration = self:DebuffInfo(ThisSpell, AnyCaster)
+
+  return Duration or 0
 end
 
--- debuff.foo.stack or dot.foo.stack
-function Unit:DebuffStack(ThisSpell, AnyCaster)
-  return self:Debuff(ThisSpell, 3, AnyCaster) or 0
+-- debuff.foo.remains & dot.foo.remains
+function Unit:DebuffRemains(ThisSpell, AnyCaster, BypassRecovery)
+  local _, _, ExpirationTime = self:DebuffInfo(ThisSpell, AnyCaster)
+  if not ExpirationTime then return 0 end
+  if ExpirationTime == 0 then return 9999 end
+
+  local Remains = ExpirationTime - GetTime() - HL.RecoveryOffset(BypassRecovery)
+
+  return Remains >= 0 and Remains or 0
 end
 
---[[*
-  * @function Unit:DebuffStackP
-  * @override Unit:DebuffStack
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffStackP(ThisSpell, AnyCaster, Offset)
-  if self:DebuffP(ThisSpell, AnyCaster, Offset) then
-    return self:DebuffStack(ThisSpell, AnyCaster)
-  else
-    return 0
-  end
+-- debuff.foo.up
+function Unit:DebuffUp(ThisSpell, AnyCaster, BypassRecovery)
+  return self:DebuffRemains(ThisSpell, AnyCaster, BypassRecovery) > 0
 end
 
--- debuff.foo.refreshable or dot.foo.refreshable
-function Unit:DebuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset)
-  return self:DebuffRemains(ThisSpell, AnyCaster, Offset) <= PandemicThreshold
+-- debuff.foo.down
+function Unit:DebuffDown(ThisSpell, AnyCaster, BypassRecovery)
+  return not self:DebuffUp(ThisSpell, AnyCaster, BypassRecovery)
 end
 
---[[*
-  * @function Unit:DebuffRefreshableP
-  * @override Unit:DebuffRefreshable
-  * @desc Offset defaulted to "Auto" which is ideal in most cases to improve the prediction.
-  *
-  * @param {string|number} [Offset="Auto"]
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffRefreshableP(ThisSpell, PandemicThreshold, AnyCaster, Offset)
-  return self:DebuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, Offset or "Auto")
-end
+-- debuff.foo.refreshable & dot.foo.refreshable, automaticaly calculates the PandemicThreshold from HeroDBC spell data.
+function Unit:DebuffRefreshable(ThisSpell, AnyCaster, BypassRecovery)
+  local PandemicThreshold = ThisSpell:PandemicThreshold()
 
---[[*
-  * @function Unit:DebuffRefreshableC
-  * @override Unit:DebuffRefreshable
-  * @desc Automaticaly calculates the pandemicThreshold from enum table.
-  *
-  * @param
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffRefreshableC(ThisSpell, AnyCaster, Offset)
-  return self:DebuffRefreshable(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
-end
-
---[[*
-  * @function Unit:DebuffRefreshableCP
-  * @override Unit:DebuffRefreshableP
-  * @desc Automaticaly calculates the pandemicThreshold from enum table with prediction.
-  *
-  * @param
-  *
-  * @returns {number}
-  *]]
-function Unit:DebuffRefreshableCP(ThisSpell, AnyCaster, Offset)
-  return self:DebuffRefreshableP(ThisSpell, ThisSpell:PandemicThreshold(), AnyCaster, Offset)
+  return self:DebuffRemains(ThisSpell, AnyCaster, BypassRecovery) <= PandemicThreshold
 end
 
 -- dot.foo.ticks_remain
-function Unit:DebuffTicksRemainP(ThisSpell)
-  local Remains = self:DebuffRemainsP(ThisSpell)
-  if Remains == 0 then
-    return 0
-  else
-    return math.ceil(Remains / ThisSpell:TickTime())
-  end
+function Unit:DebuffTicksRemain(ThisSpell, AnyCaster, BypassRecovery)
+  local Remains = self:DebuffRemains(ThisSpell, AnyCaster, BypassRecovery)
+  if Remains == 0 then return 0 end
+
+  return math.ceil(Remains / ThisSpell:TickTime())
 end
 
--- buff.bloodlust.up
+
 do
-  local HeroismBuff = {
-    Spell(90355), -- Ancient Hysteria
-    Spell(2825), -- Bloodlust
-    Spell(32182), -- Heroism
-    Spell(160452), -- Netherwinds
-    Spell(80353), -- Time Warp
-    Spell(178207), -- Drums of Fury
+  local BloodlustSpells = {
+    -- Abilities
+    Spell(2825), -- Shaman: Bloodlust (Horde)
+    Spell(32182), -- Shaman: Heroism (Alliance)
+    Spell(80353), -- Mage:Time Warp
+    Spell(90355), -- Hunter: Ancient Hysteria
+    Spell(160452), -- Hunter: Netherwinds
+    -- Drums
     Spell(35475), -- Drums of War
-    Spell(230935), -- Drums of Montain
-    Spell(256740) -- Drums of Maelstrom
+    Spell(35476), -- Drums of Battle
+    Spell(146555), -- Drums of Rage
+    Spell(178207), -- Drums of Fury
+    Spell(230935), -- Drums of the Mountain
+    Spell(256740), -- Drums of the Maelstrom
+    Spell(309658), -- Drums of Deathly Ferocity
   }
-  local ThisUnit, _Remains
-  local function _HasHeroism()
-    for i = 1, #HeroismBuff do
-      local Buff = HeroismBuff[i]
-      if ThisUnit:Buff(Buff, nil, true) then
-        return _Remains and ThisUnit:BuffRemains(Buff, true) or true
+
+  -- buff.bloodlust.remains
+  function Unit:BloodlustRemains(BypassRecovery)
+    local GUID = self:GUID()
+    if not GUID then return false end
+
+    for i = 1, #BloodlustSpells do
+      local BloodlustSpell = BloodlustSpells[i]
+      if self:BuffUp(BloodlustSpell, nil) then
+        return self:BuffRemains(BloodlustSpell, nil, BypassRecovery)
       end
     end
-    return false
+
+    return 0
   end
 
-  local function _HasHeroismP(Offset)
-    for i = 1, #HeroismBuff do
-      local Buff = HeroismBuff[i]
-      if ThisUnit:Buff(Buff, nil, true) then
-        return _Remains and ThisUnit:BuffRemainsP(Buff, true, Offset or "Auto") or true
-      end
-    end
-    return false
+  -- buff.bloodlust.up
+  function Unit:BloodlustUp(BypassRecovery)
+    return self:BloodlustRemains(BypassRecovery) > 0
   end
 
-  function Unit:HasHeroism(Remains)
-    local GUID = self:GUID()
-    if GUID then
-      local Key = Remains and "Remains" or "Up"
-      ThisUnit, _Remains = self, Remains
-      return Cache.Get("UnitInfo", GUID, "HasHeroism", Key, _HasHeroism)
-    end
-    return Remains and 0 or false
+  -- buff.bloodlust.down
+  function Unit:BloodlustDown(BypassRecovery)
+    return not self:BloodlustUp(BypassRecovery)
   end
-
-  function Unit:HasHeroismP(Remains)
-    local GUID = self:GUID()
-    if GUID then
-      local Key = Remains and "Remains" or "Up"
-      ThisUnit, _Remains = self, Remains
-      return Cache.Get("UnitInfo", GUID, "HasHeroismP", Key, _HasHeroismP)
-    end
-    return Remains and 0 or false
-  end
-end
-function Unit:HasHeroismRemains()
-  return self:HasHeroism(true)
-end
-
-function Unit:HasHeroismRemainsP()
-  return self:HasHeroismP(true)
-end
-
-function Unit:HasNotHeroism()
-  return (not self:HasHeroism())
 end

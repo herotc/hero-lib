@@ -1,3 +1,4 @@
+
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
@@ -12,13 +13,12 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-local IsPetActive = IsPetActive
+
 -- File Locals
 
 
-
 --- ============================ CONTENT ============================
--- Get if there is a pet currently active or not.
-function Pet:IsActive()
-  return IsPetActive()
+-- Get the enemies in spell's range of the pet (works only for targeted spells).
+function Pet:GetEnemiesInSpellRange(ThisSpell)
+  -- TODO
 end

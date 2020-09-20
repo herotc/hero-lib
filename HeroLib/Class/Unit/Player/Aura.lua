@@ -20,7 +20,7 @@ local tostring = tostring
 --- ============================ CONTENT ============================
 -- Get if the player is stealthed or not
 do
-  local IsStealthedBuff = {
+  local StealthSpellsByType = {
     -- Normal Stealth
     {
       -- Rogue
@@ -45,68 +45,65 @@ do
       Spell(58984) -- Shadowmeld
     }
   }
-  local ThisUnit, _Abilities, _Special, _Remains, _Predict
-  local function _IsStealthed()
+
+  function Player:StealthRemains(CheckCombat, CheckSpecial, BypassRecovery)
+    -- Considering there is a small delay between the ability cast and the buff trigger we also look at the time since last cast.
     if Spell.Rogue then
       local Assassination, Outlaw, Subtlety = Spell.Rogue.Assassination, Spell.Rogue.Outlaw, Spell.Rogue.Subtlety
+
       if Assassination then
-        if (Abilities and Assassination.Vanish:TimeSinceLastCast() < 0.3) or
-          (Special and Assassination.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true
+        if (CheckCombat and Assassination.Vanish:TimeSinceLastCast() < 0.3)
+          or (CheckSpecial and Assassination.Shadowmeld:TimeSinceLastCast() < 0.3) then
+          return 1
         end
       end
+
       if Outlaw then
-        if (Abilities and Outlaw.Vanish:TimeSinceLastCast() < 0.3) or
-          (Special and Outlaw.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true
+        if (CheckCombat and Outlaw.Vanish:TimeSinceLastCast() < 0.3)
+          or (CheckSpecial and Outlaw.Shadowmeld:TimeSinceLastCast() < 0.3) then
+          return 1
         end
       end
+
       if Subtlety then
-        if (Abilities and (Subtlety.Vanish:TimeSinceLastCast() < 0.3
-          or Subtlety.ShadowDance:TimeSinceLastCast() < 0.3))
-          or (Special and Subtlety.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true
+        if (CheckCombat and (Subtlety.ShadowDance:TimeSinceLastCast() < 0.3 or Subtlety.Vanish:TimeSinceLastCast() < 0.3))
+          or (CheckSpecial and Subtlety.Shadowmeld:TimeSinceLastCast() < 0.3) then
+          return 1
         end
       end
     end
+
     if Spell.Druid then
       local Feral = Spell.Druid.Feral
+
       if Feral then
-        if (Abilities and Feral.Incarnation:TimeSinceLastCast() < 0.3) or
-          (Special and Feral.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return _Remains and 1 or true
+        if (CheckCombat and Feral.Incarnation:TimeSinceLastCast() < 0.3)
+          or (CheckSpecial and Feral.Shadowmeld:TimeSinceLastCast() < 0.3) then
+          return 1
         end
       end
     end
-    for i = 1, #IsStealthedBuff do
-      if i == 1 or (i == 2 and _Abilities) or (i == 3 and _Special) then
-        local Buffs = IsStealthedBuff[i]
-        for j = 1, #Buffs do
-          local Buff = Buffs[j]
-          if _Predict and ThisUnit:BuffP(Buff) then
-            return _Remains and (ThisUnit:BuffRemainsP(Buff) >= 0 and ThisUnit:BuffRemainsP(Buff) or 60) or true
-          elseif not _Predict and ThisUnit:Buff(Buff) then
-            return _Remains and (ThisUnit:BuffRemains(Buff) >= 0 and ThisUnit:BuffRemains(Buff) or 60) or true
+
+    for i = 1, #StealthSpellsByType do
+      if i == 1 or (i == 2 and CheckCombat) or (i == 3 and CheckSpecial) then
+        local StealthSpells = StealthSpellsByType[i]
+        for j = 1, #StealthSpells do
+          local StealthSpell = StealthSpells[j]
+          if Player:BuffUp(StealthSpell) then
+            return Player:BuffRemains(StealthSpell, nil, BypassRecovery)
           end
         end
       end
     end
-    return false
+
+    return 0
   end
 
-  function Player:IsStealthed(Abilities, Special, Remains)
-    local Key = tostring(Abilites) .. "-" .. tostring(Special) .. "-" .. tostring(Remains)
-    ThisUnit, _Abilities, _Special, _Remains, _Predict = self, Abilities, Special, Remains, false
-    return Cache.Get("MiscInfo", "IsStealthed", Key, _IsStealthed)
+  function Player:StealthUp(CheckCombat, CheckSpecial, BypassRecovery)
+    return self:StealthRemains(CheckCombat, CheckSpecial, BypassRecovery) > 0
   end
 
-  function Player:IsStealthedP(Abilities, Special, Remains)
-    local Key = tostring(Abilites) .. "-" .. tostring(Special) .. "-" .. tostring(Remains)
-    ThisUnit, _Abilities, _Special, _Remains, _Predict = self, Abilities, Special, Remains, true
-    return Cache.Get("MiscInfo", "IsStealthedP", Key, _IsStealthed)
+  function Player:StealthDown(CheckCombat, CheckSpecial, BypassRecovery)
+    return not self:StealthUp(CheckCombat, CheckSpecial, BypassRecovery)
   end
-end
-
-function Player:IsStealthedRemains(Abilities, Special)
-  return self:IsStealthed(Abilities, Special, true)
 end

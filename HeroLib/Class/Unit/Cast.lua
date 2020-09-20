@@ -13,152 +13,180 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local unpack = unpack
+local GetTime = GetTime
+local UnitCastingInfo = UnitCastingInfo -- name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
+local UnitChannelInfo = UnitChannelInfo -- name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
 -- File Locals
 
 
 
 --- ============================ CONTENT ============================
--- Get all the casting infos from an unit and put it into the Cache.
-function Unit:GetCastingInfo(GUID)
-  local UnitInfo = Cache.UnitInfo[GUID]
-  if not UnitInfo then
-    UnitInfo = {}
-    Cache.UnitInfo[GUID] = UnitInfo
-  end
-  -- name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID
-  UnitInfo.Casting = { UnitCastingInfo(self.UnitID) }
+-- Get the CastingInfo (from UnitCastingInfo).
+function Unit:CastingInfo()
+  local UnitID = self:ID()
+  if not UnitID then return end
+
+  return UnitCastingInfo(UnitID)
 end
 
--- Get the Casting Infos from the Cache.
-function Unit:CastingInfo(Index)
-  local GUID = self:GUID()
-  if GUID then
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo or not UnitInfo.Casting then
-      self:GetCastingInfo(GUID)
-      UnitInfo = Cache.UnitInfo[GUID]
-    end
-    if Index then
-      return UnitInfo.Casting[Index]
-    else
-      return unpack(UnitInfo.Casting)
-    end
-  end
-  return nil
-end
+-- Get the ChannelingInfo (from UnitChannelInfo).
+function Unit:ChannelingInfo()
+  local UnitID = self:ID()
+  if not UnitID then return end
 
--- Get if the unit is casting or not. Param to check if the unit is casting a specific spell or not
-function Unit:IsCasting(Spell)
-  if Spell then
-    return self:CastingInfo(9) == Spell:ID() and true or false
-  else
-    return self:CastingInfo(1) and true or false
-  end
+  return UnitChannelInfo(UnitID)
 end
 
 -- Get the unit cast's name if there is any.
 function Unit:CastName()
-  return self:IsCasting() and self:CastingInfo(1) or ""
-end
+  local CastName = self:CastingInfo()
 
--- Get the unit cast's id if there is any.
-function Unit:CastID()
-  return self:IsCasting() and self:CastingInfo(10) or -1
-end
-
---- Get all the Channeling Infos from an unit and put it into the Cache.
-function Unit:GetChannelingInfo(GUID)
-  local UnitInfo = Cache.UnitInfo[GUID]
-  if not UnitInfo then
-    UnitInfo = {}
-    Cache.UnitInfo[GUID] = UnitInfo
-  end
-  UnitInfo.Channeling = { UnitChannelInfo(self.UnitID) }
-end
-
--- Get the Channeling Infos from the Cache.
-function Unit:ChannelingInfo(Index)
-  local GUID = self:GUID()
-  if GUID then
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo or not UnitInfo.Channeling then
-      self:GetChannelingInfo(GUID)
-      UnitInfo = Cache.UnitInfo[GUID]
-    end
-    if Index then
-      return UnitInfo.Channeling[Index]
-    else
-      return unpack(UnitInfo.Channeling)
-    end
-  end
-  return nil
-end
-
--- Get if the unit is channeling or not.
-function Unit:IsChanneling(Spell)
-  if Spell then
-    return self:ChannelName() == Spell:Name() and true or false
-  else
-    return self:ChannelingInfo(1) and true or false
-  end
+  return CastName
 end
 
 -- Get the unit channel's name if there is any.
 function Unit:ChannelName()
-  return self:IsChanneling() and self:ChannelingInfo(1) or ""
+  local ChannelName = self:ChannelingInfo()
+
+  return ChannelName
+end
+
+-- Get the unit cast's spell id if there is any.
+function Unit:CastSpellID()
+  local _, _, _, _, _, _, _, _, CastSpellID = self:CastingInfo()
+
+  return CastSpellID
+end
+
+-- Get the unit channel's spell id if there is any.
+function Unit:ChannelSpellID()
+  local _, _, _, _, _, _, _, ChannelSpellID = self:ChannelingInfo()
+
+  return ChannelSpellID
+end
+
+-- Get the cost of the current cast
+function Unit:CastCost()
+  local CastSpellID = self:CastSpellID()
+
+  if CastSpellID then
+    return Spell(CastSpellID):Cost(1, "cost")
+  end
+
+  return 0
+end
+
+-- Get if the unit is casting or not. Arg to check if the unit is casting a specific spell or not.
+function Unit:IsCasting(ThisSpell)
+  local CastName, _, _, _, _, _, _, _, CastSpellID = self:CastingInfo()
+
+  if ThisSpell then
+    return CastSpellID == ThisSpell:ID() and true or false
+  end
+
+  return CastName and true or false
+end
+
+
+-- Get if the unit is channeling or not.
+function Unit:IsChanneling(ThisSpell)
+  local ChannelName, _, _, _, _, _, _, ChannelSpellID = self:ChannelingInfo()
+
+  if ThisSpell then
+    return ChannelSpellID == ThisSpell:ID() and true or false
+  end
+
+  return ChannelName and true or false
 end
 
 -- Get if the unit cast is interruptible if there is any.
 function Unit:IsInterruptible()
-  return (self:CastingInfo(8) == false or self:ChannelingInfo(7) == false) and true or false
+  local _, _, _, _, _, _, _, CastNotInterruptible = self:CastingInfo()
+  local _, _, _, _, _, _, ChannelNotInterruptible = self:ChannelingInfo()
+
+  return ((CastNotInterruptible == false or ChannelNotInterruptible == false) and true) or false
 end
 
 -- Get when the cast, if there is any, started (in seconds).
 function Unit:CastStart()
-  if self:IsCasting() then return self:CastingInfo(4) / 1000 end
-  if self:IsChanneling() then return self:ChannelingInfo(4) / 1000 end
+  local _, _, _, CastStartTime = self:CastingInfo()
+  local _, _, _, ChannelStartTime = self:ChannelingInfo()
+
+  if CastStartTime then return CastStartTime / 1000 end
+  if ChannelStartTime then return ChannelStartTime / 1000 end
+
   return 0
+end
+
+-- Alias of CastStart.
+function Unit:ChannelStart()
+  return self:CastStart()
 end
 
 -- Get when the cast, if there is any, will end (in seconds).
 function Unit:CastEnd()
-  if self:IsCasting() then return self:CastingInfo(5) / 1000 end
-  if self:IsChanneling() then return self:ChannelingInfo(5) / 1000 end
+  local _, _, _, _, CastEndTime = self:CastingInfo()
+  local _, _, _, _, ChannelEndTime = self:ChannelingInfo()
+
+  if CastEndTime then return CastEndTime / 1000 end
+  if ChannelEndTime then return ChannelEndTime / 1000 end
+
   return 0
+end
+
+-- Alias of CastEnd.
+function Unit:ChannelEnd()
+  return self:CastEnd()
 end
 
 -- Get the full duration, in seconds, of the current cast, if there is any.
 function Unit:CastDuration()
-  return self:CastEnd() - self:CastStart()
+  local _, _, _, CastStartTime, CastEndTime = self:CastingInfo()
+  local _, _, _, ChannelStartTime, ChannelEndTime = self:ChannelingInfo()
+
+  if CastStartTime then
+    return CastEndTime - CastStartTime
+  end
+  if ChannelStartTime then
+    return ChannelEndTime - ChannelStartTime
+  end
+end
+
+-- Alias of CastDuration.
+function Unit:ChannelDuration()
+  return self:CastDuration()
 end
 
 -- Get the remaining cast time, if there is any.
 function Unit:CastRemains()
-  if self:IsCasting() or self:IsChanneling() then
-    return self:CastEnd() - GetTime()
-  end
-  return 0
+  local CastEnd = self:CastEnd()
+
+  return (CastEnd and (CastEnd - GetTime())) or 0
+end
+
+-- Alias of CastRemains.
+function Unit:ChannelRemains()
+  return self:CastRemains()
 end
 
 -- Get the progression of the cast in percentage if there is any.
 -- By default for channeling, it returns total - progress, if ReverseChannel is true it'll return only progress.
 function Unit:CastPercentage(ReverseChannel)
-  if self:IsCasting() then
-    local CastStart = self:CastStart()
-    return (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
+  local _, _, _, CastStartTime, CastEndTime = self:CastingInfo()
+  local _, _, _, ChannelStartTime, ChannelEndTime = self:ChannelingInfo()
+
+  if CastStartTime then
+    return (GetTime() - CastStartTime) / (CastEndTime - CastStartTime) * 100
   end
-  if self:IsChanneling() then
-    local CastStart = self:CastStart()
-    return ReverseChannel and (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100 or 100 - (GetTime() - CastStart) / (self:CastEnd() - CastStart) * 100
+
+  if ChannelStartTime then
+    return ReverseChannel and (GetTime() - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100 or 100 - (GetTime() - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100
   end
+
   return 0
 end
 
--- Get the cost of the current cast
-function Unit:CastCost()
-  local CastID = self:CastID()
-  if CastID and CastID ~= -1 then
-    return Spell(CastID):CostInfo(1, "cost")
-  end
-  return 0
+-- Alias of CastPercentage.
+function Unit:ChannelPercentage(ReverseChannel)
+  return self:CastPercentage(ReverseChannel)
 end

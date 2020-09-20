@@ -13,6 +13,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local GetUnitSpeed = GetUnitSpeed
+local strsplit = strsplit
 local tonumber = tonumber
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitCanAttack = UnitCanAttack
@@ -58,6 +59,7 @@ function Unit:GUID()
   if self.UseCache then
     return self.UnitGUID
   end
+
   return UnitGUID(self.UnitID)
 end
 
@@ -66,6 +68,7 @@ function Unit:Name()
   if self.UseCache then
     return self.UnitName
   end
+
   return UnitName(self.UnitID)
 end
 
@@ -74,6 +77,7 @@ function Unit:Exists()
   if self.UseCache then
     return self.UnitExists and UnitIsVisible(self.UnitID)
   end
+
   return UnitExists(self.UnitID) and UnitIsVisible(self.UnitID)
 end
 
@@ -84,27 +88,26 @@ function Unit:NPCID(BypassCache)
   end
 
   local GUID = self:GUID()
-  if GUID then
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo then
-      UnitInfo = {}
-      Cache.UnitInfo[GUID] = UnitInfo
-    end
+  if not GUID then return -1 end
 
-    local NPCID = UnitInfo.NPCID
-    if not NPCID then
-      local type, _, _, _, _, npcid = strsplit('-', GUID)
-      if type == "Creature" or type == "Pet" or type == "Vehicle" then
-        NPCID = tonumber(npcid)
-      else
-        NPCID = -2
-      end
-      UnitInfo.NPCID = NPCID
-    end
-
-    return NPCID
+  local UnitInfo = Cache.UnitInfo[GUID]
+  if not UnitInfo then
+    UnitInfo = {}
+    Cache.UnitInfo[GUID] = UnitInfo
   end
-  return -1
+
+  local NPCID = UnitInfo.NPCID
+  if not NPCID then
+    local Type, _, _, _, _, NPCIDFromGUID = strsplit('-', GUID)
+    if Type == "Creature" or Type == "Pet" or Type == "Vehicle" then
+      NPCID = tonumber(NPCIDFromGUID)
+    else
+      NPCID = -2
+    end
+    UnitInfo.NPCID = NPCID
+  end
+
+  return NPCID
 end
 
 -- Get the level of the unit
@@ -116,21 +119,24 @@ end
 function Unit:IsInBossList(NPCID, HP)
   local NPCID = NPCID or self:NPCID()
   local HP = HP or 100
-  local ThisUnit
+
   for _, ThisUnit in pairs(Boss) do
     if ThisUnit:Exists() and ThisUnit:NPCID() == NPCID and ThisUnit:HealthPercentage() <= HP then
       return true
     end
   end
+
   return false
 end
 
 -- Get if the unit CanAttack the other one.
 function Unit:CanAttack(Other)
-  if self.UnitID == "player" and Other.UseCache then
+  local UnitID = self:ID()
+  if UnitID == "player" and Other.UseCache then
     return Other.UnitCanBeAttacked
   end
-  return UnitCanAttack(self.UnitID, Other.UnitID)
+
+  return UnitCanAttack(UnitID, Other:ID())
 end
 
 local DummyUnits = {
@@ -186,6 +192,7 @@ local DummyUnits = {
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
+
   return NPCID >= 0 and DummyUnits[NPCID] == true
 end
 
@@ -206,7 +213,10 @@ end
 
 -- Get the unit Health Percentage
 function Unit:HealthPercentage()
-  return self:Health() ~= -1 and self:MaxHealth() ~= -1 and self:Health() / self:MaxHealth() * 100
+  local Health = self:Health()
+  local MaxHealth = self:MaxHealth()
+
+  return Health > 0 and MaxHealth > 0 and Health / MaxHealth * 100 or -1
 end
 
 -- Get if the unit Is Dead Or Ghost.
@@ -231,20 +241,19 @@ end
 
 -- Get if we are Tanking or not the Unit.
 function Unit:IsTanking(Other, ThreatThreshold)
-  local ThreatThreshold = ThreatThreshold or 2
-  local ThreatSituation = UnitThreatSituation(self.UnitID, Other.UnitID)
-  return ThreatSituation and ThreatSituation >= ThreatThreshold or false
+  local ThreatSituation = UnitThreatSituation(self:ID(), Other:ID())
+
+  return (ThreatSituation and ThreatSituation >= (ThreatThreshold or 2)) or false
 end
 
 function Unit:IsTankingAoE(Radius, ThreatSituation)
-  local Radius = Radius or 8
-  HL.GetEnemies(Radius, true)
   local IsTankingAOE = false
-  for _, Unit in pairs(Cache.Enemies[Radius]) do
-    if self:IsTanking(Unit, ThreatSituation) then
+  for _, ThisUnit in pairs(Player:GetEnemiesInRange(Radius or 6.5)) do
+    if self:IsTanking(ThisUnit, ThreatSituation) then
       IsTankingAOE = true
     end
   end
+
   return IsTankingAOE
 end
 

@@ -46,27 +46,25 @@ Class\Unit\TimeToDie.lua
 Class\Unit\List.lua
 Class\Unit\Player\Main.lua
 Class\Unit\Player\Power.lua
-Class\Unit\Player\Stat.lua
-Class\Unit\Player\Equipment.lua
 Class\Unit\Player\Aura.lua
+Class\Unit\Player\Enemies.lua
+Class\Unit\Player\Equipment.lua
+Class\Unit\Player\Stat.lua
 Class\Unit\Player\Instance.lua
-Class\Unit\Player\MythicDungeon.lua
 Class\Unit\Player\Tank.lua
 Class\Unit\Pet\Main.lua
+Class\Unit\Pet\Enemies.lua
 Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
-Class\Spell\Travel.lua
 Class\Spell\Azerite.lua
 Class\Item.lua
-
-# Misc
-Misc\ToSort.lua
 
 # Events
 Events\Main.lua
 Events\Unit.lua
 Events\Player.lua
+Events\Enemies.lua
 Events\Aura.lua
 Events\PMultiplier.lua
 Events\Spell.lua
@@ -74,7 +72,8 @@ Events\Prev_Spell.lua
 Events\InFlight.lua
 Events\KeyBinding.lua
 
-# Enemy Tracking
-Misc\Enemies.lua
+# Misc
+Misc\ToSort.lua
+Misc\Overrides.lua
 
 Main.lua

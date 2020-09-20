@@ -19,7 +19,7 @@ local Item = HL.Item
 
 --- ============================ CONTENT ============================
 -- Get if the unit is stunned or not
-local IsStunnedDebuff = {
+local IsStunnedDebuffs = {
   -- Demon Hunter
   -- Druid
   -- General
@@ -41,31 +41,36 @@ local IsStunnedDebuff = {
   -- Warrior
   -- General
   Spell(132168), -- Shockwave
-  Spell(132169) -- Storm Bolt
+  Spell(132169), -- Storm Bolt
 }
 function Unit:IterateStunDebuffs()
-  for i = 1, #IsStunnedDebuff[1] do
-    if self:Debuff(IsStunnedDebuff[1][i], nil, true) then
+  for i = 1, #IsStunnedDebuffs do
+    local IsStunnedDebuff = IsStunnedDebuffs[i]
+    if self:Debuff(IsStunnedDebuff, nil, true) then
       return true
     end
   end
+
   return false
 end
 
 function Unit:IsStunned()
   local GUID = self:GUID()
-  if GUID then
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo then
-      UnitInfo = {}
-      Cache.UnitInfo[GUID] = UnitInfo
-    end
-    if UnitInfo.IsStunned == nil then
-      UnitInfo.IsStunned = self:IterateStunDebuffs()
-    end
-    return UnitInfo.IsStunned
+  if not GUID then return end
+
+  local UnitInfo = Cache.UnitInfo[GUID]
+  if not UnitInfo then
+    UnitInfo = {}
+    Cache.UnitInfo[GUID] = UnitInfo
   end
-  return nil
+
+  local IsStunned = UnitInfo.IsStunned
+  if IsStunned == nil then
+    IsStunned = self:IterateStunDebuffs()
+    UnitInfo.IsStunned = IsStunned
+  end
+
+  return IsStunned
 end
 
 -- Get if an unit is not immune to stuns
@@ -82,21 +87,24 @@ local IsStunnableClassification = {
 function Unit:IsStunnable()
   -- TODO: Add DR Check
   local GUID = self:GUID()
-  if GUID then
-    local UnitInfo = Cache.UnitInfo[GUID]
-    if not UnitInfo then
-      UnitInfo = {}
-      Cache.UnitInfo[GUID] = UnitInfo
-    end
-    if UnitInfo.IsStunnable == nil then
-      UnitInfo.IsStunnable = IsStunnableClassification[self:Classification()]
-    end
-    return UnitInfo.IsStunnable
+  if not GUID then return end
+
+  local UnitInfo = Cache.UnitInfo[GUID]
+  if not UnitInfo then
+    UnitInfo = {}
+    Cache.UnitInfo[GUID] = UnitInfo
   end
-  return nil
+
+  local IsStunnable = UnitInfo.IsStunnable
+  if IsStunnable == nil then
+    IsStunnable = IsStunnableClassification[self:Classification()]
+    UnitInfo.IsStunnable = IsStunnable
+  end
+
+  return IsStunnable
 end
 
 -- Get if an unit can be stunned or not
 function Unit:CanBeStunned(IgnoreClassification)
-  return (IgnoreClassification or self:IsStunnable()) and not self:IsStunned() or false
+  return ((IgnoreClassification or self:IsStunnable()) and not self:IsStunned()) or false
 end

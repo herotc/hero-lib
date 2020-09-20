@@ -12,7 +12,9 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-
+local UnitInVehicle = UnitInVehicle
+local IsMounted = IsMounted
+local UnitRace = UnitRace -- race, raceEn, raceId
 -- File Locals
 
 
@@ -28,18 +30,14 @@ end
 -- Dwarf, Draenei, Gnome, Human, NightElf, Worgen
 -- BloodElf, Goblin, Orc, Tauren, Troll, Scourge
 -- Pandaren
-do
-  -- race, raceEn, raceId
-  local UnitRace = UnitRace
-  function Player:Race()
-    local _, race = UnitRace(self.UnitID)
-    return race
-  end
+function Player:Race()
+  local _, Race = UnitRace(self.UnitID)
+  return Race
+end
 
-  -- Test if the unit is of race unit_race
-  function Player:IsRace(unit_race)
-    return unit_race and self:Race() == unit_race or false
-  end
+-- Test if the unit is of the given race.
+function Player:IsRace(ThisRace)
+  return ThisRace and self:Race() == ThisRace or false
 end
 
 do
@@ -80,7 +78,7 @@ do
   }
   function Player:IsOnCombatMount()
     for i = 1, #CombatMountBuff do
-      if self:Buff(CombatMountBuff[i], nil, true) then
+      if self:BuffUp(CombatMountBuff[i], true) then
         return true
       end
     end
@@ -96,7 +94,7 @@ end
 do
   -- Get if the player is in a vhehicle that is not really a vehicle.
   local InVehicleWhitelist = {
-    Spell = {
+    Spells = {
       --- Warlord of Draenor (WoD)
       -- Hellfire Citadel (T18 - 6.2 Patch)
       Spell(187819), -- Crush (Kormrok's Hands)
@@ -104,7 +102,7 @@ do
       -- Blackrock Foundry (T17 - 6.0 Patch)
       Spell(157059) -- Rune of Grasping Earth (Kromog's Hand)
     },
-    PetMount = {
+    PetMounts = {
       --- Warlord of Draenor (WoD)
       -- Garrison Stables Quest (6.0 Patch)
       87082, -- Silverperlt
@@ -120,39 +118,46 @@ do
   }
   function Player:IsInWhitelistedVehicle()
     -- Spell
-    for i = 1, #InVehicleWhitelist.Spell do
-      if self:Debuff(InVehicleWhitelist.Spell[i], nil, true) then
+    local VehicleSpells = InVehicleWhitelist.Spells
+    for i = 1, #VehicleSpells do
+      local VehicleSpell = VehicleSpells[i]
+      if self:DebuffUp(VehicleSpell, nil, true) then
         return true
       end
     end
+
     -- PetMount
+    local PetMounts = InVehicleWhitelist.PetMounts
     if Pet:IsActive() then
-      for i = 1, #InVehicleWhitelist.PetMount do
-        if Pet:NPCID() == InVehicleWhitelist.PetMount[i] then
+      for i = 1, #PetMounts do
+        local PetMount = PetMounts[i]
+        if Pet:NPCID() == PetMount then
           return true
         end
       end
     end
+
     return false
   end
 end
 
 do
   local StopCast = {
-    Debuff = {
+    Debuffs = {
       { Spell(240447), 1 } -- Quake (M+ Affix)
     }
   }
   function Player:ShouldStopCasting()
-    for i = 1, #StopCast.Debuff do
-      local Record = StopCast.Debuff[i]
+    local Debuffs = StopCast.Debuffs
+    for i = 1, #Debuffs do
+      local Record = Debuffs[i]
       local Debuff, Duration
       if type(Record) == "table" then
         Debuff, Duration = Record[1], Record[2]
       else
         Debuff = Record
       end
-      if self:Debuff(Debuff, nil, true) and (not Duration or self:DebuffRemains(Debuff, nil, true) <= Duration) then
+      if self:DebuffUp(Debuff, nil, true) and (not Duration or self:DebuffRemains(Debuff, nil, true) <= Duration) then
         return true
       end
     end
