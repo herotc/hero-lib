@@ -154,7 +154,7 @@ function Unit:IsSpellInRange(ThisSpell)
   local GUID = self:GUID()
   if not GUID then return false end
 
-  return IsSpellInRange(ThisSpell:BookIndex(), self:ID()) == 1
+  return IsSpellInRange(ThisSpell:BookIndex(), ThisSpell:BookType(), self:ID()) == 1
 end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()

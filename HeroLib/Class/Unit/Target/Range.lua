@@ -1,4 +1,3 @@
-
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
@@ -14,11 +13,13 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 
+-- WoW API
+local IsActionInRange = IsActionInRange
 -- File Locals
 
 
+
 --- ============================ CONTENT ============================
--- Get the enemies in spell's range of the pet (works only for targeted spells).
-function Pet:GetEnemiesInSpellRange(ThisSpell)
-  -- TODO
+function Target:IsActionInRange(ActionSlot)
+  return IsActionInRange(ActionSlot)
 end

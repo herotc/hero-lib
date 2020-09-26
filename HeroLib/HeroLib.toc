@@ -52,7 +52,7 @@ Class\Unit\Player\Stat.lua
 Class\Unit\Player\Instance.lua
 Class\Unit\Player\Tank.lua
 Class\Unit\Pet\Main.lua
-Class\Unit\Pet\Enemies.lua
+Class\Unit\Target\Range.lua
 Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua

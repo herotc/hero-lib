@@ -272,6 +272,7 @@ local function UpdateAction(ActionSlot)
   local ActionHotKey = RawHotKey and Utils.ShortenHotKey(RawHotKey) or nil
 
   Actions[ActionSlot] = {
+    Slot = ActionSlot,
     Type = ActionType,
     ID = ActionID,
     SubType = ActionSubType,
@@ -298,7 +299,10 @@ local function FindAction(Type, Identifier)
   if not ActionSlots then return end
 
   -- We return the first match as this moment
-  return Actions[ActionSlots[1]]
+  local ActionSlot = ActionSlots[1]
+  if ActionSlot then
+    return Actions[ActionSlot]
+  end
 end
 
 function Action.FindByItemID(ItemID)
@@ -381,4 +385,24 @@ do
   function Action.TextureHotKey(TextureID)
     return HotKey("Texture", TextureID)
   end
+end
+
+function Target:IsItemInActionRange(ThisItem)
+  local ItemID = ThisItem:ID()
+  local ThisAction = Action.FindByItemID(ItemID)
+  if not ThisAction then
+    return false
+  end
+
+  return self:IsActionInRange(Action.Slot)
+end
+
+function Target:IsSpellInActionRange(ThisSpell)
+  local SpellID = ThisSpell:ID()
+  local ThisAction = Action.FindBySpellID(SpellID)
+  if not ThisAction then
+    return false
+  end
+
+  return self:IsActionInRange(ThisAction.Slot)
 end
