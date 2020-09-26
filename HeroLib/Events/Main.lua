@@ -56,6 +56,32 @@ function HL:RegisterForEvent(Handler, ...)
   end
 end
 
+-- Unregister a handler from an event.
+-- @param Handler The handler function.
+-- @param Events The events name.
+function HL:UnregisterForEvent(Handler, Event)
+  if Handlers[Event] then
+    for Index, Function in pairs(Handlers[Event]) do
+      if Function == Handler then
+        tableremove(Handlers[Event], Index)
+        if #Handlers[Event] == 0 then
+          EventFrame:UnregisterEvent(Event)
+        end
+        return
+      end
+    end
+  end
+end
+
+-- OnEvent Frame Listener
+EventFrame:SetScript("OnEvent",
+  function(self, Event, ...)
+    for _, Handler in pairs(Handlers[Event]) do
+      Handler(Event, ...)
+    end
+  end
+)
+
 -- Register a handler for a combat event.
 -- @param Handler The handler function.
 -- @param Events The events name.
@@ -131,23 +157,6 @@ function HL:RegisterForCombatSuffixEvent(Handler, ...)
   end
 end
 
--- Unregister a handler from an event.
--- @param Handler The handler function.
--- @param Events The events name.
-function HL:UnregisterForEvent(Handler, Event)
-  if Handlers[Event] then
-    for Index, Function in pairs(Handlers[Event]) do
-      if Function == Handler then
-        tableremove(Handlers[Event], Index)
-        if #Handlers[Event] == 0 then
-          EventFrame:UnregisterEvent(Event)
-        end
-        return
-      end
-    end
-  end
-end
-
 -- Unregister a handler from a combat event.
 -- @param Handler The handler function.
 -- @param Events The events name.
@@ -217,15 +226,6 @@ function HL:UnregisterForCombatSuffixEvent(Handler, Event)
     end
   end
 end
-
--- OnEvent Frame Listener
-EventFrame:SetScript("OnEvent",
-  function(self, Event, ...)
-    for _, Handler in pairs(Handlers[Event]) do
-      Handler(Event, ...)
-    end
-  end
-)
 
 -- Combat Log Event Unfiltered Listener
 local function ListenerCombatLogEventUnfiltered(Event, TimeStamp, SubEvent, ...)

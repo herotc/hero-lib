@@ -5,7 +5,7 @@ move-folders:
  HeroLib/HeroLib: HeroLib
 
 ignore:
- - bfa-api-changes.txt
+ - symlink.sh
 
 enable-nolib-creation: no
 

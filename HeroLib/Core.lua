@@ -16,7 +16,6 @@ local wipe = table.wipe
 
 
 --- ======= GLOBALIZE =======
--- Addon
 HeroLib = HL
 HL.Enum = {} -- Constant Infos Enum
 HL.MAXIMUM = 40 -- Max # Buffs and Max # Nameplates.

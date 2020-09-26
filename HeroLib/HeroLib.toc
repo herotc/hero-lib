@@ -24,7 +24,6 @@ GUI\Panels.lua
 # API
 Settings.lua
 Core.lua
-Deprecated.lua
 
 # Enum
 Enum\AzeriteEssences.lua
@@ -70,7 +69,7 @@ Events\PMultiplier.lua
 Events\Spell.lua
 Events\Prev_Spell.lua
 Events\InFlight.lua
-Events\KeyBinding.lua
+Events\Action.lua
 
 # Misc
 Misc\ToSort.lua

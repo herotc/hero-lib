@@ -32,7 +32,28 @@ function Utils.ValueIsInTable(Table, SearchValue)
       return true
     end
   end
+
   return false
+end
+
+function Utils.ValueIsInArray(Array, SearchValue)
+  for Index = 1, #Array do
+    local Value = Array[Index]
+    if Value == SearchValue then
+      return true
+    end
+  end
+
+  return false
+end
+
+function Utils.FindValueIndexInArray(Array, SearchValue)
+  for Index = 1, #Array do
+    local Value = Array[Index]
+    if Value == SearchValue then
+      return Index
+    end
+  end
 end
 
 -- Merge two tables
@@ -115,4 +136,20 @@ function Utils.SortMixedASC(a, b)
   else
     return a < b
   end
+end
+
+function Utils.ShortenHotKey(RawHotKey)
+  local HotKey = RawHotKey:upper()
+    :gsub(" ", "")
+    :gsub("ALT%-", "A")
+    :gsub("CTRL%-", "C")
+    :gsub("SHIFT%-", "S")
+    :gsub("BUTTON", "M")
+    :gsub("NUMPAD", "N")
+    :gsub("DIVIDE", "%/")
+    :gsub("MINUS", "%-")
+    :gsub("MULTIPLY", "%*")
+    :gsub("PLUS", "%+")
+
+  return HotKey
 end

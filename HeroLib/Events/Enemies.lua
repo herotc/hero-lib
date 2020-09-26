@@ -6,10 +6,10 @@ local addonName, HL = ...
 local Cache, Utils = HeroCache, HL.Utils
 local Unit = HL.Unit
 local Player = Unit.Player
+local Pet = Unit.Pet
 local Target = Unit.Target
 local Spell = HL.Spell
 local Item = HL.Item
-local RangeIndex = HL.Enum.ItemRange.Ranged.Hostile.RangeIndex
 -- Lua
 local CreateFrame = CreateFrame
 local UIParent = UIParent
@@ -21,222 +21,18 @@ local tablesort = table.sort
 local tableremove = table.remove
 local wipe = table.wipe
 -- File Locals
+local Splash = {}
 local SPLASH_TRACKER_TIMEOUT = 3 -- 3000ms
 local NucleusAbilities = {} -- Every abilities that are used in order to compute splash data. { [SpellID] = { Type, Radius } }
 local FriendTargets = {} -- Track the targets of our friend (player, party, raid, pets, ...) in order to potentially assign the splash to their target (see NucleusAbility type). { [FriendGUID] = FriendTargetGUID }
 local TrackerBuffer = {} -- Buffer of the tracker since splash is coming from multiple events. { [SpellID] = { [SourceGUID] = { FirstTime, FriendTargetGUID, FirstDestGUID, Enemies = { GUID, LastTime, LastSpellID } } } }
 local Tracker = {} -- Track each enemies from where we splash from. { [PrimaryEnemyGUID] = { [Radius] = { [EnemyGUID] = { GUID, LastDamageTime, LastDamageSpellID } } } }
 
+--- ======= GLOBALIZE =======
+HL.Splash = Splash
+
 
 --- ============================ CONTENT ============================
--- Register a NucleusAbility.
--- Type: TargetDirectDamage = Ability like Multi-Shot or Eye Beam where the area of effect is near an unit and deals direct damage.
---                            We listen only on the SPELL_DAMAGE event.
---                            The main target is considered to be the current target of the source on the first event trigger if it has been hit, otherwise the first unit hit.
--- Type: TargetPeriodicDamage = Ability like Sunfire where the area of effect is near an unit and deals direct damage then periodic damage.
---                              We listen on SPELL_DAMAGE, SPELL_AURA_APPLIED, SPELL_AURA_REFRESH, SPELL_AURA_APPLIED_DOSE events.
---                              The main target is the unit hit by the SPELL_DAMAGE event.
--- Type : SourceDirectDamage = Ability like Fan of Knives where the area of effect is near the player (or the pet) and deals direct damage. Technically it can be used for GTAoE abilities but the Radius should be the Diameter instead.
---                             We listen only on the SPELL_DAMAGE event.
---                             The main target is considered to be the first unit hit since events are ordered from min distance to max distance.
-function HL.RegisterNucleusAbility(Type, SpellID, Radius)
-  assert(type(Type) == "string" and (Type == "TargetDirectDamage" or Type == "TargetPeriodicDamage" or Type == "SourceDirectDamage"), "Invalid Type.")
-  assert(type(SpellID) == "number", "Invalid SpellID.")
-  assert(type(Radius) == "number" and Radius >= 1 and Radius < 100, "Radius must be between 1 and 100.")
-
-  HL.Debug("RegisterNucleusAbility - Adding ability " .. SpellID .. " with " .. Radius .. "y radius.")
-  NucleusAbilities[SpellID] = { Type = Type, Radius = Radius }
-  TrackerBuffer[SpellID] = {}
-end
-
--- Register every default NucleusAbilities.
-function HL.RegisterNucleusAbilities()
-  HL.Debug("RegisterNucleusAbilities")
-  -- Commons
-  -- Essences
-  HL.RegisterNucleusAbility("TargetDirectDamage", 295305, 8)      -- Purification Protocol (Minor)
-  HL.RegisterNucleusAbility("SourceDirectDamage", 297108, 12)     -- Blood of the Enemy (Major)
-  -- Trinkets
-  HL.RegisterNucleusAbility("SourceDirectDamage", 313088, 8)     -- Torment in Jar (Buff)
-  HL.RegisterNucleusAbility("SourceDirectDamage", 313089, 8)     -- Torment in Jar (Explosion)
-
-  -- Death Knight
-  -- Commons
-  HL.RegisterNucleusAbility("SourceDirectDamage", 43265, 8 * 2)   -- Death and Decay
-  -- Blood
-  HL.RegisterNucleusAbility("SourceDirectDamage", 50842, 10)      -- Blood Boil
-  HL.RegisterNucleusAbility("SourceDirectDamage", 194844, 8)      -- Bonestorm
-  -- Frost
-  HL.RegisterNucleusAbility("SourceDirectDamage", 196770, 8)      -- Remorseless Winter
-  HL.RegisterNucleusAbility("SourceDirectDamage", 207230, 8)      -- Frostscythe
-  HL.RegisterNucleusAbility("TargetDirectDamage", 49184, 10)      -- Howling Blast
-  -- Unholy
-  HL.RegisterNucleusAbility("SourceDirectDamage", 152280, 8 * 2)  -- Defile
-  -- HL.RegisterNucleusAbility("TO_INVESTIGATE", 115989, 8)          -- Unholy Blight
-
-  -- Demon Hunter
-  -- Havoc
-  HL.RegisterNucleusAbility("SourceDirectDamage", 191427, 8 * 2)  -- Metamorphosis
-  HL.RegisterNucleusAbility("SourceDirectDamage", 198013, 20)     -- Eye Beam
-  HL.RegisterNucleusAbility("SourceDirectDamage", 188499, 8)      -- Blade Dance
-  HL.RegisterNucleusAbility("SourceDirectDamage", 210152, 8)      -- Death Sweep
-  HL.RegisterNucleusAbility("SourceDirectDamage", 258920, 8)      -- Immolation Aura
-  HL.RegisterNucleusAbility("SourceDirectDamage", 179057, 8)      -- Chaos Nova
-  -- Vengeance
-  HL.RegisterNucleusAbility("SourceDirectDamage", 247455, 8)      -- Spirit Bomb
-  HL.RegisterNucleusAbility("SourceDirectDamage", 189112, 6 * 2)  -- Infernal Strike
-  HL.RegisterNucleusAbility("SourceDirectDamage", 258921, 8)      -- Immolation Aura 1
-  HL.RegisterNucleusAbility("SourceDirectDamage", 258922, 8)      -- Immolation Aura 2
-  HL.RegisterNucleusAbility("SourceDirectDamage", 228478, 5)      -- Soul Cleave
-  HL.RegisterNucleusAbility("TargetDirectDamage", 204157, 10 * 2) -- Throw Glaive
-  HL.RegisterNucleusAbility("SourceDirectDamage", 204598, 8 * 2)  -- Sigil of Flame
-  HL.RegisterNucleusAbility("SourceDirectDamage", 212105, 8)      -- Fel Devastation
-  HL.RegisterNucleusAbility("SourceDirectDamage", 320341, 8)      -- Bulk Extraction
-
-  -- Druid
-  -- Commons
-  HL.RegisterNucleusAbility("TargetPeriodicDamage", 164815, 8)    -- Sunfire
-  HL.RegisterNucleusAbility("SourceDirectDamage", 194153, 8)      -- Lunar Strike
-  -- Balance
-  -- HL.RegisterNucleusAbility("TO_INVESTIGATE", 191037, 40)         -- Starfall
-  -- Feral
-  HL.RegisterNucleusAbility("SourceDirectDamage", 285381, 8)      -- Primal Wrath
-  HL.RegisterNucleusAbility("SourceDirectDamage", 202028, 8)      -- Brutal Slash
-  HL.RegisterNucleusAbility("SourceDirectDamage", 106830, 8)      -- Thrash (Cat)
-  HL.RegisterNucleusAbility("SourceDirectDamage", 106785, 8)      -- Swipe (Cat)
-  -- Guardian
-  HL.RegisterNucleusAbility("SourceDirectDamage", 77758, 8)       -- Thrash (Bear)
-  HL.RegisterNucleusAbility("SourceDirectDamage", 213771, 8)      -- Swipe (Bear)
-  -- Restoration
-
-  -- Hunter
-  -- Commons
-  -- Beast Mastery
-  HL.RegisterNucleusAbility("TargetDirectDamage", 2643, 8)        -- Multi-Shot
-  HL.RegisterNucleusAbility("TargetDirectDamage", 194392, 8)      -- Volley
-  HL.RegisterNucleusAbility("TargetDirectDamage", 171454, 8)      -- Chimaera Shot 1
-  HL.RegisterNucleusAbility("TargetDirectDamage", 171457, 8)      -- Chimaera Shot 2
-  HL.RegisterNucleusAbility("SourceDirectDamage", 118459, 10)     -- Beast Cleave
-  HL.RegisterNucleusAbility("SourceDirectDamage", 201754, 8)      -- Stomp
-  HL.RegisterNucleusAbility("SourceDirectDamage", 271686, 3)      -- Head My Call
-  -- Marksmanship
-  HL.RegisterNucleusAbility("TargetDirectDamage", 257620, 10)     -- Multi-Shot
-  HL.RegisterNucleusAbility("SourceDirectDamage", 120360, 40)     -- Barrage
-  -- Survival
-  HL.RegisterNucleusAbility("SourceDirectDamage", 187708, 8)      -- Carve
-  HL.RegisterNucleusAbility("SourceDirectDamage", 212436, 8)      -- Butchery
-  HL.RegisterNucleusAbility("TargetDirectDamage", 259495, 8)      -- Bombs 1
-  HL.RegisterNucleusAbility("TargetDirectDamage", 270335, 8)      -- Bombs 2
-  HL.RegisterNucleusAbility("TargetDirectDamage", 270323, 8)      -- Bombs 3
-  HL.RegisterNucleusAbility("TargetDirectDamage", 271045, 8)      -- Bombs 4
-  HL.RegisterNucleusAbility("SourceDirectDamage", 259391, 40)     -- Chakrams
-
-  -- Mage
-  -- Arcane
-  HL.RegisterNucleusAbility("SourceDirectDamage", 1449, 10)       -- Arcane Explosion
-  HL.RegisterNucleusAbility("TargetDirectDamage", 44425, 10)      -- Arcane Barrage
-  -- Fire
-  HL.RegisterNucleusAbility("SourceDirectDamage", 157981, 8)      -- Blast Wave
-  HL.RegisterNucleusAbility("SourceDirectDamage", 153561, 8 * 2)  -- Meteor
-  HL.RegisterNucleusAbility("SourceDirectDamage", 31661, 8)       -- Dragon's Breath
-  HL.RegisterNucleusAbility("TargetDirectDamage", 44457, 10)      -- Living Bomb
-  HL.RegisterNucleusAbility("SourceDirectDamage", 2120, 8 * 2)    -- Flamestrike
-  HL.RegisterNucleusAbility("TargetDirectDamage", 257541, 8)      -- Phoenix Flames
-  -- HL.RegisterNucleusAbility("TO_INVESTIGATE", 12654, 8)           -- AoE Ignite
-  -- Frost
-  HL.RegisterNucleusAbility("TargetDirectDamage", 84721, 8)       -- Frozen Orb
-  HL.RegisterNucleusAbility("SourceDirectDamage", 190357, 8 * 2)  -- Blizzard
-  HL.RegisterNucleusAbility("TargetDirectDamage", 153596, 6)      -- Comet Storm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 120, 12)        -- Cone of Cold
-  HL.RegisterNucleusAbility("TargetDirectDamage", 228600, 8)      -- Glacial Spike
-  HL.RegisterNucleusAbility("TargetDirectDamage", 148022, 8)      -- Icicle
-  HL.RegisterNucleusAbility("TargetDirectDamage", 228598, 8)      -- Ice Lance
-
-  -- Monk
-  -- Brewmaster
-  -- Windwalker
-  HL.RegisterNucleusAbility("SourceDirectDamage", 113656, 8)      -- Fists of Fury
-  HL.RegisterNucleusAbility("SourceDirectDamage", 101546, 8)      -- Spinning Crane Kick
-  HL.RegisterNucleusAbility("SourceDirectDamage", 261715, 8)      -- Rushing Jade Wind
-  HL.RegisterNucleusAbility("SourceDirectDamage", 152175, 8)      -- Whirling Dragon Punch
-
-  -- Paladin
-  -- Holy
-  -- Protection
-  -- Retribution
-
-  -- Priest
-  -- Discipline
-  -- Holy
-  -- Shadow
-  HL.RegisterNucleusAbility("TargetDirectDamage", 228360, 10)     -- Void Eruption 1
-  HL.RegisterNucleusAbility("TargetDirectDamage", 228361, 10)     -- Void Eruption 2
-  HL.RegisterNucleusAbility("TargetDirectDamage", 48045, 10)      -- Mind Sear 1
-  HL.RegisterNucleusAbility("TargetDirectDamage", 49821, 10)      -- Mind Sear 2
-  HL.RegisterNucleusAbility("TargetDirectDamage", 342835, 8)      -- Shadow Crash
-  HL.RegisterNucleusAbility("SourceDirectDamage", 325203, 15)     -- Covenant Ability: Unholy Nova DoT
-  HL.RegisterNucleusAbility("SourceDirectDamage", 325020, 8)      -- Covenant Ability: Ascended Nova
-  HL.RegisterNucleusAbility("SourceDirectDamage", 325326, 15)     -- Covenant Ability: Ascended Explosion
-
-  -- Rogue
-  -- Assassination
-  HL.RegisterNucleusAbility("SourceDirectDamage", 51723, 10)     -- Fan of Knives
-  HL.RegisterNucleusAbility("SourceDirectDamage", 121411, 10)     -- Crimson Tempest
-  HL.RegisterNucleusAbility("TargetDirectDamage", 255546, 6)     -- Poison Bomb
-  -- Outlaw
-  -- HL.RegisterNucleusAbility("TO_INVESTIGATE", 22482, 6)         -- Blade Flurry
-  HL.RegisterNucleusAbility("TargetDirectDamage", 271881, 8)     -- Blade Rush
-  -- Subtlety
-  HL.RegisterNucleusAbility("SourceDirectDamage", 197835, 10)     -- Shuriken Storm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 280720, 10)     -- Secret Technique
-  HL.RegisterNucleusAbility("SourceDirectDamage", 319175, 10)     -- Shadow Vault
-
-  -- Shaman
-  -- Elemental
-  HL.RegisterNucleusAbility("TargetDirectDamage", 188443, 10 * 2) -- Chain Lightning
-  HL.RegisterNucleusAbility("SourceDirectDamage", 61882, 8 * 2)   -- Earthquake
-  HL.RegisterNucleusAbility("SourceDirectDamage", 192222, 8 * 2)  -- Liquid Magma Totem
-  -- Enhancement
-  HL.RegisterNucleusAbility("SourceDirectDamage", 187874, 8)      -- Bladestorm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 197214, 11)     -- Sundering
-  HL.RegisterNucleusAbility("SourceDirectDamage", 197211, 8)      -- Fury of Air
-  -- Restoration
-
-  -- Warlock
-  -- Afflication
-  HL.RegisterNucleusAbility("TargetDirectDamage", 27285, 10)      -- Seed Explosion
-  -- Demonology
-  HL.RegisterNucleusAbility("TargetDirectDamage", 105174, 8)      -- Hand of Gul'dan
-  HL.RegisterNucleusAbility("TargetDirectDamage", 196277, 8)      -- Implosion
-  -- Destruction
-  HL.RegisterNucleusAbility("SourceDirectDamage", 42223, 8 * 2)   -- Rain of Fire
-  HL.RegisterNucleusAbility("SourceDirectDamage", 152108, 8 * 2)  -- Cataclysm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 22703, 10 * 2)  -- Summon Infernal
-
-  -- Warrior
-  -- Arms
-  HL.RegisterNucleusAbility("SourceDirectDamage", 152277, 8 * 2)  -- Ravager
-  HL.RegisterNucleusAbility("SourceDirectDamage", 227847, 8)      -- Bladestorm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 845, 8)         -- Cleave
-  HL.RegisterNucleusAbility("SourceDirectDamage", 1680, 8)        -- Whirlwind
-  -- Fury
-  HL.RegisterNucleusAbility("SourceDirectDamage", 46924, 8)       -- Bladestorm
-  HL.RegisterNucleusAbility("SourceDirectDamage", 118000, 12)     -- Dragon Roar
-  HL.RegisterNucleusAbility("SourceDirectDamage", 190411, 8)      -- Whirlwind
-  -- Protection
-  HL.RegisterNucleusAbility("SourceDirectDamage", 6343, 8)        -- Thunder Clap
-  HL.RegisterNucleusAbility("SourceDirectDamage", 118000, 12)     -- Dragon Roar
-  HL.RegisterNucleusAbility("SourceDirectDamage", 6572, 8)        -- Revenge
-  HL.RegisterNucleusAbility("SourceDirectDamage", 228920, 8 * 2)  -- Ravager
-end
-
--- Unregister every NucleusAbilities.
-function HL.UnregisterNucleusAbilities()
-  HL.Debug("UnregisterNucleusAbilities")
-  wipe(NucleusAbilities)
-  wipe(TrackerBuffer)
-end
-
 -- Update the targets of our friends.
 do
   local StartsWith = Utils.StartsWith
@@ -483,6 +279,216 @@ HL:RegisterForEvent(
   "PLAYER_REGEN_ENABLED"
 )
 
+-- Register a NucleusAbility.
+-- Type: TargetDirectDamage = Ability like Multi-Shot or Eye Beam where the area of effect is near an unit and deals direct damage.
+--                            We listen only on the SPELL_DAMAGE event.
+--                            The main target is considered to be the current target of the source on the first event trigger if it has been hit, otherwise the first unit hit.
+-- Type: TargetPeriodicDamage = Ability like Sunfire where the area of effect is near an unit and deals direct damage then periodic damage.
+--                              We listen on SPELL_DAMAGE, SPELL_AURA_APPLIED, SPELL_AURA_REFRESH, SPELL_AURA_APPLIED_DOSE events.
+--                              The main target is the unit hit by the SPELL_DAMAGE event.
+-- Type : SourceDirectDamage = Ability like Fan of Knives where the area of effect is near the player (or the pet) and deals direct damage. Technically it can be used for GTAoE abilities but the Radius should be the Diameter instead.
+--                             We listen only on the SPELL_DAMAGE event.
+--                             The main target is considered to be the first unit hit since events are ordered from min distance to max distance.
+function Splash.RegisterNucleusAbility(Type, SpellID, Radius)
+  assert(type(Type) == "string" and (Type == "TargetDirectDamage" or Type == "TargetPeriodicDamage" or Type == "SourceDirectDamage"), "Invalid Type.")
+  assert(type(SpellID) == "number", "Invalid SpellID.")
+  assert(type(Radius) == "number" and Radius >= 1 and Radius < 100, "Radius must be between 1 and 100.")
+
+  HL.Debug("RegisterNucleusAbility - Adding ability " .. SpellID .. " with " .. Radius .. "y radius.")
+  NucleusAbilities[SpellID] = { Type = Type, Radius = Radius }
+  TrackerBuffer[SpellID] = {}
+end
+
+-- Register every default NucleusAbilities.
+function Splash.RegisterNucleusAbilities()
+  HL.Debug("RegisterNucleusAbilities")
+  local RegisterNucleusAbility = Splash.RegisterNucleusAbility
+
+  -- Commons
+  -- Essences
+  RegisterNucleusAbility("TargetDirectDamage", 295305, 8)      -- Purification Protocol (Minor)
+  RegisterNucleusAbility("SourceDirectDamage", 297108, 12)     -- Blood of the Enemy (Major)
+  -- Trinkets
+  RegisterNucleusAbility("SourceDirectDamage", 313088, 8)     -- Torment in Jar (Buff)
+  RegisterNucleusAbility("SourceDirectDamage", 313089, 8)     -- Torment in Jar (Explosion)
+
+  -- Death Knight
+  -- Commons
+  RegisterNucleusAbility("SourceDirectDamage", 43265, 8 * 2)   -- Death and Decay
+  -- Blood
+  RegisterNucleusAbility("SourceDirectDamage", 50842, 10)      -- Blood Boil
+  RegisterNucleusAbility("SourceDirectDamage", 194844, 8)      -- Bonestorm
+  -- Frost
+  RegisterNucleusAbility("SourceDirectDamage", 196770, 8)      -- Remorseless Winter
+  RegisterNucleusAbility("SourceDirectDamage", 207230, 8)      -- Frostscythe
+  RegisterNucleusAbility("TargetDirectDamage", 49184, 10)      -- Howling Blast
+  -- Unholy
+  RegisterNucleusAbility("SourceDirectDamage", 152280, 8 * 2)  -- Defile
+  -- RegisterNucleusAbility("TO_INVESTIGATE", 115989, 8)          -- Unholy Blight
+
+  -- Demon Hunter
+  -- Havoc
+  RegisterNucleusAbility("SourceDirectDamage", 191427, 8 * 2)  -- Metamorphosis
+  RegisterNucleusAbility("SourceDirectDamage", 198013, 20)     -- Eye Beam
+  RegisterNucleusAbility("SourceDirectDamage", 188499, 8)      -- Blade Dance
+  RegisterNucleusAbility("SourceDirectDamage", 210152, 8)      -- Death Sweep
+  RegisterNucleusAbility("SourceDirectDamage", 258920, 8)      -- Immolation Aura
+  RegisterNucleusAbility("SourceDirectDamage", 179057, 8)      -- Chaos Nova
+  -- Vengeance
+  RegisterNucleusAbility("SourceDirectDamage", 247455, 8)      -- Spirit Bomb
+  RegisterNucleusAbility("SourceDirectDamage", 189112, 6 * 2)  -- Infernal Strike
+  RegisterNucleusAbility("SourceDirectDamage", 258921, 8)      -- Immolation Aura 1
+  RegisterNucleusAbility("SourceDirectDamage", 258922, 8)      -- Immolation Aura 2
+  RegisterNucleusAbility("SourceDirectDamage", 228478, 5)      -- Soul Cleave
+  RegisterNucleusAbility("TargetDirectDamage", 204157, 10 * 2) -- Throw Glaive
+  RegisterNucleusAbility("SourceDirectDamage", 204598, 8 * 2)  -- Sigil of Flame
+  RegisterNucleusAbility("SourceDirectDamage", 212105, 8)      -- Fel Devastation
+  RegisterNucleusAbility("SourceDirectDamage", 320341, 8)      -- Bulk Extraction
+
+  -- Druid
+  -- Commons
+  RegisterNucleusAbility("TargetPeriodicDamage", 164815, 8)    -- Sunfire
+  RegisterNucleusAbility("SourceDirectDamage", 194153, 8)      -- Lunar Strike
+  -- Balance
+  -- RegisterNucleusAbility("TO_INVESTIGATE", 191037, 40)         -- Starfall
+  -- Feral
+  RegisterNucleusAbility("SourceDirectDamage", 285381, 8)      -- Primal Wrath
+  RegisterNucleusAbility("SourceDirectDamage", 202028, 8)      -- Brutal Slash
+  RegisterNucleusAbility("SourceDirectDamage", 106830, 8)      -- Thrash (Cat)
+  RegisterNucleusAbility("SourceDirectDamage", 106785, 8)      -- Swipe (Cat)
+  -- Guardian
+  RegisterNucleusAbility("SourceDirectDamage", 77758, 8)       -- Thrash (Bear)
+  RegisterNucleusAbility("SourceDirectDamage", 213771, 8)      -- Swipe (Bear)
+  -- Restoration
+
+  -- Hunter
+  -- Commons
+  -- Beast Mastery
+  RegisterNucleusAbility("TargetDirectDamage", 2643, 8)        -- Multi-Shot
+  RegisterNucleusAbility("TargetDirectDamage", 194392, 8)      -- Volley
+  RegisterNucleusAbility("TargetDirectDamage", 171454, 8)      -- Chimaera Shot 1
+  RegisterNucleusAbility("TargetDirectDamage", 171457, 8)      -- Chimaera Shot 2
+  RegisterNucleusAbility("SourceDirectDamage", 118459, 10)     -- Beast Cleave
+  RegisterNucleusAbility("SourceDirectDamage", 201754, 8)      -- Stomp
+  RegisterNucleusAbility("SourceDirectDamage", 271686, 3)      -- Head My Call
+  -- Marksmanship
+  RegisterNucleusAbility("TargetDirectDamage", 257620, 10)     -- Multi-Shot
+  RegisterNucleusAbility("SourceDirectDamage", 120360, 40)     -- Barrage
+  -- Survival
+  RegisterNucleusAbility("SourceDirectDamage", 187708, 8)      -- Carve
+  RegisterNucleusAbility("SourceDirectDamage", 212436, 8)      -- Butchery
+  RegisterNucleusAbility("TargetDirectDamage", 259495, 8)      -- Bombs 1
+  RegisterNucleusAbility("TargetDirectDamage", 270335, 8)      -- Bombs 2
+  RegisterNucleusAbility("TargetDirectDamage", 270323, 8)      -- Bombs 3
+  RegisterNucleusAbility("TargetDirectDamage", 271045, 8)      -- Bombs 4
+  RegisterNucleusAbility("SourceDirectDamage", 259391, 40)     -- Chakrams
+
+  -- Mage
+  -- Arcane
+  RegisterNucleusAbility("SourceDirectDamage", 1449, 10)       -- Arcane Explosion
+  RegisterNucleusAbility("TargetDirectDamage", 44425, 10)      -- Arcane Barrage
+  -- Fire
+  RegisterNucleusAbility("SourceDirectDamage", 157981, 8)      -- Blast Wave
+  RegisterNucleusAbility("SourceDirectDamage", 153561, 8 * 2)  -- Meteor
+  RegisterNucleusAbility("SourceDirectDamage", 31661, 8)       -- Dragon's Breath
+  RegisterNucleusAbility("TargetDirectDamage", 44457, 10)      -- Living Bomb
+  RegisterNucleusAbility("SourceDirectDamage", 2120, 8 * 2)    -- Flamestrike
+  RegisterNucleusAbility("TargetDirectDamage", 257541, 8)      -- Phoenix Flames
+  -- RegisterNucleusAbility("TO_INVESTIGATE", 12654, 8)           -- AoE Ignite
+  -- Frost
+  RegisterNucleusAbility("TargetDirectDamage", 84721, 8)       -- Frozen Orb
+  RegisterNucleusAbility("SourceDirectDamage", 190357, 8 * 2)  -- Blizzard
+  RegisterNucleusAbility("TargetDirectDamage", 153596, 6)      -- Comet Storm
+  RegisterNucleusAbility("SourceDirectDamage", 120, 12)        -- Cone of Cold
+  RegisterNucleusAbility("TargetDirectDamage", 228600, 8)      -- Glacial Spike
+  RegisterNucleusAbility("TargetDirectDamage", 148022, 8)      -- Icicle
+  RegisterNucleusAbility("TargetDirectDamage", 228598, 8)      -- Ice Lance
+
+  -- Monk
+  -- Brewmaster
+  -- Windwalker
+  RegisterNucleusAbility("SourceDirectDamage", 113656, 8)      -- Fists of Fury
+  RegisterNucleusAbility("SourceDirectDamage", 101546, 8)      -- Spinning Crane Kick
+  RegisterNucleusAbility("SourceDirectDamage", 261715, 8)      -- Rushing Jade Wind
+  RegisterNucleusAbility("SourceDirectDamage", 152175, 8)      -- Whirling Dragon Punch
+
+  -- Paladin
+  -- Holy
+  -- Protection
+  -- Retribution
+
+  -- Priest
+  -- Discipline
+  -- Holy
+  -- Shadow
+  RegisterNucleusAbility("TargetDirectDamage", 228360, 10)     -- Void Eruption 1
+  RegisterNucleusAbility("TargetDirectDamage", 228361, 10)     -- Void Eruption 2
+  RegisterNucleusAbility("TargetDirectDamage", 48045, 10)      -- Mind Sear 1
+  RegisterNucleusAbility("TargetDirectDamage", 49821, 10)      -- Mind Sear 2
+  RegisterNucleusAbility("TargetDirectDamage", 342835, 8)      -- Shadow Crash
+  RegisterNucleusAbility("SourceDirectDamage", 325203, 15)     -- Covenant Ability: Unholy Nova DoT
+  RegisterNucleusAbility("SourceDirectDamage", 325020, 8)      -- Covenant Ability: Ascended Nova
+  RegisterNucleusAbility("SourceDirectDamage", 325326, 15)     -- Covenant Ability: Ascended Explosion
+
+  -- Rogue
+  -- Assassination
+  RegisterNucleusAbility("SourceDirectDamage", 51723, 10)     -- Fan of Knives
+  RegisterNucleusAbility("SourceDirectDamage", 121411, 10)     -- Crimson Tempest
+  RegisterNucleusAbility("TargetDirectDamage", 255546, 6)     -- Poison Bomb
+  -- Outlaw
+  -- RegisterNucleusAbility("TO_INVESTIGATE", 22482, 6)         -- Blade Flurry
+  RegisterNucleusAbility("TargetDirectDamage", 271881, 8)     -- Blade Rush
+  -- Subtlety
+  RegisterNucleusAbility("SourceDirectDamage", 197835, 10)     -- Shuriken Storm
+  RegisterNucleusAbility("SourceDirectDamage", 280720, 10)     -- Secret Technique
+  RegisterNucleusAbility("SourceDirectDamage", 319175, 10)     -- Shadow Vault
+
+  -- Shaman
+  -- Elemental
+  RegisterNucleusAbility("TargetDirectDamage", 188443, 10 * 2) -- Chain Lightning
+  RegisterNucleusAbility("SourceDirectDamage", 61882, 8 * 2)   -- Earthquake
+  RegisterNucleusAbility("SourceDirectDamage", 192222, 8 * 2)  -- Liquid Magma Totem
+  -- Enhancement
+  RegisterNucleusAbility("SourceDirectDamage", 187874, 8)      -- Bladestorm
+  RegisterNucleusAbility("SourceDirectDamage", 197214, 11)     -- Sundering
+  RegisterNucleusAbility("SourceDirectDamage", 197211, 8)      -- Fury of Air
+  -- Restoration
+
+  -- Warlock
+  -- Afflication
+  RegisterNucleusAbility("TargetDirectDamage", 27285, 10)      -- Seed Explosion
+  -- Demonology
+  RegisterNucleusAbility("TargetDirectDamage", 105174, 8)      -- Hand of Gul'dan
+  RegisterNucleusAbility("TargetDirectDamage", 196277, 8)      -- Implosion
+  -- Destruction
+  RegisterNucleusAbility("SourceDirectDamage", 42223, 8 * 2)   -- Rain of Fire
+  RegisterNucleusAbility("SourceDirectDamage", 152108, 8 * 2)  -- Cataclysm
+  RegisterNucleusAbility("SourceDirectDamage", 22703, 10 * 2)  -- Summon Infernal
+
+  -- Warrior
+  -- Arms
+  RegisterNucleusAbility("SourceDirectDamage", 152277, 8 * 2)  -- Ravager
+  RegisterNucleusAbility("SourceDirectDamage", 227847, 8)      -- Bladestorm
+  RegisterNucleusAbility("SourceDirectDamage", 845, 8)         -- Cleave
+  RegisterNucleusAbility("SourceDirectDamage", 1680, 8)        -- Whirlwind
+  -- Fury
+  RegisterNucleusAbility("SourceDirectDamage", 46924, 8)       -- Bladestorm
+  RegisterNucleusAbility("SourceDirectDamage", 118000, 12)     -- Dragon Roar
+  RegisterNucleusAbility("SourceDirectDamage", 190411, 8)      -- Whirlwind
+  -- Protection
+  RegisterNucleusAbility("SourceDirectDamage", 6343, 8)        -- Thunder Clap
+  RegisterNucleusAbility("SourceDirectDamage", 118000, 12)     -- Dragon Roar
+  RegisterNucleusAbility("SourceDirectDamage", 6572, 8)        -- Revenge
+  RegisterNucleusAbility("SourceDirectDamage", 228920, 8 * 2)  -- Ravager
+end
+
+-- Unregister every NucleusAbilities.
+function Splash.UnregisterNucleusAbilities()
+  HL.Debug("UnregisterNucleusAbilities")
+  wipe(NucleusAbilities)
+  wipe(TrackerBuffer)
+end
+
 -- Get the enemies in given range of the unit using splash data.
 function Unit:GetEnemiesInSplashRangeCount(Radius)
   if not self:Exists() then return 0 end
@@ -519,4 +525,4 @@ function Unit:GetEnemiesInSplashRangeCount(Radius)
 end
 
 -- OnInit
-HL.RegisterNucleusAbilities()
+Splash.RegisterNucleusAbilities()
