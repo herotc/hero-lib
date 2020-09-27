@@ -58,7 +58,7 @@ do
     if not Player:IsTanking(Target) then return false end
 
     -- Check casts
-    if ActiveMitigationSpells.Cast[Target:CastID()] then
+    if ActiveMitigationSpells.Cast[Target:CastSpellID()] then
       return true
     end
 

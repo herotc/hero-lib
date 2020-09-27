@@ -224,7 +224,7 @@ do
 
   -- Get the Focus we will loose when our cast will end, if we cast.
   function Player:FocusLossOnCastEnd()
-    return self:IsCasting() and Spell(self:CastID()):Cost() or 0
+    return self:IsCasting() and Spell(self:CastSpellID()):Cost() or 0
   end
 
   -- Predict the expected Focus at the end of the Cast/GCD.
