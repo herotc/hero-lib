@@ -242,10 +242,16 @@ local function ClearAction(ActionSlot)
 end
 
 local function UpdateAction(ActionSlot)
+  -- Prevent update for other actions than the one from ability bars.
+  if not ActionSlot or ActionSlot <= 0 or ActionSlot > 120 then return end
+
+  -- Clear the action info cached from the previous update.
   ClearAction(ActionSlot)
 
+  -- Prevent any update if the slot is empty.
   if not HasAction(ActionSlot) then return end
 
+  -- Update the action info.
   local ActionType, ActionID, ActionSubType = GetActionInfo(ActionSlot)
   if ActionID then
     if ActionType == "spell" then
