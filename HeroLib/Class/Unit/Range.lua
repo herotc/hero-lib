@@ -2,6 +2,8 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- HeroDBC
+local DBC = HeroDBC.DBC
 -- HeroLib
 local Cache, Utils = HeroCache, HL.Utils
 local Unit = HL.Unit
@@ -14,10 +16,9 @@ local Item = HL.Item
 -- Lua
 local mathrandom = math.random
 local pairs = pairs
-local tableinsert = table.insert
 local tablesort = table.sort
-local tostring = tostring
 local type = type
+local unpack = unpack
 -- WoW API
 local IsItemInRange = IsItemInRange
 local IsSpellInRange = IsSpellInRange
@@ -50,35 +51,33 @@ local RangeTableByType = {
   }
 }
 do
-  local Types = {"Melee", "Ranged"}
+  local Types = { "Melee", "Ranged" }
 
   for _, Type in pairs(Types) do
-    local Enum = HL.Enum.ItemRange[Type]
+    local ItemRange = DBC.ItemRange[Type]
     local Hostile, Friendly = RangeTableByType[Type].Hostile, RangeTableByType[Type].Friendly
 
     -- Map the range indices and sort them since the order is not guaranteed.
-    Hostile.RangeIndex = Enum.Hostile.RangeIndex
+    Hostile.RangeIndex = { unpack(ItemRange.Hostile.RangeIndex) }
     tablesort(Hostile.RangeIndex, Utils.SortMixedASC)
-    Friendly.RangeIndex = Enum.Friendly.RangeIndex
+    Friendly.RangeIndex = { unpack(ItemRange.Friendly.RangeIndex) }
     tablesort(Friendly.RangeIndex, Utils.SortMixedASC)
 
     -- Take randomly one item for each range.
-    for k, v in pairs(Enum.Hostile.ItemRange) do
+    for k, v in pairs(ItemRange.Hostile.ItemRange) do
       Hostile.ItemRange[k] = v[mathrandom(1, #v)]
     end
-    for k, v in pairs(Enum.Friendly.ItemRange) do
+    for k, v in pairs(ItemRange.Friendly.ItemRange) do
       Friendly.ItemRange[k] = v[mathrandom(1, #v)]
     end
-
-    -- Removes the items ranges in order to free up the memory.
-    Enum.Hostile.ItemRange = nil
-    Enum.Friendly.ItemRange = nil
   end
 end
 
 -- Get if the unit is in range, distance check through IsItemInRange.
 -- Do keep in mind that if you're checking the range for a distance from the player (player-centered AoE like Fan of Knives),
 -- you should use the radius - 1.5yds as distance (ex: instead of 10 you should use 8.5) because the player CombatReach is ignored (the distance is computed from the center to the edge, instead of edge to edge).
+-- Supported hostile ranges (will take a lower one if you specify a different one): 5 - 6.5 - 7 - 8 - 10 - 15 - 20 - 25 - 30 - 35 - 38 - 40 - 45 - 50 - 55 - 60 - 70 - 80 - 90 - 100
+-- Supported friendly ranges (will take a lower one if you specify a different one): 5 - 6.5 - 7 - 8 - 10 - 15 - 20 - 25 - 30 - 35 - 38 - 40 - 45 - 50 - 55 - 60 - 70 - 80 - 90 - 100
 function Unit:IsInRange(Distance)
   assert(type(Distance) == "number", "Distance must be a number.")
   assert(Distance >= 5 and Distance <= 100, "Distance must be between 5 and 100.")
@@ -129,6 +128,8 @@ end
 -- Get if the unit is in range, distance check through IsItemInRange.
 -- Melee ranges are different than Ranged one, we can only check the 5y Melee range through items at this moment.
 -- If you have a spell that increase your melee range you should instead use Unit:IsInSpellRange().
+-- Supported hostile ranges: 5
+-- Supported friendly ranges: 5
 function Unit:IsInMeleeRange(Distance)
   assert(type(Distance) == "number", "Distance must be a number.")
   assert(Distance >= 5 and Distance <= 100, "Distance must be between 5 and 100.")
@@ -178,137 +179,4 @@ end
 -- Get the maximum distance to the player, using Unit:IsInRange().
 function Unit:MaxDistance()
   return FindRange(self, true)
-end
-
---- USE WHAT IS BELOW ONLY IF YOU KNOW WHAT YOU'RE DOING ---
--- Run ManuallyFilterItemRanges() while standing at less than 1yds from an hostile target and the same for a friendly focus (easy with dummies like the ones in Orgrimmar)
--- Keep running this function until you get the message in the chat saying that the filtering is done.
--- Due to some issues with the Blizzard API we need to do multiple iterations on different frame (ideally do one call each 3-5secs)
-function HL.ManuallyFilterItemRanges()
-  -- Reset (in case you spammed it too much!)
-  if HL.ManualManualRangeTableByTypeIterations then
-    local Iterations = HL.ManualManualRangeTableByTypeIterations
-    if Iterations.Current == Iterations.Last then
-      HL.Print('ManuallyFilterItemRanges reset !')
-      HL.ManualManualRangeTableByType = nil
-    end
-  end
-
-  -- Init
-  if not HL.ManualRangeTableByType then
-    HL.Print('ManuallyFilterItemRanges initialized...')
-    HL.ManualRangeTableByType = {
-      Melee = {
-        Hostile = {
-          RangeIndex = {},
-          ItemRange = {}
-        },
-        Friendly = {
-          RangeIndex = {},
-          ItemRange = {}
-        }
-      },
-      Ranged = {
-        Hostile = {
-          RangeIndex = {},
-          ItemRange = {}
-        },
-        Friendly = {
-          RangeIndex = {},
-          ItemRange = {}
-        }
-      }
-    }
-    HL.ManualRangeTableByTypeIterations = {
-      Current = 0,
-      Last = 15
-    }
-  end
-
-  -- Locals
-  local ManualRangeTableByType = HL.ManualRangeTableByType
-  local Iterations = HL.ManualRangeTableByTypeIterations
-  local MeleeTable, RangedTable = ManualRangeTableByType.Melee, ManualRangeTableByType.Ranged
-  local MHostileTable, MFriendlyTable = MeleeTable.Hostile, MeleeTable.Friendly
-  local MHTItemRange, MHTRangeIndex = MHostileTable.ItemRange, MHostileTable.RangeIndex
-  local MFTItemRange, MFTRangeIndex = MFriendlyTable.ItemRange, MFriendlyTable.RangeIndex
-  local RHostileTable, RFriendlyTable = RangedTable.Hostile, RangedTable.Friendly
-  local RHTItemRange, RHTRangeIndex = RHostileTable.ItemRange, RHostileTable.RangeIndex
-  local RFTItemRange, RFTRangeIndex = RFriendlyTable.ItemRange, RFriendlyTable.RangeIndex
-  local TUnitID, FUnitID = Target.UnitID, Focus.UnitID
-  local ValueIsInTable = Utils.ValueIsInTable
-
-  -- Inside a given frame, we do 5 iterations.
-  for i = 1, 5 do
-    -- Filter items that can only be casted on an unit. (i.e. blacklist ground targeted aoe items)
-    for Type, Ranges in pairs(HL.Enum.ItemRangeUnfiltered) do
-      local HTItemRange = Type == "Melee" and MHTItemRange or RHTItemRange
-      local HTRangeIndex = Type == "Melee" and MHTRangeIndex or RHTRangeIndex
-      local FTItemRange = Type == "Melee" and MFTItemRange or RFTItemRange
-      local FTRangeIndex = Type == "Melee" and MFTRangeIndex or RFTRangeIndex
-
-      for Range, ItemIDs in pairs(Ranges) do
-        -- RangeIndex
-        if Type == "Melee" and Range == 5 then
-          -- Special case for melees
-          Range = "Melee"
-        else
-          -- The parser assume a string that's why we convert it to a string
-          Range = tostring(Range)
-        end
-
-        for j = 1, #ItemIDs do
-          local ItemID = ItemIDs[j]
-
-          -- Hostile filter
-          if IsItemInRange(ItemID, TUnitID) then
-            -- Make the Range table if it doesn't exist yet
-            if not HTItemRange[Range] then
-              HTItemRange[Range] = {}
-              tableinsert(HTRangeIndex, Range)
-            end
-            -- Check if the item isn't already inserted since we do multiple passes then insert it
-            if not ValueIsInTable(HTItemRange[Range], ItemID) then
-              tableinsert(HTItemRange[Range], ItemID)
-            end
-          end
-
-          -- Friendly filter
-          if IsItemInRange(ItemID, FUnitID) then
-            -- Make the Range table if it doesn't exist yet
-            if not FTItemRange[Range] then
-              FTItemRange[Range] = {}
-              tableinsert(FTRangeIndex, Range)
-            end
-            -- Check if the item isn't already inserted since we do multiple passes
-            if not ValueIsInTable(FTItemRange[Range], ItemID) then
-              tableinsert(FTItemRange[Range], ItemID)
-            end
-          end
-        end
-      end
-    end
-  end
-
-  -- Increment the pass counter
-  Iterations.Current = Iterations.Current + 1
-
-  if Iterations.Current == Iterations.Last then
-    -- Encode in JSON the content (JSON is used since it's easier to work with)
-    MHostileTable.ItemRange = Utils.JSON.encode(MHTItemRange)
-    MHostileTable.RangeIndex = Utils.JSON.encode(MHTRangeIndex)
-    MFriendlyTable.ItemRange = Utils.JSON.encode(MFTItemRange)
-    MFriendlyTable.RangeIndex = Utils.JSON.encode(MFTRangeIndex)
-    RHostileTable.ItemRange = Utils.JSON.encode(RHTItemRange)
-    RHostileTable.RangeIndex = Utils.JSON.encode(RHTRangeIndex)
-    RFriendlyTable.ItemRange = Utils.JSON.encode(RFTItemRange)
-    RFriendlyTable.RangeIndex = Utils.JSON.encode(RFTRangeIndex)
-
-    -- Pass it to SavedVariables
-    if not _G.HeroLibDB then _G.HeroLibDB = {} end
-    _G.HeroLibDB.ManualRangeTableByType = ManualRangeTableByType
-    HL.Print('ManuallyFilterItemRanges done.')
-  else
-    HL.Print('ManuallyFilterItemRanges still needs ' .. Iterations.Last - Iterations.Current .. ' iteration(s).')
-  end
 end

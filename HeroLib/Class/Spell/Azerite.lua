@@ -2,6 +2,8 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- HeroDBC
+local DBC = HeroDBC.DBC
 -- HeroLib
 local Cache, Utils = HeroCache, HL.Utils
 local Unit = HL.Unit
@@ -29,7 +31,7 @@ local wipe = table.wipe
 local AzeritePowers = {}
 local AzeriteEssences = {}
 local AzeriteNeckItemLevel
-local AzeriteEssenceScaling = HL.Enum.AzeriteEssenceScaling
+local AzeriteEssenceScaling = DBC.AzeriteEssenceScaling
 
 --- ============================ CONTENT ============================
 -- Get every traits informations and stores them.

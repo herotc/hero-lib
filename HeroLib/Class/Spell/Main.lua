@@ -2,6 +2,8 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- HeroDBC
+local DBC = HeroDBC.DBC
 -- HeroLib
 local Cache, Utils = HeroCache, HL.Utils
 local Unit = HL.Unit
@@ -219,7 +221,7 @@ end
 
 -- Spell Tick Time
 do
-  local SpellTickTime = HL.Enum.TickTime
+  local SpellTickTime = DBC.SpellTickTime
   local ClassesSpecsBySpecID = HL.SpecID_ClassesSpecs
 
   function Spell:FilterTickTime(SpecID)
@@ -260,7 +262,7 @@ end
 
 -- Spell Duration
 do
-  local SpellDuration = HL.Enum.SpellDuration
+  local SpellDuration = DBC.SpellDuration
 
   function Spell:BaseDuration()
     local Duration = SpellDuration[self:ID()]
@@ -286,7 +288,7 @@ end
 
 -- Spell GCD
 do
-  local SpellGCD = HL.Enum.TriggerGCD
+  local SpellGCD = DBC.SpellGCD
 
   function Spell:GCD()
     local GCD = SpellGCD[self.SpellID]
@@ -298,7 +300,7 @@ end
 
 -- action.foo.travel_time
 do
-  local SpellProjectileSpeed = HL.Enum.ProjectileSpeed
+  local SpellProjectileSpeed = DBC.SpellProjectileSpeed
   local ClassesSpecsBySpecID = HL.SpecID_ClassesSpecs
 
   function Spell:FilterProjectileSpeed(SpecID)

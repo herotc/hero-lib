@@ -2,6 +2,8 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- HeroDBC
+local DBC = HeroDBC.DBC
 -- HeroLib
 local Cache = HeroCache
 local Unit = HL.Unit
@@ -16,7 +18,7 @@ local tableinsert = table.insert
 local mathmax = math.max
 local GetTime = GetTime
 -- File Locals
-local TriggerGCD = HL.Enum.TriggerGCD -- TriggerGCD table until it has been filtered.
+local TriggerGCD = DBC.SpellGCD -- TriggerGCD table until it has been filtered.
 local LastRecord = 15
 local PrevGCDPredicted = 0
 local PrevGCDCastTime = 0
@@ -116,7 +118,7 @@ HL:RegisterForPetCombatEvent(
 -- Filter the Enum TriggerGCD table to keep only registered spells for a given class (based on SpecID).
 function Player:FilterTriggerGCD(SpecID)
   local RegisteredSpells = {}
-  local BaseTriggerGCD = HL.Enum.TriggerGCD -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
+  local BaseTriggerGCD = DBC.SpellGCD -- In case FilterTriggerGCD is called multiple time, we take the Enum table as base.
   -- Fetch registered spells during the init
   for Spec, Spells in pairs(HL.Spell[HL.SpecID_ClassesSpecs[SpecID][1]]) do
     for _, Spell in pairs(Spells) do

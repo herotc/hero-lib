@@ -7,7 +7,7 @@
 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## Dependencies: HeroCache
+## Dependencies: HeroDBC, HeroCache
 ## SavedVariables: HeroLibDB
 
 # WoW Lib Stuff
@@ -16,7 +16,6 @@ Lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 # Utils
 Utils.lua
-Lib\json.lua
 
 # GUI
 GUI\Panels.lua
@@ -24,14 +23,6 @@ GUI\Panels.lua
 # API
 Settings.lua
 Core.lua
-
-# Enum
-Enum\AzeriteEssences.lua
-Enum\ItemRange.lua
-Enum\ProjectileSpeed.lua
-Enum\TriggerGCD.lua
-Enum\TickTime.lua
-Enum\SpellDuration.lua
 
 # Classes
 Class\Main.lua

@@ -1,11 +1,15 @@
 package-as: HeroLib
 
+required-dependencies:
+    - 410191-herodbc
+
 move-folders:
- HeroLib/HeroCache: HeroCache
- HeroLib/HeroLib: HeroLib
+    HeroLib/HeroCache: HeroCache
+    HeroLib/HeroLib: HeroLib
 
 ignore:
- - symlink.sh
+    - symlink.bat
+    - symlink.sh
 
 enable-nolib-creation: no
 
