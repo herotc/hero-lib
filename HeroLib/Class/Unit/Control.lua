@@ -46,7 +46,7 @@ local IsStunnedDebuffs = {
 function Unit:IterateStunDebuffs()
   for i = 1, #IsStunnedDebuffs do
     local IsStunnedDebuff = IsStunnedDebuffs[i]
-    if self:Debuff(IsStunnedDebuff, nil, true) then
+    if self:DebuffUp(IsStunnedDebuff, nil, true) then
       return true
     end
   end
