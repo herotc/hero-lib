@@ -282,9 +282,9 @@ function GUI.CreateChildPanel(Parent, CName)
   CP.parent = Parent.name
   CP.usedName = CName:gsub(" ", "")
   InterfaceOptions_AddCategory(CP)
-  if Parent.collapsed then
-    GUI.TogglePanel(Parent)
-  end
+--[[   if Parent.collapsed then
+    GUI.TogglePanel(Parent) -- TODO : check if this has any impact, commented this part to collapse the options by default 
+  end ]]
   GUI.PanelsTable[CP.usedName] = CP
   return CP
 end
