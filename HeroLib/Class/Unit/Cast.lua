@@ -145,10 +145,10 @@ function Unit:CastDuration()
   local _, _, _, ChannelStartTime, ChannelEndTime = self:ChannelingInfo()
 
   if CastStartTime then
-    return CastEndTime - CastStartTime
+    return (CastEndTime - CastStartTime) / 1000
   end
   if ChannelStartTime then
-    return ChannelEndTime - ChannelStartTime
+    return (ChannelEndTime - ChannelStartTime) / 1000
   end
 end
 
