@@ -397,12 +397,14 @@ function Splash.RegisterNucleusAbilities()
   -- RegisterNucleusAbility("TO_INVESTIGATE", 12654, 8)           -- AoE Ignite
   -- Frost
   RegisterNucleusAbility("TargetDirectDamage", 84721, 8)       -- Frozen Orb
-  RegisterNucleusAbility("SourceDirectDamage", 190357, 8 * 2)  -- Blizzard
+  RegisterNucleusAbility("TargetDirectDamage", 190357, 8)      -- Blizzard
   RegisterNucleusAbility("TargetDirectDamage", 153596, 6)      -- Comet Storm
   RegisterNucleusAbility("SourceDirectDamage", 120, 12)        -- Cone of Cold
   RegisterNucleusAbility("TargetDirectDamage", 228600, 8)      -- Glacial Spike
   RegisterNucleusAbility("TargetDirectDamage", 148022, 8)      -- Icicle
   RegisterNucleusAbility("TargetDirectDamage", 228598, 8)      -- Ice Lance
+  RegisterNucleusAbility("SourceDirectDamage", 122, 12)        -- Frost Nova
+  RegisterNucleusAbility("TargetDirectDamage", 157997, 8)      -- Ice Nova
 
   -- Monk
   -- Brewmaster
