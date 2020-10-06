@@ -389,15 +389,15 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("TargetDirectDamage", 44425, 10)      -- Arcane Barrage
   -- Fire
   RegisterNucleusAbility("SourceDirectDamage", 157981, 8)      -- Blast Wave
-  RegisterNucleusAbility("SourceDirectDamage", 153561, 8 * 2)  -- Meteor
+  RegisterNucleusAbility("TargetDirectDamage", 153561, 8 * 2)  -- Meteor
   RegisterNucleusAbility("SourceDirectDamage", 31661, 8)       -- Dragon's Breath
   RegisterNucleusAbility("TargetDirectDamage", 44457, 10)      -- Living Bomb
-  RegisterNucleusAbility("SourceDirectDamage", 2120, 8 * 2)    -- Flamestrike
+  RegisterNucleusAbility("TargetDirectDamage", 2120, 8 * 2)    -- Flamestrike
   RegisterNucleusAbility("TargetDirectDamage", 257541, 8)      -- Phoenix Flames
   -- RegisterNucleusAbility("TO_INVESTIGATE", 12654, 8)           -- AoE Ignite
   -- Frost
   RegisterNucleusAbility("TargetDirectDamage", 84721, 8)       -- Frozen Orb
-  RegisterNucleusAbility("TargetDirectDamage", 190357, 8)      -- Blizzard
+  RegisterNucleusAbility("TargetDirectDamage", 190357, 8 * 2)  -- Blizzard
   RegisterNucleusAbility("TargetDirectDamage", 153596, 6)      -- Comet Storm
   RegisterNucleusAbility("SourceDirectDamage", 120, 12)        -- Cone of Cold
   RegisterNucleusAbility("TargetDirectDamage", 228600, 8)      -- Glacial Spike
