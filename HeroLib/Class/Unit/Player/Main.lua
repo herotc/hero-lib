@@ -15,6 +15,7 @@ local Item = HL.Item
 local UnitInVehicle = UnitInVehicle
 local IsMounted = IsMounted
 local UnitRace = UnitRace -- race, raceEn, raceId
+local Covenants = _G.C_Covenants
 -- File Locals
 
 
@@ -38,6 +39,19 @@ end
 -- Test if the unit is of the given race.
 function Player:IsRace(ThisRace)
   return ThisRace and self:Race() == ThisRace or false
+end
+
+-- Get the player covenant
+function Player:Covenant()
+  local covenantName
+  local activeCovenantID = Covenants.GetActiveCovenantID()
+  if activeCovenantID > 0 then
+    local covenantData =  Covenants.GetCovenantData(activeCovenantID)
+    if covenantData then
+      covenantName = covenantData.name
+    end
+  end
+  return covenantName
 end
 
 do
