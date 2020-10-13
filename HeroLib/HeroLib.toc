@@ -10,10 +10,6 @@
 ## Dependencies: HeroDBC, HeroCache
 ## SavedVariables: HeroLibDB
 
-# WoW Lib Stuff
-Lib\LibStub\LibStub.lua
-Lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
-
 # Utils
 Utils.lua
 

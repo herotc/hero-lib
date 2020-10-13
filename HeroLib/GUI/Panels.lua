@@ -97,8 +97,7 @@ end
 -- Make a dropdown
 local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   -- Constructor
-  --local Dropdown = CreateFrame("Button", "$parent_" .. Setting, Parent, "L_UIDropDownMenuTemplate")
-  local Dropdown = L_Create_UIDropDownMenu("$parent_" .. Setting, Parent)
+  local Dropdown = CreateFrame("Frame", "$parent_" .. Setting, Parent, "UIDropDownMenuTemplate")
   Parent[Setting] = Dropdown
   Dropdown.SettingTable, Dropdown.SettingKey = FindSetting(Parent.SettingsTable, strsplit(".", Setting))
   Dropdown.SavedVariablesTable, Dropdown.SavedVariablesKey = Parent.SavedVariablesTable, Setting
@@ -107,13 +106,13 @@ local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   local UpdateSetting
   if Optionals and Optionals["ReloadRequired"] then
     UpdateSetting = function(self)
-      L_UIDropDownMenu_SetSelectedID(Dropdown, self:GetID())
-      Dropdown.SavedVariablesTable[Dropdown.SavedVariablesKey] = L_UIDropDownMenu_GetText(Dropdown)
+      UIDropDownMenu_SetSelectedID(Dropdown, self:GetID())
+      Dropdown.SavedVariablesTable[Dropdown.SavedVariablesKey] = UIDropDownMenu_GetText(Dropdown)
     end
   else
     UpdateSetting = function(self)
-      L_UIDropDownMenu_SetSelectedID(Dropdown, self:GetID())
-      local SettingValue = L_UIDropDownMenu_GetText(Dropdown)
+      UIDropDownMenu_SetSelectedID(Dropdown, self:GetID())
+      local SettingValue = UIDropDownMenu_GetText(Dropdown)
       Dropdown.SettingTable[Dropdown.SettingKey] = SettingValue
       Dropdown.SavedVariablesTable[Dropdown.SavedVariablesKey] = SettingValue
     end
@@ -128,19 +127,19 @@ local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   LastOptionAttached[Parent.name] = { Dropdown, 15, 0 }
 
   local function Initialize(Self, Level)
-    local Info = L_UIDropDownMenu_CreateInfo()
+    local Info = UIDropDownMenu_CreateInfo()
     for Key, Value in pairs(Values) do
-      Info = L_UIDropDownMenu_CreateInfo()
+      Info = UIDropDownMenu_CreateInfo()
       Info.text = Value
       Info.value = Value
       Info.func = UpdateSetting
-      L_UIDropDownMenu_AddButton(Info, Level)
+      UIDropDownMenu_AddButton(Info, Level)
     end
   end
 
-  L_UIDropDownMenu_Initialize(Dropdown, Initialize)
-  L_UIDropDownMenu_SetSelectedValue(Dropdown, Dropdown.SettingTable[Dropdown.SettingKey])
-  L_UIDropDownMenu_JustifyText(Dropdown, "LEFT")
+  UIDropDownMenu_Initialize(Dropdown, Initialize)
+  UIDropDownMenu_SetSelectedValue(Dropdown, Dropdown.SettingTable[Dropdown.SettingKey])
+  UIDropDownMenu_JustifyText(Dropdown, "LEFT")
 
   local Title = Dropdown:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   Parent[Setting .. "DropdownTitle"] = Title
@@ -283,7 +282,7 @@ function GUI.CreateChildPanel(Parent, CName)
   CP.usedName = CName:gsub(" ", "")
   InterfaceOptions_AddCategory(CP)
 --[[   if Parent.collapsed then
-    GUI.TogglePanel(Parent) -- TODO : check if this has any impact, commented this part to collapse the options by default 
+    GUI.TogglePanel(Parent) -- TODO: check if this has any impact, commented this part to collapse the options by default
   end ]]
   GUI.PanelsTable[CP.usedName] = CP
   return CP
