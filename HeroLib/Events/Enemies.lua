@@ -460,6 +460,7 @@ function Splash.RegisterNucleusAbilities()
   -- Afflication
   RegisterNucleusAbility("TargetDirectDamage", 27285, 10)      -- Seed Explosion
   -- Demonology
+  RegisterNucleusAbility("SourceDirectDamage", 89753, 8)       -- Felstorm (Felguard)
   RegisterNucleusAbility("TargetDirectDamage", 105174, 8)      -- Hand of Gul'dan
   RegisterNucleusAbility("TargetDirectDamage", 196277, 8)      -- Implosion
   -- Destruction
