@@ -753,6 +753,8 @@ end
 
 do
   Player.PredictedResourceMap = {
+    -- Health (but might be percentage only?), cf. https://github.com/herotc/hero-lib/issues/35
+    [-2] = function() return Player:Health() end,
     -- Mana
     [0] = function() return Player:ManaP() end,
     -- Rage
