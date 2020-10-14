@@ -47,12 +47,12 @@ do
     ----- Tomb of Sargeras (T20 - 7.2 Patch) -----
     --- Desolate Host
     -- Engine of Eradication cannot be hit in Spirit Realm.
-    [118460] = function(self) return Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
+    [118460] = function(self) return Player:DebuffUp(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
     -- Soul Queen Dejahna cannot be hit outside Spirit Realm.
-    [118462] = function(self) return not Player:Debuff(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
+    [118462] = function(self) return not Player:DebuffUp(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
     ----- Ny'alotha (8.3 Patch) -----
     -- Drestagath heals all damage unless you have the Void Infused Ichor debuff
-    [157602] = function(self) return not (Player:IsTanking(self) or Player:DebuffP(SpecialBlacklistDataSpells.R_NYA_VoidInfusedIchor)) end,
+    [157602] = function(self) return not (Player:IsTanking(self) or Player:DebuffUp(SpecialBlacklistDataSpells.R_NYA_VoidInfusedIchor)) end,
   }
 
   function Unit:IsBlacklisted()
