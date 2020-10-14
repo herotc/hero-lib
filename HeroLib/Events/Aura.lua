@@ -200,7 +200,7 @@ do
     local AuraUnits = Aura.Units
     for AuraUnitGUID, _ in pairs(AuraUnits) do
       local AuraUnit = GetAuraUnit(AuraUnits, AuraUnitGUID)
-      if AuraUnit and AuraUnit:Debuff(self, nil, BypassRecovery) then
+      if AuraUnit and AuraUnit:DebuffUp(self, nil, BypassRecovery) then
         return true
       end
     end
