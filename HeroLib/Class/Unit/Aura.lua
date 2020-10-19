@@ -160,9 +160,8 @@ function Unit:DebuffDown(ThisSpell, AnyCaster, BypassRecovery)
 end
 
 -- debuff.foo.refreshable & dot.foo.refreshable, automaticaly calculates the PandemicThreshold from HeroDBC spell data.
-function Unit:DebuffRefreshable(ThisSpell, AnyCaster, BypassRecovery)
-  local PandemicThreshold = ThisSpell:PandemicThreshold()
-
+function Unit:DebuffRefreshable(ThisSpell, PandemicThreshold, AnyCaster, BypassRecovery)
+  local PandemicThreshold = PandemicThreshold or ThisSpell:PandemicThreshold()
   return self:DebuffRemains(ThisSpell, AnyCaster, BypassRecovery) <= PandemicThreshold
 end
 
