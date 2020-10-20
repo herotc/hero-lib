@@ -15,6 +15,7 @@ local Item = HL.Item
 local GetSpellCharges = GetSpellCharges -- currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate
 local GetSpellCooldown = GetSpellCooldown -- start, duration, enabled, modRate
 local GetTime = GetTime
+local GetSpellCount = GetSpellCount
 -- File Locals
 
 
@@ -118,4 +119,9 @@ function Spell:UsableIn(BypassRecovery)
   if self:Charges() > 0 then return 0 end
 
   return self:Recharge(BypassRecovery)
+end
+
+function Spell:Count()
+  local SpellID = self:ID()
+  return GetSpellCount(SpellID)
 end
