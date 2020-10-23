@@ -40,7 +40,12 @@ function Unit:AuraInfo(ThisSpell, Filter, Full)
 
     -- Returns the info once we match the spell ids.
     if AuraSpellID == SpellID then
-      return (Full and UnitAura(UnitID, Index, Filter)) or AuraStack, AuraDuration, AuraExpirationTime, Index
+      if Full then
+        return UnitAura(UnitID, Index, Filter)
+      else
+        return AuraStack, AuraDuration, AuraExpirationTime, Index
+      end
+      --return Full and UnitAura(UnitID, Index, Filter) or AuraStack, AuraDuration, AuraExpirationTime, Index
     end
 
     Index = Index + 1
