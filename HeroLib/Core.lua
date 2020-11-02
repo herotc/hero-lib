@@ -22,7 +22,7 @@ HL.MAXIMUM = 40 -- Max # Buffs and Max # Nameplates.
 
 --- ============================ CONTENT ============================
 --- Build Infos
-local LiveVersion, PTRVersion, BetaVersion = "8.3.7", "9.0.1", "9.0.2"
+local LiveVersion, PTRVersion, BetaVersion = "9.0.1", "9.0.1", "9.0.2"
 -- version, build, date, tocversion
 HL.BuildInfo = { GetBuildInfo() }
 -- Get the current build version.

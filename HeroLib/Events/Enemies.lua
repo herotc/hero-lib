@@ -52,8 +52,18 @@ do
       SPLASH_TRACKER_TIMEOUT = 5
     end
 
-    for _, PartyUnit in pairs(Unit.Party) do UpdateFriendTarget(PartyUnit:ID()) end
-    for _, RaidUnit in pairs(Unit.Raid) do UpdateFriendTarget(RaidUnit:ID()) end
+    UpdateFriendTarget("player")
+    UpdateFriendTarget("pet")
+    for _, PartyUnit in pairs(Unit.Party) do
+      local UnitID = PartyUnit:ID()
+      UpdateFriendTarget(UnitID)
+      UpdateFriendTarget(UnitID .. "pet")
+    end
+    for _, RaidUnit in pairs(Unit.Raid) do
+      local UnitID = RaidUnit:ID()
+      UpdateFriendTarget(UnitID)
+      UpdateFriendTarget(UnitID .. "pet")
+    end
   end
 
   -- OnInit
@@ -69,6 +79,15 @@ do
       UpdateFriendTarget(UnitID)
     end,
     "UNIT_TARGET"
+  )
+  HL:RegisterForEvent(
+    function(Event, UnitID)
+      if not StartsWith(UnitID, "player") and not StartsWith(UnitID, "party") and not StartsWith(UnitID, "raid") then
+        return
+      end
+      UpdateFriendTarget(UnitID .. "pet")
+    end,
+    "UNIT_PET"
   )
 end
 
@@ -305,6 +324,8 @@ function Splash.RegisterNucleusAbilities()
   local RegisterNucleusAbility = Splash.RegisterNucleusAbility
 
   -- Commons
+  -- Azerite Traits
+  RegisterNucleusAbility("TargetDirectDamage", 271686, 3)      -- Head My Call
   -- Essences
   RegisterNucleusAbility("TargetDirectDamage", 295305, 8)      -- Purification Protocol (Minor)
   RegisterNucleusAbility("SourceDirectDamage", 297108, 12)     -- Blood of the Enemy (Major)
@@ -363,25 +384,23 @@ function Splash.RegisterNucleusAbilities()
 
   -- Hunter
   -- Commons
-  -- Beast Mastery
-  RegisterNucleusAbility("TargetDirectDamage", 2643, 8)        -- Multi-Shot
-  RegisterNucleusAbility("TargetDirectDamage", 194392, 8)      -- Volley
+  RegisterNucleusAbility("SourceDirectDamage", 120361, 40)     -- Barrage
   RegisterNucleusAbility("TargetDirectDamage", 171454, 8)      -- Chimaera Shot 1
   RegisterNucleusAbility("TargetDirectDamage", 171457, 8)      -- Chimaera Shot 2
-  RegisterNucleusAbility("SourceDirectDamage", 118459, 10)     -- Beast Cleave
-  RegisterNucleusAbility("SourceDirectDamage", 201754, 8)      -- Stomp
-  RegisterNucleusAbility("SourceDirectDamage", 271686, 3)      -- Head My Call
+  -- Beast Mastery
+  RegisterNucleusAbility("TargetDirectDamage", 118459, 10)     -- Beast Cleave
+  RegisterNucleusAbility("TargetDirectDamage", 2643, 8)        -- Multi-Shot
+  RegisterNucleusAbility("TargetDirectDamage", 201754, 8)      -- Stomp
   -- Marksmanship
   RegisterNucleusAbility("TargetDirectDamage", 257620, 10)     -- Multi-Shot
-  RegisterNucleusAbility("SourceDirectDamage", 120360, 40)     -- Barrage
   -- Survival
-  RegisterNucleusAbility("SourceDirectDamage", 187708, 8)      -- Carve
   RegisterNucleusAbility("SourceDirectDamage", 212436, 8)      -- Butchery
+  RegisterNucleusAbility("SourceDirectDamage", 187708, 8)      -- Carve
+  RegisterNucleusAbility("SourceDirectDamage", 259391, 40)     -- Chakrams
   RegisterNucleusAbility("TargetDirectDamage", 259495, 8)      -- Bombs 1
   RegisterNucleusAbility("TargetDirectDamage", 270335, 8)      -- Bombs 2
   RegisterNucleusAbility("TargetDirectDamage", 270323, 8)      -- Bombs 3
   RegisterNucleusAbility("TargetDirectDamage", 271045, 8)      -- Bombs 4
-  RegisterNucleusAbility("SourceDirectDamage", 259391, 40)     -- Chakrams
 
   -- Mage
   -- Arcane
