@@ -13,6 +13,8 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local UnitInVehicle = UnitInVehicle
+local UnitInParty = UnitInParty
+local UnitInRaid = UnitInRaid
 local IsMounted = IsMounted
 local UnitRace = UnitRace -- race, raceEn, raceId
 local Covenants = _G.C_Covenants
@@ -25,6 +27,16 @@ local Covenants = _G.C_Covenants
 -- Get if the player is mounted on a non-combat mount.
 function Player:IsMounted()
   return IsMounted() and not self:IsOnCombatMount()
+end
+
+-- Get if the player is in a party.
+function Player:IsInParty()
+  return UnitInParty(self.UnitID)
+end
+
+-- Get if the player is in a raid.
+function Player:IsInRaid()
+  return UnitInRaid(self.UnitID)
 end
 
 -- Get the player race.
