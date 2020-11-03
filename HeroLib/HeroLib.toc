@@ -50,7 +50,7 @@ Class\Item.lua
 Events\Main.lua
 Events\Unit.lua
 Events\Player.lua
-Events\Enemies.lua
+Events\SplashEnemies.lua
 Events\Aura.lua
 Events\PMultiplier.lua
 Events\Spell.lua

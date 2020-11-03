@@ -29,13 +29,18 @@ local TrackerBuffer = {} -- Buffer of the tracker since splash is coming from mu
 local Tracker = {} -- Track each enemies from where we splash from. { [PrimaryEnemyGUID] = { [Radius] = { [EnemyGUID] = { GUID, LastDamageTime, LastDamageSpellID } } } }
 
 --- ======= GLOBALIZE =======
-HL.Splash = Splash
+HL.SplashEnemies = Splash
 
 
 --- ============================ CONTENT ============================
 -- Update the targets of our friends.
 do
   local StartsWith = Utils.StartsWith
+  -- TODO: Add more available tracking like choosing between tanks, melees, ranged, etc...
+  -- Who are the friend units we are tracking
+  local FRIEND_TARGETS_TRACKING_ALL = 1 -- "All": Player + Party/Raid and their Pet
+  local FRIEND_TARGETS_TRACKING_MINE = 2 -- "Mine Only": Player and his Pet
+  local FriendTargetsTracking = FRIEND_TARGETS_TRACKING_ALL
   local function UpdateFriendTarget(UnitID)
     local FriendGUID = UnitGUID(UnitID)
     local TargetGUID = UnitGUID(UnitID .. "target")
@@ -52,17 +57,21 @@ do
       SPLASH_TRACKER_TIMEOUT = 5
     end
 
+    -- Player update
     UpdateFriendTarget("player")
     UpdateFriendTarget("pet")
-    for _, PartyUnit in pairs(Unit.Party) do
-      local UnitID = PartyUnit:ID()
-      UpdateFriendTarget(UnitID)
-      UpdateFriendTarget(UnitID .. "pet")
-    end
-    for _, RaidUnit in pairs(Unit.Raid) do
-      local UnitID = RaidUnit:ID()
-      UpdateFriendTarget(UnitID)
-      UpdateFriendTarget(UnitID .. "pet")
+    -- Party/Raid update
+    if FriendTargetsTracking == FRIEND_TARGETS_TRACKING_ALL then
+      for _, PartyUnit in pairs(Unit.Party) do
+        local UnitID = PartyUnit:ID()
+        UpdateFriendTarget(UnitID)
+        UpdateFriendTarget(UnitID .. "pet")
+      end
+      for _, RaidUnit in pairs(Unit.Raid) do
+        local UnitID = RaidUnit:ID()
+        UpdateFriendTarget(UnitID)
+        UpdateFriendTarget(UnitID .. "pet")
+      end
     end
   end
 
@@ -73,27 +82,45 @@ do
   -- OnTargetUpdate
   HL:RegisterForEvent(
     function(Event, UnitID)
-      if not StartsWith(UnitID, "player") and not StartsWith(UnitID, "pet") and not StartsWith(UnitID, "party") and not StartsWith(UnitID, "raid") then
+      if FriendTargetsTracking == FRIEND_TARGETS_TRACKING_ALL and not StartsWith(UnitID, "player") and not StartsWith(UnitID, "pet") and not StartsWith(UnitID, "party") and not StartsWith(UnitID, "raid") then
         return
       end
+      if FriendTargetsTracking == FRIEND_TARGETS_TRACKING_MINE and not StartsWith(UnitID, "player") and not StartsWith(UnitID, "pet") then
+        return
+      end
+
       UpdateFriendTarget(UnitID)
     end,
     "UNIT_TARGET"
   )
   HL:RegisterForEvent(
     function(Event, UnitID)
-      if not StartsWith(UnitID, "player") and not StartsWith(UnitID, "party") and not StartsWith(UnitID, "raid") then
+      if FriendTargetsTracking == FRIEND_TARGETS_TRACKING_ALL and not StartsWith(UnitID, "player") and not StartsWith(UnitID, "party") and not StartsWith(UnitID, "raid") then
         return
       end
+      if FriendTargetsTracking == FRIEND_TARGETS_TRACKING_MINE and not StartsWith(UnitID, "player") then
+        return
+      end
+
       UpdateFriendTarget(UnitID .. "pet")
     end,
     "UNIT_PET"
   )
+
+  function Splash.ChangeFriendTargetsTracking(NewTracking)
+    assert(type(NewTracking) == "string" and (NewTracking == "All" or NewTracking == "Mine Only"), "Invalid Tracking.")
+
+    if NewTracking == "All" then
+      FriendTargetsTracking= FRIEND_TARGETS_TRACKING_ALL
+    elseif NewTracking == "Mine Only" then
+      FriendTargetsTracking = FRIEND_TARGETS_TRACKING_MINE
+    end
+  end
 end
 
 -- Update the tracker using damage from the combatlog.
 do
-  local function UpdateSplashes (_, Event, _, SourceGUID, _, _, _, DestGUID, _, _, _, SpellID)
+  local function UpdateSplashes(_, Event, _, SourceGUID, _, _, _, DestGUID, _, _, _, SpellID)
     -- Check if the ability used to damage the unit is valid.
     local NucleusAbility = NucleusAbilities[SpellID]
     if not NucleusAbility then return end
