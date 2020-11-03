@@ -176,11 +176,11 @@ function Unit:CastPercentage(ReverseChannel)
   local _, _, _, ChannelStartTime, ChannelEndTime = self:ChannelingInfo()
 
   if CastStartTime then
-    return (GetTime() - CastStartTime) / (CastEndTime - CastStartTime) * 100
+    return (GetTime() * 1000 - CastStartTime) / (CastEndTime - CastStartTime) * 100
   end
 
   if ChannelStartTime then
-    return ReverseChannel and (GetTime() - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100 or 100 - (GetTime() - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100
+    return ReverseChannel and (GetTime() * 1000 - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100 or 100 - (GetTime() * 1000 - ChannelStartTime) / (ChannelEndTime - ChannelStartTime) * 100
   end
 
   return 0
