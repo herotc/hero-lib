@@ -109,12 +109,17 @@ do
 
   function Splash.ChangeFriendTargetsTracking(NewTracking)
     assert(type(NewTracking) == "string" and (NewTracking == "All" or NewTracking == "Mine Only"), "Invalid Tracking.")
+    if FriendTargetsTracking == NewTracking then
+      return
+    end
 
     if NewTracking == "All" then
       FriendTargetsTracking= FRIEND_TARGETS_TRACKING_ALL
     elseif NewTracking == "Mine Only" then
       FriendTargetsTracking = FRIEND_TARGETS_TRACKING_MINE
     end
+    FriendTargets = {}
+    UpdateGroupData()
   end
 end
 
