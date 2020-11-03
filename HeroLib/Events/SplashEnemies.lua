@@ -484,9 +484,16 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 152175, 8)               -- Whirling Dragon Punch
 
   -- Paladin
+  -- Commons
+  --RegisterNucleusAbility("GroundMultipleDirectDamage", 81297, 8) -- Consecration
+  RegisterNucleusAbility("DirectDamage", 286232, 7)      -- Light's Decree (Azerite Trait)
   -- Holy
   -- Protection
+  --RegisterNucleusAbility("GroundMultipleDirectDamage", 204301, 8) -- Blessed Hammer (Usable? Spirals outward from caster)
+  RegisterNucleusAbility("DirectDamage", 53600, 6)       -- Shield of the Righteous
   -- Retribution
+  RegisterNucleusAbility("DirectDamage", 53385, 8)       -- Divine Storm
+  --RegisterNucleusAbility("GroundDirectDamage", 343721, 8) -- Final Reckoning
 
   -- Priest
   -- Discipline
