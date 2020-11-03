@@ -261,24 +261,24 @@ HL:RegisterForCombatEvent(
     if Tracker[DestGUID] then
       -- HL.Print("[SplashEnemies] Removing enemy with GUID '" .. DestGUID .. "' from the tracker.")
       Tracker[DestGUID] = nil
-    else
-      for PrimaryEnemyGUID, EnemiesByRadius in pairs(Tracker) do
-        for Radius, Enemies in pairs(EnemiesByRadius) do
-          local EnemiesCount = 0
-          -- Find the enemy and if it exists remove it.
-          for EnemyGUID, Enemy in pairs(Enemies) do
-            if DestGUID == Enemy.GUID then
-              -- HL.Print("[SplashEnemies] Removing enemy with GUID '" .. EnemyGUID .. "' from enemies table within '" .. Radius .. "y' radius of enemy with GUID '" .. PrimaryEnemyGUID .. "' due to death event.")
-              Enemies[EnemyGUID] = nil
-            else
-              EnemiesCount = EnemiesCount + 1
-            end
+    end
+
+    for PrimaryEnemyGUID, EnemiesByRadius in pairs(Tracker) do
+      for Radius, Enemies in pairs(EnemiesByRadius) do
+        local EnemiesCount = 0
+        -- Find the enemy and if it exists remove it.
+        for EnemyGUID, Enemy in pairs(Enemies) do
+          if DestGUID == Enemy.GUID then
+            -- HL.Print("[SplashEnemies] Removing enemy with GUID '" .. EnemyGUID .. "' from enemies table within '" .. Radius .. "y' radius of enemy with GUID '" .. PrimaryEnemyGUID .. "' due to death event.")
+            Enemies[EnemyGUID] = nil
+          else
+            EnemiesCount = EnemiesCount + 1
           end
-          -- Remove the entry if it does not contain any enemy.
-          if EnemiesCount == 0 then
-            -- HL.Print("[SplashEnemies] Removing enemies table within '" .. Radius .. "y' radius of enemy with GUID '" .. PrimaryEnemyGUID .. "' due to death event.")
-            EnemiesByRadius[Radius] = nil
-          end
+        end
+        -- Remove the entry if it does not contain any enemy.
+        if EnemiesCount == 0 then
+          -- HL.Print("[SplashEnemies] Removing enemies table within '" .. Radius .. "y' radius of enemy with GUID '" .. PrimaryEnemyGUID .. "' due to death event.")
+          EnemiesByRadius[Radius] = nil
         end
       end
     end
