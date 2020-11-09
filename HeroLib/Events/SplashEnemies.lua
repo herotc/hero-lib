@@ -444,6 +444,8 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 201754, 8)               -- Stomp
   -- Marksmanship
   RegisterNucleusAbility("DirectDamage", 257620, 10)              -- Multi-Shot
+  RegisterNucleusAbility("GroundDirectDamage", 260247, 8)         -- Volley
+  RegisterNucleusAbility("DirectDamage", 212680, 8)               -- ExplosiveShot
   -- Survival
   RegisterNucleusAbility("DirectDamage", 212436, 8)               -- Butchery
   RegisterNucleusAbility("DirectDamage", 187708, 8)               -- Carve
