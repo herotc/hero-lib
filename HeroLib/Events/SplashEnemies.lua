@@ -607,7 +607,7 @@ end
 
 -- Get a table of enemies within specified splash range
 function Unit:GetEnemiesInSplashRange(Radius)
-  if not self:Exists() then return 0 end
+  if not self:Exists() then return {} end
 
   local GUID = self:GUID()
   local EnemiesByRadius = Tracker[GUID]
