@@ -605,5 +605,38 @@ function Unit:GetEnemiesInSplashRangeCount(Radius)
   end
 end
 
+-- Get a table of enemies within specified splash range
+function Unit:GetEnemiesInSplashRange(Radius)
+  if not self:Exists() then return 0 end
+
+  local GUID = self:GUID()
+  local EnemiesByRadius = Tracker[GUID]
+  local EnemiesTable = {}
+  if not EnemiesByRadius then 
+    tableinsert(EnemiesTable, self)
+    return EnemiesTable
+  end
+
+  for TrackerRadius, TrackerEnemy in pairs(EnemiesByRadius) do
+    if TrackerRadius <= Radius then
+      local FarRange = self:MaxDistance() or 0
+      FarRange = FarRange + Radius
+      if FarRange < 5 then FarRange = 5 end
+      if FarRange > 100 then FarRange = 100 end
+      for TrackerGUID in pairs(TrackerEnemy) do
+        for UnitObject, UnitInfo in pairs(Player:GetEnemiesInRange(FarRange)) do
+          if UnitInfo.UnitGUID == TrackerGUID then tableinsert(EnemiesTable, UnitInfo) end
+        end
+      end
+    end
+  end
+
+  if #EnemiesTable >= 1 then
+    return EnemiesTable
+  end
+  tableinsert(EnemiesTable, self)
+  return EnemiesTable
+end
+
 -- OnInit
 Splash.RegisterNucleusAbilities()
