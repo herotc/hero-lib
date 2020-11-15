@@ -165,6 +165,11 @@ HL:RegisterForEvent(
     or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
     Spell:AzeriteEssenceScan()
     end
+    if Event == "PLAYER_LOGIN"
+    or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 ~= 13 and Arg1 ~= 14))
+    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+      HL.GetLegendaries()
+    end
 
     -- Load / Refresh Core Overrides
     if Event == "PLAYER_LOGIN" then
