@@ -247,19 +247,14 @@ end
 
 function HL.GetLegendaries()
   HL.LegendaryEffects = {}
-  local LegendaryItems = {}
   for i = 1, 12, 1 do
     local ItemObject = APIItem:CreateFromEquipmentSlot(i)
     if ItemObject:GetItemQuality() == 5 then
-      table.insert(LegendaryItems, ItemObject)
-    end
-  end
-
-  for _, item in pairs(LegendaryItems) do
-    local itemLink = item:GetItemLink()
-    for _, legEffect in pairs(LegendaryLookupTable) do
-      if itemLink and match(itemLink, legEffect) then
-        HL.LegendaryEffects[legEffect] = true
+      local itemLink = ItemObject:GetItemLink()
+      for _, legEffect in pairs(LegendaryLookupTable) do
+        if itemLink and match(itemLink, legEffect) then
+          HL.LegendaryEffects[legEffect] = true
+        end
       end
     end
   end
