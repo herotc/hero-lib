@@ -245,6 +245,7 @@ function HL.GetEquipment()
   end
 end
 
+-- Create a table of active Shadowlands legendaries
 function HL.GetLegendaries()
   HL.LegendaryEffects = {}
   for i = 1, 12, 1 do
@@ -260,8 +261,9 @@ function HL.GetLegendaries()
   end
 end
 
-function HL.LegendaryEnabled(effect)
-  return HL.LegendaryEffects[effect] ~= nil
+-- Check if a specific legendary is active, using the effect's bonus ID
+function HL.LegendaryEnabled(bonusID)
+  return HL.LegendaryEffects[bonusID] ~= nil
 end
 
 -- Check if the trinket is coded as blacklisted by the user or not.
