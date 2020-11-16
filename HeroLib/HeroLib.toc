@@ -38,6 +38,7 @@ Class\Unit\Player\Equipment.lua
 Class\Unit\Player\Stat.lua
 Class\Unit\Player\Instance.lua
 Class\Unit\Player\Tank.lua
+Class\Unit\Player\Totem.lua
 Class\Unit\Pet\Main.lua
 Class\Unit\Target\Range.lua
 Class\Spell\Main.lua
