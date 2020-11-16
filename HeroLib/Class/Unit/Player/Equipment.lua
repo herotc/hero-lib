@@ -12,6 +12,8 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetRuneforgeLegendaryComponentInfo = C_LegendaryCrafting.GetRuneforgeLegendaryComponentInfo
+local IsRuneforgeLegendary = C_LegendaryCrafting.IsRuneforgeLegendary
 local GetInventoryItemID = GetInventoryItemID
 local ItemLocation = ItemLocation
 local pairs = pairs
@@ -49,8 +51,8 @@ function HL.GetLegendaries()
 
   for i = 1, 12, 1 do
     local Item = ItemLocation:CreateFromEquipmentSlot(i)
-    if Item:IsValid() and C_LegendaryCrafting.IsRuneforgeLegendary(Item) then
-      local LegendaryInfo = C_LegendaryCrafting.GetRuneforgeLegendaryComponentInfo(Item)
+    if Item:IsValid() and IsRuneforgeLegendary(Item) then
+      local LegendaryInfo = GetRuneforgeLegendaryComponentInfo(Item)
       HL.LegendaryEffects[LegendaryInfo.powerID] = true
     end
   end
