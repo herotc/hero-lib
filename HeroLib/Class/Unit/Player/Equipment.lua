@@ -49,11 +49,13 @@ end
 function HL.GetLegendaries()
   HL.LegendaryEffects = HL.LegendaryEffects and wipe(HL.LegendaryEffects) or {}
 
-  for i = 1, 12, 1 do
-    local Item = ItemLocation:CreateFromEquipmentSlot(i)
-    if Item:IsValid() and IsRuneforgeLegendary(Item) then
-      local LegendaryInfo = GetRuneforgeLegendaryComponentInfo(Item)
-      HL.LegendaryEffects[LegendaryInfo.powerID] = true
+  for i = 1, 15, 1 do
+    if (i ~= 13 and i ~= 14) then -- No trinket legendaries currently
+      local Item = ItemLocation:CreateFromEquipmentSlot(i)
+      if Item:IsValid() and IsRuneforgeLegendary(Item) then
+        local LegendaryInfo = GetRuneforgeLegendaryComponentInfo(Item)
+        HL.LegendaryEffects[LegendaryInfo.powerID] = true
+      end
     end
   end
 end
