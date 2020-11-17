@@ -187,6 +187,7 @@ do
     Spell(80353), -- Mage:Time Warp
     Spell(90355), -- Hunter: Ancient Hysteria
     Spell(160452), -- Hunter: Netherwinds
+    Spell(264667), -- Hunter: Primal Rage
     -- Drums
     Spell(35475), -- Drums of War
     Spell(35476), -- Drums of Battle
@@ -220,5 +221,49 @@ do
   -- buff.bloodlust.down
   function Unit:BloodlustDown(BypassRecovery)
     return not self:BloodlustUp(BypassRecovery)
+  end
+end
+
+do
+  local BloodlustExhaustSpells = {
+    --TODO : look for other debuffs
+    -- Abilities
+    Spell(57724),   -- Shaman: Sated (Horde)
+    Spell(57723),   -- Shaman: Exhaustion (Alliance)
+    Spell(80354),   -- Mage:Temporal Displacement
+    Spell(264689),  -- Hunter: Fatigued
+    -- Drums
+    --Spell(35475), -- Drums of War
+    --Spell(35476), -- Drums of Battle
+    --Spell(146555), -- Drums of Rage
+    --Spell(178207), -- Drums of Fury
+    --Spell(230935), -- Drums of the Mountain
+    --Spell(256740), -- Drums of the Maelstrom
+    --Spell(309658), -- Drums of Deathly Ferocity
+  }
+
+  -- buff.bloodlust.remains
+  function Unit:BloodlustExhaustRemains(BypassRecovery)
+    local GUID = self:GUID()
+    if not GUID then return false end
+
+    for i = 1, #BloodlustExhaustSpells do
+      local BloodlustExhaustSpell = BloodlustExhaustSpells[i]
+      if self:DebuffUp(BloodlustExhaustSpell, nil) then
+        return self:DebuffRemains(BloodlustExhaustSpell, nil, BypassRecovery)
+      end
+    end
+
+    return 0
+  end
+
+  -- buff.bloodlust.up
+  function Unit:BloodlustExhaustUp(BypassRecovery)
+    return self:BloodlustExhaustRemains(BypassRecovery) > 0
+  end
+
+  -- buff.bloodlust.down
+  function Unit:BloodlustExhaustDown(BypassRecovery)
+    return not self:BloodlustExhaustUp(BypassRecovery)
   end
 end
