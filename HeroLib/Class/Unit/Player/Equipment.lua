@@ -79,10 +79,10 @@ end
 -- 16, 6928, Siphon Storm
 -- 17, 6936, Triune Ward
 -- 18, 7041, Collective Anguish
--- 19, 7042, Half-Giant Empowerment
+-- 19, 7052, Fel Bombardment
 -- 20, 7043, Darkglare Medallion
 -- 21, 7044, Darkest Hour
--- 22, 7049, Inner Demons
+-- 22, 7218, Darker Nature
 -- 23, 7050, Chaos Theory
 -- 24, 7051, Erratic Fel Core
 -- 25, 7219, Burning Wound
@@ -120,7 +120,7 @@ end
 -- 57, 7089, Cat-eye Curio
 -- 58, 7092, Luffa-Infused Embrace
 -- 59, 7093, The Natural Order's Will
--- 60, 7094, Ursoc's Lingering Spirit
+-- 60, 7094, Ursoc's Fury Remembered
 -- 61, 7095, Legacy of the Sleeper
 -- 62, 7096, Memory of the Mother Tree
 -- 63, 7097, The Dark Titan's Lesson
@@ -175,12 +175,12 @@ end
 -- 113, 7064, Final Verdict
 -- 114, 7114, Invigorating Shadowdust
 -- 115, 7113, Essence of Bloodfang
--- 116, 7112, Tiny Toxic Blades
+-- 116, 7112, Tiny Toxic Blade
 -- 117, 7111, Mark of the Master Assassin
 -- 118, 7115, Dashing Scoundrel
 -- 119, 7116, Doomblade
 -- 120, 7117, Zoldyck Insignia
--- 121, 7118, Dustwalker's Patch
+-- 121, 7118, Duskwalker's Patch
 -- 122, 7122, Concealed Blunderbuss
 -- 123, 7121, Celerity
 -- 124, 7120, Guile Charm
@@ -223,7 +223,7 @@ end
 -- 161, 7162, Talbadar's Stratagem
 -- 162, 7025, Wilfred's Sigil of Superior Summoning
 -- 163, 7026, Claw of Endereth
--- 164, 7027, Mark of Borrowed Power
+-- 164, 7027, Relic of Demonic Synergy
 -- 165, 7028, Pillars of the Dark Portal
 -- 166, 7029, Perpetual Agony of Azj'Aqir
 -- 167, 7030, Sacrolash's Dark Strike
