@@ -174,10 +174,6 @@ local function GetButtonInfo(ActionSlot, Blizzard)
   return ButtonBaseName, ButtonSlot
 end
 
-function Action.GetButtonInfo(ActionSlot, Blizzard)
-  return GetButtonInfo(ActionSlot, Blizzard)
-end
-
 local function GetButtonNameFromActionSlot(ActionSlot)
   local BarIndex = GetBarInfo(ActionSlot)
   local ButtonBaseName, ButtonSlot = GetButtonInfo(ActionSlot)
