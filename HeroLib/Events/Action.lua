@@ -115,11 +115,22 @@ local function GetBarInfo(ActionSlot)
   return BarIndex, BarSlot
 end
 
-local function GetButtonInfo(ActionSlot)
+local function GetButtonInfo(ActionSlot, Blizzard)
   local BarIndex, BarSlot = GetBarInfo(ActionSlot)
 
   local ButtonBaseName, ButtonSlot
-  if _G.Bartender4 then
+  if Blizzard then
+    -- Blizzard
+    ButtonBaseName = ButtonByAddOn.Blizzard[BarIndex][1]
+
+    if BarIndex >= 3 or BarIndex <= 6 then
+      -- Bar 3 to 6: MultiBarXXXButton
+      ButtonSlot = BarSlot
+    else
+      -- Bar 1 to 2 and 7 to 10: ActionButton
+      ButtonSlot = ActionSlot
+    end
+  elseif _G.Bartender4 then
     -- Bartender
     ButtonBaseName = ButtonByAddOn.Bartender[1][1]
     ButtonSlot = ActionSlot
@@ -170,12 +181,15 @@ local function GetButtonNameFromActionSlot(ActionSlot)
   return ButtonBaseName .. ButtonSlot
 end
 
-local function GetCommandNameFromActionSlot(ActionSlot)
+local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
   local BarIndex = GetBarInfo(ActionSlot)
   local _, ButtonSlot = GetButtonInfo(ActionSlot)
 
   local CommandNameFormat
-  if _G.Bartender4 then
+  if Blizzard then
+    _, ButtonSlot = GetButtonInfo(ActionSlot, true)
+    CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
+  elseif _G.Bartender4 then
     -- Bartender
     CommandNameFormat = ButtonByAddOn.Bartender[1][2]
   elseif _G.Dominos then
@@ -275,6 +289,12 @@ local function UpdateAction(ActionSlot)
 
   local CommandName = GetCommandNameFromActionSlot(ActionSlot)
   local RawHotKey = (CommandName and GetBindingKey(CommandName)) or nil
+
+  if RawHotKey == nil then
+    CommandName = GetCommandNameFromActionSlot(ActionSlot, true)
+    RawHotKey = (CommandName and GetBindingKey(CommandName)) or nil
+  end
+
   local ActionHotKey = RawHotKey and Utils.ShortenHotKey(RawHotKey) or nil
 
   Actions[ActionSlot] = {
