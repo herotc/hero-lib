@@ -82,15 +82,15 @@ local ButtonByAddOn = {
   },
   Dominos = {
     [1]  = { "ActionButton",              "ACTIONBUTTON%i"                         },
-    [2]  = { "DominosActionButton",       "CLICK DominosActionButton%i:LeftButton" },
+    [2]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
     [3]  = { "MultiBarRightButton",       "MULTIACTIONBAR3BUTTON%i"                },
     [4]  = { "MultiBarLeftButton",        "MULTIACTIONBAR4BUTTON%i"                },
     [5]  = { "MultiBarBottomRightButton", "MULTIACTIONBAR2BUTTON%i"                },
     [6]  = { "MultiBarBottomLeftButton",  "MULTIACTIONBAR1BUTTON%i"                },
-    [7]  = { "DominosActionButton",       "CLICK DominosActionButton%i:LeftButton" },
-    [8]  = { "DominosActionButton",       "CLICK DominosActionButton%i:LeftButton" },
-    [9]  = { "DominosActionButton",       "CLICK DominosActionButton%i:LeftButton" },
-    [10] = { "DominosActionButton",       "CLICK DominosActionButton%i:LeftButton" },
+    [7]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
+    [8]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
+    [9]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
+    [10] = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
   },
   ElvUI = {
     [1]  = { "ElvUI_Bar1Button",  "ACTIONBUTTON%i" },
@@ -141,7 +141,7 @@ local function GetButtonInfo(ActionSlot, Blizzard)
     if BarIndex == 1 then
       -- Bar 1: ActionButton
       ButtonSlot = ActionSlot
-    elseif BarIndex >= 3 or BarIndex <= 6 then
+    elseif BarIndex >= 3 and BarIndex <= 6 then
       -- Bar 3 to 6: MultiBarXXXButton
       ButtonSlot = BarSlot
     else
@@ -172,6 +172,10 @@ local function GetButtonInfo(ActionSlot, Blizzard)
   end
 
   return ButtonBaseName, ButtonSlot
+end
+
+function Action.GetButtonInfo(ActionSlot, Blizzard)
+  return GetButtonInfo(ActionSlot, Blizzard)
 end
 
 local function GetButtonNameFromActionSlot(ActionSlot)
