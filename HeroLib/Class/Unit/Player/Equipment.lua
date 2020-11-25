@@ -79,7 +79,15 @@ local function IsUserTrinketBlacklisted(TrinketItem)
   return false
 end
 
--- Function to be called against SimC's use_items
+-- Global Custom Trinkets
+-- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
+local CustomTrinketItems = {
+  FlayedwingToxin       = Item(178742, {13, 14}),
+}
+local CustomTrinketsSpells = {
+  FlayedwingToxinBuff   = Spell(345545),
+}
+
 function HL.UseTrinkets(ExcludedTrinkets)
   for _, TrinketItem in ipairs(HL.OnUseTrinkets) do
   local isExcluded = false
@@ -92,7 +100,12 @@ function HL.UseTrinkets(ExcludedTrinkets)
         end
       end
       if (not isExcluded) then
-        return TrinketItem
+        -- Global custom trinket handlers
+        if TrinketItem:ID() == CustomTrinketItems.FlayedwingToxin:ID() then
+          if not Player:BuffUp(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
+        else
+          return TrinketItem
+        end
       end
     end
   end
