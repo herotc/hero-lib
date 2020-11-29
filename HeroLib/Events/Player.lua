@@ -139,7 +139,6 @@ HL:RegisterForEvent(
     end
 
     -- Update Player
-    local PrevSpec = Cache.Persistent.Player.Spec[1]
     Cache.Persistent.Player.Class = { UnitClass("player") }
     Cache.Persistent.Player.Spec = { GetSpecializationInfo(GetSpecialization()) }
 
@@ -148,22 +147,14 @@ HL:RegisterForEvent(
     wipe(Cache.Persistent.Texture.Item)
 
     -- Update Equipment
-    if Event == "PLAYER_EQUIPMENT_CHANGED" or Event == "PLAYER_LOGIN" then
-      Player:UpdateEquipment()
-    end
+    Player:UpdateEquipment()
+    -- Update Soulbinds
+    Player:UpdateSoulbinds()
     -- Update Legendaries
-    if Event == "PLAYER_LOGIN"
-      or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 ~= 13 and Arg1 ~= 14))
-      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-      Player:UpdateActiveLegendaryEffects()
-    end
+    Player:UpdateActiveLegendaryEffects()
 
     -- Load / Refresh Core Overrides
-    if Event == "PLAYER_LOGIN" then
-      Player:Cache()
-      -- TODO: fix timing issue via event?
-      C_Timer.After(3, function() Player:Cache() end)
-    elseif Event == "PLAYER_SPECIALIZATION_CHANGED" then
+    if Event == "PLAYER_SPECIALIZATION_CHANGED" then
       local UpdateOverrides
       UpdateOverrides = function()
         if Cache.Persistent.Player.Spec[1] ~= nil then
@@ -176,7 +167,22 @@ HL:RegisterForEvent(
       UpdateOverrides()
     end
   end,
-  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN"
+  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED"
+)
+
+HL:RegisterForEvent(
+  function(Event, Arg1) Player:UpdateSoulbinds() end,
+  "SOULBIND_ACTIVATED", "SOULBIND_NODE_LEARNED", "SOULBIND_CONDUIT_INSTALLED", "SOULBIND_NODE_UPDATED", "SOULBIND_PENDING_CONDUIT_CHANGED", "SOULBIND_PATH_CHANGED", "SOULBIND_NODE_UNLEARNED", "SOULBIND_CONDUIT_UNINSTALLED"
+)
+
+-- Player Unit Cache
+HL:RegisterForEvent(
+  function(Event, Arg1)
+    Player:Cache()
+    -- TODO: fix timing issue via event?
+    C_Timer.After(3, function() Player:Cache() end)
+  end,
+  "PLAYER_LOGIN"
 )
 
 -- Spell Book Scanner
