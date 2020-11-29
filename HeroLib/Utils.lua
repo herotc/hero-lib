@@ -21,6 +21,14 @@ HL.Utils = Utils
 
 
 --- ============================ CONTENT ============================
+function Utils.BoolToInt(Value)
+  return Value and 1 or 0
+end
+
+function Utils.IntToBool(Value)
+  return Value ~= 0
+end
+
 -- Uppercase the first letter in a string
 function Utils.UpperCaseFirst(ThisString)
   return (ThisString:gsub("^%l", stringupper))
