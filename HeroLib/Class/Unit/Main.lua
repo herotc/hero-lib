@@ -188,7 +188,13 @@ local DummyUnits = {
   [126781] = true, -- Training Dummy
   [131983] = true, -- Raider's Training Dummy
   [131989] = true, -- Training Dummy
-  [131992] = true  -- Dungeoneer's Training Dummy
+  [131992] = true, -- Dungeoneer's Training Dummy
+  -- Shadowlands Kyrian
+  [154586] = true, -- Stalwart Phalanx
+  [154585] = true, -- Valiant's Resolve
+  [154583] = true, -- Starlwart Guardian
+  [154580] = true, -- Reinforced Guardian
+  [160325] = true, -- Humility's Obedience
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
