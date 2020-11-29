@@ -201,6 +201,14 @@ local DummyUnits = {
   [175450] = true, -- Dungeoneer's Training Dummy
   [175455] = true, -- Cleave Training Dummy
   [175456] = true, -- Swarm Training Dummy 
+  -- Shadowlands Night Fae
+  [174565] = true, -- Dungeoneer's Tanking Dummy
+  [174566] = true, -- Raider's Tanking Dummy
+  [174567] = true, -- Raider's Training Dummy
+  [174568] = true, -- Dungeoneer's Training Dummy
+  [175459] = true, -- Training Dummy 
+  [174570] = true, -- Swarm Training Dummy
+  [175471] = true, -- Cleave Training Dummy 
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
