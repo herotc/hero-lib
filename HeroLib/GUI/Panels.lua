@@ -66,9 +66,9 @@ local function CreateCheckButton(Parent, Setting, Text, Tooltip, Optionals)
 
   -- Frame init
   if not LastOptionAttached[Parent.name] then
-    CheckButton:SetPoint("TOPLEFT", 15, -15)
+    CheckButton:SetPoint("TOPLEFT", 15, -10)
   else
-    CheckButton:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3] - 5)
+    CheckButton:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3])
   end
   LastOptionAttached[Parent.name] = { CheckButton, 0, 0 }
 
@@ -122,7 +122,7 @@ local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   if not LastOptionAttached[Parent.name] then
     Dropdown:SetPoint("TOPLEFT", 0, -30)
   else
-    Dropdown:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] - 15, LastOptionAttached[Parent.name][3] - 25)
+    Dropdown:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] - 15, LastOptionAttached[Parent.name][3] - 20)
   end
   LastOptionAttached[Parent.name] = { Dropdown, 15, 0 }
 
@@ -161,9 +161,9 @@ local function CreateSlider(Parent, Setting, Values, Text, Tooltip, Action, Opti
 
   -- Frame init
   if not LastOptionAttached[Parent.name] then
-    Slider:SetPoint("TOPLEFT", 20, -30)
+    Slider:SetPoint("TOPLEFT", 20, -25)
   else
-    Slider:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] + 5, LastOptionAttached[Parent.name][3] - 25)
+    Slider:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] + 5, LastOptionAttached[Parent.name][3] - 20)
   end
   LastOptionAttached[Parent.name] = { Slider, -5, -20 }
 
@@ -233,9 +233,9 @@ local function CreateButton(Parent, Setting, Text, Tooltip, Action, Width, Heigh
 
   -- Frame init
   if not LastOptionAttached[Parent.name] then
-    Button:SetPoint("TOPLEFT", 15, -15)
+    Button:SetPoint("TOPLEFT", 15, -10)
   else
-    Button:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3] - 5)
+    Button:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3])
   end
   LastOptionAttached[Parent.name] = { Button, 0, 0 }
 
