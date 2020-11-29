@@ -209,12 +209,19 @@ function Spell:CostInfo(Index, Key)
 
   local CostTable = self:CostTable()
 
+  -- Convert Combo Points to Energy as default resource if applicable
+  if not Index and #CostTable > 1 and CostTable[1]["type"] == 4 and CostTable[2]["type"] == 3 then
+    Index = 2
+  else
+    Index = Index or 1
+  end
+
   return CostTable and CostTable[Index] and CostTable[Index][Key] or nil
 end
 
 -- action.foo.cost
 function Spell:Cost(Index)
-  local Cost = self:CostInfo(Index or 1, "cost")
+  local Cost = self:CostInfo(Index, "cost")
 
   return Cost or 0
 end
