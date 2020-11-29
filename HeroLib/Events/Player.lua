@@ -149,26 +149,26 @@ HL:RegisterForEvent(
 
     -- Refresh Gear
     if Event == "PLAYER_EQUIPMENT_CHANGED" or Event == "PLAYER_LOGIN" then
-      HL.GetEquipment()
+      Player:UpdateEquipment()
     end
 
     --Refresh Azerite
     if Event == "PLAYER_LOGIN"
-    or Event == "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED"
-    or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 == 1 or Arg1 == 3 or Arg1 == 5))
-    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-    Spell:AzeriteScan()
+      or Event == "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED"
+      or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 == 1 or Arg1 == 3 or Arg1 == 5))
+      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+      Spell:AzeriteScan()
     end
     if Event == "PLAYER_LOGIN"
-    or Event == "AZERITE_ESSENCE_CHANGED"
-    or Event == "AZERITE_ESSENCE_ACTIVATED"
-    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-    Spell:AzeriteEssenceScan()
+      or Event == "AZERITE_ESSENCE_CHANGED"
+      or Event == "AZERITE_ESSENCE_ACTIVATED"
+      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+      Spell:AzeriteEssenceScan()
     end
     if Event == "PLAYER_LOGIN"
-    or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 ~= 13 and Arg1 ~= 14))
-    or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-      HL.GetLegendaries()
+      or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 ~= 13 and Arg1 ~= 14))
+      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
+      Player:UpdateActiveLegendaryEffects()
     end
 
     -- Load / Refresh Core Overrides

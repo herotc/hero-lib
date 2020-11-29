@@ -113,7 +113,7 @@ function Item:IsEquipped()
 
   if ItemInfo.IsEquipped == nil then
     local ItemIsEquipped = false
-    local Equipment = HL.Equipment
+    local Equipment = Player:GetEquipment()
 
     for i = 0, #ItemSlotIDs do
       local ItemSlotID = ItemSlotIDs[i]
