@@ -138,7 +138,7 @@ HL:RegisterForEvent(
       return
     end
 
-    -- Refresh Player
+    -- Update Player
     local PrevSpec = Cache.Persistent.Player.Spec[1]
     Cache.Persistent.Player.Class = { UnitClass("player") }
     Cache.Persistent.Player.Spec = { GetSpecializationInfo(GetSpecialization()) }
@@ -147,24 +147,11 @@ HL:RegisterForEvent(
     wipe(Cache.Persistent.Texture.Spell)
     wipe(Cache.Persistent.Texture.Item)
 
-    -- Refresh Gear
+    -- Update Equipment
     if Event == "PLAYER_EQUIPMENT_CHANGED" or Event == "PLAYER_LOGIN" then
       Player:UpdateEquipment()
     end
-
-    --Refresh Azerite
-    if Event == "PLAYER_LOGIN"
-      or Event == "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED"
-      or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 == 1 or Arg1 == 3 or Arg1 == 5))
-      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-      Spell:AzeriteScan()
-    end
-    if Event == "PLAYER_LOGIN"
-      or Event == "AZERITE_ESSENCE_CHANGED"
-      or Event == "AZERITE_ESSENCE_ACTIVATED"
-      or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
-      Spell:AzeriteEssenceScan()
-    end
+    -- Update Legendaries
     if Event == "PLAYER_LOGIN"
       or (Event == "PLAYER_EQUIPMENT_CHANGED" and (Arg1 ~= 13 and Arg1 ~= 14))
       or PrevSpec ~= Cache.Persistent.Player.Spec[1] then
@@ -189,7 +176,7 @@ HL:RegisterForEvent(
       UpdateOverrides()
     end
   end,
-  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN", "AZERITE_ESSENCE_ACTIVATED", "AZERITE_ESSENCE_CHANGED"
+  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "PLAYER_LOGIN"
 )
 
 -- Spell Book Scanner
@@ -210,7 +197,7 @@ HL:RegisterForEvent(
       BookScan()
     end
   end,
-  "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH", "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED"
+  "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH"
 )
 
 -- Not Facing Unit Blacklist

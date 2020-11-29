@@ -375,11 +375,6 @@ function Splash.RegisterNucleusAbilities()
   local RegisterNucleusAbility = Splash.RegisterNucleusAbility
 
   -- Commons
-  -- Azerite Traits
-  RegisterNucleusAbility("DirectDamage", 271686, 3)               -- Head My Call
-  -- Essences
-  RegisterNucleusAbility("DirectDamage", 295305, 8)               -- Purification Protocol (Minor)
-  RegisterNucleusAbility("DirectDamage", 297108, 12)              -- Blood of the Enemy (Major)
   -- Trinkets
   RegisterNucleusAbility("DirectDamage", 313088, 8)               -- Torment in Jar (Buff)
   RegisterNucleusAbility("DirectDamage", 313089, 8)               -- Torment in Jar (Explosion)
@@ -488,7 +483,6 @@ function Splash.RegisterNucleusAbilities()
   -- Paladin
   -- Commons
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 81297, 8) -- Consecration
-  RegisterNucleusAbility("DirectDamage", 286232, 7)      -- Light's Decree (Azerite Trait)
   -- Holy
   -- Protection
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 204301, 8) -- Blessed Hammer (Usable? Spirals outward from caster)
@@ -612,7 +606,7 @@ function Unit:GetEnemiesInSplashRange(Radius)
   local GUID = self:GUID()
   local EnemiesByRadius = Tracker[GUID]
   local EnemiesTable = {}
-  if not EnemiesByRadius then 
+  if not EnemiesByRadius then
     tableinsert(EnemiesTable, self)
     return EnemiesTable
   end

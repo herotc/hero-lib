@@ -44,7 +44,6 @@ Class\Unit\Target\Range.lua
 Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
-Class\Spell\Azerite.lua
 Class\Item.lua
 
 # Events
