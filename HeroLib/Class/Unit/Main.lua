@@ -199,8 +199,11 @@ local DummyUnits = {
   [173942] = true, -- Training Dummy
   [175449] = true, -- Raider's Training Dummy
   [175450] = true, -- Dungeoneer's Training Dummy
+  [175451] = true, -- Dungeoneer's Tanking Dummy
+  [175452] = true, -- Raider's Tanking Dummy
   [175455] = true, -- Cleave Training Dummy
   [175456] = true, -- Swarm Training Dummy 
+  [175462] = true, -- Sinfall Fiend 
   -- Shadowlands Night Fae
   [174565] = true, -- Dungeoneer's Tanking Dummy
   [174566] = true, -- Raider's Tanking Dummy
