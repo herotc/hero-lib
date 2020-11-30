@@ -18,7 +18,7 @@ HeroCache = Cache;
 -- Defines our cached tables.
 -- Temporary
 Cache.APLVar = {};
-Cache.Enemies = { Melee = {}, Ranged = {}, Spell = {} };
+Cache.Enemies = { ItemAction = {}, Melee = {}, Ranged = {}, Spell = {}, SpellAction = {} };
 Cache.GUIDInfo = {};
 Cache.MiscInfo = {};
 Cache.SpellInfo = {};
@@ -41,9 +41,11 @@ Cache.HasBeenReset = false;
 function Cache.Reset()
   if not Cache.HasBeenReset then
     wipe(Cache.APLVar);
+    wipe(Cache.Enemies.ItemAction);
     wipe(Cache.Enemies.Melee);
     wipe(Cache.Enemies.Ranged);
     wipe(Cache.Enemies.Spell);
+    wipe(Cache.Enemies.SpellAction);
     wipe(Cache.GUIDInfo);
     wipe(Cache.MiscInfo);
     wipe(Cache.SpellInfo);

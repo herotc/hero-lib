@@ -17,8 +17,10 @@ local tableinsert = table.insert
 local tablesort = table.sort
 local wipe = table.wipe
 -- File Locals
+local ItemActionEnemies = Cache.Enemies.ItemAction
 local MeleeEnemies = Cache.Enemies.Melee
 local RangedEnemies = Cache.Enemies.Ranged
+local SpellActionEnemies = Cache.Enemies.SpellAction
 local SpellEnemies = Cache.Enemies.Spell
 local UnitIDs = {
   "Arena",
@@ -137,6 +139,64 @@ do
     local RangeCheck = RangeCheckByIdentifier[Identifier]
     if not RangeCheck then
       RangeCheck = function (ThisUnit) return ThisUnit:IsInSpellRange(ThisSpell) end
+      RangeCheckByIdentifier[Identifier] = RangeCheck
+    end
+    InsertAvailableUnits(EnemiesTable, RangeCheck)
+
+    return EnemiesTable
+  end
+end
+
+-- Get the enemies in action's range of the player (works only for targeted items).
+-- Note: The item has to be in the action bars.
+do
+  -- Memoize RangeCheck functions.
+  local RangeCheckByIdentifier = {}
+
+  function Player:GetEnemiesInItemActionRange(ThisItem)
+    local Identifier = ThisItem.ItemID
+    local Enemies = ItemActionEnemies
+
+    -- Prevent building the same table if it's already cached.
+    if Enemies[Identifier] then return Enemies[Identifier] end
+
+    -- Init the Variables used to build the table.
+    local EnemiesTable = {}
+    Enemies[Identifier] = EnemiesTable
+
+    -- Build from all the available units.
+    local RangeCheck = RangeCheckByIdentifier[Identifier]
+    if not RangeCheck then
+      RangeCheck = function (ThisUnit) return ThisUnit:IsItemInActionRange(ThisItem) end
+      RangeCheckByIdentifier[Identifier] = RangeCheck
+    end
+    InsertAvailableUnits(EnemiesTable, RangeCheck)
+
+    return EnemiesTable
+  end
+end
+
+-- Get the enemies in action's range of the player (works only for targeted spells).
+-- Note: The spell has to be in the action bars.
+do
+  -- Memoize RangeCheck functions.
+  local RangeCheckByIdentifier = {}
+
+  function Player:GetEnemiesInSpellActionRange(ThisSpell)
+    local Identifier = ThisSpell.SpellID
+    local Enemies = SpellActionEnemies
+
+    -- Prevent building the same table if it's already cached.
+    if Enemies[Identifier] then return Enemies[Identifier] end
+
+    -- Init the Variables used to build the table.
+    local EnemiesTable = {}
+    Enemies[Identifier] = EnemiesTable
+
+    -- Build from all the available units.
+    local RangeCheck = RangeCheckByIdentifier[Identifier]
+    if not RangeCheck then
+      RangeCheck = function (ThisUnit) return ThisUnit:IsSpellInActionRange(ThisSpell) end
       RangeCheckByIdentifier[Identifier] = RangeCheck
     end
     InsertAvailableUnits(EnemiesTable, RangeCheck)

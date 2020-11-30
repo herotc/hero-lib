@@ -413,7 +413,7 @@ do
   end
 end
 
-function Target:IsItemInActionRange(ThisItem)
+function Unit:IsItemInActionRange(ThisItem)
   local ItemID = ThisItem:ID()
   local ThisAction = Action.FindByItemID(ItemID)
   if not ThisAction then
@@ -423,7 +423,7 @@ function Target:IsItemInActionRange(ThisItem)
   return self:IsActionInRange(Action.Slot)
 end
 
-function Target:IsSpellInActionRange(ThisSpell)
+function Unit:IsSpellInActionRange(ThisSpell)
   local SpellID = ThisSpell:ID()
   local ThisAction = Action.FindBySpellID(SpellID)
   if not ThisAction then

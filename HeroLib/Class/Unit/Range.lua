@@ -20,6 +20,7 @@ local tablesort = table.sort
 local type = type
 local unpack = unpack
 -- WoW API
+local IsActionInRange = IsActionInRange
 local IsItemInRange = IsItemInRange
 local IsSpellInRange = IsSpellInRange
 -- File Locals
@@ -156,6 +157,11 @@ function Unit:IsSpellInRange(ThisSpell)
   if not GUID then return false end
 
   return IsSpellInRange(ThisSpell:BookIndex(), ThisSpell:BookType(), self:ID()) == 1
+end
+
+-- Get if the unit is in range, distance check through IsActionInRange (works only for targeted actions only)
+function Unit:IsActionInRange(ActionSlot)
+  return IsActionInRange(ActionSlot, self:ID())
 end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()
