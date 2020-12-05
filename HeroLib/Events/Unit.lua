@@ -72,7 +72,6 @@ HL:RegisterForEvent(
 -- PARTY_MEMBER_DISABLE
 
 -- General Unit Target Updated
--- Not really sure we need this event... haven't actually seen it fire yet. But just in case...
 do
   local Focus = Unit.Focus
   local BossUnits, PartyUnits, RaidUnits, NameplateUnits = Unit.Boss, Unit.Party, Unit.Raid, Unit.Nameplate
@@ -88,6 +87,6 @@ do
         if FoundUnit then FoundUnit:Cache() end
       end
     end,
-    "UNIT_TARGETABLE_CHANGED", "UNIT_FACTION"
+    "UNIT_TARGETABLE_CHANGED", "UNIT_FACTION", "UNIT_FLAGS"
   )
 end
