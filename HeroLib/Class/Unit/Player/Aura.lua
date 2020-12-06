@@ -41,6 +41,8 @@ do
     },
     -- Special Stealth
     {
+      -- Rogue
+      Spell(347037), -- Sepsis stance mask buff
       -- Night Elf
       Spell(58984) -- Shadowmeld
     }
