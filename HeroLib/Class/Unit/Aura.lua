@@ -27,7 +27,8 @@ local GetTime = GetTime
 function Unit:AuraInfo(ThisSpell, Filter, Full)
   local GUID = self:GUID()
   if not GUID then return end
-
+  if not ThisSpell then return end
+  
   local UnitID = self:ID()
   local SpellID = ThisSpell:ID()
 
