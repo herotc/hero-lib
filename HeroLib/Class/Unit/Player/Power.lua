@@ -407,7 +407,7 @@ do
     -- Get rune cooldown infos
     local CDTime, CDValue = GetRuneCooldown(Slot)
     -- Return 0 if the rune isn't in CD.
-    if CDTime == 0 then return 0 end
+    if CDTime == 0 or CDTime == nil then return 0 end
     -- Compute the CD.
     local CD = CDTime + CDValue - GetTime() - HL.RecoveryOffset(BypassRecovery)
     -- Return the Rune CD
