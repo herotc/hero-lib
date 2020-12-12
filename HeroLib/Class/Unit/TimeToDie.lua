@@ -174,13 +174,28 @@ end
 
 -- Get the unit TTD Percentage
 local SpecialTTDPercentageData = {
+  --- Shadowlands
+  ----- Dungeons -----
+  --- De Other Side
+  -- Mueh'zala leaves the fight at 10%.
+  [166608] = 10,
+  --- Sanguine Depths
+  -- General Kaal leaves the fight at 50%.
+  [162099] = 50,
+  ----- Castle of Nathria -----
+  --- Stone Legion Generals
+  -- General Kaal leaves the fight at 50% if General Grashaal has not fight yet. We take 49% as check value since it get -95% dmg reduction at 50% until intermission is over.
+  [168112] = function(self) return (not self:CheckHPFromBossList(168113, 99) and 49) or 0 end,
+  --- Sun King's Salvation
+  -- Shade of Kael'thas fight is 60% -> 45% and then 10% -> 0%.
+  [165805] = function(self) return (self:HealthPercentage() > 20 and 45) or 0 end,
+
   --- Legion
   ----- Open World  -----
-  --- Stormheim Invasion (7.2 Patch)
+  --- Stormheim Invasion
   -- Lord Commander Alexius
   [118566] = 85,
-
-  ----- Dungeons (7.0 Patch) -----
+  ----- Dungeons -----
   --- Halls of Valor
   -- Hymdall leaves the fight at 10%.
   [94960] = 10,
@@ -191,32 +206,27 @@ local SpecialTTDPercentageData = {
   --- Maw of Souls
   -- Helya leaves the fight at 70%.
   [96759] = 70,
-
-  ----- Trial of Valor (T19 - 7.1 Patch) -----
+  ----- Trial of Valor -----
   --- Odyn
   -- Hyrja & Hymdall leaves the fight at 25% during first stage and 85%/90% during second stage (HM/MM).
-  -- TODO : Put GetInstanceInfo into PersistentCache.
-  [114360] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
-  [114361] = function(self) return (not self:IsInBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
+  [114360] = function(self) return (not self:CheckHPFromBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
+  [114361] = function(self) return (not self:CheckHPFromBossList(114263, 99) and 25) or (Player:InstanceDifficulty() == 16 and 85) or 90 end,
   -- Odyn leaves the fight at 10%.
   [114263] = 10,
-  ----- Nighthold (T19 - 7.1.5 Patch) -----
-  --- Elisande
-  -- She leaves the fight two times at 10% then she normally dies.
-  -- She looses 50% power per stage (100 -> 50 -> 0).
+  ----- Nighthold -----
+  --- Elisande leaves the fight two times at 10% then normally dies. She looses 50% power per stage (100 -> 50 -> 0).
   [106643] = function(self) return (self:Power() > 0 and 10) or 0 end,
 
   --- Warlord of Draenor (WoD)
-  ----- HellFire Citadel (T18 - 6.2 Patch) -----
+  ----- Dungeons -----
+  --- Shadowmoon Burial Grounds
+  -- Carrion Worm doesn't die but leave the area at 10%.
+  [88769] = 10,
+  [76057] = 10,
+  ----- HellFire Citadel -----
   --- Hellfire Assault
   -- Mar'Tak doesn't die and leave fight at 50% (blocked at 1hp anyway).
   [93023] = 50,
-
-  ----- Dungeons (6.0 Patch) -----
-  --- Shadowmoon Burial Grounds
-  -- Carrion Worm : They doesn't die but leave the area at 10%.
-  [88769] = 10,
-  [76057] = 10
 }
 function Unit:SpecialTTDPercentage(NPCID)
   local SpecialTTDPercentage = SpecialTTDPercentageData[NPCID]

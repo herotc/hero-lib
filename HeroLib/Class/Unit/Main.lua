@@ -115,13 +115,26 @@ function Unit:Level()
   return UnitLevel(self.UnitID)
 end
 
--- Get if an unit with a given NPC ID is in the Boss list and has less HP than the given ones.
-function Unit:IsInBossList(NPCID, HP)
-  local NPCID = NPCID or self:NPCID()
-  local HP = HP or 100
+-- Get if the unit (or a given NPC ID) is in the Boss list.
+function Unit:IsInBossList(NPCID)
+  local ThisNPCID = NPCID or self:NPCID()
 
   for _, ThisUnit in pairs(Boss) do
-    if ThisUnit:Exists() and ThisUnit:NPCID() == NPCID and ThisUnit:HealthPercentage() <= HP then
+    if ThisUnit:Exists() and ThisUnit:NPCID() == ThisNPCID then
+      return true
+    end
+  end
+
+  return false
+end
+
+-- Get if the unit (or a given NPC ID) is in the Boss list and has less HP than the given ones.
+function Unit:CheckHPFromBossList(NPCID, HP)
+  local ThisNPCID = NPCID or self:NPCID()
+  local ThisHP = HP or 100
+
+  for _, ThisUnit in pairs(Boss) do
+    if ThisUnit:Exists() and ThisUnit:NPCID() == ThisNPCID and ThisUnit:HealthPercentage() <= ThisHP then
       return true
     end
   end

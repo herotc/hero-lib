@@ -21,38 +21,65 @@ local type = type
 --- ============================ CONTENT ============================
 -- Check if the unit is coded as blacklisted or not.
 do
-  local SpecialBlacklistDataSpells = {
-    D_DHT_Submerged = Spell(220519),
-    R_TOS_SpiritRealm = Spell(235621),
-    R_NYA_VoidInfusedIchor = Spell(308377)
+  local SBDSpells = {
+    Shadowlands = {
+      R_CoN_SinsoulBulwarkGrashaal = Spell(343135),
+      R_CoN_SinsoulBulwarkKaal = Spell(343126),
+      R_CoN_UnyieldingShield = Spell(346694),
+      R_CoN_BloodShroud = Spell(328921),
+    },
+    BattleforAzeroth = {
+      R_Nya_VoidInfusedIchor = Spell(308377),
+    },
+    Legion = {
+      D_DHT_Submerged = Spell(220519),
+      R_ToS_SpiritRealm = Spell(235621),
+    },
   }
   local SpecialBlacklistData = {
+    --- Shadowlands
+    ----- Castle of Nathria -----
+    --- Stone Legion Generals
+    -- General Grashaal can't be hit while this buff is present.
+    [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true) end,
+    -- General Kaal can't be hit while this buff is present.
+    [168112] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkKaal, true) end,
+    --- The Council of Blood
+    -- Stavros, Frieda and Niklaus can't be hit while this buff is present.
+    [166970] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
+    [166969] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
+    [166971] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
+    --- Shriekwing
+    -- Shriekwing can't be hit while this buff is present.
+    [164406] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_BloodShroud, true) end,
+
     --- BfA
     ----- Corruptions -----
     -- Thing From Beyond (Appears to have 2 IDs)
     [160966] = true,
     [161895] = true,
+    ----- Ny'alotha -----
+    -- Drestagath heals all damage unless you have the Void Infused Ichor debuff
+    [157602] = function(self) return not (Player:IsTanking(self) or Player:DebuffUp(SBDSpells.BattleforAzeroth.R_Nya_VoidInfusedIchor)) end,
+
     --- Legion
-    ----- Dungeons (7.0 Patch) -----
-    --- Darkheart Thicket
-    -- Strangling roots can't be hit while this buff is present
-    [100991] = function(self) return self:BuffUp(SpecialBlacklistDataSpells.D_DHT_Submerged, true) end,
+    ----- Dungeons -----
     --- Mythic+ Affixes
-    -- Fel Explosives (7.2 Patch)
+    -- Fel Explosives
     [120651] = true,
-    ----- Trial of Valor (T19 - 7.1 Patch) -----
+    --- Darkheart Thicket
+    -- Strangling roots can't be hit while this buff is present.
+    [100991] = function(self) return self:BuffUp(SBDSpells.Legion.D_DHT_Submerged, true) end,
+    ----- Trial of Valor -----
     --- Helya
     -- Striking Tentacle cannot be hit.
     [114881] = true,
-    ----- Tomb of Sargeras (T20 - 7.2 Patch) -----
+    ----- Tomb of Sargeras -----
     --- Desolate Host
     -- Engine of Eradication cannot be hit in Spirit Realm.
-    [118460] = function(self) return Player:DebuffUp(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
-    -- Soul Queen Dejahna cannot be hit outside Spirit Realm.
-    [118462] = function(self) return not Player:DebuffUp(SpecialBlacklistDataSpells.R_TOS_SpiritRealm, nil, true) end,
-    ----- Ny'alotha (8.3 Patch) -----
-    -- Drestagath heals all damage unless you have the Void Infused Ichor debuff
-    [157602] = function(self) return not (Player:IsTanking(self) or Player:DebuffUp(SpecialBlacklistDataSpells.R_NYA_VoidInfusedIchor)) end,
+    [118460] = function(self) return Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
+    -- Soul Queen Dejahna cannot be hit outside of Spirit Realm.
+    [118462] = function(self) return not Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
   }
 
   function Unit:IsBlacklisted()

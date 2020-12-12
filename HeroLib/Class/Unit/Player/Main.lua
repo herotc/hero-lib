@@ -82,6 +82,7 @@ do
     Spell(254472), -- Paladin Divine Steed
     Spell(254473), -- Paladin Divine Steed
     Spell(254474), -- Paladin Divine Steed
+
     --- Legion
     -- Class Order Hall
     Spell(220480), -- Death Knight Ebon Blade Deathcharger
@@ -97,7 +98,8 @@ do
     Spell(221672), -- Storm's Reach Greatstag
     Spell(221673), -- Storm's Reach Worg
     Spell(218964), -- Stormtalon
-    --- Warlord of Draenor (WoD)
+
+    --- Warlord of Draenor
     -- Nagrand
     Spell(164222), -- Frostwolf War Wolf
     Spell(165803) -- Telaari Talbuk
@@ -121,25 +123,32 @@ do
   -- Get if the player is in a vhehicle that is not really a vehicle.
   local InVehicleWhitelist = {
     Spells = {
-      --- Warlord of Draenor (WoD)
-      -- Hellfire Citadel (T18 - 6.2 Patch)
+      --- Shadowlands
+      -- Plaguefall
+      Spell(328429), -- Crushing Embrace (Slime Tentacle)
+      -- The Maw
+      Spell(346835), -- Soul Brand (Winged Abductors)
+
+      --- Warlord of Draenor
+      -- Hellfire Citadel
       Spell(187819), -- Crush (Kormrok's Hands)
       Spell(181345), -- Foul Crush (Kormrok's Tank Hand)
-      -- Blackrock Foundry (T17 - 6.0 Patch)
-      Spell(157059) -- Rune of Grasping Earth (Kromog's Hand)
+      -- Blackrock Foundry
+      Spell(157059), -- Rune of Grasping Earth (Kromog's Hand)
     },
     PetMounts = {
-      --- Warlord of Draenor (WoD)
-      -- Garrison Stables Quest (6.0 Patch)
+      --- Legion
+      -- Karazhan
+      116802, -- Rodent of Usual Size
+
+      --- Warlord of Draenor
+      -- Garrison Stables Quest
       87082, -- Silverperlt
       87078, -- Icehoof
       87081, -- Rocktusk
       87080, -- Riverwallow
       87079, -- Meadowstomper
       87076, -- Snarler
-      --- Legion
-      -- Karazhan
-      116802 -- Rodent of Usual Size
     }
   }
   function Player:IsInWhitelistedVehicle()
