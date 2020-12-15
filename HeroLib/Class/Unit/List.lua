@@ -52,6 +52,10 @@ do
     --- Shriekwing
     -- Shriekwing can't be hit while this buff is present.
     [164406] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_BloodShroud, true) end,
+    ----- Dungeons -----
+    --- De Other Side
+    -- Atal'ai Deathwalker's Spirit cannot be hit.
+    [170483] = true,
 
     --- BfA
     ----- Corruptions -----

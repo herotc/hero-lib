@@ -179,6 +179,10 @@ local SpecialTTDPercentageData = {
   --- De Other Side
   -- Mueh'zala leaves the fight at 10%.
   [166608] = 10,
+  --- Mists of Tirna Scithe
+  -- Tirnenns leaves the fight at 20%.
+  [164929] = 20, -- Tirnenn Villager
+  [164804] = 20, -- Droman Oulfarran
   --- Sanguine Depths
   -- General Kaal leaves the fight at 50%.
   [162099] = 50,
