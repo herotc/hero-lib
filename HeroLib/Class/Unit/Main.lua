@@ -208,6 +208,8 @@ local DummyUnits = {
   [154583] = true, -- Starlwart Guardian
   [154580] = true, -- Reinforced Guardian
   [160325] = true, -- Humility's Obedience
+  [154564] = true, -- Valiant's Humility
+  [154567] = true, -- Purity's Cleaning
   -- Shadowlands Venthyr
   [173942] = true, -- Training Dummy
   [175449] = true, -- Raider's Training Dummy
