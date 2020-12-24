@@ -57,6 +57,7 @@ do
   local CustomTrinketItems = {
     FlayedwingToxin       = Item(178742, {13, 14}),
     MistcallerOcarina     = Item(178715, {13, 14}),
+    SoulIgniter           = Item(184019, {13, 14}),
   }
   local CustomTrinketsSpells = {
     FlayedwingToxinBuff   = Spell(345545),
@@ -64,6 +65,7 @@ do
     MistcallerCrit        = Spell(332299),
     MistcallerHaste       = Spell(332300),
     MistcallerMastery     = Spell(332301),
+    SoulIgniterBuff       = Spell(345211),
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
@@ -102,6 +104,8 @@ do
             if not Player:BuffUp(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
             if not (Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste) or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
+            if Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40) then return TrinketItem end
           else
             return TrinketItem
           end
