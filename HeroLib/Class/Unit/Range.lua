@@ -155,7 +155,8 @@ end
 function Unit:IsSpellInRange(ThisSpell)
   local GUID = self:GUID()
   if not GUID then return false end
-
+  if ThisSpell:BookIndex() == nil then return false end
+  
   return IsSpellInRange(ThisSpell:BookIndex(), ThisSpell:BookType(), self:ID()) == 1
 end
 
