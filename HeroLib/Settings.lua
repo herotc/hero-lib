@@ -77,6 +77,17 @@ HL.GUISettings = {
       },
       -- Custom Use Trinket Ignore List
       TrinketUserDefined = {
+        --- Shadowlands
+        ----- PvP -----
+        --- Rated
+        -- Sinful Gladiator's Medaillon
+        [181333] = true,
+        --- Unrated
+        -- Sinful Aspirant's Medaillon
+        [184052] = true,
+        --- Battle for Azeroth
+        ----- Raid -----
+        --- Ny'alotha, The Waking City
         -- Humming Black Dragonscale
         [174044] = true
       }
