@@ -232,6 +232,8 @@ local DummyUnits = {
   [174488] = true, -- Raider's Training Dummy
   [174484] = true, -- Dungeoneer's Training Dummy
   [174487] = true, -- Training Dummy
+  -- Other
+  [65310] = true, -- Turnip Punching Bag
 }
 function Unit:IsDummy()
   local NPCID = self:NPCID()
