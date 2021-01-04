@@ -533,8 +533,8 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 27285, 10)               -- Seed Explosion
   -- Demonology
   RegisterNucleusAbility("DirectDamage", 89753, 8)                -- Felstorm (Felguard)
-  RegisterNucleusAbility("DirectDamage", 105174, 8)               -- Hand of Gul'dan
-  RegisterNucleusAbility("DirectDamage", 196277, 8)               -- Implosion
+  RegisterNucleusAbility("DirectDamage", 86040, 8)                -- Hand of Gul'dan
+  RegisterNucleusAbility("DirectDamage", 196278, 8)               -- Implosion
   -- Destruction
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 42223, 8)  -- Rain of Fire
   RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
