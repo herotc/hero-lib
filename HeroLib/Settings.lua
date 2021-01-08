@@ -80,11 +80,15 @@ HL.GUISettings = {
         --- Shadowlands
         ----- PvP -----
         --- Rated
-        -- Sinful Gladiator's Medaillon
+        -- Sinful Gladiator's Medallion
         [181333] = true,
+        -- Corrupted Gladiator's Medallion
+        [184055] = true,
         --- Unrated
-        -- Sinful Aspirant's Medaillon
+        -- Sinful Aspirant's Medallion
         [184052] = true,
+        -- Corrupted Aspirant's Medallion
+        [184058] = true,
         --- Battle for Azeroth
         ----- Raid -----
         --- Ny'alotha, The Waking City
