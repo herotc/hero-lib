@@ -25,6 +25,7 @@ do
     Shadowlands = {
       R_CoN_SinsoulBulwarkGrashaal = Spell(343135),
       R_CoN_SinsoulBulwarkKaal = Spell(343126),
+      R_CoN_HardenedStoneForm = Spell(329636),
       R_CoN_UnyieldingShield = Spell(346694),
       R_CoN_BloodShroud = Spell(328921),
     },
@@ -40,10 +41,10 @@ do
     --- Shadowlands
     ----- Castle of Nathria -----
     --- Stone Legion Generals
-    -- General Grashaal can't be hit while this buff is present.
-    [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true) end,
-    -- General Kaal can't be hit while this buff is present.
-    [168112] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkKaal, true) end,
+    -- General Grashaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
+    [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true) or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneForm, true) end,
+    -- General Kaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
+    [168112] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkKaal, true) or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneForm, true) end,
     --- The Council of Blood
     -- Stavros, Frieda and Niklaus can't be hit while this buff is present.
     [166970] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
