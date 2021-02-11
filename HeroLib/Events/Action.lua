@@ -20,6 +20,8 @@ local mathceil = math.ceil
 local mathfloor = math.floor
 local tableinsert = table.insert
 local tableremove = table.remove
+local gmatch = gmatch
+local strfind = string.find
 -- File Locals
 local Actions = {} -- { [ActionSlot] = { Type, ID, SubType, Texture, Text, CommandName, HotKey } }
 local ActionSlotsBy = {
@@ -180,6 +182,25 @@ local function GetButtonNameFromActionSlot(ActionSlot)
   return ButtonBaseName .. ButtonSlot
 end
 
+local function UpdateElvUIPaging(class)
+  for i = 1, 10 do
+    local BarNum = "bar"..i
+    local PagingString = _G.ElvUI[1].ActionBars.db[BarNum].paging[class]
+    if PagingString and Cache.Persistent.ElvUIPaging.PagingStrings[i] ~= PagingString then
+      for match1 in (PagingString..";"):gmatch("(.-)"..";") do
+        if (strfind(match1, "bonusbar") or strfind(match1, "combat")) then
+          for match2 in (match1.." "):gmatch("(%d+)".." ") do
+            if match2 then
+              Cache.Persistent.ElvUIPaging.PagingStrings[i] = PagingString
+              Cache.Persistent.ElvUIPaging.PagingBars[tonumber(match2)] = i
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
 local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
   local BarIndex = GetBarInfo(ActionSlot)
   local _, ButtonSlot = GetButtonInfo(ActionSlot)
@@ -187,7 +208,7 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
   local CommandNameFormat
   if Blizzard then
     _, ButtonSlot = GetButtonInfo(ActionSlot, true)
-    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
+    if (BarIndex > 6 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   elseif _G.Bartender4 then
     -- Bartender
@@ -197,11 +218,14 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
     CommandNameFormat = ButtonByAddOn.Dominos[BarIndex][2]
   elseif _G.ElvUI and _G.ElvUI[1].ActionBars then
     -- ElvUI
-    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
+    if _G.ElvUI[1].ActionBars.db then
+      UpdateElvUIPaging(Cache.Persistent.Player.Class[2])
+      if Cache.Persistent.ElvUIPaging.PagingBars[BarIndex] then BarIndex = Cache.Persistent.ElvUIPaging.PagingBars[BarIndex] end
+    end
     CommandNameFormat = ButtonByAddOn.ElvUI[BarIndex][2]
   else
     -- Blizzard
-    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
+    if (BarIndex > 6 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   end
 
