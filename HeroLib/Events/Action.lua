@@ -187,6 +187,7 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
   local CommandNameFormat
   if Blizzard then
     _, ButtonSlot = GetButtonInfo(ActionSlot, true)
+    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   elseif _G.Bartender4 then
     -- Bartender
@@ -196,9 +197,11 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
     CommandNameFormat = ButtonByAddOn.Dominos[BarIndex][2]
   elseif _G.ElvUI and _G.ElvUI[1].ActionBars then
     -- ElvUI
+    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.ElvUI[BarIndex][2]
   else
     -- Blizzard
+    if (BarIndex > 6 and (UnitClass("player") == "Rogue" or UnitClass("player") == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   end
 
