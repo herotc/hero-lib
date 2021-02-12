@@ -21,7 +21,6 @@ local mathfloor = math.floor
 local tableinsert = table.insert
 local tableremove = table.remove
 local gmatch = gmatch
-local strfind = string.find
 -- File Locals
 local Actions = {} -- { [ActionSlot] = { Type, ID, SubType, Texture, Text, CommandName, HotKey } }
 local ActionSlotsBy = {
@@ -186,14 +185,18 @@ local function UpdateElvUIPaging(class)
   for i = 1, 10 do
     local BarNum = "bar"..i
     local PagingString = _G.ElvUI[1].ActionBars.db[BarNum].paging[class]
-    if PagingString and Cache.Persistent.ElvUIPaging.PagingStrings[i] ~= PagingString then
+    if PagingString == "" or not PagingString then
+      Cache.Persistent.ElvUIPaging.PagingStrings[i] = nil
+      for k,v in pairs(Cache.Persistent.ElvUIPaging.PagingBars) do
+        if v == i then Cache.Persistent.ElvUIPaging.PagingBars[k] = nil end
+      end
+    end
+    if PagingString and PagingString ~= "" and Cache.Persistent.ElvUIPaging.PagingStrings[i] ~= PagingString then
       for match1 in (PagingString..";"):gmatch("(.-)"..";") do
-        if (strfind(match1, "bonusbar") or strfind(match1, "combat")) then
-          for match2 in (match1.." "):gmatch("(%d+)".." ") do
-            if match2 then
-              Cache.Persistent.ElvUIPaging.PagingStrings[i] = PagingString
-              Cache.Persistent.ElvUIPaging.PagingBars[tonumber(match2)] = i
-            end
+        for match2 in (match1.." "):gmatch("(%d+)".." ") do
+          if match2 then
+            Cache.Persistent.ElvUIPaging.PagingStrings[i] = PagingString
+            Cache.Persistent.ElvUIPaging.PagingBars[tonumber(match2)] = i
           end
         end
       end
