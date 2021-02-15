@@ -121,7 +121,7 @@ end
 
 -- Check if the spell is Usable (by resources) in predicted mode
 function Spell:IsUsableP(Offset)
-  local CostTable = self:CostTable()
+  local CostTable = self:CostTable() or {}
   local Usable = true
   if #CostTable > 0 then
     local i = 1
