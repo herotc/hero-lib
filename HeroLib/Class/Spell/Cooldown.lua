@@ -58,6 +58,17 @@ function Spell:CooldownRemains(BypassRecovery)
   return CD > 0 and CD or 0
 end
 
+-- cooldown.foo.remains_guess 
+function Spell:CooldownRemainsGuess(BypassRecovery)
+  local StartTime, Duration = self:CooldownInfo()
+  if StartTime == 0 then return 0 end
+
+  local CD = StartTime + Duration - GetTime() - HL.RecoveryOffset(BypassRecovery)
+  local reduction = ( GetTime() - self.LastCastTime ) / ( Duration - CD );
+  CD = CD * reduction;
+  return CD > 0 and CD or 0
+end
+
 -- cooldown.foo.up
 function Spell:CooldownUp(BypassRecovery)
   return self:CooldownRemains(BypassRecovery) == 0
