@@ -354,8 +354,13 @@ local function FindAction(Type, Identifier)
   local ActionSlots = ActionSlotsBy[Type][Identifier]
   if not ActionSlots then return end
 
-  -- We return the first match as this moment
-  local ActionSlot = ActionSlots[1]
+  -- If stealthed Rogue or form-shifted Druid, return last slot. Otherwise, return the first.
+  local ActionSlot
+  if (GetBonusBarOffset() > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then
+    ActionSlot = ActionSlots[#ActionSlots]
+  else
+    ActionSlot = ActionSlots[1]
+  end
   if ActionSlot then
     return Actions[ActionSlot]
   end
