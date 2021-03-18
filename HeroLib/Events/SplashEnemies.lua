@@ -520,8 +520,8 @@ function Splash.RegisterNucleusAbilities()
   -- Shaman
   -- Elemental
   --RegisterNucleusAbility("ChainDirectDamage", 188443, 10)         -- Chain Lightning
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 61882, 8)  -- Earthquake
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 192222, 8) -- Liquid Magma Totem
+  --RegisterNucleusAbility("GroundMultipleDirectDamage", 77478, 8)  -- Earthquake
+  --RegisterNucleusAbility("GroundMultipleDirectDamage", 192231, 8) -- Liquid Magma Totem
   -- Enhancement
   RegisterNucleusAbility("DirectDamage", 187874, 8)               -- Bladestorm
   RegisterNucleusAbility("DirectDamage", 197214, 11)              -- Sundering
