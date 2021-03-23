@@ -50,6 +50,9 @@ do
     [166970] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
     [166969] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
     [166971] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
+    -- Afterimages despawn immediately and shouldn't be damaged
+    [172803] = true,
+    [173053] = true,
     --- Shriekwing
     -- Shriekwing can't be hit while this buff is present.
     [164406] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_BloodShroud, true) end,
