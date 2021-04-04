@@ -354,10 +354,19 @@ local function FindAction(Type, Identifier)
   local ActionSlots = ActionSlotsBy[Type][Identifier]
   if not ActionSlots then return end
 
-  -- If stealthed Rogue or form-shifted Druid, return last slot. Otherwise, return the first.
+  -- If stealthed Rogue or form-shifted Druid, return the appropriate slot. Otherwise, return the first.
   local ActionSlot
-  if (GetBonusBarOffset() > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then
-    ActionSlot = ActionSlots[#ActionSlots]
+  local BonusBarOffset = GetBonusBarOffset()
+  if (BonusBarOffset > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then
+    for k,v in pairs(ActionSlots) do
+      local low = (1 + (NUM_ACTIONBAR_PAGES + BonusBarOffset - 1) * NUM_ACTIONBAR_BUTTONS)
+      local high = ((NUM_ACTIONBAR_PAGES + BonusBarOffset) * NUM_ACTIONBAR_BUTTONS)
+      if v >= low and v <= high then
+        ActionSlot = ActionSlots[k]
+      end
+    end
+    -- Just in case the above couldn't find a slot, return the first.
+    if not ActionSlot then ActionSlot = ActionSlots[1] end
   else
     ActionSlot = ActionSlots[1]
   end
