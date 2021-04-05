@@ -183,6 +183,15 @@ function Spell:ExecuteTime()
   return CastTime > GCD and CastTime or GCD
 end
 
+-- action.foo.execute_remains
+function Spell:ExecuteRemains()
+  if not Player:IsCasting(self) then return 0 end
+  local CastRemains = Player:CastRemains()
+  local GCDRemains = Player:GCDRemains()
+
+  return CastRemains > GCDRemains and CastRemains or GCDRemains
+end
+
 -- Get the CostTable using GetSpellPowerCost.
 function Spell:CostTable()
   local SpellID = self.SpellID
