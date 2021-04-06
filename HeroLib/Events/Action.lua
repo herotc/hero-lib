@@ -212,7 +212,7 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
   local CommandNameFormat
   if Blizzard then
     _, ButtonSlot = GetButtonInfo(ActionSlot, true)
-    if (GetBonusBarOffset() > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
+    if (GetBonusBarOffset() > 0 and (BarIndex < 3 or BarIndex > 6) and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   elseif _G.Bartender4 then
     -- Bartender
@@ -229,7 +229,7 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
     CommandNameFormat = ButtonByAddOn.ElvUI[BarIndex][2]
   else
     -- Blizzard
-    if (GetBonusBarOffset() > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
+    if (GetBonusBarOffset() > 0 and (BarIndex < 3 or BarIndex > 6) and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then BarIndex = 1 end
     CommandNameFormat = ButtonByAddOn.Blizzard[BarIndex][2]
   end
 
