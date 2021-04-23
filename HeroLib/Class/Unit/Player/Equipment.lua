@@ -55,17 +55,22 @@ do
   -- Global Custom Trinkets
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
   local CustomTrinketItems = {
-    FlayedwingToxin       = Item(178742, {13, 14}),
-    MistcallerOcarina     = Item(178715, {13, 14}),
-    SoulIgniter           = Item(184019, {13, 14}),
+    FlayedwingToxin         = Item(178742, {13, 14}),
+    MistcallerOcarina       = Item(178715, {13, 14}),
+    SoulIgniter             = Item(184019, {13, 14}),
+    DarkmoonDeckIndomitable = Item(173096, {13, 14}),
   }
   local CustomTrinketsSpells = {
-    FlayedwingToxinBuff   = Spell(345545),
-    MistcallerVers        = Spell(330067),
-    MistcallerCrit        = Spell(332299),
-    MistcallerHaste       = Spell(332300),
-    MistcallerMastery     = Spell(332301),
-    SoulIgniterBuff       = Spell(345211),
+    FlayedwingToxinBuff     = Spell(345545),
+    MistcallerVers          = Spell(330067),
+    MistcallerCrit          = Spell(332299),
+    MistcallerHaste         = Spell(332300),
+    MistcallerMastery       = Spell(332301),
+    SoulIgniterBuff         = Spell(345211),
+    IndomitableFive         = Spell(311496),
+    IndomitableSix          = Spell(311497),
+    IndomitableSeven        = Spell(311498),
+    IndomitableEight        = Spell(311499),
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
@@ -106,6 +111,8 @@ do
             if not (Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste) or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
             if Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.DarkmoonDeckIndomitable:ID() then
+            if (Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven) or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           else
             return TrinketItem
           end
