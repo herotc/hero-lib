@@ -286,6 +286,7 @@ end
 
 -- Get if we are Tanking or not the Unit.
 function Unit:IsTanking(Other, ThreatThreshold)
+  if (UnitGroupRolesAssigned("player") == "TANK" and Unit:IsInBossList(164407)) then return true end
   local ThreatSituation = UnitThreatSituation(self:ID(), Other:ID())
 
   return (ThreatSituation and ThreatSituation >= (ThreatThreshold or 2)) or false
