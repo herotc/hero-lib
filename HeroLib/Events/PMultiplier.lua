@@ -103,7 +103,13 @@ HL:RegisterForSelfCombatEvent(
     if not ListenedSpell then return end
 
     local PMultiplier = ComputePMultiplier(ListenedSpell)
-    ListenedSpell.Units[DestGUID] = { PMultiplier = PMultiplier, Time = GetTime(), Applied = false }
+    local Dot = ListenedSpell.Units[DestGUID]
+    if Dot then
+      Dot.PMultiplier = PMultiplier
+      Dot.Time = GetTime()
+    else
+      ListenedSpell.Units[DestGUID] = { PMultiplier = PMultiplier, Time = GetTime(), Applied = false }
+    end
   end,
   "SPELL_CAST_SUCCESS"
 )
@@ -119,6 +125,8 @@ HL:RegisterForSelfCombatEvent(
     local Dot = ListenedSpell.Units[DestGUID]
     if Dot then
       Dot.Applied = true
+    else
+      ListenedSpell.Units[DestGUID] = { PMultiplier = 0, Time = GetTime(), Applied = true }
     end
   end,
   "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH"
