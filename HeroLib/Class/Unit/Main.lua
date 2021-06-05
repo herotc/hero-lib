@@ -159,6 +159,8 @@ local DummyUnits = {
   [32666] = true, -- Training Dummy
   [32667] = true, -- Training Dummy
   [46647] = true, -- Training Dummy
+  [114832] = true, -- PvP Training Dummy
+  [153292] = true, -- Training Dummy
   -- MoP Shrine of Two Moons
   [67127] = true, -- Training Dummy
   -- WoD Alliance Garrison
@@ -224,7 +226,7 @@ local DummyUnits = {
   [174566] = true, -- Raider's Tanking Dummy
   [174567] = true, -- Raider's Training Dummy
   [174568] = true, -- Dungeoneer's Training Dummy
-  [175459] = true, -- Training Dummy
+  [174569] = true, -- Training Dummy
   [174570] = true, -- Swarm Training Dummy
   [175471] = true, -- Cleave Training Dummy
   -- Shadowlands Necrolord
