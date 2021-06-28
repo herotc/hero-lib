@@ -225,6 +225,38 @@ do
 end
 
 do
+  local PowerInfusionSpells = {
+    -- Abilities
+    Spell(10060), -- Priest: Power Infusion
+  }
+
+  -- buff.power_infusion.remains
+  function Unit:PowerInfusionRemains(BypassRecovery)
+    local GUID = self:GUID()
+    if not GUID then return false end
+
+    for i = 1, #PowerInfusionSpells do
+      local PowerInfusionSpell = PowerInfusionSpells[i]
+      if self:BuffUp(PowerInfusionSpell, nil) then
+        return self:BuffRemains(PowerInfusionSpell, nil, BypassRecovery)
+      end
+    end
+
+    return 0
+  end
+
+  -- buff.power_infusion.up
+  function Unit:PowerInfusionUp(BypassRecovery)
+    return self:PowerInfusionRemains(BypassRecovery) > 0
+  end
+
+  -- buff.power_infusion.down
+  function Unit:PowerInfusionDown(BypassRecovery)
+    return not self:PowerInfusionUp(BypassRecovery)
+  end
+end
+
+do
   local BloodlustExhaustSpells = {
     --TODO : look for other debuffs
     -- Abilities
