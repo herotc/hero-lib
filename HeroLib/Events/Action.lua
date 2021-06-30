@@ -96,15 +96,15 @@ local ButtonByAddOn = {
   },
   ElvUI = {
     [1]  = { "ElvUI_Bar1Button",  "ACTIONBUTTON%i" },
-    [2]  = { "ElvUI_Bar6Button",  "ELVUIBAR6BUTTON%i" },
-    [3]  = { "ElvUI_Bar5Button",  "MULTIACTIONBAR3BUTTON%i" },
+    [2]  = { "ElvUI_Bar2Button",  "ELVUIBAR2BUTTON%i" },
+    [3]  = { "ElvUI_Bar3Button",  "MULTIACTIONBAR3BUTTON%i" },
     [4]  = { "ElvUI_Bar4Button",  "MULTIACTIONBAR4BUTTON%i" },
-    [5]  = { "ElvUI_Bar2Button",  "MULTIACTIONBAR2BUTTON%i" },
-    [6]  = { "ElvUI_Bar3Button",  "MULTIACTIONBAR1BUTTON%i" },
-    [7]  = { "ElvUI_Bar7Button",  "EXTRABAR7BUTTON%i" },
-    [8]  = { "ElvUI_Bar8Button",  "EXTRABAR8BUTTON%i" },
-    [9]  = { "ElvUI_Bar9Button",  "EXTRABAR9BUTTON%i" },
-    [10] = { "ElvUI_Bar10Button", "EXTRABAR10BUTTON%i" },
+    [5]  = { "ElvUI_Bar5Button",  "MULTIACTIONBAR2BUTTON%i" },
+    [6]  = { "ElvUI_Bar6Button",  "MULTIACTIONBAR1BUTTON%i" },
+    [7]  = { "ElvUI_Bar7Button",  "ELVUIBAR7BUTTON%i" },
+    [8]  = { "ElvUI_Bar8Button",  "ELVUIBAR8BUTTON%i" },
+    [9]  = { "ElvUI_Bar9Button",  "ELVUIBAR9BUTTON%i" },
+    [10] = { "ElvUI_Bar10Button", "ELVUIBAR10BUTTON%i" },
   },
 } -- { [AddOn] = { [BarIndex] = { [1] = ButtonBaseName, [2] = CommandNameFormat } } }
 
