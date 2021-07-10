@@ -59,6 +59,7 @@ do
     MistcallerOcarina       = Item(178715, {13, 14}),
     SoulIgniter             = Item(184019, {13, 14}),
     DarkmoonDeckIndomitable = Item(173096, {13, 14}),
+    ShardofAnnhyldesAegis   = Item(186424, {13, 14}),
   }
   local CustomTrinketsSpells = {
     FlayedwingToxinBuff     = Spell(345545),
@@ -113,6 +114,8 @@ do
             if Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.DarkmoonDeckIndomitable:ID() then
             if (Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven) or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
+            if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           else
             return TrinketItem
           end
