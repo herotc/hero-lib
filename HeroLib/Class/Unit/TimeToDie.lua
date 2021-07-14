@@ -193,6 +193,15 @@ local SpecialTTDPercentageData = {
   --- Sun King's Salvation
   -- Shade of Kael'thas fight is 60% -> 45% and then 10% -> 0%.
   [165805] = function(self) return (self:HealthPercentage() > 20 and 45) or 0 end,
+  ----- Sanctum of Domination -----
+  --- Eye of the Jailer leaves at 66% and 33%
+  [180018] = function(self) return (self:HealthPercentage() > 66 and 66) or (self:HealthPercentage() <= 66 and self:HealthPercentage() > 33 and 33) or 0 end,
+  --- Painsmith Raznal leaves at 70% and 40%
+  [176523] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
+  --- Painsmith Raznal leaves at 70% and 40%
+  [176523] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
+  --- Painsmith Raznal leaves at 70% and 40%
+  [180828] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
 
   --- Legion
   ----- Open World  -----
