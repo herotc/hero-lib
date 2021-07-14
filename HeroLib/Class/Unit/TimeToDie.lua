@@ -198,10 +198,10 @@ local SpecialTTDPercentageData = {
   [180018] = function(self) return (self:HealthPercentage() > 66 and 66) or (self:HealthPercentage() <= 66 and self:HealthPercentage() > 33 and 33) or 0 end,
   --- Painsmith Raznal leaves at 70% and 40%
   [176523] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
-  --- Painsmith Raznal leaves at 70% and 40%
-  [176523] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
-  --- Painsmith Raznal leaves at 70% and 40%
-  [180828] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
+  --- Fatescribe Roh-Kalo phases at 70% and 40%
+  [179390] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
+  --- Sylvanas Windrunner intermission at 83% and "dies" at 50%
+  [180828] = function(self) return (self:HealthPercentage() > 83 and 83) or 50 end,
 
   --- Legion
   ----- Open World  -----
