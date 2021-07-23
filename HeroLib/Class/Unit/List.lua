@@ -88,6 +88,10 @@ do
     [118460] = function(self) return Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
     -- Soul Queen Dejahna cannot be hit outside of Spirit Realm.
     [118462] = function(self) return not Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
+    ----- Sanctum of Domination -----
+    --- Painsmith Raznal
+    -- Spiked Balls
+    [176581] = true,
   }
 
   function Unit:IsBlacklisted()
