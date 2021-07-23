@@ -56,6 +56,10 @@ do
     --- Shriekwing
     -- Shriekwing can't be hit while this buff is present.
     [164406] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_BloodShroud, true) end,
+    ----- Sanctum of Domination -----
+    --- Painsmith Raznal
+    -- Spiked Balls
+    [176581] = true,
     ----- Dungeons -----
     --- De Other Side
     -- Atal'ai Deathwalker's Spirit cannot be hit.
@@ -88,10 +92,6 @@ do
     [118460] = function(self) return Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
     -- Soul Queen Dejahna cannot be hit outside of Spirit Realm.
     [118462] = function(self) return not Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
-    ----- Sanctum of Domination -----
-    --- Painsmith Raznal
-    -- Spiked Balls
-    [176581] = true,
   }
 
   function Unit:IsBlacklisted()
