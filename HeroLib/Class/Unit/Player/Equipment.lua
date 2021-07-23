@@ -60,6 +60,7 @@ do
     SoulIgniter             = Item(184019, {13, 14}),
     DarkmoonDeckIndomitable = Item(173096, {13, 14}),
     ShardofAnnhyldesAegis   = Item(186424, {13, 14}),
+    TomeofMonstruousConstructions   = Item(186422, {13, 14}),
   }
   local CustomTrinketsSpells = {
     FlayedwingToxinBuff     = Spell(345545),
@@ -72,6 +73,7 @@ do
     IndomitableSix          = Spell(311497),
     IndomitableSeven        = Spell(311498),
     IndomitableEight        = Spell(311499),
+    TomeofMonstruousConstructionsBuff = Spell(357163),
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
@@ -116,6 +118,8 @@ do
             if (Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven) or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
             if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
+            if Player:BuffDown(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
           else
             return TrinketItem
           end
