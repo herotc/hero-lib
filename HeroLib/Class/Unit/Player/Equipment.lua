@@ -109,7 +109,7 @@ do
         if not IsExcluded then
           -- Global custom trinket handlers
           if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
-            if not Player:BuffUp(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
+            if not Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
             if not (Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste) or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
@@ -119,7 +119,7 @@ do
           elseif TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
             if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
-            if Player:BuffDown(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
+            if not Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
           else
             return TrinketItem
           end
