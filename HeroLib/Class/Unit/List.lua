@@ -28,6 +28,7 @@ do
       R_CoN_HardenedStoneForm = Spell(329636),
       R_CoN_UnyieldingShield = Spell(346694),
       R_CoN_BloodShroud = Spell(328921),
+      R_SoD_EternalTorment = Spell(355790),
     },
     BattleforAzeroth = {
       R_Nya_VoidInfusedIchor = Spell(308377),
@@ -57,6 +58,9 @@ do
     -- Shriekwing can't be hit while this buff is present.
     [164406] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_BloodShroud, true) end,
     ----- Sanctum of Domination -----
+    --- Remnant of Ner'zhul
+    -- Orb of torment take 99% reduced damage while they have their buff
+    [177117] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SoD_EternalTorment, true) end,
     --- Painsmith Raznal
     -- Spiked Balls
     [176581] = true,
