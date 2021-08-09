@@ -175,25 +175,25 @@ local DummyUnits = {
   [87762] = true, -- Mage Tower Damage Raider's Training Dummy
   [88288] = true, -- Tanking Dungeoneer's Training Dummy
   [88289] = true, -- Healing Training Dummy ----> FRIENDLY
-  -- Legion Rogue Class Order Hall
-  [92164] = true, -- Training Dummy
-  [92165] = true, -- Dungeoneer's Training Dummy
-  [92166] = true, -- Raider's Training Dummy
-  -- Legion Priest Class Order Hall
-  [107555] = true, -- Bound void Wraith
-  [107556] = true, -- Bound void Walker
   -- Legion Druid Class Order Hall
   [113964] = true, -- Raider's Training Dummy
   [113966] = true, -- Dungeoneer's Training Dummy
-  -- Legion Warlock Class Order Hall
-  [102052] = true, -- Rebellious imp
-  [102048] = true, -- Rebellious Felguard
-  [102045] = true, -- Rebellious WrathGuard
-  [101956] = true, -- Rebellious Fel Lord
   -- Legion Mage Class Order Hall
   [103397] = true, -- Greater Bullwark Construct
   [103404] = true, -- Bullwark Construct
   [103402] = true, -- Lesser Bullwark Construct
+  -- Legion Priest Class Order Hall
+  [107555] = true, -- Bound void Wraith
+  [107556] = true, -- Bound void Walker
+  -- Legion Rogue Class Order Hall
+  [92164] = true, -- Training Dummy
+  [92165] = true, -- Dungeoneer's Training Dummy
+  [92166] = true, -- Raider's Training Dummy
+  -- Legion Warlock Class Order Hall
+  [101956] = true, -- Rebellious Fel Lord
+  [102045] = true, -- Rebellious WrathGuard
+  [102048] = true, -- Rebellious Felguard
+  [102052] = true, -- Rebellious imp
   -- BfA Dazar'Alor
   [144081] = true, -- Training Dummy
   [144082] = true, -- Training Dummy
@@ -205,13 +205,13 @@ local DummyUnits = {
   [131989] = true, -- Training Dummy
   [131992] = true, -- Dungeoneer's Training Dummy
   -- Shadowlands Kyrian
-  [154586] = true, -- Stalwart Phalanx
-  [154585] = true, -- Valiant's Resolve
-  [154583] = true, -- Starlwart Guardian
-  [154580] = true, -- Reinforced Guardian
-  [160325] = true, -- Humility's Obedience
   [154564] = true, -- Valiant's Humility
   [154567] = true, -- Purity's Cleaning
+  [154580] = true, -- Reinforced Guardian
+  [154583] = true, -- Starlwart Guardian
+  [154585] = true, -- Valiant's Resolve
+  [154586] = true, -- Stalwart Phalanx
+  [160325] = true, -- Humility's Obedience
   -- Shadowlands Venthyr
   [173942] = true, -- Training Dummy
   [175449] = true, -- Raider's Training Dummy
@@ -228,12 +228,12 @@ local DummyUnits = {
   [174568] = true, -- Dungeoneer's Training Dummy
   [174569] = true, -- Training Dummy
   [174570] = true, -- Swarm Training Dummy
-  [175471] = true, -- Cleave Training Dummy
+  [174571] = true, -- Cleave Training Dummy
   -- Shadowlands Necrolord
-  [174491] = true, -- Tanking Dummy
-  [174488] = true, -- Raider's Training Dummy
   [174484] = true, -- Dungeoneer's Training Dummy
   [174487] = true, -- Training Dummy
+  [174488] = true, -- Raider's Training Dummy
+  [174491] = true, -- Tanking Dummy
   -- Other
   [65310] = true, -- Turnip Punching Bag
 }
