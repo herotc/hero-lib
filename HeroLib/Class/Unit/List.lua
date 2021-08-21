@@ -64,6 +64,9 @@ do
     --- Painsmith Raznal
     -- Spiked Balls
     [176581] = true,
+    --- Trash
+    -- Condemned Soul Remnant
+    [180385] = true,
     ----- Dungeons -----
     --- De Other Side
     -- Atal'ai Deathwalker's Spirit cannot be hit.
