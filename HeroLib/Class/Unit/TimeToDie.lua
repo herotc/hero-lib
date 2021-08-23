@@ -186,7 +186,7 @@ local SpecialTTDPercentageData = {
   --- Sanguine Depths
   -- General Kaal leaves the fight at 50%.
   [162099] = 50,
-  ----- Castle of Nathria -----
+  ----- Castle Nathria -----
   --- Stone Legion Generals
   -- General Kaal leaves the fight at 50% if General Grashaal has not fight yet. We take 49% as check value since it get -95% dmg reduction at 50% until intermission is over.
   [168112] = function(self) return (not self:CheckHPFromBossList(168113, 99) and 49) or 0 end,
@@ -200,8 +200,8 @@ local SpecialTTDPercentageData = {
   [176523] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
   --- Fatescribe Roh-Kalo phases at 70% and 40%
   [179390] = function(self) return (self:HealthPercentage() > 70 and 70) or (self:HealthPercentage() <= 70 and self:HealthPercentage() > 40 and 40) or 0 end,
-  --- Sylvanas Windrunner intermission at 83% and "dies" at 50%
-  [180828] = function(self) return (self:HealthPercentage() > 83 and 83) or 50 end,
+  --- Sylvanas Windrunner intermission at 83% and "dies" at 50% (45% in MM)
+  [180828] = function(self) return (self:HealthPercentage() > 83 and 83) or ((Player:InstanceDifficulty() == 16 and 45) or 50) end,
 
   --- Legion
   ----- Open World  -----
