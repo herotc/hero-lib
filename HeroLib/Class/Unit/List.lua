@@ -40,7 +40,7 @@ do
   }
   local SpecialBlacklistData = {
     --- Shadowlands
-    ----- Castle of Nathria -----
+    ----- Castle Nathria -----
     --- Stone Legion Generals
     -- General Grashaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
     [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true) or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneForm, true) end,
