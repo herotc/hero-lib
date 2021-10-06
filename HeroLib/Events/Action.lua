@@ -365,7 +365,19 @@ local function FindAction(Type, Identifier)
         ActionSlot = ActionSlots[k]
       end
     end
-    -- Just in case the above couldn't find a slot, return the first.
+    -- Just in case the above couldn't find a slot, return the first slot in the array, unless it's on bar1.
+    if not ActionSlot then 
+      if #ActionSlots == 1 then
+        ActionSlot = ActionSlots[1]
+      else
+        for k,v in pairs(ActionSlots) do
+          if v > 12 then
+            ActionSlot = ActionSlots[k]
+            break
+          end
+        end
+      end
+    end
     if not ActionSlot then ActionSlot = ActionSlots[1] end
   else
     ActionSlot = ActionSlots[1]
