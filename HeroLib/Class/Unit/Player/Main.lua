@@ -53,6 +53,12 @@ function Player:IsRace(ThisRace)
   return ThisRace and self:Race() == ThisRace or false
 end
 
+-- Get the player covenant ID
+-- 0: none, 1: Kyrian, 2: Venthyr, 3: Night Fae, 4: Necrolord
+function Player:CovenantID()
+  return Covenants.GetActiveCovenantID()
+end
+
 -- Get the player covenant
 function Player:Covenant()
   local covenantName
