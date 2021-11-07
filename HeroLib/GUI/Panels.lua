@@ -43,6 +43,7 @@ end
 local function AnchorTooltip(Frame, Tooltip)
   Frame:SetScript("OnEnter",
     function(self)
+      Mixin(GameTooltip, BackdropTemplateMixin)
       GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
       GameTooltip:ClearLines()
       GameTooltip:SetBackdropColor(0, 0, 0, 1)
