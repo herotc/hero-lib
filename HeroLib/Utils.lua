@@ -76,6 +76,18 @@ function Utils.MergeTable(T1, T2)
   return Table
 end
 
+-- Merge two tables by key
+function Utils.MergeTableByKey(T1, T2)
+  local Table = {}
+  for Key, Value in pairs(T1) do
+    Table[Key] = Value
+  end
+  for Key, Value in pairs(T2) do
+    Table[Key] = Value
+  end
+  return Table
+end
+
 -- Compare two values
 local CompareThisTable = {
   [">"] = function(A, B) return A > B end,
