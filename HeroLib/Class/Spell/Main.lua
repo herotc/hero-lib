@@ -121,6 +121,12 @@ end
 
 -- Check if the spell is Usable (by resources) in predicted mode
 function Spell:IsUsableP(Offset)
+  -- Handle case where spell is actually disabled not due to missing resources
+  local SpellUsable, SpellMissingResource = self:IsUsable()
+  if SpellUsable == false and SpellMissingResource == false then
+    return false
+  end
+
   local CostTable = self:CostTable() or {}
   local Usable = true
   if #CostTable > 0 then
