@@ -23,9 +23,10 @@ local type = type
 do
   local SBDSpells = {
     Shadowlands = {
-      R_CoN_SinsoulBulwarkGrashaal = Spell(343135),
       R_CoN_SinsoulBulwarkKaal = Spell(343126),
-      R_CoN_HardenedStoneForm = Spell(329636),
+      R_CoN_SinsoulBulwarkGrashaal = Spell(343135),
+      R_CoN_HardenedStoneFormKaal = Spell(329636),
+      R_CoN_HardenedStoneFormGrashaal = Spell(329808),
       R_CoN_UnyieldingShield = Spell(346694),
       R_CoN_BloodShroud = Spell(328921),
       R_SoD_EternalTorment = Spell(355790),
@@ -42,10 +43,12 @@ do
     --- Shadowlands
     ----- Castle Nathria -----
     --- Stone Legion Generals
-    -- General Grashaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
-    [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true) or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneForm, true) end,
     -- General Kaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
-    [168112] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkKaal, true) or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneForm, true) end,
+    [168112] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkKaal, true)
+      or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneFormKaal, true) end,
+    -- General Grashaal can't be hit while Sinsoul Bulwark is present and takes 95% reduced damage when Hardened Stone Form is present.
+    [168113] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_SinsoulBulwarkGrashaal, true)
+      or self:BuffUp(SBDSpells.Shadowlands.R_CoN_HardenedStoneFormGrashaal, true) end,
     --- The Council of Blood
     -- Stavros, Frieda and Niklaus can't be hit while this buff is present.
     [166970] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_CoN_UnyieldingShield, true) end,
@@ -61,9 +64,25 @@ do
     --- Remnant of Ner'zhul
     -- Orb of torment take 99% reduced damage while they have their buff
     [177117] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SoD_EternalTorment, true) end,
+    --- The Nine
+    -- Secondary RP units that use scripted attacks
+    [177222] = true, -- Aradne
+    [177098] = true, -- Arthura
+    [177101] = true, -- Brynja
+    [177099] = true, -- Daschla
+    [178737] = true, -- Kyra (P2)
+    [178736] = true, -- Signe (P2)
     --- Painsmith Raznal
     -- Spiked Balls
     [176581] = true,
+    --- Sylvannas Windrunner
+    -- Friendly RP Units (Bolvar/Jaina/Thrall)
+    [178081] = true,
+    [176533] = true,
+    [176532] = true,
+    -- Anduin Wrynn and The Jailer (P3 RP characters in the center platform)
+    [178072] = true,
+    [178079] = true,
     --- Trash
     -- Condemned Soul Remnant
     [180385] = true,

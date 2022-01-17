@@ -73,7 +73,12 @@ HL.GUISettings = {
         [157229] = true,
         ----- Corrupted Gear (8.3 Patch) -----
         -- Thing From Beyond
-        [160966] = true
+        [160966] = true,
+        ----- SL Dungeons -----
+        -- Mists of Tirna Scythe - Illusionary Vulpin (Mistcaller)
+        [165251] = true,
+        -- Sanguine Depths - Animated Weapon (Noble Skirmisher)
+        [166589] = true,
       },
       -- Custom Use Trinket Ignore List
       TrinketUserDefined = {
@@ -84,11 +89,15 @@ HL.GUISettings = {
         [181333] = true,
         -- Corrupted Gladiator's Medallion
         [184055] = true,
+        -- Unchained Gladiator's Medallion
+        [185304] = true,
         --- Unrated
         -- Sinful Aspirant's Medallion
         [184052] = true,
         -- Corrupted Aspirant's Medallion
         [184058] = true,
+        -- Unchained Aspirant's Medallion
+        [185309] = true,
         --- Battle for Azeroth
         ----- Raid -----
         --- Ny'alotha, The Waking City
