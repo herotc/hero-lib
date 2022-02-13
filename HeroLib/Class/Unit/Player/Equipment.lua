@@ -151,3 +151,49 @@ end
 function Player:HasLegendaryEquipped(LegendaryID)
   return ActiveLegendaryEffects[LegendaryID] ~= nil
 end
+
+local TierSets = {
+  [28] = {
+    -- Warrior
+    [1]  = {[1] = 188942, [3] = 188941, [5] = 188938, [7] = 188940, [10] = 188937},
+    -- Paladin
+    [2]  = {[1] = 188933, [3] = 188932, [5] = 188929, [7] = 188931, [10] = 188928},
+    -- Hunter
+    [3]  = {[1] = 188859, [3] = 188856, [5] = 188858, [7] = 188860, [10] = 188861},
+    -- Rogue
+    [4]  = {[1] = 188901, [3] = 188905, [5] = 188903, [7] = 188902, [10] = 188907},
+    -- Priest
+    [5]  = {[1] = 188880, [3] = 188879, [5] = 188875, [7] = 188878, [10] = 188881},
+    -- Death Knight
+    [6]  = {[1] = 188868, [3] = 188867, [5] = 188864, [7] = 188866, [10] = 188863},
+    -- Shaman
+    [7]  = {[1] = 188923, [3] = 188920, [5] = 188922, [7] = 188924, [10] = 188925},
+    -- Mage
+    [8]  = {[1] = 188844, [3] = 188843, [5] = 188839, [7] = 188842, [10] = 188845},
+    -- Warlock
+    [9]  = {[1] = 188889, [3] = 188888, [5] = 188884, [7] = 188887, [10] = 188890},
+    -- Monk
+    [10] = {[1] = 188910, [3] = 188914, [5] = 188912, [7] = 188911, [10] = 188916},
+    -- Druid
+    [11] = {[1] = 188847, [3] = 188851, [5] = 188849, [7] = 188848, [10] = 188853},
+    -- Demon Hunter
+    [12] = {[1] = 188892, [3] = 188896, [5] = 188894, [7] = 188893, [10] = 188898}
+  }
+}
+
+-- Check if a tier set bonus is equipped
+function Player:HasTier(Tier, Pieces)
+  if TierSets[Tier][Cache.Persistent.Player.Class[3]] then
+    local Count = 0
+    local Item
+    for Slot, ItemID in pairs(TierSets[Tier][Cache.Persistent.Player.Class[3]]) do
+      Item = Equipment[Slot]
+      if Item and Item == ItemID then
+        Count = Count + 1
+      end
+    end
+    return Count > Pieces - 1
+  else
+    return false
+  end
+end
