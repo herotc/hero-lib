@@ -130,6 +130,11 @@ function Item:IsEquipped()
   return ItemInfo.IsEquipped
 end
 
+-- Get the item's base Cooldown (from GetSpellBaseCooldown and DBC data)
+function Item:Cooldown()
+  return GetSpellBaseCooldown(DBC.ItemSpell[self:ID()]) / 1000
+end
+
 -- Get the CooldownInfo (from GetItemCooldown).
 function Item:CooldownInfo()
   return GetItemCooldown(self:ID())
