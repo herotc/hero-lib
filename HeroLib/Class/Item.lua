@@ -173,6 +173,11 @@ do
   end
 end
 
+-- trinket.foo.has_cooldown or item.foo.has_cooldown
+function Item:HasCooldown()
+  return self:Cooldown() > 0
+end
+
 -- cooldown.foo.up
 function Item:CooldownUp()
   return self:CooldownRemains() == 0
