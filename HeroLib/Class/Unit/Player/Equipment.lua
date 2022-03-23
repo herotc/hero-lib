@@ -152,6 +152,59 @@ function Player:HasLegendaryEquipped(LegendaryID)
   return ActiveLegendaryEffects[LegendaryID] ~= nil
 end
 
+local UnityLegendaryIDs = {
+  264,
+  267,
+  268,
+  269,
+  270,
+  271,
+  272,
+  273,
+  274,
+  275,
+  276,
+  277
+}
+
+local UnityBeltIDs = {
+  -- mage
+  190464,
+  -- druid
+  190465,
+  -- hunter
+  190466,
+  -- death knight
+  190467,
+  -- priest
+  190468,
+  -- warlock
+  190469,
+  -- demon hunter
+  190470,
+  -- rogue
+  190471,
+  -- monk
+  190472,
+  -- shaman
+  190473,
+  -- paladin
+  190474,
+  -- warrior
+  190475
+}
+
+function Player:HasUnity()
+  for _,LegendaryID in pairs(UnityLegendaryIDs) do
+    if Player:HasLegendaryEquipped(LegendaryID) then return true end
+  end
+  local Belt = Equipment[6]
+  for _,BeltID in pairs(UnityBeltIDs) do
+    if Belt and Belt == BeltID then return true end
+  end
+  return false
+end
+
 local TierSets = {
   [28] = {
     -- Warrior
