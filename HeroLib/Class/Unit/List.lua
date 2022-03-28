@@ -86,6 +86,13 @@ do
     --- Trash
     -- Condemned Soul Remnant
     [180385] = true,
+    ----- Sepulcher of the First Ones -----
+    --- Prototype Pantheon
+    -- Wild Stampede NPC IDs
+    [185456] = true, -- Wild Walkie
+    [185460] = true, -- Wild Walkie
+    [185480] = true, -- Wild Zoomie
+    [185481] = true, -- Wild Sleepy
     ----- Dungeons -----
     --- De Other Side
     -- Atal'ai Deathwalker's Spirit cannot be hit.
