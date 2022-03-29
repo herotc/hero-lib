@@ -2,7 +2,7 @@
 
 ## Title: Hero|cFFA330C9Cache|r
 ## Author: HeroTC, Aethys
-## Version: 9.2.0.04
+## Version: 9.2.0.05
 ## Notes: Cache Library packaged with HeroLib and used by HeroTC Addons. Can be used by others 3rd-Party Addons.
 
 ## DefaultState: Enabled
