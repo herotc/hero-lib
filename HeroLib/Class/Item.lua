@@ -132,7 +132,7 @@ end
 
 -- Get the item's base Cooldown (from GetSpellBaseCooldown and DBC data)
 function Item:Cooldown()
-  return GetSpellBaseCooldown(DBC.ItemSpell[self:ID()]) / 1000
+  return (DBC.ItemSpell[self:ID()] and GetSpellBaseCooldown(DBC.ItemSpell[self:ID()]) / 1000 or 0)
 end
 
 -- Get the CooldownInfo (from GetItemCooldown).
