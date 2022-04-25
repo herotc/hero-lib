@@ -30,6 +30,11 @@ do
       R_CoN_UnyieldingShield = Spell(346694),
       R_CoN_BloodShroud = Spell(328921),
       R_SoD_EternalTorment = Spell(355790),
+      R_SotFO_GenesisBulwark = Spell(367573),
+      R_SotFO_DominationsGrasp = Spell(362505),
+      R_SotFO_IncompleteForm = Spell(361934),
+      R_SotFO_NebularCloud = Spell(365381),
+      R_SotFO_BurnedOut = Spell(369571),
     },
     BattleforAzeroth = {
       R_Nya_VoidInfusedIchor = Spell(308377),
@@ -93,6 +98,22 @@ do
     [185460] = true, -- Wild Walkie
     [185480] = true, -- Wild Zoomie
     [185481] = true, -- Wild Sleepy
+    --- Artificer Xy'mox
+    -- Xy'mox takes 99% reduced damage while they have their buff
+    [183501] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SotFO_GenesisBulwark, true) end,
+    --- Anduin Wrynn
+    -- Anduin takes no damage directly within intermission phases
+    [181854] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SotFO_DominationsGrasp, true) end,
+    [184830] = true, -- Beacon of Hope
+    --- Lords of Shadow
+    -- Inchoate Shadow enemies should not be attacked until they transform into Corporeal Shadow
+    [183138] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SotFO_IncompleteForm, true) end,
+    [181825] = true, -- Slumber Cloud
+    --- Rygelon
+    -- Cosmic Core enemies do not take damage directly
+    [182823] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SotFO_NebularCloud, true) end,
+    -- Unstable Matter enemies are immune to damage for 5s after being brought to 0 HP before healing
+    [183945] = function(self) return self:BuffUp(SBDSpells.Shadowlands.R_SotFO_BurnedOut, true) end,
     ----- Dungeons -----
     --- De Other Side
     -- Atal'ai Deathwalker's Spirit cannot be hit.
