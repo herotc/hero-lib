@@ -55,25 +55,29 @@ do
   -- Global Custom Trinkets
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
   local CustomTrinketItems = {
-    FlayedwingToxin         = Item(178742, {13, 14}),
-    MistcallerOcarina       = Item(178715, {13, 14}),
-    SoulIgniter             = Item(184019, {13, 14}),
-    DarkmoonDeckIndomitable = Item(173096, {13, 14}),
-    ShardofAnnhyldesAegis   = Item(186424, {13, 14}),
+    FlayedwingToxin                 = Item(178742, {13, 14}),
+    MistcallerOcarina               = Item(178715, {13, 14}),
+    SoulIgniter                     = Item(184019, {13, 14}),
+    DarkmoonDeckIndomitable         = Item(173096, {13, 14}),
+    ShardofAnnhyldesAegis           = Item(186424, {13, 14}),
     TomeofMonstruousConstructions   = Item(186422, {13, 14}),
+    SoleahsSecretTechnique          = Item(185818, {13, 14}),
+    SoleahsSecretTechnique2         = Item(190958, {13, 14}),
   }
   local CustomTrinketsSpells = {
-    FlayedwingToxinBuff     = Spell(345545),
-    MistcallerVers          = Spell(330067),
-    MistcallerCrit          = Spell(332299),
-    MistcallerHaste         = Spell(332300),
-    MistcallerMastery       = Spell(332301),
-    SoulIgniterBuff         = Spell(345211),
-    IndomitableFive         = Spell(311496),
-    IndomitableSix          = Spell(311497),
-    IndomitableSeven        = Spell(311498),
-    IndomitableEight        = Spell(311499),
+    FlayedwingToxinBuff               = Spell(345545),
+    MistcallerVers                    = Spell(330067),
+    MistcallerCrit                    = Spell(332299),
+    MistcallerHaste                   = Spell(332300),
+    MistcallerMastery                 = Spell(332301),
+    SoulIgniterBuff                   = Spell(345211),
+    IndomitableFive                   = Spell(311496),
+    IndomitableSix                    = Spell(311497),
+    IndomitableSeven                  = Spell(311498),
+    IndomitableEight                  = Spell(311499),
     TomeofMonstruousConstructionsBuff = Spell(357163),
+    SoleahsSecretTechniqueBuff        = Spell(351952),
+    SoleahsSecretTechnique2Buff       = Spell(368512),
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
@@ -120,6 +124,8 @@ do
             if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
             if not Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
+            if not (Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)) then return TrinketItem end
           else
             return TrinketItem
           end
