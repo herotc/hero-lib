@@ -13,6 +13,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local UnitAura = UnitAura -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3, ..., value11
+local GetPlayerAuraBySpellID = GetPlayerAuraBySpellID
 local GetTime = GetTime
 -- File Locals
 
@@ -24,31 +25,46 @@ local GetTime = GetTime
 
 -- Get the AuraInfo (from UnitAura).
 -- Only returns Stack, Duration, ExpirationTime, Index by default. Except if the Full argument is truthy then it is the UnitAura call that is returned.
-function Unit:AuraInfo(ThisSpell, Filter, Full)
-  local GUID = self:GUID()
-  if not GUID then return end
+do
+  local GUID, SpellID, UnitID
+  local AuraStack, AuraDuration, AuraExpirationTime, AuraSpellID, Index
 
-  local UnitID = self:ID()
-  local SpellID = ThisSpell:ID()
+  function Unit:AuraInfo(ThisSpell, Filter, Full)
+    GUID = self:GUID()
+    if not GUID then return end
 
-  local Index = 1
-  while true do
-    local _, _, AuraStack, _, AuraDuration, AuraExpirationTime, _, _, _, AuraSpellID = UnitAura(UnitID, Index, Filter)
+    SpellID = ThisSpell:ID()
 
-    -- Returns no value if the aura was not found.
-    if not AuraSpellID then return end
-
-    -- Returns the info once we match the spell ids.
-    if AuraSpellID == SpellID then
+    -- Use GetPlayerAuraBySpellID if we are checking a player buff as it is more performant and finds more things
+    if GUID == Player:GUID() then
       if Full then
-        return UnitAura(UnitID, Index, Filter)
+        return GetPlayerAuraBySpellID(SpellID)      
       else
-        return AuraStack, AuraDuration, AuraExpirationTime, Index
+        _, _, AuraStack, _, AuraDuration, AuraExpirationTime = GetPlayerAuraBySpellID(SpellID)
+        return AuraStack, AuraDuration, AuraExpirationTime
       end
-      --return Full and UnitAura(UnitID, Index, Filter) or AuraStack, AuraDuration, AuraExpirationTime, Index
     end
 
-    Index = Index + 1
+    UnitID = self:ID()
+    Index = 1
+    while true do
+      _, _, AuraStack, _, AuraDuration, AuraExpirationTime, _, _, _, AuraSpellID = UnitAura(UnitID, Index, Filter)
+
+      -- Returns no value if the aura was not found.
+      if not AuraSpellID then return end
+
+      -- Returns the info once we match the spell ids.
+      if AuraSpellID == SpellID then
+        if Full then
+          return UnitAura(UnitID, Index, Filter)
+        else
+          return AuraStack, AuraDuration, AuraExpirationTime, Index
+        end
+        --return Full and UnitAura(UnitID, Index, Filter) or AuraStack, AuraDuration, AuraExpirationTime, Index
+      end
+
+      Index = Index + 1
+    end
   end
 end
 
