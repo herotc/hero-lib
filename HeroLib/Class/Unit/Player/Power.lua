@@ -256,8 +256,8 @@ end
 do
   local EnergyPowerType = Enum.PowerType.Energy
   -- energy.max
-  function Player:EnergyMax()
-    return UnitPowerMax(self.UnitID, EnergyPowerType)
+  function Player:EnergyMax(MaxOffset)
+    return math.max(0, UnitPowerMax(self.UnitID, EnergyPowerType) + (MaxOffset or 0))
   end
 
   -- energy
@@ -271,29 +271,29 @@ do
   end
 
   -- energy.pct
-  function Player:EnergyPercentage()
-    return (self:Energy() / self:EnergyMax()) * 100
+  function Player:EnergyPercentage(MaxOffset)
+    return math.min(100, (self:Energy() / self:EnergyMax(MaxOffset)) * 100)
   end
 
   -- energy.deficit
-  function Player:EnergyDeficit()
-    return self:EnergyMax() - self:Energy()
+  function Player:EnergyDeficit(MaxOffset)
+    return math.max(0, self:EnergyMax(MaxOffset) - self:Energy())
   end
 
   -- "energy.deficit.pct"
-  function Player:EnergyDeficitPercentage()
-    return (self:EnergyDeficit() / self:EnergyMax()) * 100
+  function Player:EnergyDeficitPercentage(MaxOffset)
+    return (self:EnergyDeficit(MaxOffset) / self:EnergyMax(MaxOffset)) * 100
   end
 
   -- "energy.regen.pct"
-  function Player:EnergyRegenPercentage()
-    return (self:EnergyRegen() / self:EnergyMax()) * 100
+  function Player:EnergyRegenPercentage(MaxOffset)
+    return (self:EnergyRegen() / self:EnergyMax(MaxOffset)) * 100
   end
 
   -- energy.time_to_max
-  function Player:EnergyTimeToMax()
+  function Player:EnergyTimeToMax(MaxOffset)
     if self:EnergyRegen() == 0 then return -1 end
-    return self:EnergyDeficit() / self:EnergyRegen()
+    return self:EnergyDeficit(MaxOffset) / self:EnergyRegen()
   end
 
   -- "energy.time_to_x"
@@ -321,21 +321,21 @@ do
   end
 
   -- Predict the expected Energy at the end of the Cast/GCD.
-  function Player:EnergyPredicted(Offset)
+  function Player:EnergyPredicted(Offset, MaxOffset)
     if self:EnergyRegen() == 0 then return -1 end
-    return math.min(Player:EnergyMax(), self:Energy() + self:EnergyRemainingCastRegen(Offset))
+    return math.min(Player:EnergyMax(MaxOffset), self:Energy() + self:EnergyRemainingCastRegen(Offset))
   end
 
   -- Predict the expected Energy Deficit at the end of the Cast/GCD.
-  function Player:EnergyDeficitPredicted(Offset)
+  function Player:EnergyDeficitPredicted(Offset, MaxOffset)
     if self:EnergyRegen() == 0 then return -1 end
-    return math.max(0, self:EnergyDeficit() - self:EnergyRemainingCastRegen(Offset))
+    return math.max(0, self:EnergyDeficit(MaxOffset) - self:EnergyRemainingCastRegen(Offset))
   end
 
   -- Predict time to max energy at the end of Cast/GCD
-  function Player:EnergyTimeToMaxPredicted()
+  function Player:EnergyTimeToMaxPredicted(Offset, MaxOffset)
     if self:EnergyRegen() == 0 then return -1 end
-    local EnergyDeficitPredicted = self:EnergyDeficitPredicted()
+    local EnergyDeficitPredicted = self:EnergyDeficitPredicted(Offset, MaxOffset)
     if EnergyDeficitPredicted <= 0 then
       return 0
     end
