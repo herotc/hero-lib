@@ -148,7 +148,7 @@ do
     local Buffer = TrackerBuffer[SpellID][SourceGUID]
     if not Buffer then
       -- Buffer are created only on SPELL_DAMAGE event, it should always be the case since it's triggered before the AURA ones though.
-      if Event ~= "SPELL_DAMAGE" then return end
+      if Event ~= "SPELL_DAMAGE" and Event ~= "SPELL_PERIODIC_DAMAGE" then return end
 
       -- HL.Print("[SplashEnemies] Creating buffer for SpellID '" .. SpellID .. "' from SourceGUID '" .. SourceGUID .. "'.")
       Buffer = { FirstTime = GetTime(), FriendTargetGUID = FriendTargetGUID, FirstDestGUID = DestGUID, Enemies = { { GUID = DestGUID, LastTime = GetTime(), LastSpellID = SpellID } } }
@@ -179,7 +179,7 @@ do
     end
   end
 
-  HL:RegisterForCombatEvent(UpdateSplashes, "SPELL_DAMAGE", "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH", "SPELL_AURA_APPLIED_DOSE")
+  HL:RegisterForCombatEvent(UpdateSplashes, "SPELL_DAMAGE", "SPELL_PERIODIC_DAMAGE", "SPELL_AURA_APPLIED", "SPELL_AURA_REFRESH", "SPELL_AURA_APPLIED_DOSE")
 end
 
 -- Process the tracker buffer every 50ms.
