@@ -13,7 +13,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local UnitAura = UnitAura -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3, ..., value11
-local GetPlayerAuraBySpellID = GetPlayerAuraBySpellID
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local GetTime = GetTime
 -- File Locals
 
@@ -38,9 +38,13 @@ do
     -- Use GetPlayerAuraBySpellID if we are checking a player buff as it is more performant and finds more things
     if GUID == Player:GUID() then
       if Full then
-        return GetPlayerAuraBySpellID(SpellID)      
+        return GetPlayerAuraBySpellID(SpellID)
       else
-        _, _, AuraStack, _, AuraDuration, AuraExpirationTime = GetPlayerAuraBySpellID(SpellID)
+        local spellTable = GetPlayerAuraBySpellID(SpellID)
+        if type(spellTable) ~= "table" then return nil end
+        AuraDuration = spellTable.duration
+        AuraExpirationTime = spellTable.expirationTime
+        AuraStack = spellTable.applications
         return AuraStack, AuraDuration, AuraExpirationTime
       end
     end

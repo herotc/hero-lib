@@ -145,7 +145,7 @@ local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   local Title = Dropdown:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   Parent[Setting .. "DropdownTitle"] = Title
   Title:SetPoint("BOTTOMLEFT", Dropdown, "TOPLEFT", 20, 5)
-  Title:SetWidth(InterfaceOptionsFramePanelContainer:GetRight() - InterfaceOptionsFramePanelContainer:GetLeft() - 30)
+  --Title:SetWidth(InterfaceOptionsFramePanelContainer:GetRight() - InterfaceOptionsFramePanelContainer:GetLeft() - 30)
   Title:SetJustifyH("LEFT")
   Title:SetText("|c00dfb802" .. Text .. "|r")
 

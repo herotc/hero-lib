@@ -431,6 +431,17 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 213771, 8)               -- Swipe (Bear)
   -- Restoration
 
+  -- Evoker
+  -- Commons
+  -- Devastation
+  RegisterNucleusAbility("DirectDamage", 357212, 8)               -- Pyre (Check spell ID)
+  RegisterNucleusAbility("DirectDamage", 357208, 12)              -- Fire Breath (Check spell ID; Range? It's a cone up to 25y(?))
+  RegisterNucleusAbility("DirectDamage", 359073, 12)              -- Eternity Surge (Check spell ID; Range? Could technically be out to 25y)
+  RegisterNucleusAbility("DirectDamage", 362969, 6)               -- Azure Strike (Check spell ID, as it could also be 355627)
+  RegisterNucleusAbility("GroundDirectDamage", 369372, 8)         -- Firestorm (Check spell ID; Should be GroundMultipleDirectDamage?)
+  RegisterNucleusAbility("GroundDirectDamage", 357210, 12)        -- Deep Breath (Check spell ID; Range? Spell range is listed 20-50y)
+  -- Preservation
+
   -- Hunter
   -- Commons
   RegisterNucleusAbility("DirectDamage", 171454, 8)               -- Chimaera Shot 1

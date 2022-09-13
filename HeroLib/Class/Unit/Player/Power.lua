@@ -748,6 +748,30 @@ do
 end
 
 ------------------------------
+--- 19 | Essence Functions ---
+------------------------------
+do
+  local EssencePowerType = Enum.PowerType.Essence
+
+  -- essence.max
+  function Player:EssenceMax()
+    return UnitPowerMax(self.UnitID, EssencePowerType)
+  end
+
+  -- essence
+  function Player:Essence()
+    return UnitPower(self.UnitID, EssencePowerType)
+  end
+
+  -- essence.deficit
+  function Player:EssenceDeficit()
+    return self:EssenceMax() - self:Essence()
+  end
+
+  -- TODO: Essence regen/TimeToX functions
+end
+
+------------------------------
 --- Predicted Resource Map ---
 ------------------------------
 
@@ -787,6 +811,8 @@ do
     [17] = function() return Player:Fury() end,
     -- Pain
     [18] = function() return Player:Pain() end,
+    -- Essence
+    [19] = function() return Player:Essence() end,
   }
 end
 
@@ -828,5 +854,8 @@ do
     [17] = function() return nil end,
     -- Pain
     [18] = function() return nil end,
+    -- Essence
+    -- TODO: Add EssenceTimeToX()
+    [19] = function() return nil end,
   }
 end
