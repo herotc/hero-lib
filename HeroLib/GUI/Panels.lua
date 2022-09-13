@@ -258,8 +258,11 @@ function GUI.CreatePanel(Parent, Addon, PName, SettingsTable, SavedVariablesTabl
   Parent.Panel.SavedVariablesTable = SavedVariablesTable
   Panel.name = Addon
   Panel.usedName = Addon:gsub(" ", "")
-  InterfaceOptions_AddCategory(Panel)
+  local category = Settings.RegisterCanvasLayoutCategory(Panel, Addon)
+  Settings.RegisterAddOnCategory(category)
+  Panel.category = category
   GUI.PanelsTable[Panel.usedName] = Panel
+  GUI.PanelsTable[Panel.category] = category
   return Panel
 end
 
@@ -270,7 +273,8 @@ function GUI.CreateChildPanel(Parent, CName)
   local CLevel = SubStringCount(ParentName, "_ChildPanel_")
   local CName = CName
   for i = 0, CLevel do
-    CName = "   " .. CName
+    -- Leaving this in and commented out. I don't think it's necessary with the new settings system.
+    --CName = "   " .. CName
   end
 
   local CP = CreateFrame("Frame", ParentName .. "_ChildPanel_" .. CName, Parent)
@@ -281,11 +285,14 @@ function GUI.CreateChildPanel(Parent, CName)
   CP.name = CName
   CP.parent = Parent.name
   CP.usedName = CName:gsub(" ", "")
-  InterfaceOptions_AddCategory(CP)
+  local category = Settings.RegisterCanvasLayoutSubcategory(Parent.category, CP, CName)
+  Settings.RegisterAddOnCategory(category)
+  CP.category = category
 --[[   if Parent.collapsed then
     GUI.TogglePanel(Parent) -- TODO: check if this has any impact, commented this part to collapse the options by default
   end ]]
   GUI.PanelsTable[CP.usedName] = CP
+  GUI.PanelsTable[CP.category] = category
   return CP
 end
 
