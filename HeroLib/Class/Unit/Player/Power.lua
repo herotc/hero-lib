@@ -774,20 +774,20 @@ do
   end
 
   -- essence.regen
-  function Player:EssenceRegen()
-  end
+  --function Player:EssenceRegen()
+  --end
 
   -- essence.cast_regen
-  function Player:EssenceCastRegen(CastTime)
-  end
+  --function Player:EssenceCastRegen(CastTime)
+  --end
 
   -- essence.time_to_max
-  function Player:EssenceTimeToMax()
-  end
+  --function Player:EssenceTimeToMax()
+  --end
 
   -- essence.time_to_x
-  function Player:EssenceTimeToX()
-  end
+  --function Player:EssenceTimeToX()
+  --end
 end
 
 ------------------------------
