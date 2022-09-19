@@ -768,7 +768,26 @@ do
     return self:EssenceMax() - self:Essence()
   end
 
-  -- TODO: Essence regen/TimeToX functions
+  -- essence.deficit.pct
+  function Player:EssenceDeficitPercentage()
+    return (self:EssenceDeficit() / self:EssenceMax()) * 100
+  end
+
+  -- essence.regen
+  function Player:EssenceRegen()
+  end
+
+  -- essence.cast_regen
+  function Player:EssenceCastRegen(CastTime)
+  end
+
+  -- essence.time_to_max
+  function Player:EssenceTimeToMax()
+  end
+
+  -- essence.time_to_x
+  function Player:EssenceTimeToX()
+  end
 end
 
 ------------------------------
