@@ -101,13 +101,11 @@ do
       local TrinketItemID = TrinketItem:ID()
       local IsExcluded = false
 
-      -- Did we specify a slotID? If so, return nil if this trinket isn't in that slot
-      if slotID then
-        if Equipment[slotID] ~= TrinketItemID then return nil end
-      end
-
+      -- Did we specify a slotID? If so, mark as excluded if this trinket isn't in that slot
+      if slotID and Equipment[slotID] ~= TrinketItemID then
+        IsExcluded = true
       -- Check if the trinket is ready, unless it's blacklisted
-      if TrinketItem:IsReady() and not IsUserTrinketBlacklisted(TrinketItem) then
+      elseif TrinketItem:IsReady() and not IsUserTrinketBlacklisted(TrinketItem) then
         for i=1, #ExcludedTrinkets do
           if ExcludedTrinkets[i] == TrinketItemID then
             IsExcluded = true
