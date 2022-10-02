@@ -448,7 +448,6 @@ end
 --- 7 | Soul Shards  ---
 ------------------------
 do
-  local WarlockPowerBar_UnitPower = WarlockPowerBar_UnitPower
   local SoulShardsPowerType = Enum.PowerType.SoulShards
 
   -- soul_shard.max
@@ -458,12 +457,12 @@ do
 
   -- soul_shard
   function Player:SoulShards()
-    return WarlockPowerBar_UnitPower(self.UnitID)
+    return UnitPower(self.UnitID, SoulShardsPowerType)
   end
 
   -- soul shards predicted, customize in spec overrides
   function Player:SoulShardsP()
-    return WarlockPowerBar_UnitPower(self.UnitID)
+    return UnitPower(self.UnitID, SoulShardsPowerType)
   end
 
   -- soul_shard.deficit
