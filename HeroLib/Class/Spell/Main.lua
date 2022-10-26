@@ -241,6 +241,11 @@ function Spell:Cost(Index)
   return Cost or 0
 end
 
+-- talent.foo.rank
+function Spell:TalentRank()
+  return Cache.Persistent.Talents[self.SpellID] or 0
+end
+
 -- Spell Tick Time
 do
   local SpellTickTime = DBC.SpellTickTime

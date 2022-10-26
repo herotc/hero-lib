@@ -72,11 +72,6 @@ function Player:Covenant()
   return covenantName
 end
 
--- Get a talent rank by spell ID
-function Player:TalentRank(SpellID)
-  return Cache.Persistent.Talents[SpellID] or 0
-end
-
 do
   -- Get if the player is on a combat mount or not.
   local CombatMountBuff = {
