@@ -166,8 +166,31 @@ HL:RegisterForEvent(
       end
       UpdateOverrides()
     end
+
+    if Event == "PLAYER_LOGIN" or Event == "PLAYER_SPECIALIZATION_CHANGED" or Event == "PLAYER_TALENT_UPDATE" or Event == "TRAIT_CONFIG_UPDATED" then
+      wipe(Cache.Persistent.Talents)
+      local TalentConfigID = C_ClassTalents.GetActiveConfigID()
+      local TalentConfigInfo = C_Traits.GetConfigInfo(TalentConfigID)
+      local TalentTreeIDs = TalentConfigInfo["treeIDs"]
+      for i = 1, #TalentTreeIDs do
+        for _, NodeID in pairs(C_Traits.GetTreeNodes(TalentTreeIDs[i])) do
+          local NodeInfo = C_Traits.GetNodeInfo(TalentConfigID, NodeID)
+          local ActiveTalent = NodeInfo.activeEntry
+          local TalentRank = NodeInfo.activeRank
+          if (ActiveTalent and TalentRank > 0) then
+            local TalentEntryID = ActiveTalent.entryID
+            local TalentEntryInfo = C_Traits.GetEntryInfo(TalentConfigID, TalentEntryID)
+            local DefinitionID = TalentEntryInfo["definitionID"]
+            local DefinitionInfo = C_Traits.GetDefinitionInfo(DefinitionID)
+            local SpellID = DefinitionInfo["spellID"]
+            local SpellName = GetSpellInfo(SpellID)
+            Cache.Persistent.Talents[SpellID] = (Cache.Persistent.Talents[SpellID]) and (Cache.Persistent.Talents[SpellID] + TalentRank) or TalentRank
+          end
+        end
+      end
+    end
   end,
-  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED"
+  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "TRAIT_CONFIG_UPDATED"
 )
 
 HL:RegisterForEvent(

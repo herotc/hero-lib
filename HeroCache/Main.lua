@@ -34,7 +34,8 @@ Cache.Persistent = {
   BookIndex = { Pet = {}, Player = {} },
   SpellLearned = { Pet = {}, Player = {} },
   Texture = { Spell = {}, Item = {}, Custom = {} },
-  ElvUIPaging = { PagingString, PagingStrings = {}, PagingBars = {} }
+  ElvUIPaging = { PagingString, PagingStrings = {}, PagingBars = {} },
+  Talents = { Rank }
 };
 
 -- Reset the cache.
