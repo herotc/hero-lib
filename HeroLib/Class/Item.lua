@@ -222,3 +222,13 @@ function Item:TrinketHasUseBuff()
   if TrinketAura == nil then return false end
   return true
 end
+
+-- buff.potion.duration
+function Item:BuffDuration()
+  if not self:IsUsable() then return 0 end
+  local ItemSpell = DBC.ItemSpell[self.ItemID]
+  if not ItemSpell then return 0 end
+  local BuffLength = DBC.SpellDuration[ItemSpell]
+  if not BuffLength then return 0 end
+  return BuffLength
+end
