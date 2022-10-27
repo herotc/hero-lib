@@ -388,32 +388,41 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 50842, 10)               -- Blood Boil
   RegisterNucleusAbility("DirectDamage", 194844, 8)               -- Bonestorm
   -- Frost
-  RegisterNucleusAbility("DirectDamage", 196770, 8)               -- Remorseless Winter
+  RegisterNucleusAbility("DirectDamage", 196771, 8)               -- Remorseless Winter
   RegisterNucleusAbility("DirectDamage", 207230, 8)               -- Frostscythe
   RegisterNucleusAbility("DirectDamage", 49184, 10)               -- Howling Blast
+  RegisterNucleusAbility("GroundDirectDamage", 52212, 8)          -- Death and Decay
+  RegisterNucleusAbility("DirectDamage", 204167, 6)               -- Chill Streak
   -- Unholy
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 152280, 8) -- Defile
   --RegisterNucleusAbility("TO_INVESTIGATE", 115989, 8)             -- Unholy Blight
+  RegisterNucleusAbility("GroundDirectDamage", 52212, 8)            -- Death and Decay
+  RegisterNucleusAbility("DirectDamage", 212739, 8)                 -- Epidemic
 
   -- Demon Hunter
   -- Commons
   --RegisterNucleusAbility("ChainDirectDamage", 204157, 10)         -- Throw Glaive
+  RegisterNucleusAbility("DirectDamage", 258921, 8)               -- Immolation Aura 1
+  RegisterNucleusAbility("DirectDamage", 258922, 8)               -- Immolation Aura 2
+  RegisterNucleusAbility("GroundDirectDamage", 204598, 8)         -- Sigil of Flame
   -- Havoc
-  RegisterNucleusAbility("GroundDirectDamage", 191427, 8)         -- Metamorphosis
-  RegisterNucleusAbility("DirectDamage", 198013, 20)              -- Eye Beam
-  RegisterNucleusAbility("DirectDamage", 188499, 8)               -- Blade Dance
-  RegisterNucleusAbility("DirectDamage", 210152, 8)               -- Death Sweep
-  RegisterNucleusAbility("DirectDamage", 258920, 8)               -- Immolation Aura
+  RegisterNucleusAbility("GroundDirectDamage", 200166, 8)         -- Metamorphosis
+  RegisterNucleusAbility("DirectDamage", 198030, 20)              -- Eye Beam
+  RegisterNucleusAbility("DirectDamage", 391374, 8)               -- Blade Dance 1
+  RegisterNucleusAbility("DirectDamage", 391378, 8)               -- Blade Dance 2
+  RegisterNucleusAbility("DirectDamage", 200685, 8)               -- Blade Dance 3
+  RegisterNucleusAbility("DirectDamage", 199552, 8)               -- Blade Dance 4
+  RegisterNucleusAbility("DirectDamage", 393054, 8)               -- Death Sweep 1
+  RegisterNucleusAbility("DirectDamage", 393055, 8)               -- Death Sweep 2
   RegisterNucleusAbility("DirectDamage", 179057, 8)               -- Chaos Nova
   -- Vengeance
   RegisterNucleusAbility("DirectDamage", 247455, 8)               -- Spirit Bomb
   RegisterNucleusAbility("DirectDamage", 189112, 6)               -- Infernal Strike
-  RegisterNucleusAbility("DirectDamage", 258921, 8)               -- Immolation Aura 1
-  RegisterNucleusAbility("DirectDamage", 258922, 8)               -- Immolation Aura 2
   RegisterNucleusAbility("DirectDamage", 228478, 5)               -- Soul Cleave
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 204598, 8) -- Sigil of Flame
   RegisterNucleusAbility("DirectDamage", 212105, 13)              -- Fel Devastation
   RegisterNucleusAbility("DirectDamage", 320341, 8)               -- Bulk Extraction
+  RegisterNucleusAbility("GroundDirectDamage", 307046, 8)         -- Elysian Decree (Covenant) 1
+  RegisterNucleusAbility("GroundDirectDamage", 339894, 8)         -- Elysian Decree (Covenant) 2
 
   -- Druid
   -- Commons
@@ -501,8 +510,10 @@ function Splash.RegisterNucleusAbilities()
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 204301, 8) -- Blessed Hammer (Usable? Spirals outward from caster)
   RegisterNucleusAbility("DirectDamage", 53600, 6)       -- Shield of the Righteous
   -- Retribution
-  RegisterNucleusAbility("DirectDamage", 53385, 8)       -- Divine Storm
-  --RegisterNucleusAbility("GroundDirectDamage", 343721, 8) -- Final Reckoning
+  RegisterNucleusAbility("DirectDamage", 53385, 8)          -- Divine Storm
+  RegisterNucleusAbility("GroundDirectDamage", 81297, 8)    -- Consecration
+  RegisterNucleusAbility("GroundDirectDamage", 343721, 8)   -- Final Reckoning
+  RegisterNucleusAbility("DirectDamage", 385816, 8)         -- Incandescence
 
   -- Priest
   -- Discipline
