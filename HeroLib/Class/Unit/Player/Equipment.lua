@@ -163,29 +163,27 @@ function Player:PotionSelected()
         return Item(PotionID)
       end
     end
-  end
-  if PotionType == "Frozen Focus" then
+  elseif PotionType == "Frozen Focus" then
     for _, PotionID in ipairs(FrozenFocusIDs) do
       if Item(PotionID):IsUsable() then
         return Item(PotionID)
       end
     end
-  end
-  if PotionType == "Chilled Clarity" then
+  elseif PotionType == "Chilled Clarity" then
     for _, PotionID in ipairs(ChilledClarityIDs) do
       if Item(PotionID):IsUsable() then
         return Item(PotionID)
       end
     end
-  end
-  if PotionType == "Shocking Disclosure" then
+  elseif PotionType == "Shocking Disclosure" then
     for _, PotionID in ipairs(ShockingDisclosureIDs) do
       if Item(PotionID):IsUsable() then
         return Item(PotionID)
       end
     end
+  else
+    return nil
   end
-  return nil
 end
 
 -- Create a table of active Shadowlands legendaries
