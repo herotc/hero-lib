@@ -230,6 +230,6 @@ function Item:BuffDuration()
   if not ItemSpell then return 0 end
   local BuffLength = DBC.SpellDuration[ItemSpell]
   if not BuffLength then return 0 end
-  if BuffLength > 1000 then BuffLength = BuffLength / 1000
+  if BuffLength > 1000 then BuffLength = BuffLength / 1000 end
   return BuffLength
 end
