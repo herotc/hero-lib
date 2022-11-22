@@ -160,6 +160,7 @@ local DummyUnits = {
   [32667] = true, -- Training Dummy
   [46647] = true, -- Training Dummy
   [114832] = true, -- PvP Training Dummy
+  [153285] = true, -- Training Dummy
   [153292] = true, -- Training Dummy
   -- MoP Shrine of Two Moons
   [67127] = true, -- Training Dummy
