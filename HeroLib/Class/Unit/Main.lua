@@ -235,6 +235,15 @@ local DummyUnits = {
   [174487] = true, -- Training Dummy
   [174488] = true, -- Raider's Training Dummy
   [174491] = true, -- Tanking Dummy
+  -- DargonFlight Valdrakken
+  [198594] = true, -- Cleave Training Dummy
+  [194648] = true, -- Training Dummy
+  [189632] = true, -- Animated Duelist
+  [194643] = true, -- Dungeoneer's Training Dummy
+  [194644] = true, -- Dungeoneer's Training Dummy
+  [197833] = true, -- PvP Training Dummy
+  [189617] = true, -- Boulderfist
+  [194649] = true, -- Normal Tank Dummy
   -- Other
   [65310] = true, -- Turnip Punching Bag
 }
