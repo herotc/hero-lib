@@ -63,6 +63,7 @@ do
     TomeofMonstruousConstructions   = Item(186422, {13, 14}),
     SoleahsSecretTechnique          = Item(185818, {13, 14}),
     SoleahsSecretTechnique2         = Item(190958, {13, 14}),
+    RubyWhelpShell                  = Item(193757, {13, 14}),
   }
   local CustomTrinketsSpells = {
     FlayedwingToxinBuff               = Spell(345545),
@@ -129,6 +130,9 @@ do
             if not Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
             if not (Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)) then return TrinketItem end
+          elseif TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID() then
+            -- Just return nil because Ruby Whelp Shell will never be used rotationally
+            return nil
           else
             return TrinketItem
           end
