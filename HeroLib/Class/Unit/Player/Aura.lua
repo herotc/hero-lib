@@ -26,14 +26,14 @@ do
       -- Rogue
       Spell(1784), -- Stealth
       Spell(115191), -- Stealth w/ Subterfuge Talent
+      Spell(11327), -- Vanish
+      Spell(115193), -- Vanish w/ Subterfuge Talent
       -- Feral
       Spell(5215) -- Prowl
     },
     -- Combat Stealth
     {
       -- Rogue
-      Spell(11327), -- Vanish
-      Spell(115193), -- Vanish w/ Subterfuge Talent
       Spell(115192), -- Subterfuge Buff
       Spell(185422), -- Stealth from Shadow Dance
       -- Druid
@@ -51,27 +51,9 @@ do
   function Player:StealthRemains(CheckCombat, CheckSpecial, BypassRecovery)
     -- Considering there is a small delay between the ability cast and the buff trigger we also look at the time since last cast.
     if Spell.Rogue then
-      local Assassination, Outlaw, Subtlety = Spell.Rogue.Assassination, Spell.Rogue.Outlaw, Spell.Rogue.Subtlety
-
-      if Assassination then
-        if (CheckCombat and Assassination.Vanish:TimeSinceLastCast() < 0.3)
-          or (CheckSpecial and Assassination.Shadowmeld:TimeSinceLastCast() < 0.3) then
+      if (CheckCombat and (Spell.Rogue.Commons.ShadowDance:TimeSinceLastCast() < 0.3 or Spell.Rogue.Commons.Vanish:TimeSinceLastCast() < 0.3))
+        or (CheckSpecial and Spell.Rogue.Commons.Shadowmeld:TimeSinceLastCast() < 0.3) then
           return 1
-        end
-      end
-
-      if Outlaw then
-        if (CheckCombat and Outlaw.Vanish:TimeSinceLastCast() < 0.3)
-          or (CheckSpecial and Outlaw.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return 1
-        end
-      end
-
-      if Subtlety then
-        if (CheckCombat and (Subtlety.ShadowDance:TimeSinceLastCast() < 0.3 or Subtlety.Vanish:TimeSinceLastCast() < 0.3))
-          or (CheckSpecial and Subtlety.Shadowmeld:TimeSinceLastCast() < 0.3) then
-          return 1
-        end
       end
     end
 
@@ -91,7 +73,7 @@ do
         local StealthSpells = StealthSpellsByType[i]
         for j = 1, #StealthSpells do
           local StealthSpell = StealthSpells[j]
-          if Player:BuffUp(StealthSpell) then
+          if Player:BuffUp(StealthSpell, nil, BypassRecovery) then
             return Player:BuffRemains(StealthSpell, nil, BypassRecovery)
           end
         end
