@@ -14,7 +14,7 @@ local Item = HL.Item
 -- Lua
 local Enum = Enum
 local GetPowerRegen = GetPowerRegen
-local GetTime =GetTime
+local GetTime = GetTime
 local pairs = pairs
 local tablesort = table.sort
 local UnitPower = UnitPower
@@ -767,26 +767,27 @@ do
     return self:EssenceMax() - self:Essence()
   end
 
-  -- essence.deficit.pct
-  function Player:EssenceDeficitPercentage()
-    return (self:EssenceDeficit() / self:EssenceMax()) * 100
+  --[[ Moved these functions to Evoker Events/Overrides
+  -- essence.time_to_max
+  function Player:EssenceTimeToMax()
+    local Deficit = Player:EssenceDeficit()
+    if Deficit == 0 then return 0; end
+    local Regen = GetPowerRegenForPowerType(EssencePowerType)
+    local TimeToOneEssence = 5 / (5 / (1 / Regen))
+    local LastUpdate = Cache.Persistent.Player.LastPowerUpdate
+    return Deficit * TimeToOneEssence - (GetTime() - LastUpdate)
   end
 
-  -- essence.regen
-  --function Player:EssenceRegen()
-  --end
-
-  -- essence.cast_regen
-  --function Player:EssenceCastRegen(CastTime)
-  --end
-
-  -- essence.time_to_max
-  --function Player:EssenceTimeToMax()
-  --end
-
   -- essence.time_to_x
-  --function Player:EssenceTimeToX()
-  --end
+  function Player:EssenceTimeToX(Amount)
+    local Essence = Player:Essence()
+    if Essence >= Amount then return 0; end
+    local Regen = GetPowerRegenForPowerType(EssencePowerType)
+    local TimeToOneEssence = 5 / (5 / (1 / Regen))
+    local LastUpdate = Cache.Persistent.Player.LastPowerUpdate
+    return ((Amount - Essence) * TimeToOneEssence) - (GetTime() - LastUpdate)
+  end
+  ]]
 end
 
 ------------------------------
