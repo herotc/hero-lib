@@ -244,6 +244,9 @@ local DummyUnits = {
   [197833] = true, -- PvP Training Dummy
   [189617] = true, -- Boulderfist
   [194649] = true, -- Normal Tank Dummy
+  -- DargonFlight Iskaara
+  [193563] = true, -- Training Dummy
+  [196394] = true, -- Tuskarr Training Dummy (toy)
   -- Other
   [65310] = true, -- Turnip Punching Bag
 }
