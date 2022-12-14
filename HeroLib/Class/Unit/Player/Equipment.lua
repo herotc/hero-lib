@@ -55,6 +55,7 @@ do
   -- Global Custom Trinkets
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
   local CustomTrinketItems = {
+    -- Shadowlands
     FlayedwingToxin                 = Item(178742, {13, 14}),
     MistcallerOcarina               = Item(178715, {13, 14}),
     SoulIgniter                     = Item(184019, {13, 14}),
@@ -66,6 +67,7 @@ do
     -- Dragonflight
     PrimalRitualShell               = Item(200563, {13, 14}),
     RubyWhelpShell                  = Item(193757, {13, 14}),
+    TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
   }
   local CustomTrinketsSpells = {
     FlayedwingToxinBuff               = Spell(345545),
@@ -118,6 +120,7 @@ do
 
         if not IsExcluded then
           -- Global custom trinket handlers
+          -- Shadowlands
           if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
             if not Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
@@ -132,6 +135,9 @@ do
             if not Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
             if not (Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)) then return TrinketItem end
+          -- Dragonflight
+          elseif TrinketItemID == CustomTrinketItems.TreemouthsFesteringSplinter:ID() then
+            if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
           elseif TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID() or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID() then
             -- Just return nil because these will never be used rotationally
             return nil
