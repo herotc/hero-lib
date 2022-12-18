@@ -101,6 +101,60 @@ do
     return false
   end
 
+  -- Check if the trinket is coded as blacklisted either globally or by the user
+  function Player:IsTrinketBlacklisted(TrinketItem)
+    if IsUserTrinketBlacklisted(TrinketItem) then
+      return true
+    end
+
+    -- Shadowlands
+    
+    local TrinketItemID = TrinketItem:ID()
+    if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
+      return Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff)
+    end
+
+    if TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
+      return Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste)
+        or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)
+    end
+
+    if TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
+      return not (Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40))
+    end
+
+    if TrinketItemID == CustomTrinketItems.DarkmoonDeckIndomitable:ID() then
+      return not ((Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven)
+        or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)))
+    end
+
+    if TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
+      return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
+    end
+
+    if TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
+      return Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff)
+    end
+
+    if TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
+      return Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)
+    end
+
+    -- Dragonflight
+    
+    if TrinketItemID == CustomTrinketItems.TreemouthsFesteringSplinter:ID() then
+      return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
+    end
+
+    if TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID()
+    or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID() then
+      return true
+    end
+
+    return false
+  end
+
+  -- Return the trinket item of the first usable trinket that is not blacklisted or excluded
   function Player:GetUseableTrinkets(ExcludedTrinkets, slotID)
     for _, TrinketItem in ipairs(UseableTrinkets) do
       local TrinketItemID = TrinketItem:ID()
@@ -110,7 +164,7 @@ do
       if slotID and Equipment[slotID] ~= TrinketItemID then
         IsExcluded = true
       -- Check if the trinket is ready, unless it's blacklisted
-      elseif TrinketItem:IsReady() and not IsUserTrinketBlacklisted(TrinketItem) then
+      elseif TrinketItem:IsReady() and not Player:IsTrinketBlacklisted(TrinketItem) then
         for i=1, #ExcludedTrinkets do
           if ExcludedTrinkets[i] == TrinketItemID then
             IsExcluded = true
@@ -119,31 +173,7 @@ do
         end
 
         if not IsExcluded then
-          -- Global custom trinket handlers
-          -- Shadowlands
-          if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
-            if not Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
-            if not (Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste) or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
-            if Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.DarkmoonDeckIndomitable:ID() then
-            if (Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven) or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
-            if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
-            if not Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
-            if not (Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)) then return TrinketItem end
-          -- Dragonflight
-          elseif TrinketItemID == CustomTrinketItems.TreemouthsFesteringSplinter:ID() then
-            if (Player:IsTankingAoE(8) or Player:IsTanking(Target)) then return TrinketItem end
-          elseif TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID() or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID() then
-            -- Just return nil because these will never be used rotationally
-            return nil
-          else
-            return TrinketItem
-          end
+          return TrinketItem
         end
       end
     end
