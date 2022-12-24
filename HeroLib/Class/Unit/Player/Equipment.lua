@@ -65,11 +65,13 @@ do
     SoleahsSecretTechnique          = Item(185818, {13, 14}),
     SoleahsSecretTechnique2         = Item(190958, {13, 14}),
     -- Dragonflight
+    GlobeofJaggedIce                = Item(193732, {13, 14}),
     PrimalRitualShell               = Item(200563, {13, 14}),
     RubyWhelpShell                  = Item(193757, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
   }
   local CustomTrinketsSpells = {
+    -- Shadowlands
     FlayedwingToxinBuff               = Spell(345545),
     MistcallerVers                    = Spell(330067),
     MistcallerCrit                    = Spell(332299),
@@ -83,6 +85,8 @@ do
     TomeofMonstruousConstructionsBuff = Spell(357163),
     SoleahsSecretTechniqueBuff        = Spell(351952),
     SoleahsSecretTechnique2Buff       = Spell(368512),
+    -- Dragonflight
+    SkeweringColdDebuff               = Spell(388929),
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
@@ -108,7 +112,7 @@ do
     end
 
     -- Shadowlands
-    
+
     local TrinketItemID = TrinketItem:ID()
     if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
       return Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff)
@@ -141,7 +145,11 @@ do
     end
 
     -- Dragonflight
-    
+
+    if TrinketItemID == CustomTrinketItems.GlobeofJaggedIce:ID() then
+      return Target:DebuffStack(CustomTrinketsSpells.SkeweringColdDebuff) < 4
+    end
+
     if TrinketItemID == CustomTrinketItems.TreemouthsFesteringSplinter:ID() then
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
