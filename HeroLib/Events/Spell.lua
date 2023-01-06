@@ -105,7 +105,6 @@ end
 -- Add spells in the Listened Spells Whitelist
 function Player:RegisterListenedItemSpells()
   ListenedItemSpells = {}
-  ListenedSpecItemSpells = {}
   local UsableTrinkets = self:GetOnUseTrinkets()
   for _, TrinketItem in ipairs(UsableTrinkets) do
     local Spell = TrinketItem:OnUseSpell()
@@ -114,27 +113,15 @@ function Player:RegisterListenedItemSpells()
       ListenedItemSpells[Spell:ID()] = Spell
     end
   end
-  local SpecID = Cache.Persistent.Player.Spec[1];
-  local PlayerClass = HL.SpecID_ClassesSpecs[SpecID][1]
-  if HL.Item[PlayerClass] then
-    for Spec, Items in pairs(HL.Item[PlayerClass]) do
-      for _, Item in pairs(Items) do
-        local Spell = Item:OnUseSpell()
-        if Spell then
-          -- HL.Print("Listening to spell " .. Spell:ID() .. " for spec item " .. Item:Name() )
-          ListenedSpecItemSpells[Spell:ID()] = Spell
-        end
-      end
-    end
-  end
 end
 
 -- Register spells to listen for a given class (based on SpecID).
 function Player:RegisterListenedSpells(SpecID)
   PlayerSpecs = {}
   ListenedSpells = {}
-  -- Fetch registered spells during the init
+  ListenedSpecItemSpells = {}
   local PlayerClass = HL.SpecID_ClassesSpecs[SpecID][1]
+  -- Fetch registered spells during the init
   for Spec, Spells in pairs(HL.Spell[PlayerClass]) do
     tableinsert(PlayerSpecs, Spec)
     ListenedSpells[Spec] = {}
@@ -159,7 +146,17 @@ function Player:RegisterListenedSpells(SpecID)
     end
   end
   -- Re-scan equipped Item spells after module initialization
-  Player:RegisterListenedItemSpells()
+  if HL.Item[PlayerClass] then
+    for Spec, Items in pairs(HL.Item[PlayerClass]) do
+      for _, Item in pairs(Items) do
+        local Spell = Item:OnUseSpell()
+        if Spell then
+          -- HL.Print("Listening to spell " .. Spell:ID() .. " for spec item " .. Item:Name() )
+          ListenedSpecItemSpells[Spell:ID()] = Spell
+        end
+      end
+    end
+  end
 end
 
 -- Add spells in the Listened Spells Whitelist
