@@ -2,6 +2,8 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- HeroDBC
+local DBC = HeroDBC.DBC
 -- HeroLib
 local Cache = HeroCache
 -- Lua
@@ -210,8 +212,9 @@ do
     self.ItemLevel = ItemLevel
     self.ItemMinLevel = ItemMinLevel
     self.ItemSlotIDs = ItemSlotIDs or ItemSlotTable[ItemEquipLoc]
+    self.ItemUseSpell = DBC.ItemSpell[ItemID] and HL.Spell(DBC.ItemSpell[ItemID]) or nil
+    
     -- Variables
-    self.LastCastTime = 0
     self.LastDisplayTime = 0
     self.LastHitTime = 0
   end

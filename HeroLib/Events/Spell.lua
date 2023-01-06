@@ -13,11 +13,14 @@ local MultiSpell = HL.MultiSpell
 local Item = HL.Item
 -- Lua
 local pairs = pairs
+local ipairs = ipairs
 local tableinsert = table.insert
 local GetTime = GetTime
 -- File Locals
 local PlayerSpecs = {}
 local ListenedSpells = {}
+local ListenedItemSpells = {}
+local ListenedSpecItemSpells = {}
 local Custom = {
   Whitelist = {},
   Blacklist = {}
@@ -26,58 +29,105 @@ local MultiSpells = {}
 --- ============================ CONTENT ============================
 
 -- Player On Cast Success Listener
-HL:RegisterForSelfCombatEvent(
-  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-    for i = 1, #PlayerSpecs do
-      local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
+do
+  local ListenedSpell
+  HL:RegisterForSelfCombatEvent(
+    function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
+        if ListenedSpell then
+          ListenedSpell.LastCastTime = GetTime()
+          ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
+        end
+      end
+      ListenedSpell = ListenedItemSpells[SpellID]
       if ListenedSpell then
         ListenedSpell.LastCastTime = GetTime()
-        ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
       end
-    end
-  end,
-  "SPELL_CAST_SUCCESS"
-)
+      ListenedSpell = ListenedSpecItemSpells[SpellID]
+      if ListenedSpell then
+        ListenedSpell.LastCastTime = GetTime()
+      end
+    end,
+    "SPELL_CAST_SUCCESS"
+  )
+end
 
 -- Pet On Cast Success Listener
-HL:RegisterForPetCombatEvent(
-  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-    for i = 1, #PlayerSpecs do
-      local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
-      if ListenedSpell then
-        ListenedSpell.LastCastTime = GetTime()
-        ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
+do
+  local ListenedSpell
+  HL:RegisterForPetCombatEvent(
+    function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
+        if ListenedSpell then
+          ListenedSpell.LastCastTime = GetTime()
+          ListenedSpell.LastHitTime = GetTime() + ListenedSpell:TravelTime()
+        end
       end
-    end
-  end,
-  "SPELL_CAST_SUCCESS"
-)
+    end,
+    "SPELL_CAST_SUCCESS"
+  )
+end
 
 -- Player Aura Applied Listener
-HL:RegisterForSelfCombatEvent(
-  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-    for i = 1, #PlayerSpecs do
-      local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
-      if ListenedSpell then
-        ListenedSpell.LastAppliedOnPlayerTime = GetTime()
+do
+  local ListenedSpell
+  HL:RegisterForSelfCombatEvent(
+    function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
+        if ListenedSpell then
+          ListenedSpell.LastAppliedOnPlayerTime = GetTime()
+        end
       end
-    end
-  end,
-  "SPELL_AURA_APPLIED"
-)
+    end,
+    "SPELL_AURA_APPLIED"
+  )
+end
 
 -- Player Aura Removed Listener
-HL:RegisterForSelfCombatEvent(
-  function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
-    for i = 1, #PlayerSpecs do
-      local ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
-      if ListenedSpell then
-        ListenedSpell.LastRemovedFromPlayerTime = GetTime()
+do
+  local ListenedSpell
+  HL:RegisterForSelfCombatEvent(
+    function(_, _, _, _, _, _, _, _, _, _, _, SpellID)
+      for i = 1, #PlayerSpecs do
+        ListenedSpell = ListenedSpells[PlayerSpecs[i]][SpellID]
+        if ListenedSpell then
+          ListenedSpell.LastRemovedFromPlayerTime = GetTime()
+        end
+      end
+    end,
+    "SPELL_AURA_REMOVED"
+  )
+end
+
+-- Add spells in the Listened Spells Whitelist
+function Player:RegisterListenedItemSpells()
+  ListenedItemSpells = {}
+  ListenedSpecItemSpells = {}
+  local UsableTrinkets = self:GetOnUseTrinkets()
+  for _, TrinketItem in ipairs(UsableTrinkets) do
+    local Spell = TrinketItem:OnUseSpell()
+    if Spell then
+      -- HL.Print("Listening to spell " .. Spell:ID() .. " for item " .. TrinketItem:Name() )
+      ListenedItemSpells[Spell:ID()] = Spell
+    end
+  end
+  local SpecID = Cache.Persistent.Player.Spec[1];
+  local PlayerClass = HL.SpecID_ClassesSpecs[SpecID][1]
+  if HL.Item[PlayerClass] then
+    for Spec, Items in pairs(HL.Item[PlayerClass]) do
+      for _, Item in pairs(Items) do
+        local Spell = Item:OnUseSpell()
+        if Spell then
+          -- HL.Print("Listening to spell " .. Spell:ID() .. " for spec item " .. Item:Name() )
+          ListenedSpecItemSpells[Spell:ID()] = Spell
+        end
       end
     end
-  end,
-  "SPELL_AURA_REMOVED"
-)
+  end
+end
 
 -- Register spells to listen for a given class (based on SpecID).
 function Player:RegisterListenedSpells(SpecID)
@@ -108,6 +158,8 @@ function Player:RegisterListenedSpells(SpecID)
       end
     end
   end
+  -- Re-scan equipped Item spells after module initialization
+  Player:RegisterListenedItemSpells()
 end
 
 -- Add spells in the Listened Spells Whitelist

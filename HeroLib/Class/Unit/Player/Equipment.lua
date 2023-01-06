@@ -29,6 +29,11 @@ function Player:GetEquipment()
   return Equipment
 end
 
+-- Retrieve the current player's usable trinket items
+function Player:GetOnUseTrinkets()
+  return UseableTrinkets
+end
+
 -- Save the current player's equipment.
 function Player:UpdateEquipment()
   wipe(Equipment)
@@ -49,6 +54,8 @@ function Player:UpdateEquipment()
       end
     end
   end
+
+  self:RegisterListenedItemSpells()
 end
 
 do

@@ -81,6 +81,10 @@ function Item:IsUsable()
   return IsUsableItem(self:ID())
 end
 
+function Item:OnUseSpell()
+  return self.ItemUseSpell
+end
+
 -- Check if a given item is currently equipped.
 -- Inventory slots
 -- INVSLOT_HEAD       = 1
@@ -200,15 +204,14 @@ function Item:IsEquippedAndReady()
 end
 
 -- Get the item Last Cast Time.
-function Item:LastCastTime()
-  return self.LastCastTime
+function Item:TimeSinceLastCast()
+  return self:OnUseSpell() and self:OnUseSpell():TimeSinceLastCast() or 0
 end
 
 -- trinket.foo.has_stat.any_dps
 function Item:TrinketHasStatAnyDps()
-  local TrinketSpell = DBC.ItemSpell[self.ItemID]
-  if not TrinketSpell then return false end
-  local TrinketAura = DBC.SpellAuraStat[TrinketSpell]
+  if not self:OnUseSpell() then return false end
+  local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
   if not TrinketAura then return false end
   return true
 end
@@ -216,9 +219,8 @@ end
 -- trinket.foo.has_use_buff
 function Item:TrinketHasUseBuff()
   if not self:IsUsable() then return false end
-  local TrinketSpell = DBC.ItemSpell[self.ItemID]
-  if not TrinketSpell then return false end
-  local TrinketAura = DBC.SpellAuraStat[TrinketSpell]
+  if not self:OnUseSpell() then return false end
+  local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
   if TrinketAura == nil then return false end
   return true
 end
@@ -226,9 +228,8 @@ end
 -- buff.potion.duration
 function Item:BuffDuration()
   if not self:IsUsable() then return 0 end
-  local ItemSpell = DBC.ItemSpell[self.ItemID]
-  if not ItemSpell then return 0 end
-  local BuffLength = DBC.SpellDuration[ItemSpell]
+  if not self:OnUseSpell() then return 0 end
+  local BuffLength = DBC.SpellDuration[self:OnUseSpell():ID()]
   if not BuffLength then return 0 end
   if BuffLength > 1000 then BuffLength = BuffLength / 1000 end
   return BuffLength
