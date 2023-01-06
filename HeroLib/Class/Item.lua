@@ -229,7 +229,7 @@ end
 function Item:BuffDuration()
   if not self:IsUsable() then return 0 end
   if not self:OnUseSpell() then return 0 end
-  local BuffLength = DBC.SpellDuration[self:OnUseSpell():ID()]
+  local BuffLength = DBC.SpellDuration[self:OnUseSpell():ID()][1]
   if not BuffLength then return 0 end
   if BuffLength > 1000 then BuffLength = BuffLength / 1000 end
   return BuffLength
