@@ -208,14 +208,16 @@ do
     Spell(90355), -- Hunter: Ancient Hysteria
     Spell(160452), -- Hunter: Netherwinds
     Spell(264667), -- Hunter: Primal Rage
+    Spell(390386), -- Evoker: Fury of the Aspects
     -- Drums
-    Spell(35475), -- Drums of War
-    Spell(35476), -- Drums of Battle
-    Spell(146555), -- Drums of Rage
-    Spell(178207), -- Drums of Fury
-    Spell(230935), -- Drums of the Mountain
-    Spell(256740), -- Drums of the Maelstrom
-    Spell(309658), -- Drums of Deathly Ferocity
+    Spell(35475), -- Drums of War (Cata)
+    Spell(35476), -- Drums of Battle (Cata)
+    Spell(146555), -- Drums of Rage (MoP)
+    Spell(178207), -- Drums of Fury (WoD)
+    Spell(230935), -- Drums of the Mountain (Legion)
+    Spell(256740), -- Drums of the Maelstrom (BfA)
+    Spell(309658), -- Drums of Deathly Ferocity (SL)
+    Spell(381301), -- Feral Hide Drums (DF)
   }
 
   -- buff.bloodlust.remains
@@ -284,6 +286,7 @@ do
     Spell(57723),   -- Shaman: Exhaustion (Alliance)
     Spell(80354),   -- Mage:Temporal Displacement
     Spell(264689),  -- Hunter: Fatigued
+    Spell(390435),  -- Evoker: Exhaustion
     -- Drums
     --Spell(35475), -- Drums of War
     --Spell(35476), -- Drums of Battle
