@@ -22,7 +22,7 @@ HL.MAXIMUM = 40 -- Max # Buffs and Max # Nameplates.
 
 --- ============================ CONTENT ============================
 --- Build Infos
-local LiveVersion, PTRVersion, BetaVersion = "9.1.0", "9.1.0", "9.1.0"
+local LiveVersion, PTRVersion, BetaVersion = "10.0.2", "10.0.2", "10.0.2"
 -- version, build, date, tocversion
 HL.BuildInfo = { GetBuildInfo() }
 -- Get the current build version.
@@ -75,7 +75,7 @@ HL.SpecID_ClassesSpecs = {
   [105] = { "Druid", "Restoration" },
   -- Evoker
   [1467] = { "Evoker", "Devastation" },
-  --[1468] = { "Evoker", "Preservation" },
+  [1468] = { "Evoker", "Preservation" },
   -- Hunter
   [253] = { "Hunter", "Beast Mastery" },
   [254] = { "Hunter", "Marksmanship" },
