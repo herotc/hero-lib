@@ -43,7 +43,6 @@ Class\Unit\Pet\Main.lua
 Class\Spell\Main.lua
 Class\Spell\Book.lua
 Class\Spell\Cooldown.lua
-Class\Spell\Soulbind.lua
 Class\Item.lua
 
 # Events

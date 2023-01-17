@@ -12,8 +12,6 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-local GetRuneforgeLegendaryComponentInfo = C_LegendaryCrafting.GetRuneforgeLegendaryComponentInfo
-local IsRuneforgeLegendary = C_LegendaryCrafting.IsRuneforgeLegendary
 local GetInventoryItemID = GetInventoryItemID
 local ItemLocation = ItemLocation
 local select = select
@@ -21,7 +19,6 @@ local wipe = wipe
 -- File Locals
 local Equipment = {}
 local UseableTrinkets = {}
-local ActiveLegendaryEffects = {}
 
 --- ============================ CONTENT =============================
 -- Retrieve the current player's equipment.
@@ -197,80 +194,8 @@ do
   end
 end
 
--- Create a table of active Shadowlands legendaries
-function Player:UpdateActiveLegendaryEffects()
-  wipe(ActiveLegendaryEffects)
-
-  for i = 1, 15, 1 do
-    if i ~= 13 and i ~= 14 then -- Skip trinket slots since there is no trinket legendary
-      local SlotItem = ItemLocation:CreateFromEquipmentSlot(i)
-      if SlotItem:IsValid() and IsRuneforgeLegendary(SlotItem) then
-        local LegendaryInfo = GetRuneforgeLegendaryComponentInfo(SlotItem)
-        ActiveLegendaryEffects[LegendaryInfo.powerID] = true
-      end
-    end
-  end
-end
-
--- Check if a specific legendary is active, using the effect's ID
--- See HeroDBC/scripts/DBC/parsed/Legendaries.lua for a reference of Legendary Effect IDs
-function Player:HasLegendaryEquipped(LegendaryID)
-  return ActiveLegendaryEffects[LegendaryID] ~= nil
-end
-
-local UnityLegendaryIDs = {
-  264,
-  267,
-  268,
-  269,
-  270,
-  271,
-  272,
-  273,
-  274,
-  275,
-  276,
-  277
-}
-
-local UnityBeltIDs = {
-  -- mage
-  190464,
-  -- druid
-  190465,
-  -- hunter
-  190466,
-  -- death knight
-  190467,
-  -- priest
-  190468,
-  -- warlock
-  190469,
-  -- demon hunter
-  190470,
-  -- rogue
-  190471,
-  -- monk
-  190472,
-  -- shaman
-  190473,
-  -- paladin
-  190474,
-  -- warrior
-  190475
-}
-
-function Player:HasUnity()
-  for _,LegendaryID in pairs(UnityLegendaryIDs) do
-    if Player:HasLegendaryEquipped(LegendaryID) then return true end
-  end
-  local Belt = Equipment[6]
-  for _,BeltID in pairs(UnityBeltIDs) do
-    if Belt and Belt == BeltID then return true end
-  end
-  return false
-end
-
+-- Define our tier set tables
+-- TierSets[TierNumber][ClassID][ItemSlot] = Item ID
 local TierSets = {
   -- Item Slot IDs: 1 - Head, 3 - Shoulders, 5 - Chest, 7 - Legs, 10 - Hands
   [28] = {

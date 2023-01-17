@@ -148,10 +148,6 @@ HL:RegisterForEvent(
 
     -- Update Equipment
     Player:UpdateEquipment()
-    -- Update Soulbinds
-    Player:UpdateSoulbinds()
-    -- Update Legendaries
-    Player:UpdateActiveLegendaryEffects()
 
     -- Load / Refresh Core Overrides
     if Event == "PLAYER_SPECIALIZATION_CHANGED" then
