@@ -250,6 +250,7 @@ local DummyUnits = {
   [65310] = true, -- Turnip Punching Bag (toy)
   [66374] = true, -- Anatomical Dummy (toy)
   [196394] = true, -- Tuskarr Training Dummy (toy)
+  [196406] = true, -- Rubbery Fish Head (toy)
   [199057] = true, -- Black Dragon's Challenge Dummy (toy)
 }
 function Unit:IsDummy()
