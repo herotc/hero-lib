@@ -45,6 +45,12 @@ do
     },
   }
   local SpecialBlacklistData = {
+    --- Dragonflight
+    ----- Vault of the Incarnates -----
+    --- Raszageth
+    -- Volatile Sparks despawn when interrupted, damage to them is irrelevant
+    [194999] = true,
+    
     --- Shadowlands
     ----- Castle Nathria -----
     --- Stone Legion Generals
