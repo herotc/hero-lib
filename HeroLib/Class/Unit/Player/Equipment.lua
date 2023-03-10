@@ -60,6 +60,7 @@ do
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
   local CustomTrinketItems = {
     -- Shadowlands
+    BargastsLeash                   = Item(184017, {13, 14}),
     FlayedwingToxin                 = Item(178742, {13, 14}),
     MistcallerOcarina               = Item(178715, {13, 14}),
     SoulIgniter                     = Item(184019, {13, 14}),
@@ -118,6 +119,11 @@ do
     -- Shadowlands
 
     local TrinketItemID = TrinketItem:ID()
+
+    if TrinketItemID == CustomTrinketItems.BargastsLeash:ID() then
+      return not (Player:IsInParty() or Player:IsInRaid())
+    end
+
     if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
       return Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff)
     end
