@@ -74,6 +74,7 @@ do
     PrimalRitualShell               = Item(200563, {13, 14}),
     RubyWhelpShell                  = Item(193757, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
+    UncannyPocketwatch              = Item(195220, {13, 14}),
   }
   local CustomTrinketsSpells = {
     -- Shadowlands
@@ -165,7 +166,8 @@ do
     end
 
     if TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID()
-    or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID() then
+    or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID()
+    or TrinketItemID == CustomTrinketItems.UncannyPocketwatch:ID() then
       return true
     end
 
