@@ -50,7 +50,14 @@ do
       244899, -- Fiery Strike (Coven)
       245458, -- Foe Breaker (Aggramar)
       248499, -- Sweeping Scythe (Argus)
-      258039 -- Deadly Scythe (Argus)
+      258039, -- Deadly Scythe (Argus)
+      -- T29 VotI
+      376279, -- Concussive Slam (Terros)
+      372056, -- Crush (Primal Council)
+      375580, -- Zephyr Slam (Dathea)
+      390548, -- Sundering Strike (Kurog)
+      375870, -- Mortal Stoneclaws (Broodkeeper)
+      377658, -- Electrified Jaws (Raszageth)
     },
     Channel = {} -- TODO ?
   }
