@@ -322,3 +322,22 @@ do
     return not self:BloodlustExhaustUp(BypassRecovery)
   end
 end
+
+do
+  local EnemyAbsorbSpells = {
+    ---- Vault of the Incarnates
+    -- Raszageth
+    Spell(382530), -- Surging Ruiner Shield (Surge)
+    Spell(388691), -- Stormsurge Shield
+  }
+
+  function Unit:EnemyAbsorb()
+    for i = 1, #EnemyAbsorbSpells do
+      local AbsorbSpell = EnemyAbsorbSpells[i]
+      if self:BuffUp(AbsorbSpell, true) then
+        return true
+      end
+    end
+    return false
+  end
+end
