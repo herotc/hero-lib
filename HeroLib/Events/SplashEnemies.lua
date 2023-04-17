@@ -564,7 +564,7 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("GroundDirectDamage", 42223, 8)          -- Rain of Fire (temp, since Destruction has very few AoEs)
   RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
   RegisterNucleusAbility("GroundDirectDamage", 22703, 10)         -- Summon Infernal
-  RegisterNucleusAbility("PeriodicDamage", 20153, 12)             -- Infernal/Blasphemy AoE Immolation pulse (not working... minion vs pet issue?)
+  RegisterNucleusAbility("DirectDamage", 20153, 12)               -- Infernal/Blasphemy AoE Immolation pulse (not working... minion vs pet issue?)
 
   -- Warrior
   -- Arms
