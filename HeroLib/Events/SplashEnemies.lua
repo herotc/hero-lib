@@ -530,15 +530,15 @@ function Splash.RegisterNucleusAbilities()
 
   -- Rogue
   -- Assassination
-  RegisterNucleusAbility("DirectDamage", 51723, 10)               -- Fan of Knives
   RegisterNucleusAbility("DirectDamage", 121411, 10)              -- Crimson Tempest
+  RegisterNucleusAbility("DirectDamage", 51723, 10)               -- Fan of Knives
   RegisterNucleusAbility("DirectDamage", 255546, 6)               -- Poison Bomb
   -- Outlaw
   RegisterNucleusAbility("DirectDamage", 22482, 6)                -- Blade Flurry
   RegisterNucleusAbility("DirectDamage", 271881, 8)               -- Blade Rush
   -- Subtlety
   RegisterNucleusAbility("DirectDamage", 197835, 10)              -- Shuriken Storm
-  RegisterNucleusAbility("DirectDamage", 280720, 10)              -- Secret Technique
+  RegisterNucleusAbility("DirectDamage", 282449, 10)              -- Secret Technique
   RegisterNucleusAbility("DirectDamage", 319175, 10)              -- Black Powder
 
   -- Shaman
@@ -547,9 +547,8 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 77478, 8)                -- Earthquake
   RegisterNucleusAbility("DirectDamage", 192231, 8)               -- Liquid Magma Totem
   -- Enhancement
-  RegisterNucleusAbility("DirectDamage", 187874, 8)               -- Bladestorm
+  RegisterNucleusAbility("DirectDamage", 187874, 8)               -- Crash Lightning
   RegisterNucleusAbility("DirectDamage", 197214, 11)              -- Sundering
-  RegisterNucleusAbility("DirectDamage", 197211, 8)               -- Fury of Air
   -- Restoration
 
   -- Warlock
@@ -557,30 +556,34 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 27285, 10)               -- Seed Explosion
   -- Demonology
   RegisterNucleusAbility("DirectDamage", 89753, 8)                -- Felstorm (Felguard)
+  RegisterNucleusAbility("GroundDirectDamage", 386609, 8)         -- Guillotine's Fel Explosion
   RegisterNucleusAbility("DirectDamage", 86040, 8)                -- Hand of Gul'dan
   RegisterNucleusAbility("DirectDamage", 196278, 8)               -- Implosion
   -- Destruction
+  RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
+  RegisterNucleusAbility("DirectDamage", 387547, 8)               -- Cry Havoc
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 42223, 8)  -- Rain of Fire
   RegisterNucleusAbility("GroundDirectDamage", 42223, 8)          -- Rain of Fire (temp, since Destruction has very few AoEs)
-  RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
   RegisterNucleusAbility("GroundDirectDamage", 22703, 10)         -- Summon Infernal
   RegisterNucleusAbility("DirectDamage", 20153, 12)               -- Infernal/Blasphemy AoE Immolation pulse (not working... minion vs pet issue?)
 
   -- Warrior
+  -- Commons
+  RegisterNucleusAbility("GroundDirectDamage", 156287, 8)         -- Ravager
+  RegisterNucleusAbility("DirectDamage", 396719, 8)               -- Thunder Clap
+  RegisterNucleusAbility("DirectDamage", 384318, 12)              -- Thunderous Roar
+  RegisterNucleusAbility("DirectDamage", 199658, 8)               -- Whirlwind
   -- Arms
-  RegisterNucleusAbility("DirectDamage", 152277, 8)               -- Ravager
-  RegisterNucleusAbility("DirectDamage", 227847, 8)               -- Bladestorm
+  RegisterNucleusAbility("DirectDamage", 50622, 8)                -- Bladestorm
   RegisterNucleusAbility("DirectDamage", 845, 8)                  -- Cleave
+  RegisterNucleusAbility("DirectDamage", 262161, 8)               -- Warbreaker
   RegisterNucleusAbility("DirectDamage", 1680, 8)                 -- Whirlwind
   -- Fury
-  RegisterNucleusAbility("DirectDamage", 46924, 8)                -- Bladestorm
-  RegisterNucleusAbility("DirectDamage", 118000, 12)              -- Dragon Roar
-  RegisterNucleusAbility("DirectDamage", 190411, 8)               -- Whirlwind
+  RegisterNucleusAbility("DirectDamage", 385061, 12)              -- Odyn's Fury
+  RegisterNucleusAbility("DirectDamage", 385062, 12)              -- Odyn's Fury also (offhand?)
   -- Protection
-  RegisterNucleusAbility("DirectDamage", 6343, 8)                 -- Thunder Clap
-  RegisterNucleusAbility("DirectDamage", 118000, 12)              -- Dragon Roar
   RegisterNucleusAbility("DirectDamage", 6572, 8)                 -- Revenge
-  RegisterNucleusAbility("DirectDamage", 228920, 8)               -- Ravager
+  RegisterNucleusAbility("DirectDamage", 6343, 8)                 -- Thunder Clap
 end
 
 -- Unregister every NucleusAbilities.
