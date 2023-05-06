@@ -519,14 +519,11 @@ function Splash.RegisterNucleusAbilities()
   -- Discipline
   -- Holy
   -- Shadow
+  RegisterNucleusAbility("DirectDamage", 205386, 8)               -- Shadow Crash
   RegisterNucleusAbility("DirectDamage", 228360, 10)              -- Void Eruption 1
   RegisterNucleusAbility("DirectDamage", 228361, 10)              -- Void Eruption 2
-  RegisterNucleusAbility("DirectDamage", 48045, 10)               -- Mind Sear 1
-  RegisterNucleusAbility("DirectDamage", 49821, 10)               -- Mind Sear 2
-  RegisterNucleusAbility("DirectDamage", 205386, 8)               -- Shadow Crash
-  RegisterNucleusAbility("DirectDamage", 325203, 15)              -- Covenant Ability: Unholy Nova DoT
-  RegisterNucleusAbility("DirectDamage", 325020, 8)               -- Covenant Ability: Ascended Nova
-  RegisterNucleusAbility("DirectDamage", 325326, 15)              -- Covenant Ability: Ascended Explosion
+  RegisterNucleusAbility("DirectDamage", 394979, 10)              -- Mind Sear (Void Lasher)
+  RegisterNucleusAbility("DirectDamage", 373279, 10)              -- Void Spike (Thing From Beyond)
 
   -- Rogue
   -- Assassination
