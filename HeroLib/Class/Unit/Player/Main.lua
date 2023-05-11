@@ -109,6 +109,8 @@ do
   -- Get if the player is in a vhehicle that is not really a vehicle.
   local InVehicleWhitelist = {
     Spells = {
+      --- Dragonflight
+      Spell(377222), -- Consume (Treemouth, Brackenhide Hollow)
       --- Shadowlands
       -- Plaguefall
       Spell(328429), -- Crushing Embrace (Slime Tentacle)
