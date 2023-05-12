@@ -18,18 +18,12 @@ local select = select
 local wipe = wipe
 -- File Locals
 local Equipment = {}
-local UseableTrinkets = {}
 local UseableItems = {}
 
 --- ============================ CONTENT =============================
 -- Retrieve the current player's equipment.
 function Player:GetEquipment()
   return Equipment
-end
-
--- Retrieve the current player's usable trinket items
-function Player:GetOnUseTrinkets()
-  return UseableTrinkets
 end
 
 -- Retrieve the current player's usable items
@@ -40,7 +34,6 @@ end
 -- Save the current player's equipment.
 function Player:UpdateEquipment()
   wipe(Equipment)
-  wipe(UseableTrinkets)
   wipe(UseableItems)
 
   for i = 1, 19 do
@@ -49,17 +42,15 @@ function Player:UpdateEquipment()
     if ItemID ~= nil then
       -- Equipment
       Equipment[i] = ItemID
-      -- Useable Trinkets
+      -- Useable Items
+      local ItemObject
       if i == 13 or i == 14 then
-        local TrinketItem = Item(ItemID, {i})
-        if TrinketItem:IsUsable() then
-          table.insert(UseableTrinkets, TrinketItem)
-        end
+        ItemObject = Item(ItemID, {i})
       else
-        local ItemObject = Item(ItemID)
-        if ItemObject:IsUsable() then
-          table.insert(UseableItems, ItemObject)
-        end
+        ItemObject = Item(ItemID)
+      end
+      if ItemObject:IsUsable() then
+        table.insert(UseableItems, ItemObject)
       end
     end
   end
@@ -70,7 +61,7 @@ end
 do
   -- Global Custom Trinkets
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
-  local CustomTrinketItems = {
+  local CustomItems = {
     -- Shadowlands
     BargastsLeash                   = Item(184017, {13, 14}),
     FlayedwingToxin                 = Item(178742, {13, 14}),
@@ -88,7 +79,7 @@ do
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
     UncannyPocketwatch              = Item(195220, {13, 14}),
   }
-  local CustomTrinketsSpells = {
+  local CustomItemSpells = {
     -- Shadowlands
     FlayedwingToxinBuff               = Spell(345545),
     MistcallerVers                    = Spell(330067),
@@ -108,15 +99,15 @@ do
   }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
-  local function IsUserTrinketBlacklisted(TrinketItem)
-    if not TrinketItem then return false end
+  local function IsUserItemBlacklisted(Item)
+    if not Item then return false end
 
-    local TrinketItemID = TrinketItem:ID()
-    if HL.GUISettings.General.Blacklist.TrinketUserDefined[TrinketItemID] then
-      if type(HL.GUISettings.General.Blacklist.TrinketUserDefined[TrinketItemID]) == "boolean" then
+    local ItemID = Item:ID()
+    if HL.GUISettings.General.Blacklist.ItemUserDefined[ItemID] then
+      if type(HL.GUISettings.General.Blacklist.ItemUserDefined[ItemID]) == "boolean" then
         return true
       else
-        return HL.GUISettings.General.Blacklist.TrinketUserDefined[TrinketItemID](TrinketItem)
+        return HL.GUISettings.General.Blacklist.ItemUserDefined[ItemID](Item)
       end
     end
 
@@ -124,130 +115,78 @@ do
   end
 
   -- Check if the trinket is coded as blacklisted either globally or by the user
-  function Player:IsTrinketBlacklisted(TrinketItem)
-    if IsUserTrinketBlacklisted(TrinketItem) then
+  function Player:IsItemBlacklisted(Item)
+    if IsUserItemBlacklisted(Item) then
       return true
     end
 
+    local ItemID = Item:ID()
+    
     -- Shadowlands
-
-    local TrinketItemID = TrinketItem:ID()
-
-    if TrinketItemID == CustomTrinketItems.BargastsLeash:ID() then
+    if ItemID == CustomItems.BargastsLeash:ID() then
       return not (Player:IsInParty() or Player:IsInRaid())
     end
 
-    if TrinketItemID == CustomTrinketItems.FlayedwingToxin:ID() then
-      return Player:AuraInfo(CustomTrinketsSpells.FlayedwingToxinBuff)
+    if ItemID == CustomItems.FlayedwingToxin:ID() then
+      return Player:AuraInfo(CustomItemSpells.FlayedwingToxinBuff)
     end
 
-    if TrinketItemID == CustomTrinketItems.MistcallerOcarina:ID() then
-      return Player:BuffUp(CustomTrinketsSpells.MistcallerCrit) or Player:BuffUp(CustomTrinketsSpells.MistcallerHaste)
-        or Player:BuffUp(CustomTrinketsSpells.MistcallerMastery) or Player:BuffUp(CustomTrinketsSpells.MistcallerVers)
+    if ItemID == CustomItems.MistcallerOcarina:ID() then
+      return Player:BuffUp(CustomItemSpells.MistcallerCrit) or Player:BuffUp(CustomItemSpells.MistcallerHaste)
+        or Player:BuffUp(CustomItemSpells.MistcallerMastery) or Player:BuffUp(CustomItemSpells.MistcallerVers)
     end
 
-    if TrinketItemID == CustomTrinketItems.SoulIgniter:ID() then
-      return not (Player:BuffDown(CustomTrinketsSpells.SoulIgniterBuff) and Target:IsInRange(40))
+    if ItemID == CustomItems.SoulIgniter:ID() then
+      return not (Player:BuffDown(CustomItemSpells.SoulIgniterBuff) and Target:IsInRange(40))
     end
 
-    if TrinketItemID == CustomTrinketItems.DarkmoonDeckIndomitable:ID() then
-      return not ((Player:BuffUp(CustomTrinketsSpells.IndomitableFive) or Player:BuffUp(CustomTrinketsSpells.IndomitableSix) or Player:BuffUp(CustomTrinketsSpells.IndomitableSeven)
-        or Player:BuffUp(CustomTrinketsSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)))
+    if ItemID == CustomItems.DarkmoonDeckIndomitable:ID() then
+      return not ((Player:BuffUp(CustomItemSpells.IndomitableFive) or Player:BuffUp(CustomItemSpells.IndomitableSix) or Player:BuffUp(CustomItemSpells.IndomitableSeven)
+        or Player:BuffUp(CustomItemSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)))
     end
 
-    if TrinketItemID == CustomTrinketItems.ShardofAnnhyldesAegis:ID() then
+    if ItemID == CustomItems.ShardofAnnhyldesAegis:ID() then
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
 
-    if TrinketItemID == CustomTrinketItems.TomeofMonstruousConstructions:ID() then
-      return Player:AuraInfo(CustomTrinketsSpells.TomeofMonstruousConstructionsBuff)
+    if ItemID == CustomItems.TomeofMonstruousConstructions:ID() then
+      return Player:AuraInfo(CustomItemSpells.TomeofMonstruousConstructionsBuff)
     end
 
-    if TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique:ID() or TrinketItemID == CustomTrinketItems.SoleahsSecretTechnique2:ID() then
-      return Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomTrinketsSpells.SoleahsSecretTechnique2Buff)
+    if ItemID == CustomItems.SoleahsSecretTechnique:ID() or ItemID == CustomItems.SoleahsSecretTechnique2:ID() then
+      return Player:BuffUp(CustomItemSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomItemSpells.SoleahsSecretTechnique2Buff)
     end
 
     -- Dragonflight
-
-    if TrinketItemID == CustomTrinketItems.GlobeofJaggedIce:ID() then
-      return Target:DebuffStack(CustomTrinketsSpells.SkeweringColdDebuff) < 4
+    if ItemID == CustomItems.GlobeofJaggedIce:ID() then
+      return Target:DebuffStack(CustomItemSpells.SkeweringColdDebuff) < 4
     end
 
-    if TrinketItemID == CustomTrinketItems.TreemouthsFesteringSplinter:ID() then
+    if ItemID == CustomItems.TreemouthsFesteringSplinter:ID() then
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
 
-    if TrinketItemID == CustomTrinketItems.RubyWhelpShell:ID()
-    or TrinketItemID == CustomTrinketItems.PrimalRitualShell:ID()
-    or TrinketItemID == CustomTrinketItems.UncannyPocketwatch:ID() then
+    if ItemID == CustomItems.RubyWhelpShell:ID()
+    or ItemID == CustomItems.PrimalRitualShell:ID()
+    or ItemID == CustomItems.UncannyPocketwatch:ID() then
       return true
     end
 
+    -- Return false by default
     return false
   end
 
   -- Return the trinket item of the first usable trinket that is not blacklisted or excluded
-  function Player:GetUseableTrinkets(ExcludedTrinkets, slotID)
-    for _, TrinketItem in ipairs(UseableTrinkets) do
-      local TrinketItemID = TrinketItem:ID()
+  function Player:GetUseableItems(ExcludedItems, slotID)
+    for _, Item in ipairs(UseableItems) do
+      local ItemID = Item:ID()
       local IsExcluded = false
 
       -- Did we specify a slotID? If so, mark as excluded if this trinket isn't in that slot
-      if slotID and Equipment[slotID] ~= TrinketItemID then
+      if slotID and Equipment[slotID] ~= ItemID then
         IsExcluded = true
       -- Check if the trinket is ready, unless it's blacklisted
-      elseif TrinketItem:IsReady() and not Player:IsTrinketBlacklisted(TrinketItem) then
-        for i=1, #ExcludedTrinkets do
-          if ExcludedTrinkets[i] == TrinketItemID then
-            IsExcluded = true
-            break
-          end
-        end
-
-        if not IsExcluded then
-          return TrinketItem
-        end
-      end
-    end
-
-    return nil
-  end
-
-  -- Other On-Use Item Handling
-  -- Note: As with trinkets, we can override on a per-module basis by passing in to ExcludedItems
-  local CustomItems = {
-  }
-  local CustomItemSpells = {
-  }
-
-  -- Check if the item is blacklisted
-  function Player:IsItemBlacklisted(ItemObject)
-    -- Add custom item blacklisting here, similar to IsTrinketBlacklisted above.
-    return false
-  end
-
-  -- Return the item object of the first usable trinket that is not blacklisted or excluded
-  function Player:GetUseableItems(ExcludedItems, slotID, IncludeTrinkets, ExcludedTrinkets)
-    -- If we're checking trinkets, let's do them first
-    if IncludeTrinkets then
-      local TrinketToUse = Player:GetUseableTrinkets(ExcludedTrinkets)
-      if TrinketToUse then
-        local TrinketSlot = TrinketToUse:SlotIDs()[1]
-        local TrinketSpell = TrinketToUse:OnUseSpell()
-        local TrinketRange = 1000
-        if TrinketSpell and TrinketSpell.MaximumRange > 0 then TrinketRange = TrinketSpell.MaximumRange end
-        return TrinketToUse, TrinketSlot, TrinketRange
-      end
-    end
-
-    for _, ItemObject in ipairs(UseableItems) do
-      local ItemID = ItemObject:ID()
-      local IsExcluded = false
-
-      -- Did we specify a slotID? If so, mark as excluded if item is not in that slot
-      if slotID and Equipement[slotID] ~= ItemID then
-        IsExcluded = true
-      elseif ItemObject:IsReady() and not Player:IsItemBlacklisted(ItemObject) then
+      elseif Item:IsReady() and not Player:IsItemBlacklisted(Item) then
         for i=1, #ExcludedItems do
           if ExcludedItems[i] == ItemID then
             IsExcluded = true
@@ -256,11 +195,10 @@ do
         end
 
         if not IsExcluded then
-          local ItemSlot = ItemObject:SlotIDs()[1]
-          local ItemSpell = ItemObject:OnUseSpell()
-          local ItemRange = 1000
-          if ItemSpell and ItemSpell.MaximumRange > 0 then ItemRange = ItemSpell.MaximumRange end
-          return ItemObject, ItemSlot, ItemRange
+          local ItemSlot = Item:SlotIDs()[1]
+          local ItemSpell = Item:OnUseSpell()
+          local ItemRange = (ItemSpell and ItemSpell.MaximumRange > 0) and ItemSpell.MaximumRange or 1000
+          return Item, ItemSlot, ItemRange
         end
       end
     end

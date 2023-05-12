@@ -81,7 +81,7 @@ HL.GUISettings = {
         [166589] = true,
       },
       -- Custom Use Trinket Ignore List
-      TrinketUserDefined = {
+      ItemUserDefined = {
         --- Shadowlands
         ----- PvP -----
         --- Rated

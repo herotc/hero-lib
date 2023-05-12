@@ -105,9 +105,9 @@ end
 -- Add spells in the Listened Spells Whitelist
 function Player:RegisterListenedItemSpells()
   ListenedItemSpells = {}
-  local UsableTrinkets = self:GetOnUseTrinkets()
-  for _, TrinketItem in ipairs(UsableTrinkets) do
-    local Spell = TrinketItem:OnUseSpell()
+  local UsableItems = self:GetOnUseItems()
+  for _, Item in ipairs(UsableItems) do
+    local Spell = Item:OnUseSpell()
     if Spell then
       -- HL.Print("Listening to spell " .. Spell:ID() .. " for item " .. TrinketItem:Name() )
       ListenedItemSpells[Spell:ID()] = Spell
