@@ -197,7 +197,7 @@ do
         if not IsExcluded then
           local ItemSlot = Item:SlotIDs()[1]
           local ItemSpell = Item:OnUseSpell()
-          local ItemRange = (ItemSpell and ItemSpell.MaximumRange > 0) and ItemSpell.MaximumRange or 1000
+          local ItemRange = (ItemSpell and ItemSpell.MaximumRange > 0) and ItemSpell.MaximumRange or 100
           return Item, ItemSlot, ItemRange
         end
       end
