@@ -231,7 +231,13 @@ do
     -- If we're checking trinkets, let's do them first
     if IncludeTrinkets then
       local TrinketToUse = Player:GetUseableTrinkets(ExcludedTrinkets)
-      if TrinketToUse then return TrinketToUse end
+      if TrinketToUse then
+        local TrinketSlot = TrinketToUse:SlotIDs()[1]
+        local TrinketSpell = TrinketToUse:OnUseSpell()
+        local TrinketRange = 1000
+        if TrinketSpell and TrinketSpell.MaximumRange > 0 then TrinketRange = TrinketSpell.MaximumRange end
+        return TrinketToUse, TrinketSlot, TrinketRange
+      end
     end
 
     for _, ItemObject in ipairs(UseableItems) do
@@ -250,7 +256,11 @@ do
         end
 
         if not IsExcluded then
-          return ItemObject
+          local ItemSlot = ItemObject:SlotIDs()[1]
+          local ItemSpell = ItemObject:OnUseSpell()
+          local ItemRange = 1000
+          if ItemSpell and ItemSpell.MaximumRange > 0 then ItemRange = ItemSpell.MaximumRange end
+          return ItemObject, ItemSlot, ItemRange
         end
       end
     end
