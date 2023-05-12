@@ -19,6 +19,7 @@ local wipe = wipe
 -- File Locals
 local Equipment = {}
 local UseableTrinkets = {}
+local UseableItems = {}
 
 --- ============================ CONTENT =============================
 -- Retrieve the current player's equipment.
@@ -31,10 +32,16 @@ function Player:GetOnUseTrinkets()
   return UseableTrinkets
 end
 
+-- Retrieve the current player's usable items
+function Player:GetOnUseItems()
+  return UseableItems
+end
+
 -- Save the current player's equipment.
 function Player:UpdateEquipment()
   wipe(Equipment)
   wipe(UseableTrinkets)
+  wipe(UseableItems)
 
   for i = 1, 19 do
     local ItemID = select(1, GetInventoryItemID("player", i))
@@ -47,6 +54,11 @@ function Player:UpdateEquipment()
         local TrinketItem = Item(ItemID, {i})
         if TrinketItem:IsUsable() then
           table.insert(UseableTrinkets, TrinketItem)
+        end
+      else
+        local ItemObject = Item(ItemID)
+        if ItemObject:IsUsable() then
+          table.insert(UseableItems, ItemObject)
         end
       end
     end
@@ -194,6 +206,51 @@ do
 
         if not IsExcluded then
           return TrinketItem
+        end
+      end
+    end
+
+    return nil
+  end
+
+  -- Other On-Use Item Handling
+  -- Note: As with trinkets, we can override on a per-module basis by passing in to ExcludedItems
+  local CustomItems = {
+  }
+  local CustomItemSpells = {
+  }
+
+  -- Check if the item is blacklisted
+  function Player:IsItemBlacklisted(ItemObject)
+    -- Add custom item blacklisting here, similar to IsTrinketBlacklisted above.
+    return false
+  end
+
+  -- Return the item object of the first usable trinket that is not blacklisted or excluded
+  function Player:GetUseableItems(ExcludedItems, slotID, IncludeTrinkets, ExcludedTrinkets)
+    -- If we're checking trinkets, let's do them first
+    if IncludeTrinkets then
+      local TrinketToUse = Player:GetUseableTrinkets(ExcludedTrinkets)
+      if TrinketToUse then return TrinketToUse end
+    end
+
+    for _, ItemObject in ipairs(UseableItems) do
+      local ItemID = ItemObject:ID()
+      local IsExcluded = false
+
+      -- Did we specify a slotID? If so, mark as excluded if item is not in that slot
+      if slotID and Equipement[slotID] ~= ItemID then
+        IsExcluded = true
+      elseif ItemObject:IsReady() and not Player:IsItemBlacklisted(ItemObject) then
+        for i=1, #ExcludedItems do
+          if ExcludedItems[i] == ItemID then
+            IsExcluded = true
+            break
+          end
+        end
+
+        if not IsExcluded then
+          return ItemObject
         end
       end
     end
