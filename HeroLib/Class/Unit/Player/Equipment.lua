@@ -13,6 +13,8 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local GetInventoryItemID = GetInventoryItemID
+local GetProfessionInfo = GetProfessionInfo
+local GetProfessions = GetProfessions
 local ItemLocation = ItemLocation
 local select = select
 local wipe = wipe
@@ -59,8 +61,32 @@ function Player:UpdateEquipment()
 end
 
 do
-  -- Global Custom Trinkets
-  -- Note: Can still be overriden on a per-module basis by passing in to ExcludedTrinkets
+  -- Global Custom Items
+  -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
+  local EngItems = {
+    -- Dragonflight Engineering excludes
+    -- Most tinkers are situational at best, so let's exclude every item with a tinker slot
+    -- Epic Quality Goggles
+    BattleReadyGoggles              = Item(198326),
+    LightweightOcularLenses         = Item(198323),
+    OscillatingWildernessOpticals   = Item(198325),
+    PeripheralVisionProjectors      = Item(198324),
+    -- Rare Quality Goggles
+    DeadlineDeadeyes                = Item(198330),
+    MilestoneMagnifiers             = Item(198329),
+    QualityAssuredOptics            = Item(198328),
+    SentrysStabilizedSpecs          = Item(198331),
+    -- Uncommon Quality Goggles
+    ClothGoggles                    = Item(205278),
+    LeatherGoggles                  = Item(205279),
+    MailGoggles                     = Item(205280),
+    PlateGoggles                    = Item(205281),
+    -- Epic Quality Wrists
+    ComplicatedCuffs                = Item(198332),
+    DifficultWristProtectors        = Item(198333),
+    NeedlesslyComplexWristguards    = Item(198327),
+    OverengineeredSleeveExtenders   = Item(198322),
+  }
   local CustomItems = {
     -- Shadowlands
     BargastsLeash                   = Item(184017, {13, 14}),
@@ -170,6 +196,17 @@ do
     or ItemID == CustomItems.PrimalRitualShell:ID()
     or ItemID == CustomItems.UncannyPocketwatch:ID() then
       return true
+    end
+
+    for _, profindex in pairs({GetProfessions()}) do
+      local prof = GetProfessionInfo(profindex)
+      if prof == "Engineering" then
+        for _, EngItem in pairs(EngItems) do
+          if ItemID == EngItem:ID() then
+            return true
+          end
+        end
+      end
     end
 
     -- Return false by default
