@@ -63,6 +63,10 @@ end
 do
   -- Global Custom Items
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
+  local GenericItems = {
+    -- Generic items that we always want to exclude
+    TabardoftheLightbringer         = Item(52252),
+  }
   local EngItems = {
     -- Dragonflight Engineering excludes
     -- Most tinkers are situational at best, so let's exclude every item with a tinker slot
@@ -196,6 +200,12 @@ do
     or ItemID == CustomItems.PrimalRitualShell:ID()
     or ItemID == CustomItems.UncannyPocketwatch:ID() then
       return true
+    end
+
+    for _, GenItem in pairs(GenericItems) do
+      if ItemID == GenItem:ID() then
+        return true
+      end
     end
 
     for _, profindex in pairs({GetProfessions()}) do
