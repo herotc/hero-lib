@@ -329,6 +329,9 @@ do
     -- Raszageth
     Spell(382530), -- Surging Ruiner Shield (Surge)
     Spell(388691), -- Stormsurge Shield
+    ---- Aberrus
+    -- Assault of the Zaqari
+    Spell(397383), -- Molten Barrier (Mystics)
   }
 
   function Unit:EnemyAbsorb()
