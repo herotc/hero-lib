@@ -174,6 +174,12 @@ end
 
 -- Get the unit TTD Percentage
 local SpecialTTDPercentageData = {
+  --- Dragonflight
+  ----- Dungeons -----
+  --- Brackenhide Hollow 
+  -- Decatriarch Wratheye
+  [186121] = 5,
+
   --- Shadowlands
   ----- Dungeons -----
   --- De Other Side
@@ -240,6 +246,14 @@ local SpecialTTDPercentageData = {
   --- Hellfire Assault
   -- Mar'Tak doesn't die and leave fight at 50% (blocked at 1hp anyway).
   [93023] = 50,
+
+  --- Classic
+  ----- Dungeons -----
+  --- Uldaman 
+  -- Dwarves
+  [184580] = 5,
+  [184581] = 5,
+  [184582] = 5,
 }
 function Unit:SpecialTTDPercentage(NPCID)
   local SpecialTTDPercentage = SpecialTTDPercentageData[NPCID]
