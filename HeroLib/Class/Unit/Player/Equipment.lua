@@ -65,7 +65,10 @@ do
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
   local GenericItems = {
     -- Generic items that we always want to exclude
-    TabardoftheLightbringer         = Item(52252),
+    -- Dragonflight
+    PrimalRitualShell               = Item(200563, {13, 14}),
+    RubyWhelpShell                  = Item(193757, {13, 14}),
+    UncannyPocketwatch              = Item(195220, {13, 14}),
   }
   local EngItems = {
     -- Dragonflight Engineering excludes
@@ -104,10 +107,7 @@ do
     SoleahsSecretTechnique2         = Item(190958, {13, 14}),
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
-    PrimalRitualShell               = Item(200563, {13, 14}),
-    RubyWhelpShell                  = Item(193757, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
-    UncannyPocketwatch              = Item(195220, {13, 14}),
   }
   local CustomItemSpells = {
     -- Shadowlands
@@ -151,8 +151,12 @@ do
     end
 
     local ItemID = Item:ID()
-    
-    -- Shadowlands
+    local ItemSlot = Item:SlotIDs()[1]
+
+    -- Exclude all tabards and shirts
+    if ItemSlot == 19 or ItemSlot == 4 then return true end
+
+    -- Shadowlands items being excluded with custom checks.
     if ItemID == CustomItems.BargastsLeash:ID() then
       return not (Player:IsInParty() or Player:IsInRaid())
     end
@@ -187,7 +191,7 @@ do
       return Player:BuffUp(CustomItemSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomItemSpells.SoleahsSecretTechnique2Buff)
     end
 
-    -- Dragonflight
+    -- Dragonflight items being excluded with custom checks.
     if ItemID == CustomItems.GlobeofJaggedIce:ID() then
       return Target:DebuffStack(CustomItemSpells.SkeweringColdDebuff) < 4
     end
@@ -196,21 +200,23 @@ do
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
 
-    if ItemID == CustomItems.RubyWhelpShell:ID()
-    or ItemID == CustomItems.PrimalRitualShell:ID()
-    or ItemID == CustomItems.UncannyPocketwatch:ID() then
-      return true
-    end
-
+    -- Any generic items we always want to exclude from suggestions.
     for _, GenItem in pairs(GenericItems) do
       if ItemID == GenItem:ID() then
         return true
       end
     end
 
+    -- Handle Engineering excludes.
     for _, profindex in pairs({GetProfessions()}) do
       local prof = GetProfessionInfo(profindex)
       if prof == "Engineering" then
+        -- Hacky workaround for excluding Engineering cloak/waist tinkers.
+        -- If possible, find a way to parse tinkers and handle this properly.
+        if ItemSlot == 6 or ItemSlot == 15 then
+          return true
+        end
+        -- Exclude specific Engineering items.
         for _, EngItem in pairs(EngItems) do
           if ItemID == EngItem:ID() then
             return true
