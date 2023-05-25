@@ -221,7 +221,7 @@ function Item:TrinketHasUseBuff()
   if not self:IsUsable() then return false end
   if not self:OnUseSpell() then return false end
   local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
-  if TrinketAura == nil then return false end
+  if not TrinketAura then return false end
   return true
 end
 
