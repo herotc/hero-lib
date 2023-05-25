@@ -217,7 +217,7 @@ function Item:TrinketHasStatAnyDps()
 end
 
 -- trinket.foo.has_use_buff
-function Item:TrinketHasUseBuff()
+function Item:HasUseBuff()
   if not self:IsUsable() then return false end
   if not self:OnUseSpell() then return false end
   local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
