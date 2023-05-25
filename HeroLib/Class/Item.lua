@@ -209,7 +209,7 @@ function Item:TimeSinceLastCast()
 end
 
 -- trinket.foo.has_stat.any_dps
-function Item:TrinketHasStatAnyDps()
+function Item:HasStatAnyDps()
   if not self:OnUseSpell() then return false end
   local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
   if not TrinketAura then return false end
