@@ -136,9 +136,6 @@ do
 
     --- Legion
     ----- Dungeons -----
-    --- Mythic+ Affixes
-    -- Fel Explosives
-    [120651] = true,
     --- Darkheart Thicket
     -- Strangling roots can't be hit while this buff is present.
     [100991] = function(self) return self:BuffUp(SBDSpells.Legion.D_DHT_Submerged, true) end,
@@ -152,6 +149,12 @@ do
     [118460] = function(self) return Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
     -- Soul Queen Dejahna cannot be hit outside of Spirit Realm.
     [118462] = function(self) return not Player:DebuffUp(SBDSpells.Legion.R_ToS_SpiritRealm, nil, true) end,
+
+    --- Mythic+ Affixes
+    -- Fel Explosives
+    [120651] = true,
+    -- Incorporeal
+    [204560] = true,
   }
 
   function Unit:IsBlacklisted()
