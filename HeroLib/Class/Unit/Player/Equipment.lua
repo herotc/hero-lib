@@ -66,6 +66,7 @@ do
   local GenericItems = {
     -- Generic items that we always want to exclude
     -- Dragonflight
+    OminousChromaticEssence         = Item(203729, {13, 14}),
     PrimalRitualShell               = Item(200563, {13, 14}),
     RubyWhelpShell                  = Item(193757, {13, 14}),
     UncannyPocketwatch              = Item(195220, {13, 14}),
