@@ -147,7 +147,7 @@ do
 
   -- Check if the trinket is coded as blacklisted either globally or by the user
   function Player:IsItemBlacklisted(Item)
-    if IsUserItemBlacklisted(Item) then
+    if IsUserItemBlacklisted(Item) or not Item:SlotIDs() then
       return true
     end
 
