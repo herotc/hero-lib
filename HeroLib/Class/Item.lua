@@ -76,6 +76,11 @@ function Item:IsLegendary()
   return self.ItemRarity == 5
 end
 
+-- Check whether the item exists in our inventory
+function Item:Exists()
+  return GetItemCount(self:ID()) > 0
+end
+
 -- Get wether an item is usable currently.
 function Item:IsUsable()
   return IsUsableItem(self:ID())
