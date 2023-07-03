@@ -47,6 +47,7 @@ do
   local SpecialBlacklistData = {
     --- Dragonflight
     ----- Demon Hunter Condemned Demons -----
+    -- If we want to include for the DH, we can - function() return Cache.Persistent.Player.Class[3] ~= 12 end
     [168932] = true,
     [169421] = true,
     [169425] = true,
