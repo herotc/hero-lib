@@ -46,6 +46,14 @@ do
   }
   local SpecialBlacklistData = {
     --- Dragonflight
+    ----- Demon Hunter Condemned Demons -----
+    [168932] = true,
+    [169421] = true,
+    [169425] = true,
+    [169426] = true,
+    [169428] = true,
+    [169429] = true,
+    [169430] = true,
     ----- Vault of the Incarnates -----
     --- Raszageth
     -- Volatile Sparks despawn when interrupted, damage to them is irrelevant
