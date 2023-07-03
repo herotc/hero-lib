@@ -2,6 +2,11 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
+-- File Locals
+local GUI = HL.GUI
+local CreatePanel = GUI.CreatePanel
+local CreateChildPanel = GUI.CreateChildPanel
+local CreatePanelOption = GUI.CreatePanelOption
 
 
 --- ============================ CONTENT ============================
@@ -107,3 +112,15 @@ HL.GUISettings = {
     }
   }
 }
+
+function HL.GUI.CorePanelSettingsInit()
+  -- GUI
+  local HLPanel = CreatePanel(HL.GUI, "HeroLib", "PanelFrame", HL.GUISettings, HeroLibDB.GUISettings)
+  -- Child Panel
+  local CP_HLGeneral = CreateChildPanel(HLPanel, "HLGeneral")
+  -- Debug
+  CreatePanelOption("CheckButton", CP_HLGeneral, "General.DebugMode", "Enable Debug Mode", "Enable if you want HeroLib to output debug messages.")
+  -- ReduceCPULoad
+  CreatePanelOption("CheckButton", CP_HLGeneral, "General.ReduceCPULoad", "Reduce CPU Load", "Enable if you would like to increase the cycle time of the addon, causing the addon to use less CPU.")
+  CreatePanelOption("Slider", CP_HLGeneral, "General.ReduceCPULoadOffset", {0, 1, 0.01}, "Reduce CPU Load Offset", "Set this value to tell the addon how many more milliseconds to add to its cycle time. For example: 0.03 is 30ms.")
+end

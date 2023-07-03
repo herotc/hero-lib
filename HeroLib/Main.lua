@@ -20,6 +20,25 @@ local PrintedClassicWarning = false
 --- ============================ CONTENT ============================
 -- Create the MainFrame
 HL.MainFrame = CreateFrame("Frame", "HeroLib_MainFrame", UIParent)
+HL.MainFrame:RegisterEvent("ADDON_LOADED")
+HL.MainFrame:SetScript("OnEvent", function (self, Event, Arg1)
+  if Event == "ADDON_LOADED" then
+    if Arg1 == "HeroLib" then
+      if type(HeroLibDB) ~= "table" then
+        HeroLibDB = {}
+      end
+      if type(HeroLibDB.GUISettings) ~= "table" then
+        HeroLibDB.GUISettings = {}
+      end
+      HL.GUI.LoadSettingsRecursively(HL.GUISettings)
+      HL.GUI.CorePanelSettingsInit()
+
+      C_Timer.After(2, function ()
+        HL.MainFrame:UnregisterEvent("ADDON_LOADED")
+      end)
+    end
+  end
+end)
 
 -- Main
 HL.Timer = {
@@ -27,6 +46,7 @@ HL.Timer = {
   PulseOffset = 0,
   TTD = 0
 }
+
 function HL.Pulse()
   if HL.BuildInfo[4] and HL.BuildInfo[4] < 100000 then
     OnRetail = false
