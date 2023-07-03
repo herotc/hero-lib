@@ -17,7 +17,7 @@ HL.GUISettings = {
     DebugMode = false,
     -- Reduce CPU Usage (decrease a little bit Rotation potential performance but saves FPS)
     ReduceCPULoad = false,
-    ReduceCPULoadOffset = 0.034, -- Default:34ms | It'll be added to the default 66ms, can be positive or negative
+    ReduceCPULoadOffset = 34, -- Default:34ms | It'll be added to the default 66ms, can be positive or negative
     -- Blacklist Settings
     Blacklist = {
       -- During how many times the GCD time you want to blacklist an unit from Cycling
@@ -121,6 +121,6 @@ function HL.GUI.CorePanelSettingsInit()
   -- Debug
   CreatePanelOption("CheckButton", CP_HLGeneral, "General.DebugMode", "Enable Debug Mode", "Enable if you want HeroLib to output debug messages.")
   -- ReduceCPULoad
-  CreatePanelOption("CheckButton", CP_HLGeneral, "General.ReduceCPULoad", "Reduce CPU Load", "Enable if you would like to increase the cycle time of the addon, causing the addon to use less CPU.")
-  CreatePanelOption("Slider", CP_HLGeneral, "General.ReduceCPULoadOffset", {0, 1, 0.01}, "Reduce CPU Load Offset", "Set this value to tell the addon how many more milliseconds to add to its cycle time. For example: 0.03 is 30ms.")
+  CreatePanelOption("CheckButton", CP_HLGeneral, "General.ReduceCPULoad", "Reduce CPU Load", "Enable if you would like to increase the cycle time of the addon, causing HeroLib and HeroRotation to use less CPU by running through its cycles on a longer delay.")
+  CreatePanelOption("Slider", CP_HLGeneral, "General.ReduceCPULoadOffset", {0, 1000, 1}, "Reduce CPU Load Offset (|cffff0000WARNING|r)", "Set this value to tell the addon how many more milliseconds to add to HeroLib and HeroRotation's cycle time when the above 'Reduce CPU Load' option is checked. |cffff0000WARNING|r: High values are NOT recommended, as this will cause HeroRotation's suggestions to appear latent. By default, the addon will cycle 15 times per second (its built-in 66ms delay). When 'Reduce CPU Load' is checked, this value will be added to that 66ms. If this value is set to 434, for example, that will add 434ms. This would make HeroRotation only cycle twice per second.")
 end

@@ -63,7 +63,7 @@ function HL.Pulse()
     -- And add the Reduce CPU Load offset (default 50ms) in case it's enabled.
     --HL.Timer.PulseOffset = mathmax(10, mathmin(50, HL.Latency()))/1000 + (HL.GUISettings.General.ReduceCPULoad and HL.GUISettings.General.ReduceCPULoadOffset or 0)
     -- Until further performance improvements, we'll use 66ms (i.e. 15Hz) as baseline. Offset (positive or negative) can still be added from Settings.lua
-    HL.Timer.PulseOffset = 0.066 + (HL.GUISettings.General.ReduceCPULoad and HL.GUISettings.General.ReduceCPULoadOffset or 0)
+    HL.Timer.PulseOffset = 0.066 + (HL.GUISettings.General.ReduceCPULoad and (HL.GUISettings.General.ReduceCPULoadOffset / 1000) or 0)
     HL.Timer.Pulse = GetTime() + HL.Timer.PulseOffset
 
     Cache.HasBeenReset = false
