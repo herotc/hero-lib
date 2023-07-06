@@ -73,6 +73,11 @@ do
     RubyWhelpShell                  = Item(193757, {13, 14}),
     ScreamingBlackDragonscale       = Item(202612, {13, 14}),
     UncannyPocketwatch              = Item(195220, {13, 14}),
+    -- Engineering Epic Quality Wrists
+    ComplicatedCuffs                = Item(198332),
+    DifficultWristProtectors        = Item(198333),
+    NeedlesslyComplexWristguards    = Item(198327),
+    OverengineeredSleeveExtenders   = Item(198322),
   }
   local EngItems = {
     -- Dragonflight Engineering excludes
@@ -92,11 +97,6 @@ do
     LeatherGoggles                  = Item(205279),
     MailGoggles                     = Item(205280),
     PlateGoggles                    = Item(205281),
-    -- Epic Quality Wrists
-    ComplicatedCuffs                = Item(198332),
-    DifficultWristProtectors        = Item(198333),
-    NeedlesslyComplexWristguards    = Item(198327),
-    OverengineeredSleeveExtenders   = Item(198322),
   }
   local CustomItems = {
     -- Shadowlands
