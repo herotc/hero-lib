@@ -76,6 +76,7 @@ HL.SpecID_ClassesSpecs = {
   -- Evoker
   [1467] = { "Evoker", "Devastation" },
   [1468] = { "Evoker", "Preservation" },
+  [1473] = { "Evoker", "Augmentation" },
   -- Hunter
   [253] = { "Hunter", "Beast Mastery" },
   [254] = { "Hunter", "Marksmanship" },
