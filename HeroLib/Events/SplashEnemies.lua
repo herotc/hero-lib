@@ -375,54 +375,46 @@ function Splash.RegisterNucleusAbilities()
   local RegisterNucleusAbility = Splash.RegisterNucleusAbility
 
   -- Commons
-  -- Trinkets
-  RegisterNucleusAbility("DirectDamage", 313088, 8)               -- Torment in Jar (Buff)
-  RegisterNucleusAbility("DirectDamage", 313089, 8)               -- Torment in Jar (Explosion)
-  -- Covenants
-  RegisterNucleusAbility("PeriodicDamage", 325640, 8)             -- Soul Rot (Warlock, not working)
 
   -- Death Knight
   -- Commons
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 43265, 8)  -- Death and Decay
+  RegisterNucleusAbility("DirectDamage", 383313, 8)               -- Abomination Limb
+  RegisterNucleusAbility("GroundDirectDamage", 52212, 8)          -- Death and Decay
   -- Blood
   RegisterNucleusAbility("DirectDamage", 50842, 10)               -- Blood Boil
-  RegisterNucleusAbility("DirectDamage", 194844, 8)               -- Bonestorm
+  RegisterNucleusAbility("DirectDamage", 196528, 8)               -- Bonestorm
+  RegisterNucleusAbility("DirectDamage", 274156, 8)               -- Consumption
   -- Frost
-  RegisterNucleusAbility("DirectDamage", 196771, 8)               -- Remorseless Winter
+  RegisterNucleusAbility("DirectDamage", 155166, 12)              -- Breath of Sindragosa
+  RegisterNucleusAbility("DirectDamage", 204167, 6)               -- Chill Streak
   RegisterNucleusAbility("DirectDamage", 207230, 8)               -- Frostscythe
   RegisterNucleusAbility("DirectDamage", 49184, 10)               -- Howling Blast
-  RegisterNucleusAbility("GroundDirectDamage", 52212, 8)          -- Death and Decay
-  RegisterNucleusAbility("DirectDamage", 204167, 6)               -- Chill Streak
+  RegisterNucleusAbility("DirectDamage", 196771, 8)               -- Remorseless Winter
   -- Unholy
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 152280, 8) -- Defile
-  --RegisterNucleusAbility("TO_INVESTIGATE", 115989, 8)             -- Unholy Blight
-  RegisterNucleusAbility("GroundDirectDamage", 52212, 8)            -- Death and Decay
-  RegisterNucleusAbility("DirectDamage", 212739, 8)                 -- Epidemic
+  RegisterNucleusAbility("GroundDirectDamage", 156000, 8)         -- Defile
+  RegisterNucleusAbility("DirectDamage", 115994, 10)              -- Unholy Blight
+  RegisterNucleusAbility("DirectDamage", 212739, 8)               -- Epidemic
 
   -- Demon Hunter
   -- Commons
-  --RegisterNucleusAbility("ChainDirectDamage", 204157, 10)         -- Throw Glaive
-  RegisterNucleusAbility("DirectDamage", 258921, 8)               -- Immolation Aura 1
-  RegisterNucleusAbility("DirectDamage", 258922, 8)               -- Immolation Aura 2
+  RegisterNucleusAbility("DirectDamage", 179057, 8)               -- Chaos Nova
+  RegisterNucleusAbility("DirectDamage", 258922, 8)               -- Immolation Aura
+  RegisterNucleusAbility("GroundDirectDamage", 307046, 8)         -- Elysian Decree
   RegisterNucleusAbility("GroundDirectDamage", 204598, 8)         -- Sigil of Flame
   -- Havoc
-  RegisterNucleusAbility("GroundDirectDamage", 200166, 8)         -- Metamorphosis
+  RegisterNucleusAbility("DirectDamage", 200685, 8)               -- Blade Dance 1
+  RegisterNucleusAbility("DirectDamage", 199552, 8)               -- Blade Dance 2
+  RegisterNucleusAbility("DirectDamage", 210153, 8)               -- Death Sweep 1
+  RegisterNucleusAbility("DirectDamage", 210155, 8)               -- Death Sweep 2
+  RegisterNucleusAbility("DirectDamage", 258860, 10)              -- Essence Break
   RegisterNucleusAbility("DirectDamage", 198030, 20)              -- Eye Beam
-  RegisterNucleusAbility("DirectDamage", 391374, 8)               -- Blade Dance 1
-  RegisterNucleusAbility("DirectDamage", 391378, 8)               -- Blade Dance 2
-  RegisterNucleusAbility("DirectDamage", 200685, 8)               -- Blade Dance 3
-  RegisterNucleusAbility("DirectDamage", 199552, 8)               -- Blade Dance 4
-  RegisterNucleusAbility("DirectDamage", 393054, 8)               -- Death Sweep 1
-  RegisterNucleusAbility("DirectDamage", 393055, 8)               -- Death Sweep 2
-  RegisterNucleusAbility("DirectDamage", 179057, 8)               -- Chaos Nova
+  RegisterNucleusAbility("GroundDirectDamage", 200166, 8)         -- Metamorphosis
   -- Vengeance
-  RegisterNucleusAbility("DirectDamage", 247455, 8)               -- Spirit Bomb
-  RegisterNucleusAbility("DirectDamage", 189112, 6)               -- Infernal Strike
-  RegisterNucleusAbility("DirectDamage", 228478, 5)               -- Soul Cleave
-  RegisterNucleusAbility("DirectDamage", 212105, 13)              -- Fel Devastation
   RegisterNucleusAbility("DirectDamage", 320341, 8)               -- Bulk Extraction
-  RegisterNucleusAbility("GroundDirectDamage", 307046, 8)         -- Elysian Decree (Covenant) 1
-  RegisterNucleusAbility("GroundDirectDamage", 339894, 8)         -- Elysian Decree (Covenant) 2
+  RegisterNucleusAbility("DirectDamage", 212105, 13)              -- Fel Devastation
+  RegisterNucleusAbility("DirectDamage", 189112, 6)               -- Infernal Strike
+  RegisterNucleusAbility("DirectDamage", 228478, 8)               -- Soul Cleave
+  RegisterNucleusAbility("DirectDamage", 247455, 8)               -- Spirit Bomb
 
   -- Druid
   -- Commons
@@ -442,9 +434,13 @@ function Splash.RegisterNucleusAbilities()
 
   -- Evoker
   -- Commons
+  RegisterNucleusAbility("DirectDamage", 357209, 12)              -- Fire Breath (Check spell ID; Range? It's a cone up to 25y(?))
+  -- Augmentation
+  RegisterNucleusAbility("DirectDamage", 395160, 8)               -- Eruption
+  RegisterNucleusAbility("DirectDamage", 396288, 6)              -- Upheaval (Range? Spell goes from 3/6/9/12y depending on empower level)
+  RegisterNucleusAbility("GroundDirectDamage", 403631, 12)        -- Breath of Eons (Range? Spell range is 15-50y)
   -- Devastation
   RegisterNucleusAbility("DirectDamage", 357212, 8)               -- Pyre (Check spell ID)
-  RegisterNucleusAbility("DirectDamage", 357209, 12)              -- Fire Breath (Check spell ID; Range? It's a cone up to 25y(?))
   RegisterNucleusAbility("DirectDamage", 359077, 12)              -- Eternity Surge (Check spell ID; Range? Could technically be out to 25y)
   RegisterNucleusAbility("DirectDamage", 362969, 6)               -- Azure Strike (Check spell ID, as it could also be 355627)
   RegisterNucleusAbility("GroundDirectDamage", 369374, 8)         -- Firestorm (Check spell ID; Should be GroundMultipleDirectDamage?)
