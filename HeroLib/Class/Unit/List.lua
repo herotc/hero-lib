@@ -59,7 +59,13 @@ do
     --- Raszageth
     -- Volatile Sparks despawn when interrupted, damage to them is irrelevant
     [194999] = true,
-    
+    ----- Dungeons -----
+    --- Uldaman ---
+    -- The Lost Dwarves retreat to their longship at 10% hp
+    [184580] = function(self) return self:HealthPercentage() <= 10 end,
+    [184581] = function(self) return self:HealthPercentage() <= 10 end,
+    [184582] = function(self) return self:HealthPercentage() <= 10 end,
+
     --- Shadowlands
     ----- Castle Nathria -----
     --- Stone Legion Generals
