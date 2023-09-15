@@ -66,12 +66,12 @@ local function CreateCheckButton(Parent, Setting, Text, Tooltip, Optionals)
   CheckButton.SavedVariablesTable, CheckButton.SavedVariablesKey = Parent.SavedVariablesTable, Setting
 
   -- Frame init
-  if not LastOptionAttached[Parent.name] then
+  if not LastOptionAttached[Parent.usedName] then
     CheckButton:SetPoint("TOPLEFT", 15, -10)
   else
-    CheckButton:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3])
+    CheckButton:SetPoint("TOPLEFT", LastOptionAttached[Parent.usedName][1], "BOTTOMLEFT", LastOptionAttached[Parent.usedName][2], LastOptionAttached[Parent.usedName][3])
   end
-  LastOptionAttached[Parent.name] = { CheckButton, 0, 0 }
+  LastOptionAttached[Parent.usedName] = { CheckButton, 0, 0 }
 
   CheckButton:SetChecked(CheckButton.SettingTable[CheckButton.SettingKey])
 
@@ -120,12 +120,12 @@ local function CreateDropdown(Parent, Setting, Values, Text, Tooltip, Optionals)
   end
 
   -- Frame init
-  if not LastOptionAttached[Parent.name] then
+  if not LastOptionAttached[Parent.usedName] then
     Dropdown:SetPoint("TOPLEFT", 0, -30)
   else
-    Dropdown:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] - 15, LastOptionAttached[Parent.name][3] - 20)
+    Dropdown:SetPoint("TOPLEFT", LastOptionAttached[Parent.usedName][1], "BOTTOMLEFT", LastOptionAttached[Parent.usedName][2] - 15, LastOptionAttached[Parent.usedName][3] - 20)
   end
-  LastOptionAttached[Parent.name] = { Dropdown, 15, 0 }
+  LastOptionAttached[Parent.usedName] = { Dropdown, 15, 0 }
 
   local function Initialize(Self, Level)
     local Info = UIDropDownMenu_CreateInfo()
@@ -161,12 +161,12 @@ local function CreateSlider(Parent, Setting, Values, Text, Tooltip, Action, Opti
   Slider.SavedVariablesTable, Slider.SavedVariablesKey = Parent.SavedVariablesTable, Setting
 
   -- Frame init
-  if not LastOptionAttached[Parent.name] then
+  if not LastOptionAttached[Parent.usedName] then
     Slider:SetPoint("TOPLEFT", 20, -25)
   else
-    Slider:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2] + 5, LastOptionAttached[Parent.name][3] - 20)
+    Slider:SetPoint("TOPLEFT", LastOptionAttached[Parent.usedName][1], "BOTTOMLEFT", LastOptionAttached[Parent.usedName][2] + 5, LastOptionAttached[Parent.usedName][3] - 20)
   end
-  LastOptionAttached[Parent.name] = { Slider, -5, -20 }
+  LastOptionAttached[Parent.usedName] = { Slider, -5, -20 }
 
   Slider:SetMinMaxValues(Values[1], Values[2])
   Slider.minValue, Slider.maxValue = Slider:GetMinMaxValues()
@@ -233,12 +233,12 @@ local function CreateButton(Parent, Setting, Text, Tooltip, Action, Width, Heigh
   end
 
   -- Frame init
-  if not LastOptionAttached[Parent.name] then
+  if not LastOptionAttached[Parent.usedName] then
     Button:SetPoint("TOPLEFT", 15, -10)
   else
-    Button:SetPoint("TOPLEFT", LastOptionAttached[Parent.name][1], "BOTTOMLEFT", LastOptionAttached[Parent.name][2], LastOptionAttached[Parent.name][3])
+    Button:SetPoint("TOPLEFT", LastOptionAttached[Parent.usedName][1], "BOTTOMLEFT", LastOptionAttached[Parent.usedName][2], LastOptionAttached[Parent.usedName][3])
   end
-  LastOptionAttached[Parent.name] = { Button, 0, 0 }
+  LastOptionAttached[Parent.usedName] = { Button, 0, 0 }
 
   _G[Button:GetName() .. "Text"]:SetText("|c00dfb802" .. Text .. "|r")
 
@@ -284,7 +284,7 @@ function GUI.CreateChildPanel(Parent, CName)
   CP.SavedVariablesTable = Parent.SavedVariablesTable
   CP.name = CName
   CP.parent = Parent.name
-  CP.usedName = CName:gsub(" ", "")
+  CP.usedName = ParentName .. "_ChildPanel_" .. CName:gsub(" ", "")
   local category = Settings.RegisterCanvasLayoutSubcategory(Parent.category, CP, CName)
   Settings.RegisterAddOnCategory(category)
   CP.category = category
