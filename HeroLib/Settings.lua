@@ -117,10 +117,10 @@ function HL.GUI.CorePanelSettingsInit()
   -- GUI
   local HLPanel = CreatePanel(HL.GUI, "HeroLib", "PanelFrame", HL.GUISettings, HeroLibDB.GUISettings)
   -- Child Panel
-  local CP_HLGeneral = CreateChildPanel(HLPanel, "HLGeneral")
+  local CP_General = CreateChildPanel(HLPanel, "General")
   -- Debug
-  CreatePanelOption("CheckButton", CP_HLGeneral, "General.DebugMode", "Enable Debug Mode", "Enable if you want HeroLib to output debug messages.")
+  CreatePanelOption("CheckButton", CP_General, "General.DebugMode", "Enable Debug Mode", "Enable if you want HeroLib to output debug messages.")
   -- ReduceCPULoad
-  CreatePanelOption("CheckButton", CP_HLGeneral, "General.ReduceCPULoad", "Reduce CPU Load", "Enable if you would like to increase the cycle time of the addon, causing HeroLib and HeroRotation to use less CPU by running through its cycles on a longer delay.")
-  CreatePanelOption("Slider", CP_HLGeneral, "General.ReduceCPULoadOffset", {0, 1000, 1}, "Reduce CPU Load Offset (|cffff0000WARNING|r)", "Set this value to tell the addon how many more milliseconds to add to HeroLib and HeroRotation's cycle time when the above 'Reduce CPU Load' option is checked. |cffff0000WARNING|r: High values are NOT recommended, as this will cause HeroRotation's suggestions to appear latent. By default, the addon will cycle 15 times per second (its built-in 66ms delay). When 'Reduce CPU Load' is checked, this value will be added to that 66ms. If this value is set to 434, for example, that will add 434ms. This would make HeroRotation only cycle twice per second.")
+  CreatePanelOption("CheckButton", CP_General, "General.ReduceCPULoad", "Reduce CPU Load", "Enable if you would like to increase the cycle time of the addon, causing HeroLib and HeroRotation to use less CPU by running through its cycles on a longer delay.")
+  CreatePanelOption("Slider", CP_General, "General.ReduceCPULoadOffset", {0, 1000, 1}, "Reduce CPU Load Offset (|cffff0000WARNING|r)", "Set this value to tell the addon how many more milliseconds to add to HeroLib and HeroRotation's cycle time when the above 'Reduce CPU Load' option is checked. |cffff0000WARNING|r: High values are NOT recommended, as this will cause HeroRotation's suggestions to appear latent. By default, the addon will cycle 15 times per second (its built-in 66ms delay). When 'Reduce CPU Load' is checked, this value will be added to that 66ms. If this value is set to 434, for example, that will add 434ms. This would make HeroRotation only cycle twice per second.")
 end
