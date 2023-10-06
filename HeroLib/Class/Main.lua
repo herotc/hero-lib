@@ -90,7 +90,7 @@ do
     { "Arena",      5,          true    },
     { "Boss",       4,          true    },
     { "Nameplate",  HL.MAXIMUM, true    },
-    { "Party",      5,          true    },
+    { "Party",      4,          true    },
     { "Raid",       40,         true    }
   }
   for _, UnitID in pairs(UnitIDs) do
