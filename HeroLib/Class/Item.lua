@@ -216,18 +216,12 @@ end
 -- trinket.foo.has_stat.any_dps
 function Item:HasStatAnyDps()
   if not self:OnUseSpell() then return false end
-  local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
-  if not TrinketAura then return false end
-  return true
+  return DBC.SpellAuraStat[self:OnUseSpell():ID()]
 end
 
 -- trinket.foo.has_use_buff
 function Item:HasUseBuff()
-  if not self:IsUsable() then return false end
-  if not self:OnUseSpell() then return false end
-  local TrinketAura = DBC.SpellAuraStat[self:OnUseSpell():ID()]
-  if not TrinketAura then return false end
-  return true
+  return self:IsUsable() and self:HasStatAnyDps()
 end
 
 -- buff.potion.duration
