@@ -27,6 +27,7 @@ Cache.UnitInfo = {};
 -- Persistent
 Cache.Persistent = {
   Equipment = {},
+  TierSets = {},
   Player = {
     Class = { UnitClass("player") },
     Spec = {}
