@@ -419,9 +419,11 @@ function Splash.RegisterNucleusAbilities()
   -- Druid
   -- Commons
   RegisterNucleusAbility("PeriodicDamage", 164815, 8)             -- Sunfire
-  RegisterNucleusAbility("DirectDamage", 194153, 8)               -- Lunar Strike
+  RegisterNucleusAbility("DirectDamage", 194153, 10)               -- Starfire
   -- Balance
-  --RegisterNucleusAbility("TO_INVESTIGATE", 191037, 40)            -- Starfall
+  --RegisterNucleusAbility("TO_INVESTIGATE", 191037, 45)            -- Starfall
+  RegisterNucleusAbility("DirectDamage", 274283, 8)               -- New Moon/Full Moon
+  RegisterNucleusAbility("DirectDamage", 88751, 8)                -- Wild Mushroom
   -- Feral
   RegisterNucleusAbility("DirectDamage", 285381, 8)               -- Primal Wrath
   RegisterNucleusAbility("DirectDamage", 202028, 8)               -- Brutal Slash
