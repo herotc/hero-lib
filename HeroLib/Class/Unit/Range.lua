@@ -124,7 +124,7 @@ function Unit:IsInRange(Distance)
     --IsInRange = IsItemInRange(ItemRange[Distance], self:ID())
     local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
     --HL.Print("IsInRange ("..tostring(self:Name())..") UnitMinRange: "..tostring(UnitMinRange)..", UnitMaxRange: "..tostring(UnitMaxRange))
-    IsInRange = UnitMaxRange and UnitMaxRange <= Distance
+    IsInRange = UnitMaxRange and (UnitMaxRange <= Distance or UnitMaxRange <= 10)
     UnitInfoIsInRange[Identifier] = IsInRange
   end
 
@@ -155,7 +155,7 @@ function Unit:IsInMeleeRange(Distance)
 
   --return IsItemInRange(ItemRange[Distance], self:ID())
   local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
-  return UnitMaxRange and UnitMaxRange <= Distance
+  return UnitMaxRange and (UnitMaxRange <= Distance or UnitMaxRange <= 10)
 end
 
 -- Get if the unit is in range, distance check through IsSpellInRange (works only for targeted spells only)
