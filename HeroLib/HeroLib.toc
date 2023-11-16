@@ -10,6 +10,10 @@
 ## Dependencies: HeroDBC, HeroCache
 ## SavedVariables: HeroLibDB
 
+# External Libs
+ExtLibs\LibStub.lua
+ExtLibs\LibRangeCheck-3.0.lua
+
 # Utils
 Utils.lua
 

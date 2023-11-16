@@ -21,8 +21,10 @@ local type = type
 local unpack = unpack
 -- WoW API
 local IsActionInRange = IsActionInRange
-local IsItemInRange = IsItemInRange
+--local IsItemInRange = IsItemInRange
 local IsSpellInRange = IsSpellInRange
+-- External Libs
+local LRC = LibStub("LibRangeCheck-3.0-ElvUI")
 -- File Locals
 
 
@@ -119,7 +121,10 @@ function Unit:IsInRange(Distance)
       end
     end
 
-    IsInRange = IsItemInRange(ItemRange[Distance], self:ID())
+    --IsInRange = IsItemInRange(ItemRange[Distance], self:ID())
+    local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
+    --HL.Print("IsInRange ("..tostring(self:Name())..") UnitMinRange: "..tostring(UnitMinRange)..", UnitMaxRange: "..tostring(UnitMaxRange))
+    IsInRange = UnitMaxRange and UnitMaxRange <= Distance
     UnitInfoIsInRange[Identifier] = IsInRange
   end
 
@@ -148,7 +153,9 @@ function Unit:IsInMeleeRange(Distance)
   local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
   local ItemRange = RangeTable.ItemRange
 
-  return IsItemInRange(ItemRange[Distance], self:ID())
+  --return IsItemInRange(ItemRange[Distance], self:ID())
+  local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
+  return UnitMaxRange and UnitMaxRange <= Distance
 end
 
 -- Get if the unit is in range, distance check through IsSpellInRange (works only for targeted spells only)
