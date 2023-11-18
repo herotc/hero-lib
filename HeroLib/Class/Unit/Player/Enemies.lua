@@ -50,7 +50,7 @@ do
   -- Memoize RangeCheck functions.
   local RangeCheckByRadius = {}
 
-  function Player:GetEnemiesInRange(Radius, Spell)
+  function Player:GetEnemiesInRange(Radius)
     local Enemies = RangedEnemies
 
     -- Prevent building the same table if it's already cached.
@@ -73,7 +73,7 @@ do
         if #Radiuses >= 2 then tablesort(Radiuses, Utils.SortASC) end
         -- Take the closest range from the Radius and filter from it
         for _, ThisUnit in pairs(Enemies[Radiuses[1]]) do
-          if (ThisUnit:IsInRange(Radius) or (Spell and ThisUnit:IsSpellInRange(Spell))) then tableinsert(EnemiesTable, Unit) end
+          if ThisUnit:IsInRange(Radius) then tableinsert(EnemiesTable, Unit) end
         end
 
         return EnemiesTable
@@ -97,7 +97,7 @@ do
   -- Memoize RangeCheck functions.
   local RangeCheckByRadius = {}
 
-  function Player:GetEnemiesInMeleeRange(Radius, Spell)
+  function Player:GetEnemiesInMeleeRange(Radius)
     local Enemies = MeleeEnemies
 
     -- Prevent building the same table if it's already cached.
@@ -110,7 +110,7 @@ do
     -- Build from all the available units.
     local RangeCheck = RangeCheckByRadius[Radius]
     if not RangeCheck then
-      RangeCheck = function (ThisUnit) return (ThisUnit:IsInMeleeRange(Radius) or (Spell and ThisUnit:IsSpellInRange(Spell))) end
+      RangeCheck = function (ThisUnit) return ThisUnit:IsInMeleeRange(Radius) end
       RangeCheckByRadius[Radius] = RangeCheck
     end
     InsertAvailableUnits(EnemiesTable, RangeCheck)
