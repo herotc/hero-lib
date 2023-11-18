@@ -252,9 +252,12 @@ RangeTableBySpell = {
   MAGE = {
     Hostile = {
       RangeIndex = {
-        35, 40
+        30, 35, 40
       },
       SpellRange = {
+        [30] = {
+          118,             -- Polymorph
+        },
         [35] = {
           31589,           -- Slow
         },
