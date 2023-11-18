@@ -57,19 +57,11 @@ RangeTableBySpell = {
   WARRIOR = {
     Hostile = {
       RangeIndex = {
-        5, 8, 20, 25, 30, 40
+        5, 8, 20, 25, 30
       },
       SpellRange = {
          [5] = {
-          6572,            -- Revenge
-          7384,            -- Overpower
-          12294,           -- Mortal Strike
-          23881,           -- Bloodthirst
-          23922,           -- Shield Slam
-          34428,           -- Victory Rush
-          85288,           -- Raging Blow
-          184367,          -- Rampage
-          202168,          -- Impending Victory
+          1464,            -- Slam
         },
          [8] = {
           5246,            -- Intimidating Shout
@@ -79,16 +71,12 @@ RangeTableBySpell = {
         },
         [25] = {
           100,             -- Charge
-          376079,          -- Spear of Bastion
         },
         [30] = {
           355,             -- Taunt
           2764,            -- Throw
           57755,           -- Heroic Throw
           384090,          -- Titanic Throw
-        },
-        [40] = {
-          6544,            -- Heroic Leap
         },
       },
     },
