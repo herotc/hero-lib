@@ -21,10 +21,7 @@ local type = type
 local unpack = unpack
 -- WoW API
 local IsActionInRange = IsActionInRange
---local IsItemInRange = IsItemInRange
 local IsSpellInRange = IsSpellInRange
--- External Libs
-local LRC = LibStub("LibRangeCheck-3.0-ElvUI")
 -- File Locals
 
 
@@ -53,34 +50,364 @@ local RangeTableByType = {
     }
   }
 }
-do
-  local Types = { "Melee", "Ranged" }
 
-  for _, Type in pairs(Types) do
-    local ItemRange = DBC.ItemRange[Type]
-    local Hostile, Friendly = RangeTableByType[Type].Hostile, RangeTableByType[Type].Friendly
+-- Spell table for range checking
+local RangeTableBySpell = {}
+RangeTableBySpell = {
+  WARRIOR = {
+    Hostile = {
+      RangeIndex = {
+        5, 8, 20, 25, 30, 40
+      },
+      SpellRange = {
+         [5] = {
+          6572,            -- Revenge
+          7384,            -- Overpower
+          12294,           -- Mortal Strike
+          23881,           -- Bloodthirst
+          23922,           -- Shield Slam
+          34428,           -- Victory Rush
+          85288,           -- Raging Blow
+          184367,          -- Rampage
+          202168,          -- Impending Victory
+        },
+         [8] = {
+          5246,            -- Intimidating Shout
+        },
+        [20] = {
+          107570,          -- Storm Bolt
+        },
+        [25] = {
+          100,             -- Charge
+          376079,          -- Spear of Bastion
+        },
+        [30] = {
+          355,             -- Taunt
+          2764,            -- Throw
+          57755,           -- Heroic Throw
+          384090,          -- Titanic Throw
+        },
+        [40] = {
+          6544,            -- Heroic Leap
+        },
+      },
+    },
+    Friendly = {}
+  },
+  PALADIN = {
+    Hostile = {
+      RangeIndex = {
+        5, 8, 10, 20, 30, 40
+      },
+      SpellRange = {
+         [5] = {
+          35395,           -- Crusader Strike
+          53600,           -- Shield of the Righteous
+        },
+         [8] = {
+          53395,           -- Hammer of the Righteous
+          96231,           -- Rebuke
+        },
+        [10] = {
+          853,             -- Hammer of Justice
+        },
+        [20] = {
+          10326,           -- Turn Undead
+          184575,          -- Blade of Justice
+        },
+        [30] = {
+          20271,           -- Judgment
+          24275,           -- Hammer of Wrath
+          31935,           -- Avenger's Shield
+          62124,           -- Hand of Reckoning
+          183218,          -- Hand of Hinderance
+          275779,          -- Judgment
+          375576,          -- Divine Toll
+        },
+        [40] = {
+          20473,           -- Holy Shock
+        },
+      },
+    },
+    Friendly = {}
+  },
+  HUNTER = {
+    Hostile = {
+      RangeIndex = {
+        5, 8, 15, 20, 30, 40, 50
+      },
+      SpellRange = {
+         [5] = {
+          186270,          -- Raptor Strike
+          259387,          -- Mongoose Bite
+        },
+         [8] = {
+          212436,          -- Butchery
+        },
+        [15] = {
+          269751,          -- Flanking Strike
+        },
+        [20] = {
+          213691,          -- Scatter Shot
+        },
+        [30] = {
+          109248,          -- Binding Shot
+          190925,          -- Harpoon
+        },
+        [40] = {
+          75,              -- Auto Shot
+        },
+        [50] = {
+          34026,           -- Kill Command
+          321530,          -- Bloodshed
+          360966,          -- Spearhead
+        },
+      },
+    },
+    Friendly = {}
+  },
+  ROGUE = {
+    Hostile = {
+    RangeIndex = {
+        5, 10, 15, 20, 25, 30
+      },
+      SpellRange = {
+         [5] = {
+          8676,            -- Ambush
+          196819,          -- Eviscerate
+        },
+        [10] = {
+          921,             -- Pick Pocket
+        },
+        [15] = {
+          2094,            -- Blind
+        },
+        [20] = {
+          271877,          -- Blade Rush
+        },
+        [25] = {
+          36554,           -- Shadowstep
+        },
+        [30] = {
+          114014,          -- Shuriken Toss
+          185565,          -- Poisoned Knife
+          185763,          -- Pistol Shot
+        },
+      },
+    },
+    Friendly = {}
+  },
+  PRIEST = {
+    Hostile = {
+      RangeIndex = {
+        40
+      },
+      SpellRange = {
+        [40] = {
+          589,             -- Shadow Word: Pain
+          8092,            -- Mind Blast
+        },
+      },
+    },
+    Friendly = {}
+  },
+  DEATHKNIGHT = {
+    Hostile = {
+      RangeIndex = {
+        5, 8, 15, 30, 40
+      },
+      SpellRange = {
+         [5] = {
+          49020,           -- Obliterate
+          85948,           -- Festering Strike
+          195182,          -- Marrowrend
+        },
+         [8] = {
+          207230,          -- Frostscythe
+        },
+        [15] = {
+          47528,           -- Mind Freeze
+        },
+        [30] = {
+          49576,           -- Death Grip
+        },
+        [40] = {
+          305392,          -- Chill Streak
+        },
+      },
+    },
+    Friendly = {}
+  },
+  SHAMAN = {
+    Hostile = {
+      RangeIndex = {
+        5, 20, 30, 40
+      },
+      SpellRange = {
+         [5] = {
+          17364            -- Stormstrike
+        },
+        [20] = {
+          305483,          -- Lightning Lasso
+        },
+        [30] = {
+          57994,           -- Wind Shear
+        },
+        [40] = {
+          188196,          -- Lightning Bolt
+        },
+      },
+    },
+    Friendly = {}
+  },
+  MAGE = {
+    Hostile = {
+      RangeIndex = {
+        35, 40
+      },
+      SpellRange = {
+        [35] = {
+          31589,           -- Slow
+        },
+        [40] = {
+          2139,            -- Counterspell
+        },
+      },
+    },
+    Friendly = {}
+  },
+  WARLOCK = {
+    Hostile = {
+      RangeIndex = {
+        20, 30, 40
+      },
+      SpellRange = {
+        [20] = {
+          6789,            -- Mortal Coil
+        },
+        [30] = {
+          710,             -- Banish
+        },
+        [40] = {
+          686,             -- Shadow Bolt
+          980,             -- Agony
+          29722,           -- Incinerate
+        },
+      },
+    },
+    Friendly = {}
+  },
+  MONK = {
+    Hostile = {
+      RangeIndex = {
+        5, 8, 9, 15, 20, 30, 40
+      },
+      SpellRange = {
+         [5] = {
+          100780,          -- Tiger Palm
+        },
+         [8] = {
+          113656,          -- Fists of Fury
+        },
+         [9] = {
+          392983,          -- Strike of the Windlord
+        },
+        [15] = {
+          121253,          -- Keg Smash
+        },
+        [20] = {
+          115078,          -- Paralysis
+          122470,          -- Touch of Karma
+        },
+        [30] = {
+          324312,          -- Clash
+        },
+        [40] = {
+          117952,          -- Crackling Jade Lightning
+        },
+      },
+    },
+    Friendly = {}
+  },
+  DRUID = {
+    Hostile = {
+      RangeIndex = {
+        5, 13, 20, 25, 40
+      },
+      SpellRange = {
+         [5] = {
+          5221,            -- Shred
+          6807,            -- Maul
+        },
+        [13] = {
+          106839,          -- Skull Bash
+        },
+        [20] = {
+          33786,           -- Cyclone
+        },
+        [25] = {
+          16979,           -- Feral Charge (bear)
+          49376,           -- Feral Charge (cat)
+          102383,          -- Feral Charge (moonkin)
+          102401,          -- Feral Charge (no form)
+        },
+        [40] = {
+          2908,            -- Soothe
+          8921,            -- Moonfire
+          197628,          -- Starfire
+        },
+      },
+    },
+    Friendly = {}
+  },
+  DEMONHUNTER = {
+    Hostile = {
+      RangeIndex = {
+        5, 15, 50
+      },
+      SpellRange = {
+         [5] = {
+          162794,          -- Chaos Strike
+          228477,          -- Soul Cleave
+        },
+        [15] = {
+          232893,          -- Felblade
+        },
+        [50] = {
+          370965,          -- The HUNTER
+        },
+      },
+    },
+    Friendly = {}
+  },
+  EVOKER = {
+    Hostile = {
+      RangeIndex = {
+        25
+      },
+      SpellRange = {
+        [25] = {
+          361469,                                   -- Living Flame
+          369819,                                   -- Disintegrate
+        },
+      }
+    },
+    Friendly = {
+      RangeIndex = {
+        25
+      },
+      SpellRange = {
+        [25] = {
+          361469,                                   -- Living Flame
+        },
+      },
+    },
+  },
+}
 
-    -- Map the range indices and sort them since the order is not guaranteed.
-    Hostile.RangeIndex = { unpack(ItemRange.Hostile.RangeIndex) }
-    tablesort(Hostile.RangeIndex, Utils.SortMixedASC)
-    Friendly.RangeIndex = { unpack(ItemRange.Friendly.RangeIndex) }
-    tablesort(Friendly.RangeIndex, Utils.SortMixedASC)
-
-    -- Take randomly one item for each range.
-    for k, v in pairs(ItemRange.Hostile.ItemRange) do
-      Hostile.ItemRange[k] = v[mathrandom(1, #v)]
-    end
-    for k, v in pairs(ItemRange.Friendly.ItemRange) do
-      Friendly.ItemRange[k] = v[mathrandom(1, #v)]
-    end
-  end
-end
-
--- Get if the unit is in range, distance check through IsItemInRange.
+-- Get if the unit is in range, distance check through IsSpellInRange.
 -- Do keep in mind that if you're checking the range for a distance from the player (player-centered AoE like Fan of Knives),
 -- you should use the radius - 1.5yds as distance (ex: instead of 10 you should use 8.5) because the player CombatReach is ignored (the distance is computed from the center to the edge, instead of edge to edge).
--- Supported hostile ranges (will take a lower one if you specify a different one): 5 - 6.5 - 7 - 8 - 10 - 15 - 20 - 25 - 30 - 35 - 38 - 40 - 45 - 50 - 55 - 60 - 70 - 80 - 90 - 100
--- Supported friendly ranges (will take a lower one if you specify a different one): 5 - 6.5 - 7 - 8 - 10 - 15 - 20 - 25 - 30 - 35 - 38 - 40 - 45 - 50 - 55 - 60 - 70 - 80 - 90 - 100
 function Unit:IsInRange(Distance)
   assert(type(Distance) == "number", "Distance must be a number.")
   assert(Distance >= 5 and Distance <= 100, "Distance must be between 5 and 100.")
@@ -103,28 +430,31 @@ function Unit:IsInRange(Distance)
   local IsInRange = UnitInfoIsInRange[Identifier]
   if IsInRange == nil then
     -- Select the hostile or friendly range table
-    local RangeTableByReaction = RangeTableByType.Ranged
-    local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
-    local ItemRange = RangeTable.ItemRange
+    local Class = Cache.Persistent.Player.Class[2]
+    local RangeTable = Player:CanAttack(self) and RangeTableBySpell[Class].Hostile or RangeTableBySpell[Class].Friendly
+    if not RangeTable.RangeIndex then return false end
+    local SpellRange = RangeTable.SpellRange
 
-    -- If the distance we want to check doesn't exists, we look for a fallback.
-    if not ItemRange[Distance] then
-      -- Iterate in reverse order the ranges in order to find the exact rannge or one that is lower than the one we look for (so we are guarantee it is in range)
-      local RangeIndex = RangeTable.RangeIndex
-      for i = #RangeIndex, 1, -1 do
-        local Range = RangeIndex[i]
-        if Range == Distance then break end
-        if Range < Distance then
-          Distance = Range
-          break
+    -- Determine what spell to use to check range
+    local CheckSpell = nil
+    local RangeIndex = RangeTable.RangeIndex
+    for i = #RangeIndex, 1, -1 do
+      local Range = RangeIndex[i]
+      if Range <= Distance then
+        for _, SpellID in pairs(SpellRange[Range]) do
+          if Spell(SpellID):IsLearned() then
+            CheckSpell = Spell(SpellID)
+            break
+          end
         end
+        Distance = Range - 1
       end
+      if CheckSpell then break end
     end
 
-    --IsInRange = IsItemInRange(ItemRange[Distance], self:ID())
-    local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
-    --HL.Print("IsInRange ("..tostring(self:Name())..") UnitMinRange: "..tostring(UnitMinRange)..", UnitMaxRange: "..tostring(UnitMaxRange))
-    IsInRange = UnitMaxRange and (UnitMaxRange <= Distance or UnitMaxRange <= 10)
+    -- Check the range
+    if not CheckSpell then return false end
+    IsInRange = self:IsSpellInRange(CheckSpell)
     UnitInfoIsInRange[Identifier] = IsInRange
   end
 
@@ -149,13 +479,19 @@ function Unit:IsInMeleeRange(Distance)
   local GUID = self:GUID()
   if not GUID then return false end
 
-  local RangeTableByReaction = RangeTableByType.Melee
-  local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
-  local ItemRange = RangeTable.ItemRange
+  local Class = Cache.Persistent.Player.Class[2]
+  local RangeTable = Player:CanAttack(self) and RangeTableBySpell[Class].Hostile or RangeTableBySpell[Class].Friendly
+  if not RangeTable.RangeIndex then return false end
+  local SpellRange = RangeTable.SpellRange[Distance]
 
-  --return IsItemInRange(ItemRange[Distance], self:ID())
-  local UnitMinRange, UnitMaxRange = LRC:GetRange(self:ID())
-  return UnitMaxRange and (UnitMaxRange <= Distance or UnitMaxRange <= 10)
+  local CheckSpell = nil
+  for _, SpellID in pairs(SpellRange) do
+    if Spell(SpellID):IsLearned() then
+      CheckSpell = Spell(SpellID)
+      return self:IsSpellInRange(CheckSpell)
+    end
+  end
+  return false
 end
 
 -- Get if the unit is in range, distance check through IsSpellInRange (works only for targeted spells only)
