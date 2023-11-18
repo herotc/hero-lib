@@ -142,7 +142,8 @@ RangeTableBySpell = {
           259387,          -- Mongoose Bite
         },
          [8] = {
-          212436,          -- Butchery
+          187707,          -- Muzzle
+          195645,          -- Wing Clip
         },
         [15] = {
           269751,          -- Flanking Strike
