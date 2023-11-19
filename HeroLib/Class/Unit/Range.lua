@@ -297,6 +297,7 @@ RangeTableBySpell = {
       SpellRange = {
          [5] = {
           100780,          -- Tiger Palm
+          205523,          -- Blackout Kick (Brewmaster - PTA replaces Tiger Palm)
         },
          [8] = {
           113656,          -- Fists of Fury
@@ -312,7 +313,7 @@ RangeTableBySpell = {
           122470,          -- Touch of Karma
         },
         [30] = {
-          324312,          -- Clash
+          115546,          -- Provoke
         },
         [40] = {
           117952,          -- Crackling Jade Lightning
