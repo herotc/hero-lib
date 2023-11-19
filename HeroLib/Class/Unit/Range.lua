@@ -355,18 +355,27 @@ RangeTableBySpell = {
   DEMONHUNTER = {
     Hostile = {
       RangeIndex = {
-        5, 15, 50
+        5, 10, 15, 30, 40, 50
       },
       SpellRange = {
          [5] = {
           162794,          -- Chaos Strike
           228477,          -- Soul Cleave
         },
+        [10] = {
+          183752,          -- Disrupt
+        },
         [15] = {
           232893,          -- Felblade
         },
+        [30] = {
+          185245,          -- Torment
+        },
+        [40] = {
+          204157,          -- Throw Glaive
+        },
         [50] = {
-          370965,          -- The HUNTER
+          370965,          -- The Hunt
         },
       },
     },
