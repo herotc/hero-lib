@@ -361,6 +361,7 @@ RangeTableBySpell = {
       SpellRange = {
          [5] = {
           162794,          -- Chaos Strike
+          201427,          -- Annihilation
           228477,          -- Soul Cleave
         },
         [10] = {
