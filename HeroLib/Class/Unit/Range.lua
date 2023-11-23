@@ -513,9 +513,10 @@ end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()
 local function FindRange(ThisUnit, Max)
-  local RangeTableByReaction = RangeTableByType.Ranged
-  local RangeTable = Player:CanAttack(ThisUnit) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
+  local Class = Cache.Persistent.Player.Class[2]
+  local RangeTable = Player:CanAttack(ThisUnit) and RangeTableBySpell[Class].Hostile or RangeTableBySpell[Class].Friendly
   local RangeIndex = RangeTable.RangeIndex
+  if not RangeIndex then return nil end
 
   for i = #RangeIndex - (Max and 1 or 0), 1, -1 do
     if not ThisUnit:IsInRange(RangeIndex[i]) then
