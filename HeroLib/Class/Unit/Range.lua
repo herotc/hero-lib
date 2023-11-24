@@ -161,7 +161,7 @@ local function UpdateRangeSpells()
           -- If we have an exception, use that. Otherwise, use the max range from DBC.
           local MaxRange = (RangeExceptions[SpellID]) and RangeExceptions[SpellID] or SMRInfo[3]
           -- Added IsReady and CooldownDown checks here, as we were getting some funky spell additions otherwise.
-          if MaxRange and (Spell(SpellID):IsReady() or Spell(SpellID):CooldownDown()) then
+          if MaxRange and (Spell(SpellID):IsReady() or Spell(SpellID):CooldownDown() or SpellID == 921) then
             -- If we don't have the range category yet, create it, add this spell to that category, and add the distance to RangeIndex.
             if not Cache.Persistent.RangeSpells.SpellRange[MaxRange] then
               Cache.Persistent.RangeSpells.SpellRange[MaxRange] = {}
