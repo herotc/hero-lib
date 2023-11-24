@@ -328,7 +328,7 @@ local function FindRange(ThisUnit, Max)
   if not RangeIndex then return nil end
 
   for i = #RangeIndex - (Max and 1 or 0), 1, -1 do
-    if not ThisUnit:IsInRange(RangeIndex[i]) then
+    if RangeIndex[i] and not ThisUnit:IsInRange(RangeIndex[i]) then
       return Max and RangeIndex[i + 1] or RangeIndex[i]
     end
   end
