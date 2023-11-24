@@ -34,6 +34,7 @@ Cache.Persistent = {
   },
   BookIndex = { Pet = {}, Player = {} },
   SpellLearned = { Pet = {}, Player = {} },
+  RangeSpells = { RangeIndex = {}, SpellIDs = {}, MinRangeSpells = {} },
   Texture = { Spell = {}, Item = {}, Custom = {} },
   ElvUIPaging = { PagingString, PagingStrings = {}, PagingBars = {} },
   Talents = { Rank }
