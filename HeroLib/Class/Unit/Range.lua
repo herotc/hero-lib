@@ -134,7 +134,11 @@ local function UpdateRangeSpells()
   end
 
   -- Reset the Cache table.
-  wipe(Cache.Persistent.RangeSpells)
+  if type(Cache.Persistent.RangeSpells) == "table" then
+    wipe(Cache.Persistent.RangeSpells)
+  else
+    Cache.Persistent.RangeSpells = {}
+  end
   Cache.Persistent.RangeSpells.RangeIndex = {}
   Cache.Persistent.RangeSpells.SpellRange = {}
   Cache.Persistent.RangeSpells.MinRangeSpells = {}
