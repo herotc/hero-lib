@@ -209,16 +209,14 @@ local function UpdateRangeSpells()
           -- If we have an exception, use that. Otherwise, use the max range from DBC.
           local MaxRange = (RangeExceptions[SpellID]) and RangeExceptions[SpellID] or SMRInfo[3]
           -- Added IsReady and CooldownDown checks here, as we were getting some funky spell additions otherwise.
-          if MaxRange and (Spell(SpellID):IsReady() or Spell(SpellID):CooldownDown() or SpellID == 921) then
-            -- If we don't have the range category yet, create it, add this spell to that category, and add the distance to RangeIndex.
-            if not Cache.Persistent.RangeSpells.HostileSpells[MaxRange] then
-              Cache.Persistent.RangeSpells.HostileSpells[MaxRange] = {}
-              tinsert(Cache.Persistent.RangeSpells.HostileIndex, MaxRange)
-              tinsert(Cache.Persistent.RangeSpells.HostileSpells[MaxRange], SpellID)
-              if MinRange and MinRange > 0 then
-                Cache.Persistent.RangeSpells.MinRangeSpells[SpellID] = MinRange
+          if MaxRange and Spell(SpellID):IsLearned() then
+            -- If we have a hostile as our target, only add spells to the table that return a value for IsSpellInRange.
+            if not Target or not Player:CanAttack(Target) or Target and Player:CanAttack(Target) and IsSpellInRange(Spell(SpellID):BookIndex(), Spell(SpellID):BookType(), "target") ~= nil then
+              -- If we don't have the range category yet, create it, add this spell to that category, and add the distance to RangeIndex.
+              if not Cache.Persistent.RangeSpells.HostileSpells[MaxRange] then
+                Cache.Persistent.RangeSpells.HostileSpells[MaxRange] = {}
+                tinsert(Cache.Persistent.RangeSpells.HostileIndex, MaxRange)
               end
-            else
               tinsert(Cache.Persistent.RangeSpells.HostileSpells[MaxRange], SpellID)
               if MinRange and MinRange > 0 then
                 Cache.Persistent.RangeSpells.MinRangeSpells[SpellID] = MinRange
@@ -257,7 +255,7 @@ HL.RangeSpellFrame:SetScript("OnEvent", function (self, Event, Arg1)
   end
 end)
 
--- Get if the unit is in range, distance check through IsSpellInRange.
+-- Get if the unit is in range, distance check through IsSpellInRange or IsItemInRange, depending on combat state.
 -- Do keep in mind that if you're checking the range for a distance from the player (player-centered AoE like Fan of Knives),
 -- you should use the radius - 1.5yds as distance (ex: instead of 10 you should use 8.5) because the player CombatReach is ignored (the distance is computed from the center to the edge, instead of edge to edge).
 function Unit:IsInRange(Distance)
