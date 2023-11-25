@@ -169,15 +169,10 @@ end
 
 -- Create our base table with all of our possible range checking spells.
 local function UpdateRangeSpells()
-  local BookType = BOOKTYPE_SPELL
+  -- Get max spell index from tab 3 (tab 1 = General, tab 2 = Class, tab 3 = Current Spec, other tabs = Inactive Specs)
   local max = 0
-  -- Only using tabs 2 and 3 because we don't care about "General" or off-spec.
-  for i = 2, 3 do
-    local _, _, offset, numSlots, _, specID = GetSpellTabInfo(i)
-    if specID == 0 then
-      max = offset + numSlots
-    end
-  end
+  local _, _, offset, numSlots = GetSpellTabInfo(3)
+  max = offset + numSlots
 
   -- Reset the Cache table.
   if type(Cache.Persistent.RangeSpells) == "table" then
@@ -192,14 +187,13 @@ local function UpdateRangeSpells()
   Cache.Persistent.RangeSpells.MinRangeSpells = {}
 
   for SpellBookID = 1, max do
-    local Type, BaseSpellID = GetSpellBookItemInfo(SpellBookID, BookType)
-    -- PETACTION probably isn't needed, but later we can be open to using the pet spell tab.
+    local Type, BaseSpellID = GetSpellBookItemInfo(SpellBookID, BOOKTYPE_SPELL)
+    -- PETACTION probably isn't needed, but we'll keep it just in case.
     if Type == "SPELL" or type == "PETACTION" then
       -- Get the name and spell ID from the spellbook slot.
-      local SpellName = GetSpellBookItemName(SpellBookID, BookType)
-      local _, SpellID = GetSpellLink(SpellName)
+      local SpellName, _, SpellID = GetSpellBookItemName(SpellBookID, BOOKTYPE_SPELL)
       -- We only care about spells with a range, obviously.
-      if SpellHasRange(SpellBookID, BookType) then
+      if SpellHasRange(SpellBookID, BOOKTYPE_SPELL) then
         -- Pull the range data from DBC.
         local SMRInfo = DBC.SpellMeleeRange[SpellID]
         -- Make sure we actually get something back from DBC.
