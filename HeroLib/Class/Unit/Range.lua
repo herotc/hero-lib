@@ -218,6 +218,8 @@ function Unit:IsInRange(Distance)
   local GUID = self:GUID()
   if not GUID then return false end
 
+  if not Player:CanAttack(self) then return false end
+
   local UnitInfo = Cache.UnitInfo[GUID]
   if not UnitInfo then
     UnitInfo = {}
