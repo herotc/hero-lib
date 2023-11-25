@@ -374,7 +374,7 @@ function Unit:IsInRangeByItem(Distance)
   -- If the distance we want to check doesn't exists, we look for a fallback.
   if not ItemRange[Distance] then
     -- Iterate in reverse order the ranges in order to find the exact rannge or one that is lower than the one we look for (so we are guarantee it is in range)
-    local RangeIndex = RangeTable.Index
+    local RangeIndex = RangeTable.RangeIndex
     for i = #RangeIndex, 1, -1 do
       local Range = RangeIndex[i]
       if Range == Distance then break end
