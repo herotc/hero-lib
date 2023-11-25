@@ -24,11 +24,57 @@ local type = type
 local unpack = unpack
 -- WoW API
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
+local InCombatLockdown = InCombatLockdown
 local IsActionInRange = IsActionInRange
+local IsItemInRange = IsItemInRange
 local IsSpellInRange = IsSpellInRange
 -- File Locals
 local RangeExceptions = {}
+-- IsInRangeTable generated manually by FilterItemRange
+local RangeTableByType = {
+  Melee = {
+    Hostile = {
+      RangeIndex = {},
+      ItemRange = {}
+    },
+    Friendly = {
+      RangeIndex = {},
+      ItemRange = {}
+    }
+  },
+  Ranged = {
+    Hostile = {
+      RangeIndex = {},
+      ItemRange = {}
+    },
+    Friendly = {
+      RangeIndex = {},
+      ItemRange = {}
+    }
+  }
+}
+do
+  local Types = { "Melee", "Ranged" }
 
+  for _, Type in pairs(Types) do
+    local ItemRange = DBC.ItemRange[Type]
+    local Hostile, Friendly = RangeTableByType[Type].Hostile, RangeTableByType[Type].Friendly
+
+    -- Map the range indices and sort them since the order is not guaranteed.
+    Hostile.RangeIndex = { unpack(ItemRange.Hostile.RangeIndex) }
+    tablesort(Hostile.RangeIndex, Utils.SortMixedASC)
+    Friendly.RangeIndex = { unpack(ItemRange.Friendly.RangeIndex) }
+    tablesort(Friendly.RangeIndex, Utils.SortMixedASC)
+
+    -- Take randomly one item for each range.
+    for k, v in pairs(ItemRange.Hostile.ItemRange) do
+      Hostile.ItemRange[k] = v[mathrandom(1, #v)]
+    end
+    for k, v in pairs(ItemRange.Friendly.ItemRange) do
+      Friendly.ItemRange[k] = v[mathrandom(1, #v)]
+    end
+  end
+end
 
 --- ============================ CONTENT ============================
 -- Empty table, later populated during ADDON_LOADED.
@@ -139,8 +185,10 @@ local function UpdateRangeSpells()
   else
     Cache.Persistent.RangeSpells = {}
   end
-  Cache.Persistent.RangeSpells.RangeIndex = {}
-  Cache.Persistent.RangeSpells.SpellRange = {}
+  Cache.Persistent.RangeSpells.HostileIndex = {}
+  Cache.Persistent.RangeSpells.FriendlyIndex = {}
+  Cache.Persistent.RangeSpells.HostileSpells = {}
+  Cache.Persistent.RangeSpells.FriendlySpells = {}
   Cache.Persistent.RangeSpells.MinRangeSpells = {}
 
   for SpellBookID = 1, max do
@@ -163,15 +211,15 @@ local function UpdateRangeSpells()
           -- Added IsReady and CooldownDown checks here, as we were getting some funky spell additions otherwise.
           if MaxRange and (Spell(SpellID):IsReady() or Spell(SpellID):CooldownDown() or SpellID == 921) then
             -- If we don't have the range category yet, create it, add this spell to that category, and add the distance to RangeIndex.
-            if not Cache.Persistent.RangeSpells.SpellRange[MaxRange] then
-              Cache.Persistent.RangeSpells.SpellRange[MaxRange] = {}
-              tinsert(Cache.Persistent.RangeSpells.RangeIndex, MaxRange)
-              tinsert(Cache.Persistent.RangeSpells.SpellRange[MaxRange], SpellID)
+            if not Cache.Persistent.RangeSpells.HostileSpells[MaxRange] then
+              Cache.Persistent.RangeSpells.HostileSpells[MaxRange] = {}
+              tinsert(Cache.Persistent.RangeSpells.HostileIndex, MaxRange)
+              tinsert(Cache.Persistent.RangeSpells.HostileSpells[MaxRange], SpellID)
               if MinRange and MinRange > 0 then
                 Cache.Persistent.RangeSpells.MinRangeSpells[SpellID] = MinRange
               end
             else
-              tinsert(Cache.Persistent.RangeSpells.SpellRange[MaxRange], SpellID)
+              tinsert(Cache.Persistent.RangeSpells.HostileSpells[MaxRange], SpellID)
               if MinRange and MinRange > 0 then
                 Cache.Persistent.RangeSpells.MinRangeSpells[SpellID] = MinRange
               end
@@ -183,7 +231,8 @@ local function UpdateRangeSpells()
   end
 
   -- Sort the RangeIndex table, as we need it to be in order for later iterating.
-  tablesort(Cache.Persistent.RangeSpells.RangeIndex)
+  tablesort(Cache.Persistent.RangeSpells.HostileIndex)
+  tablesort(Cache.Persistent.RangeSpells.FriendlyIndex)
 end
 
 -- Dummy frame for event registration.
@@ -215,11 +264,19 @@ function Unit:IsInRange(Distance)
   assert(type(Distance) == "number", "Distance must be a number.")
   assert(Distance >= 5 and Distance <= 100, "Distance must be between 5 and 100.")
 
+  if InCombatLockdown() then
+    IsInRange = self:IsInRangeBySpell(Distance)
+  else
+    IsInRange = self:IsInRangeByItem(Distance)
+  end
+
+  return IsInRange
+end
+
+function Unit:IsInRangeBySpell(Distance)
+  -- Range Check from Cache
   local GUID = self:GUID()
   if not GUID then return false end
-
-  if not Player:CanAttack(self) then return false end
-
   local UnitInfo = Cache.UnitInfo[GUID]
   if not UnitInfo then
     UnitInfo = {}
@@ -230,65 +287,106 @@ function Unit:IsInRange(Distance)
     UnitInfoIsInRange = {}
     UnitInfo.IsInRange = UnitInfoIsInRange
   end
-
-  local Identifier = Distance -- Considering the Distance can change if it doesn't exist we use the one passed as argument for the cache
+  local Identifier = Distance
   local IsInRange = UnitInfoIsInRange[Identifier]
-  if IsInRange == nil then
-    -- Pull our range table from Cache.
-    local RangeTable = Cache.Persistent.RangeSpells
-    local SpellRange = RangeTable.SpellRange
 
-    -- Determine what spell to use to check range
-    local CheckSpell = nil
-    local RangeIndex = RangeTable.RangeIndex
-    for i = #RangeIndex, 1, -1 do
-      local Range = RangeIndex[i]
-      -- Protect against removed indexes
-      if Range == nil then
-        i = i - 1
-        if i <= 0 then
-          return false
-        else
-          Range = RangeIndex[i]
-        end
+  -- Pull our range table from Cache
+  local RangeTable = Cache.Persistent.RangeSpells
+  local IsHostile = Player:CanAttack(self)
+  -- Only use our hostile spells table if we can attack the target
+  local SpellRange = (IsHostile) and RangeTable.HostileSpells or RangeTable.FriendlySpells
+
+  -- Determine what spell to use to check range
+  local CheckSpell = nil
+  -- Select the appropriate index
+  local RangeIndex = (IsHostile) and RangeTable.HostileIndex or RangeTable.FriendlyIndex
+  for i = #RangeIndex, 1, -1 do
+    local Range = RangeIndex[i]
+    -- Protect against removed indexes
+    if Range == nil then
+      i = i - 1
+      if i <= 0 then
+        return false
+      else
+        Range = RangeIndex[i]
       end
-      if Range and Range <= Distance then
-        for SpellIndex, SpellID in pairs(SpellRange[Range]) do
-          -- Does the spell have a MinRange? Is it higher than our current range check?
-          local MinRange = Cache.Persistent.RangeSpells.MinRangeSpells[SpellID]
-          if MinRange and MinRange < Distance and not self:IsInRange(MinRange) or not MinRange then
-            -- Check the API IsSpellInRange.
-            -- It returns nil on a spell that can't be used for range checking and 0 or 1 for one that can.
-            local BookIndex = Spell(SpellID):BookIndex()
-            local BookType = Spell(SpellID):BookType()
-            local SpellInRange = IsSpellInRange(BookIndex, BookType, self:ID())
-            -- If the spell can't be used for range checking, remove it from the table.
-            if SpellInRange == nil then
-              SpellRange[Range][SpellIndex] = nil
-              -- If the range category is now empty, remove it and its index entry.
-              local CheckCount = 0
-              for _ in pairs(SpellRange[Range]) do CheckCount = CheckCount + 1 end
-              if CheckCount == 0 then
-                RangeIndex[i] = nil
-                SpellRange[Range] = nil
-              end
-            else
-              CheckSpell = Spell(SpellID)
-              break
+    end
+    if Range and Range <= Distance then
+      for SpellIndex, SpellID in pairs(SpellRange[Range]) do
+        -- Does the spell have a MinRange? Is it higher than our current range check?
+        local MinRange = Cache.Persistent.RangeSpells.MinRangeSpells[SpellID]
+        if MinRange and MinRange < Distance and not self:IsInRange(MinRange) or not MinRange or not IsHostile then
+          -- Check the API IsSpellInRange
+          -- It returns nil on a spell that can't be used for range checking and 0 or 1 for one that can
+          local BookIndex = Spell(SpellID):BookIndex()
+          local BookType = Spell(SpellID):BookType()
+          local SpellInRange = IsSpellInRange(BookIndex, BookType, self:ID())
+          -- If the spell can't be used for range checking, remove it from the table.
+          if SpellInRange == nil then
+            SpellRange[Range][SpellIndex] = nil
+            -- If the range category is now empty, remove it and its index entry.
+            local CheckCount = 0
+            for _ in pairs(SpellRange[Range]) do CheckCount = CheckCount + 1 end
+            if CheckCount == 0 then
+              RangeIndex[i] = nil
+              SpellRange[Range] = nil
             end
+          else
+            CheckSpell = Spell(SpellID)
+            break
           end
         end
-        Distance = Range - 1
       end
-      if CheckSpell then break end
+      Distance = Range - 1
     end
-
-    -- Check the range
-    if not CheckSpell then return false end
-    IsInRange = self:IsSpellInRange(CheckSpell)
-    UnitInfoIsInRange[Identifier] = IsInRange
+    if CheckSpell then break end
   end
 
+  -- Check the range
+  if not CheckSpell then return false end
+  IsInRange = self:IsSpellInRange(CheckSpell)
+  UnitInfoIsInRange[Identifier] = IsInRange
+  return IsInRange
+end
+
+function Unit:IsInRangeByItem(Distance)
+  -- Range Check from Cache
+  local GUID = self:GUID()
+  if not GUID then return false end
+  local UnitInfo = Cache.UnitInfo[GUID]
+  if not UnitInfo then
+    UnitInfo = {}
+    Cache.UnitInfo[GUID] = UnitInfo
+  end
+  local UnitInfoIsInRange = UnitInfo.IsInRange
+  if not UnitInfoIsInRange then
+    UnitInfoIsInRange = {}
+    UnitInfo.IsInRange = UnitInfoIsInRange
+  end
+  local Identifier = Distance
+  local IsInRange = UnitInfoIsInRange[Identifier]
+
+  -- Select the hostile or friendly range table
+  local RangeTableByReaction = RangeTableByType.Ranged
+  local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
+  local ItemRange = RangeTable.ItemRange
+
+  -- If the distance we want to check doesn't exists, we look for a fallback.
+  if not ItemRange[Distance] then
+    -- Iterate in reverse order the ranges in order to find the exact rannge or one that is lower than the one we look for (so we are guarantee it is in range)
+    local RangeIndex = RangeTable.Index
+    for i = #RangeIndex, 1, -1 do
+      local Range = RangeIndex[i]
+      if Range == Distance then break end
+      if Range < Distance then
+        Distance = Range
+        break
+      end
+    end
+  end
+
+  IsInRange = IsItemInRange(ItemRange[Distance], self:ID())
+  UnitInfoIsInRange[Identifier] = IsInRange
   return IsInRange
 end
 
