@@ -315,13 +315,15 @@ function Unit:IsInRangeBySpell(Distance)
           local SpellInRange = IsSpellInRange(BookIndex, BookType, self:ID())
           -- If the spell can't be used for range checking, remove it from the table.
           if SpellInRange == nil then
-            SpellRange[Range][SpellIndex] = nil
-            -- If the range category is now empty, remove it and its index entry.
-            local CheckCount = 0
-            for _ in pairs(SpellRange[Range]) do CheckCount = CheckCount + 1 end
-            if CheckCount == 0 then
-              RangeIndex[i] = nil
-              SpellRange[Range] = nil
+            if self:Exists() then
+              SpellRange[Range][SpellIndex] = nil
+              -- If the range category is now empty, remove it and its index entry.
+              local CheckCount = 0
+              for _ in pairs(SpellRange[Range]) do CheckCount = CheckCount + 1 end
+              if CheckCount == 0 then
+                RangeIndex[i] = nil
+                SpellRange[Range] = nil
+              end
             end
           else
             CheckSpell = Spell(SpellID)
