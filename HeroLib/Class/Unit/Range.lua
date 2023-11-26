@@ -18,6 +18,7 @@ local mathceil = math.ceil
 local mathfloor = math.floor
 local mathrandom = math.random
 local pairs = pairs
+local ipairs = ipairs
 local tinsert = table.insert
 local tablesort = table.sort
 local type = type
@@ -304,7 +305,7 @@ function Unit:IsInRangeBySpell(Distance)
       end
     end
     if Range and Range <= Distance then
-      for SpellIndex, SpellID in pairs(SpellRange[Range]) do
+      for SpellIndex, SpellID in ipairs(SpellRange[Range]) do
         -- Does the spell have a MinRange? Is it higher than our current range check?
         local MinRange = Cache.Persistent.RangeSpells.MinRangeSpells[SpellID]
         if MinRange and MinRange < Distance and not self:IsInRange(MinRange) or not MinRange or not IsHostile then
@@ -314,18 +315,13 @@ function Unit:IsInRangeBySpell(Distance)
           local BookType = Spell(SpellID):BookType()
           local SpellInRange = IsSpellInRange(BookIndex, BookType, self:ID())
           -- If the spell can't be used for range checking, remove it from the table.
-          if SpellInRange == nil then
-            if self:Exists() then
-              SpellRange[Range][SpellIndex] = nil
-              -- If the range category is now empty, remove it and its index entry.
-              local CheckCount = 0
-              for _ in pairs(SpellRange[Range]) do CheckCount = CheckCount + 1 end
-              if CheckCount == 0 then
-                RangeIndex[i] = nil
-                SpellRange[Range] = nil
-              end
+          if SpellInRange ~= nil then
+            if SpellIndex ~= 1 then
+              local CurrentIndex = SpellIndex
+              local SlotOneSpell = SpellRange[Range][1]
+              SpellRange[Range][CurrentIndex] = SlotOneSpell
+              SpellRange[Range][1] = SpellID
             end
-          else
             CheckSpell = Spell(SpellID)
             break
           end
