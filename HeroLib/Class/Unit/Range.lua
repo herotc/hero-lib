@@ -391,14 +391,16 @@ function Unit:IsInMeleeRange(Distance)
 
   -- At this moment we cannot check multiple melee range (5, 8, 10), only the 5yds one from the item.
   -- So we use the ranged item while substracting 1.5y, which is the player hitbox radius.
-  if (Distance ~= 5) then
-    return self:IsInRange(Distance - 1.5)
-  end
+  --if (Distance ~= 5) then
+    --return self:IsInRange(Distance - 1.5)
+  --end
 
   local GUID = self:GUID()
   if not GUID then return false end
 
-  return self:IsInRange(5)
+  -- With the inability to get as granular as we could with IsItemInRange, let's just make IsInMeleeRange directly call IsInRange.
+  -- This is (obviously) not optimal, but might be a necessary evil based on the lack of granularity.
+  return self:IsInRange(Distance)
 end
 
 -- Get if the unit is in range, distance check through IsSpellInRange (works only for targeted spells only)
