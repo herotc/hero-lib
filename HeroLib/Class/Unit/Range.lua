@@ -364,7 +364,7 @@ function Unit:IsInRangeByItem(Distance)
   -- If the distance we want to check doesn't exists, we look for a fallback.
   if not ItemRange[Distance] then
     -- Iterate in reverse order the ranges in order to find the exact rannge or one that is lower than the one we look for (so we are guarantee it is in range)
-    local RangeIndex = RangeTable.RangeIndex
+    local RangeIndex = Player:CanAttack(self) and RangeTable.HostileIndex or RangeTable.FriendlyIndex
     for i = #RangeIndex, 1, -1 do
       local Range = RangeIndex[i]
       if Range == Distance then break end
@@ -419,8 +419,16 @@ end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()
 local function FindRange(ThisUnit, Max)
-  local RangeTable = Cache.Persistent.RangeSpells
-  local RangeIndex = RangeTable.RangeIndex
+  local RangeTable, RangeIndex
+  local CanWeAttack = Player:CanAttack(ThisUnit)
+  local InCombat = InCombatLockdown()
+  if InCombat then
+    RangeTable = CanWeAttack and Cache.Persistent.RangeSpells.HostileSpells or Cache.Persistent.RangeSpells.FriendlySpells
+    RangeIndex = CanWeAttack and Cache.Persistent.RangeSpells.HostileIndex or Cache.Persistent.RangeSpells.FriendlyIndex
+  else
+    RangeTable = CanWeAttack and RangeTableByType.Ranged.Hostile or RangeTableByType.Ranged.Friendly
+    RangeIndex = RangeTable.RangeIndex
+  end
   if not RangeIndex then return nil end
 
   for i = #RangeIndex - (Max and 1 or 0), 1, -1 do
