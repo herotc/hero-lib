@@ -179,8 +179,9 @@ do
   local GenericItems = {
     -- Generic items that we always want to exclude
     -- Dragonflight
+    CruelDreamcarver                = Item(207783, {16, 17}),
     DraconicCauterizingMagma        = Item(204388, {13, 14}),
-    HeatofPrimalWinter              = Item(201962),
+    HeatofPrimalWinter              = Item(201962, {2}),
     OminousChromaticEssence         = Item(203729, {13, 14}),
     PrimalRitualShell               = Item(200563, {13, 14}),
     RingBoundHourglass              = Item(193000, {13, 14}),
