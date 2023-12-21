@@ -198,6 +198,12 @@ function Item:CooldownDown()
   return self:CooldownRemains() ~= 0
 end
 
+-- trinket.foo.cast_time
+function Item:CastTime()
+  if not self:OnUseSpell() then return 0 end
+  return self:OnUseSpell():CastTime() or 0
+end
+
 -- Get wether an item is ready to be used
 function Item:IsReady()
   return (self:IsUsable() and self:CooldownUp())
