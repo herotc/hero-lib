@@ -246,6 +246,9 @@ do
     -- Dragonflight
     SkeweringColdDebuff               = Spell(388929),
   }
+  local RangeOverrides = {
+    [207172]                          = 10, -- Belor'relos, the Suncaller
+  }
 
   -- Check if the trinket is coded as blacklisted by the user or not.
   local function IsUserItemBlacklisted(Item)
@@ -370,6 +373,7 @@ do
           local ItemSlot = Item:SlotIDs()[1]
           local ItemSpell = Item:OnUseSpell()
           local ItemRange = (ItemSpell and ItemSpell.MaximumRange > 0 and ItemSpell.MaximumRange <= 100) and ItemSpell.MaximumRange or 100
+          if RangeOverrides[ItemID] then ItemRange = RangeOverrides[ItemID] end
           return Item, ItemSlot, ItemRange
         end
       end
