@@ -115,6 +115,11 @@ function Unit:Level()
   return UnitLevel(self.UnitID)
 end
 
+-- Get the class of the unit
+function Unit:Class()
+  return UnitClass(self.UnitID)
+end
+
 -- Get if the unit (or a given NPC ID) is in the Boss list.
 function Unit:IsInBossList(NPCID)
   local ThisNPCID = NPCID or self:NPCID()
