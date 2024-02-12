@@ -118,6 +118,11 @@ local TierSets = {
   },
 }
 
+local UsableItemOverride = {
+  -- Dragonflight
+  [208321] = true, -- Iridal
+}
+
 -- Retrieve the current player's equipment.
 function Player:GetEquipment()
   return Equipment
@@ -146,7 +151,7 @@ function Player:UpdateEquipment()
       else
         ItemObject = Item(ItemID)
       end
-      if ItemObject:IsUsable() then
+      if ItemObject:IsUsable() or UsableItemOverride[ItemID] then
         table.insert(UseableItems, ItemObject)
       end
     end
