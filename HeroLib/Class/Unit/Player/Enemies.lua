@@ -138,7 +138,7 @@ do
     -- Build from all the available units.
     local RangeCheck = RangeCheckByIdentifier[Identifier]
     if not RangeCheck then
-      RangeCheck = function (ThisUnit) return ThisUnit:IsInSpellRange(ThisSpell) end
+      RangeCheck = function (ThisUnit) return ThisUnit:IsSpellInRange(ThisSpell) end
       RangeCheckByIdentifier[Identifier] = RangeCheck
     end
     InsertAvailableUnits(EnemiesTable, RangeCheck)

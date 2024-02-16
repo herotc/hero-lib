@@ -130,7 +130,7 @@ end
 
 -- Get if the unit is in range, distance check through IsItemInRange.
 -- Melee ranges are different than Ranged one, we can only check the 5y Melee range through items at this moment.
--- If you have a spell that increase your melee range you should instead use Unit:IsInSpellRange().
+-- If you have a spell that increase your melee range you should instead use Unit:IsSpellInRange().
 -- Supported hostile ranges: 5
 -- Supported friendly ranges: 5
 function Unit:IsInMeleeRange(Distance)
