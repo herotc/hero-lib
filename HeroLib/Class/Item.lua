@@ -208,8 +208,7 @@ end
 function Item:IsReady()
   if not self:IsUsable() then return false end
   local SpellGCD = DBC.SpellGCD[self:OnUseSpell():ID()]
-  local Ready = (SpellGCD > 0) and self:CooldownRemains() < Player:GCD() or self:CooldownUp()
-  return Ready
+  return (SpellGCD > 0) and self:CooldownRemains() <= Player:GCD() or self:CooldownUp()
 end
 
 -- Get whether an item is equipped and ready to be used
