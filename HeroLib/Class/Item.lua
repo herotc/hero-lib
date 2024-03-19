@@ -1,21 +1,24 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL   = ...
 -- HeroDBC
-local DBC = HeroDBC.DBC
+local DBC             = HeroDBC.DBC
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
+local Cache           = HeroCache
+local Unit            = HL.Unit
+local Player          = Unit.Player
+local Target          = Unit.Target
+local Spell           = HL.Spell
+local Item            = HL.Item
 -- Lua
-local GetItemCooldown = GetItemCooldown -- start, duration, enable, modRate
-local GetItemInfo = GetItemInfo -- itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
-local GetTime = GetTime
-local IsUsableItem = IsUsableItem -- usable, noMana
+local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo -- effectiveILvl, isPreview, baseILvl
+local GetItemCooldown = C_Item.GetItemCooldown -- start, duration, enable, modRate
+local GetItemInfo     = C_Item.GetItemInfo -- itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
+local GetItemLink     = C_Item.GetItemLink -- itemLink
+local IsUsableItem    = C_Item.IsUsableItem -- usable, noMana
+local ItemLocation    = ItemLocation
+local GetTime         = GetTime
 -- File Locals
 
 

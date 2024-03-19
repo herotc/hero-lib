@@ -8,13 +8,12 @@ local DBC = HeroDBC.DBC
 local Cache = HeroCache
 -- Lua
 local error = error
-local GetItemInfo = GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 local GetSpellInfo = GetSpellInfo
 local setmetatable = setmetatable
 local stringformat = string.format
 local tableinsert = table.insert
 -- File Locals
-
 
 
 --- ============================ CONTENT ============================
