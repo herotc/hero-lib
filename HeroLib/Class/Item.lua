@@ -51,6 +51,16 @@ end
 
 -- Get the item Level.
 function Item:Level()
+  if not self:IsEquipped() then return self.ItemLevel end
+  local Equipment = Player:GetEquipment()
+  for _,i in pairs(self:SlotIDs()) do
+    if self:ID() == Equipment[i] then
+      local Location = ItemLocation:CreateFromEquipmentSlot(i)
+      local ItemLink = GetItemLink(Location)
+      return GetDetailedItemLevelInfo(ItemLink) or self.ItemLevel
+    end
+  end
+  -- Safety
   return self.ItemLevel
 end
 
