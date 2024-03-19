@@ -22,7 +22,7 @@ local unpack = unpack
 -- WoW API
 local InCombatLockdown = InCombatLockdown
 local IsActionInRange = IsActionInRange
-local IsItemInRange = IsItemInRange
+local IsItemInRange = C_Item.IsItemInRange
 local IsSpellInRange = IsSpellInRange
 -- File Locals
 
