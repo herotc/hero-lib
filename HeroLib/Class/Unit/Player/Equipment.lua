@@ -116,6 +116,36 @@ local TierSets = {
     -- Evoker
     [13] = {[1] = 207227, [3] = 207225, [5] = 207230, [7] = 207226, [10] = 207228}
   },
+  -- Dragonflight - Season 4
+  ["DFS4"] = {
+    -- Item Slot IDs: 1 - Head, 3 - Shoulders, 5 - Chest, 7 - Legs, 10 - Hands
+    -- Warrior
+    [1]  = {[1] = 217218, [3] = 217220, [5] = 217216, [7] = 217219, [10] = 217217},
+    -- Paladin
+    [2]  = {[1] = 217198, [3] = 217200, [5] = 217196, [7] = 217199, [10] = 217197},
+    -- Hunter
+    [3]  = {[1] = 217183, [3] = 217185, [5] = 217181, [7] = 217184, [10] = 217182},
+    -- Rogue
+    [4]  = {[1] = 217208, [3] = 217210, [5] = 217206, [7] = 217209, [10] = 217207},
+    -- Priest
+    [5]  = {[1] = 217202, [3] = 217204, [5] = 217205, [7] = 217203, [10] = 217201},
+    -- Death Knight
+    [6]  = {[1] = 217223, [3] = 217225, [5] = 217221, [7] = 217224, [10] = 217222},
+    -- Shaman
+    [7]  = {[1] = 217238, [3] = 217240, [5] = 217236, [7] = 217239, [10] = 217237},
+    -- Mage
+    [8]  = {[1] = 217232, [3] = 217234, [5] = 217235, [7] = 217233, [10] = 217231},
+    -- Warlock
+    [9]  = {[1] = 217212, [3] = 217214, [5] = 217215, [7] = 217213, [10] = 217211},
+    -- Monk
+    [10] = {[1] = 217188, [3] = 217190, [5] = 217186, [7] = 217189, [10] = 217187},
+    -- Druid
+    [11] = {[1] = 217193, [3] = 217195, [5] = 217191, [7] = 217194, [10] = 217192},
+    -- Demon Hunter
+    [12] = {[1] = 217228, [3] = 217230, [5] = 217226, [7] = 217229, [10] = 217227},
+    -- Evoker
+    [13] = {[1] = 217178, [3] = 217180, [5] = 217176, [7] = 217179, [10] = 217177}
+  },
 }
 
 local UsableItemOverride = {
@@ -390,5 +420,39 @@ end
 
 -- Check if a tier set bonus is equipped
 function Player:HasTier(Tier, Pieces)
-  return Cache.Persistent.TierSets[Tier][Pieces.."pc"]
+  local DFS4Translate = {
+    -- Warrior
+    [1] = { [71] = 29, [72] = 30, [73] = 31 },
+    -- Paladin
+    [2] = { [66] = 29, [70] = 31 },
+    -- Hunter
+    [3] = { [253] = 31, [254] = 31, [255] = 29 },
+    -- Rogue
+    [4] = { [259] = 31, [260] = 31, [261] = 31 },
+    -- Priest
+    [5] = { [258] = 30 },
+    -- Death Knight
+    [6] = { [250] = 30, [251] = 30, [252] = 31 },
+    -- Shaman
+    [7] = { [262] = 31, [263] = 31 },
+    -- Mage
+    [8] = { [62] = 31, [63] = 30, [64] = 31 },
+    -- Warlock
+    [9] = { [265] = 31, [266] = 31, [267] = 29 },
+    -- Monk
+    [10] = { [268] = 31, [269] = 29 },
+    -- Druid
+    [11] = { [102] = 29, [103] = 31, [104] = 30 },
+    -- Demon Hunter
+    [12] = { [577] = 31, [581] = 31 },
+    -- Evoker
+    [13] = { [1467] = 30, [1473] = 31 }
+  }
+  local Class = Cache.Persistent.Player.Class[3]
+  local Spec = Cache.Persistent.Player.Spec[1]
+  if DFS4Translate[Class][Spec] and DFS4Translate[Class][Spec] == Tier then
+    return Cache.Persistent.TierSets[Tier][Pieces.."pc"] or Cache.Persistent.TierSets["DFS4"][Pieces.."pc"]
+  else
+    return Cache.Persistent.TierSets[Tier][Pieces.."pc"]
+  end
 end
