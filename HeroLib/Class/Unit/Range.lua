@@ -173,7 +173,7 @@ end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()
 local function FindRange(ThisUnit, Max)
-  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(ThisUnit)) then return 0 end
+  if InCombatLockdown() and (ThisUnit:IsAPlayer() or not Player:CanAttack(ThisUnit)) then return 0 end
   local RangeTableByReaction = RangeTableByType.Ranged
   local RangeTable = Player:CanAttack(ThisUnit) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
   local RangeIndex = RangeTable.RangeIndex
