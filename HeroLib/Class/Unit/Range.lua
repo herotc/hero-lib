@@ -101,7 +101,7 @@ function Unit:IsInRange(Distance)
   if IsInRange == nil then
     -- For now, if we're in combat and trying to range check a friendly, just return false.
     -- TODO: Come up with friendly tracking while in combat.
-    if InCombatLockdown() and (UnitIsPlayer(self) or not Player:CanAttack(self)) then return false end
+    if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return false end
     -- Select the hostile or friendly range table
     local RangeTableByReaction = RangeTableByType.Ranged
     local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
@@ -148,7 +148,7 @@ function Unit:IsInMeleeRange(Distance)
 
   -- Again, if in combat and target is friendly, return false for now.
   -- TODO: Come up with friendly tracking while in combat.
-  if InCombatLockdown() and (UnitIsPlayer(self) or not Player:CanAttack(self)) then return false end
+  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return false end
 
   local RangeTableByReaction = RangeTableByType.Melee
   local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
@@ -173,7 +173,7 @@ end
 
 -- Find Range mixin, used by Unit:MinDistance() and Unit:MaxDistance()
 local function FindRange(ThisUnit, Max)
-  if InCombatLockdown() and (UnitIsPlayer(self) or not Player:CanAttack(ThisUnit)) then return 0 end
+  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(ThisUnit)) then return 0 end
   local RangeTableByReaction = RangeTableByType.Ranged
   local RangeTable = Player:CanAttack(ThisUnit) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
   local RangeIndex = RangeTable.RangeIndex
