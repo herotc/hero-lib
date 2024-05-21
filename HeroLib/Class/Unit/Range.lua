@@ -99,9 +99,9 @@ function Unit:IsInRange(Distance)
   local Identifier = Distance -- Considering the Distance can change if it doesn't exist we use the one passed as argument for the cache
   local IsInRange = UnitInfoIsInRange[Identifier]
   if IsInRange == nil then
-    -- For now, if we're in combat and trying to range check a friendly, just return false.
+    -- For now, if we're in combat and trying to range check a friendly unit or enemy player, just return true to avoid icon shading.
     -- TODO: Come up with friendly tracking while in combat.
-    if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return false end
+    if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return true end
     -- Select the hostile or friendly range table
     local RangeTableByReaction = RangeTableByType.Ranged
     local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
@@ -146,9 +146,9 @@ function Unit:IsInMeleeRange(Distance)
   local GUID = self:GUID()
   if not GUID then return false end
 
-  -- Again, if in combat and target is friendly, return false for now.
+  -- Again, if in combat and target is friendly unit or enemy player, return true to avoid icon shading.
   -- TODO: Come up with friendly tracking while in combat.
-  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return false end
+  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return true end
 
   local RangeTableByReaction = RangeTableByType.Melee
   local RangeTable = Player:CanAttack(self) and RangeTableByReaction.Hostile or RangeTableByReaction.Friendly
