@@ -90,24 +90,50 @@ HL.GUISettings = {
         --- Shadowlands
         ----- PvP -----
         --- Rated
-        -- Sinful Gladiator's Medallion
-        [181333] = true,
-        -- Corrupted Gladiator's Medallion
-        [184055] = true,
-        -- Unchained Gladiator's Medallion
-        [185304] = true,
+        [181333] = true, -- Sinful Gladiator's Medallion
+        [184055] = true, -- Corrupted Gladiator's Medallion
+        [185304] = true, -- Unchained Gladiator's Medallion
         --- Unrated
-        -- Sinful Aspirant's Medallion
-        [184052] = true,
-        -- Corrupted Aspirant's Medallion
-        [184058] = true,
-        -- Unchained Aspirant's Medallion
-        [185309] = true,
+        [184052] = true, -- Sinful Aspirant's Medallion
+        [184058] = true, -- Corrupted Aspirant's Medallion
+        [185309] = true, -- Unchained Aspirant's Medallion
         --- Battle for Azeroth
         ----- Raid -----
         --- Ny'alotha, The Waking City
-        -- Humming Black Dragonscale
-        [174044] = true
+        [174044] = true, -- Humming Black Dragonscale
+        --- Dragonflight
+        ----- Dungeons -----
+        [193757] = true, -- Ruby Whelp Shell
+        ----- Raid -----
+        --- Aberrus
+        [202612] = true, -- Screaming Black Dragonscale
+        [203729] = true, -- Ominous Chromatic Essence
+        --- Amirdrassil
+        [207783] = true, -- Cruel Dreamcarver
+        ----- Open World Reward -----
+        [195220] = true, -- Uncanny Pocketwatch
+        [200563] = true, -- Primal Ritual Shell
+        [201962] = true, -- Heat of Primal Winter
+        [204388] = true, -- Draconic Cauterizing Magma
+        ----- Engineering Items -----
+        [198322] = true, -- Overengineered Sleeve Extenders
+        [198323] = true, -- Lightweight Ocular Lenses
+        [198324] = true, -- Peripheral Vision Projectors
+        [198325] = true, -- Oscillating Wilderness Opticals
+        [198326] = true, -- Battle-Ready Goggles
+        [198327] = true, -- Needlessly Complex Wristguards
+        [198328] = true, -- Quality Assured Optics
+        [198329] = true, -- Milestone Magnifiers
+        [198330] = true, -- Deadline Deadeyes
+        [198331] = true, -- Sentrys Stabilized Specs
+        [198332] = true, -- Complicated Cuffs
+        [198333] = true, -- Difficult Wrist Protectors
+        [205278] = true, -- Cloth Goggles
+        [205279] = true, -- Leather Goggles
+        [205280] = true, -- Mail Goggles
+        [205281] = true, -- Plate Goggles
+        ----- Other Crafted Items -----
+        [193000] = true, -- Ring-Bound Hourglass
       }
     }
   }
