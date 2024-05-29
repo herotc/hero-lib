@@ -107,7 +107,9 @@ do
   local HealingAbsorbedSpells = {
     Debuff = {
       -- T21 Antorus
-      Spell(243961) -- Misery (Varimathras)
+      Spell(243961), -- Misery (Varimathras)
+      -- T31 Amirdrassil
+      Spell(421656), -- Cauterizing Wound (Smolderon)
     }
   }
   function Player:HealingAbsorbed()
