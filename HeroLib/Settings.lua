@@ -87,20 +87,6 @@ HL.GUISettings = {
       },
       -- Custom Use Trinket Ignore List
       ItemUserDefined = {
-        --- Shadowlands
-        ----- PvP -----
-        --- Rated
-        [181333] = true, -- Sinful Gladiator's Medallion
-        [184055] = true, -- Corrupted Gladiator's Medallion
-        [185304] = true, -- Unchained Gladiator's Medallion
-        --- Unrated
-        [184052] = true, -- Sinful Aspirant's Medallion
-        [184058] = true, -- Corrupted Aspirant's Medallion
-        [185309] = true, -- Unchained Aspirant's Medallion
-        --- Battle for Azeroth
-        ----- Raid -----
-        --- Ny'alotha, The Waking City
-        [174044] = true, -- Humming Black Dragonscale
         --- Dragonflight
         ----- Dungeons -----
         [193757] = true, -- Ruby Whelp Shell
