@@ -20,28 +20,37 @@ local Item = HL.Item
 --- ============================ CONTENT ============================
 -- Get if the unit is stunned or not
 local IsStunnedDebuffs = {
+  -- Death Knight
+  Spell(91797),  -- Monstrous Blow (pet)
+  Spell(91800),  -- Gnaw (pet)
+  Spell(221562), -- Asphyxiate
   -- Demon Hunter
+  Spell(179057), -- Chaos Nova
+  Spell(211881), -- Fel Eruption
   -- Druid
-  -- General
-  Spell(5211), -- Mighty Bash
-  -- Feral
-  Spell(203123), -- Maim
+  Spell(5211),   -- Mighty Bash
+  Spell(22570),  -- Maim
   Spell(163505), -- Rake
+  -- Evoker
+  Spell(372245), -- Terror of the Skies
+  -- Hunter
+  Spell(24394),  -- Intimidation (may be an old ID)
+  Spell(117526), -- Binding Shot
+  -- Monk
+  Spell(119381), -- Leg Sweep
   -- Paladin
-  -- General
-  Spell(853), -- Hammer of Justice
-  -- Retribution
+  Spell(853),    -- Hammer of Justice
   Spell(205290), -- Wake of Ashes
+  -- Priest
+  Spell(64044),  -- Psychic Horror
   -- Rogue
-  -- General
-  Spell(199804), -- Between the Eyes
-  Spell(1833), -- Cheap Shot
-  Spell(408), -- Kidney Shot
-  Spell(196958), -- Strike from the Shadows
+  Spell(408),    -- Kidney Shot
+  Spell(1833),   -- Cheap Shot
+  -- Warlock
+  Spell(30283),  -- Shadowfury
   -- Warrior
-  -- General
-  Spell(132168), -- Shockwave
-  Spell(132169), -- Storm Bolt
+  Spell(46968),  -- Shockwave
+  Spell(107570), -- Storm Bolt
 }
 function Unit:IterateStunDebuffs()
   for i = 1, #IsStunnedDebuffs do
