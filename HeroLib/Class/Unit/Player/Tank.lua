@@ -58,6 +58,29 @@ do
       390548, -- Sundering Strike (Kurog)
       375870, -- Mortal Stoneclaws (Broodkeeper)
       377658, -- Electrified Jaws (Raszageth)
+      -- T30 Aberrus
+      404744, -- Terror Claws (Kazzara)
+      403699, -- Shadow Spike (Amalgamation)
+      403203, -- Flame Slash (Amalgamation)
+      405914, -- Withering Vulnerability (Amalgamation)
+      406783, -- Shadowflame Burst (Amalgamation)
+      401258, -- Heavy Cudgel (Assault)
+      410351, -- Flaming Cudgel (Assault)
+      407547, -- Flaming Slash (Rashok)
+      407597, -- Earthen Crush (Rashok)
+      401348, -- Incinerating Maws (Magmorax)
+      401022, -- Calamitous Strike (Echo)
+      407790, -- Sunder Shadow (Echo)
+      401325, -- Burning Claws (Sarkareth)
+      411236, -- Void Claws (Sarkareth)
+      408422, -- Void Slash (Sarkareth)
+      -- T31 Amirdrassil
+      424352, -- Dreadfire Barrage (Gnarlroot)
+      421020, -- Agonizing Claws (Council)
+      418637, -- Furious Charge (Larodar)
+      421343, -- Brand of Damnation (Smolderon)
+      417431, -- Fyr'alath's Bite (Fyrakk)
+      425492, -- Infernal Maw (Fyrakk)
     },
     Channel = {} -- TODO ?
   }
