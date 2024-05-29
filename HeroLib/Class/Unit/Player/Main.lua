@@ -168,10 +168,12 @@ end
 do
   local StopCast = {
     Debuffs = {
-      { Spell(240447), 1 } -- Quake (M+ Affix)
     }
   }
   function Player:ShouldStopCasting()
+    -- Only debuff to force stop of casting (M+ Quaking) was removed,
+    -- so just returning false for now while leaving the functional code.
+    return false
     local Debuffs = StopCast.Debuffs
     for i = 1, #Debuffs do
       local Record = Debuffs[i]
