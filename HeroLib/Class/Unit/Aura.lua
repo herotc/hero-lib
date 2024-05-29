@@ -202,22 +202,23 @@ end
 do
   local BloodlustSpells = {
     -- Abilities
-    Spell(2825), -- Shaman: Bloodlust (Horde)
-    Spell(32182), -- Shaman: Heroism (Alliance)
-    Spell(80353), -- Mage:Time Warp
-    Spell(90355), -- Hunter: Ancient Hysteria
+    Spell(2825),   -- Shaman: Bloodlust (Horde)
+    Spell(32182),  -- Shaman: Heroism (Alliance)
+    Spell(80353),  -- Mage: Time Warp
+    Spell(90355),  -- Hunter: Ancient Hysteria
     Spell(160452), -- Hunter: Netherwinds
     Spell(264667), -- Hunter: Primal Rage
     Spell(390386), -- Evoker: Fury of the Aspects
     -- Drums
-    Spell(35475), -- Drums of War (Cata)
-    Spell(35476), -- Drums of Battle (Cata)
+    Spell(35475),  -- Drums of War (Cata)
+    Spell(35476),  -- Drums of Battle (Cata)
     Spell(146555), -- Drums of Rage (MoP)
     Spell(178207), -- Drums of Fury (WoD)
     Spell(230935), -- Drums of the Mountain (Legion)
     Spell(256740), -- Drums of the Maelstrom (BfA)
     Spell(309658), -- Drums of Deathly Ferocity (SL)
     Spell(381301), -- Feral Hide Drums (DF)
+    Spell(444257), -- Thunderous Drums (TWW)
   }
 
   -- buff.bloodlust.remains
