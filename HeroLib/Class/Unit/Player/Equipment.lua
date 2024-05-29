@@ -212,35 +212,11 @@ do
   -- Global Custom Items
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
   local CustomItems = {
-    -- Shadowlands
-    BargastsLeash                   = Item(184017, {13, 14}),
-    FlayedwingToxin                 = Item(178742, {13, 14}),
-    MistcallerOcarina               = Item(178715, {13, 14}),
-    SoulIgniter                     = Item(184019, {13, 14}),
-    DarkmoonDeckIndomitable         = Item(173096, {13, 14}),
-    ShardofAnnhyldesAegis           = Item(186424, {13, 14}),
-    TomeofMonstruousConstructions   = Item(186422, {13, 14}),
-    SoleahsSecretTechnique          = Item(185818, {13, 14}),
-    SoleahsSecretTechnique2         = Item(190958, {13, 14}),
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
   }
   local CustomItemSpells = {
-    -- Shadowlands
-    FlayedwingToxinBuff               = Spell(345545),
-    MistcallerVers                    = Spell(330067),
-    MistcallerCrit                    = Spell(332299),
-    MistcallerHaste                   = Spell(332300),
-    MistcallerMastery                 = Spell(332301),
-    SoulIgniterBuff                   = Spell(345211),
-    IndomitableFive                   = Spell(311496),
-    IndomitableSix                    = Spell(311497),
-    IndomitableSeven                  = Spell(311498),
-    IndomitableEight                  = Spell(311499),
-    TomeofMonstruousConstructionsBuff = Spell(357163),
-    SoleahsSecretTechniqueBuff        = Spell(351952),
-    SoleahsSecretTechnique2Buff       = Spell(368512),
     -- Dragonflight
     SkeweringColdDebuff               = Spell(388929),
   }
@@ -275,41 +251,6 @@ do
 
     -- Exclude all tabards and shirts
     if ItemSlot == 19 or ItemSlot == 4 then return true end
-
-    -- Shadowlands items being excluded with custom checks.
-    if ItemID == CustomItems.BargastsLeash:ID() then
-      return not (Player:IsInParty() or Player:IsInRaid())
-    end
-
-    if ItemID == CustomItems.FlayedwingToxin:ID() then
-      return Player:AuraInfo(CustomItemSpells.FlayedwingToxinBuff)
-    end
-
-    if ItemID == CustomItems.MistcallerOcarina:ID() then
-      return Player:BuffUp(CustomItemSpells.MistcallerCrit) or Player:BuffUp(CustomItemSpells.MistcallerHaste)
-        or Player:BuffUp(CustomItemSpells.MistcallerMastery) or Player:BuffUp(CustomItemSpells.MistcallerVers)
-    end
-
-    if ItemID == CustomItems.SoulIgniter:ID() then
-      return not (Player:BuffDown(CustomItemSpells.SoulIgniterBuff) and Target:IsInRange(40))
-    end
-
-    if ItemID == CustomItems.DarkmoonDeckIndomitable:ID() then
-      return not ((Player:BuffUp(CustomItemSpells.IndomitableFive) or Player:BuffUp(CustomItemSpells.IndomitableSix) or Player:BuffUp(CustomItemSpells.IndomitableSeven)
-        or Player:BuffUp(CustomItemSpells.IndomitableEight)) and (Player:IsTankingAoE(8) or Player:IsTanking(Target)))
-    end
-
-    if ItemID == CustomItems.ShardofAnnhyldesAegis:ID() then
-      return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
-    end
-
-    if ItemID == CustomItems.TomeofMonstruousConstructions:ID() then
-      return Player:AuraInfo(CustomItemSpells.TomeofMonstruousConstructionsBuff)
-    end
-
-    if ItemID == CustomItems.SoleahsSecretTechnique:ID() or ItemID == CustomItems.SoleahsSecretTechnique2:ID() then
-      return Player:BuffUp(CustomItemSpells.SoleahsSecretTechniqueBuff) or Player:BuffUp(CustomItemSpells.SoleahsSecretTechnique2Buff)
-    end
 
     -- Dragonflight items being excluded with custom checks.
     if ItemID == CustomItems.GlobeofJaggedIce:ID() then
