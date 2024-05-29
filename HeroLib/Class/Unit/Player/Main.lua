@@ -165,15 +165,14 @@ do
   end
 end
 
-do
+-- M+ Quaking was removed, but the code could be useful later.
+-- Commenting the code out for now.
+--[[ do
   local StopCast = {
     Debuffs = {
     }
   }
   function Player:ShouldStopCasting()
-    -- Only debuff to force stop of casting (M+ Quaking) was removed,
-    -- so just returning false for now while leaving the functional code.
-    return false
     local Debuffs = StopCast.Debuffs
     for i = 1, #Debuffs do
       local Record = Debuffs[i]
@@ -188,4 +187,4 @@ do
       end
     end
   end
-end
+end ]]
