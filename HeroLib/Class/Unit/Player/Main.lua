@@ -57,7 +57,7 @@ do
   local CombatMountBuff = {
     --- Classes
     Spell(131347), -- Demon Hunter Glide
-    Spell(783), -- Druid Travel Form
+    Spell(783),    -- Druid Travel Form
     Spell(165962), -- Druid Flight Form
     Spell(220509), -- Paladin Divine Steed
     Spell(221883), -- Paladin Divine Steed
@@ -111,6 +111,7 @@ do
     Spells = {
       --- Dragonflight
       Spell(377222), -- Consume (Treemouth, Brackenhide Hollow)
+
       --- Shadowlands
       -- Plaguefall
       Spell(328429), -- Crushing Embrace (Slime Tentacle)
