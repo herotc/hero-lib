@@ -222,6 +222,7 @@ do
     RingBoundHourglass              = Item(193000, {13, 14}),
     RubyWhelpShell                  = Item(193757, {13, 14}),
     ScreamingBlackDragonscale       = Item(202612, {13, 14}),
+    SpringsKeeper                   = Item(209948, {16}),
     UncannyPocketwatch              = Item(195220, {13, 14}),
     -- Engineering Epic Quality Wrists
     ComplicatedCuffs                = Item(198332),
