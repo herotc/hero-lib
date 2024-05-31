@@ -211,6 +211,43 @@ end
 do
   -- Global Custom Items
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
+  local GenericItems = {
+    -- Generic items that we always want to exclude
+    -- Dragonflight
+    CruelDreamcarver                = Item(207783, {16, 17}),
+    DraconicCauterizingMagma        = Item(204388, {13, 14}),
+    HeatofPrimalWinter              = Item(201962, {2}),
+    OminousChromaticEssence         = Item(203729, {13, 14}),
+    PrimalRitualShell               = Item(200563, {13, 14}),
+    RingBoundHourglass              = Item(193000, {13, 14}),
+    RubyWhelpShell                  = Item(193757, {13, 14}),
+    ScreamingBlackDragonscale       = Item(202612, {13, 14}),
+    UncannyPocketwatch              = Item(195220, {13, 14}),
+    -- Engineering Epic Quality Wrists
+    ComplicatedCuffs                = Item(198332),
+    DifficultWristProtectors        = Item(198333),
+    NeedlesslyComplexWristguards    = Item(198327),
+    OverengineeredSleeveExtenders   = Item(198322),
+  }
+  local EngItems = {
+    -- Dragonflight Engineering excludes
+    -- Most tinkers are situational at best, so let's exclude every item with a tinker slot
+    -- Epic Quality Goggles
+    BattleReadyGoggles              = Item(198326),
+    LightweightOcularLenses         = Item(198323),
+    OscillatingWildernessOpticals   = Item(198325),
+    PeripheralVisionProjectors      = Item(198324),
+    -- Rare Quality Goggles
+    DeadlineDeadeyes                = Item(198330),
+    MilestoneMagnifiers             = Item(198329),
+    QualityAssuredOptics            = Item(198328),
+    SentrysStabilizedSpecs          = Item(198331),
+    -- Uncommon Quality Goggles
+    ClothGoggles                    = Item(205278),
+    LeatherGoggles                  = Item(205279),
+    MailGoggles                     = Item(205280),
+    PlateGoggles                    = Item(205281),
+  }
   local CustomItems = {
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
@@ -261,7 +298,14 @@ do
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
 
-    -- Handle Engineering tinker excludes.
+    -- Any generic items we always want to exclude from suggestions.
+    for _, GenItem in pairs(GenericItems) do
+      if ItemID == GenItem:ID() then
+        return true
+      end
+    end
+
+    -- Handle Engineering excludes.
     for _, profindex in pairs({GetProfessions()}) do
       local prof = GetProfessionInfo(profindex)
       if prof == "Engineering" then
@@ -269,6 +313,12 @@ do
         -- If possible, find a way to parse tinkers and handle this properly.
         if ItemSlot == 6 or ItemSlot == 15 then
           return true
+        end
+        -- Exclude specific Engineering items.
+        for _, EngItem in pairs(EngItems) do
+          if ItemID == EngItem:ID() then
+            return true
+          end
         end
       end
     end
