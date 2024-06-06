@@ -15,7 +15,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local GetTime = GetTime
-local GetSpellInfo = GetSpellInfo -- name, rank, icon, castTime, minRange, maxRange, spellId
+local GetSpellInfo = C_Spell.GetSpellInfo -- castTime, name, minRange, originalIconID, iconID, maxRange, spellID
 local IsSpellKnown = IsSpellKnown
 local IsPlayerSpell = IsPlayerSpell
 local IsUsableSpell = IsUsableSpell
@@ -166,7 +166,9 @@ end
 
 -- Check if the spell Is Castable or not.
 function Spell:IsCastable(BypassRecovery)
-  return self:IsLearned() and self:CooldownUp(BypassRecovery)
+  --return self:IsLearned() and self:CooldownUp(BypassRecovery)
+  -- Temporary workaround
+  return (self:IsKnown() or self:IsPetKnown()) and self:CooldownUp(BypassRecovery)
 end
 
 -- Check if the spell Is Castable and Usable or not.
@@ -176,7 +178,7 @@ end
 
 -- action.foo.cast_time
 function Spell:CastTime()
-  local _, _, _, CastTime = self:InfoByID()
+  local CastTime = self:InfoByID().castTime
 
   return CastTime and CastTime / 1000 or 0
 end
