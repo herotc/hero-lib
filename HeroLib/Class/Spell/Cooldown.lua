@@ -13,7 +13,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local GetSpellCharges = GetSpellCharges -- currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate
-local GetSpellCooldown = GetSpellCooldown -- start, duration, enabled, modRate
+local GetSpellCooldown = C_Spell.GetSpellCooldown -- isEnabled, startTime, modRate, duration
 local GetTime = GetTime
 -- File Locals
 
@@ -26,8 +26,9 @@ local GetTime = GetTime
 -- Get the CooldownInfo (from GetSpellCooldown).
 function Spell:CooldownInfo()
   local SpellID = self:ID()
+  local CDInfo = GetSpellCooldown(SpellID)
 
-  return GetSpellCooldown(SpellID)
+  return CDInfo.isEnabled, CDInfo.startTime, CDInfo.modRate, CDInfo.duration
 end
 
 -- Get the ChargesInfos (from GetSpellCharges).
@@ -43,7 +44,7 @@ function Spell:Cooldown()
   local _, _, _, Duration = self:ChargesInfo()
   -- If it does not exists, it means it's cooldown information.
   if not Duration then
-    _, Duration = self:CooldownInfo()
+    _, _, _, Duration = self:CooldownInfo()
   end
 
   return Duration
@@ -51,7 +52,7 @@ end
 
 -- cooldown.foo.remains
 function Spell:CooldownRemains(BypassRecovery)
-  local StartTime, Duration = self:CooldownInfo()
+  local _, StartTime, _, Duration = self:CooldownInfo()
   if StartTime == 0 then return 0 end
   local CD = StartTime + Duration - GetTime() - HL.RecoveryOffset(BypassRecovery)
 
@@ -60,7 +61,7 @@ end
 
 -- cooldown.foo.remains_guess 
 function Spell:CooldownRemainsGuess(BypassRecovery)
-  local StartTime, Duration = self:CooldownInfo()
+  local _, StartTime, _, Duration = self:CooldownInfo()
   if StartTime == 0 then return 0 end
 
   local CD = StartTime + Duration - GetTime() - HL.RecoveryOffset(BypassRecovery)
