@@ -130,6 +130,7 @@ do
       self.LastRemovedFromPlayerTime = 0
     else
       local SpellData = GetSpellInfo(SpellID)
+      if not SpellData then return end
       self.SpellID = SpellData.spellID
       self.SpellType = SpellData.spellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
       self.SpellName = SpellData.name
