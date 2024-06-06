@@ -13,6 +13,8 @@ local GetSpellInfo = C_Spell.GetSpellInfo
 local setmetatable = setmetatable
 local stringformat = string.format
 local tableinsert = table.insert
+-- API
+local GetSpellInfo = C_Spell.GetSpellInfo
 -- File Locals
 
 
@@ -113,19 +115,34 @@ do
     if SpellType and type(SpellType) ~= "string" then error("Invalid Spell Type.") end
 
     -- Attributes
-    local SpellName, _, _, _, MinimumRange, MaximumRange = GetSpellInfo(SpellID)
-    self.SpellID = SpellID
-    self.SpellType = SpellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
-    self.SpellName = SpellName
-    self.MinimumRange = MinimumRange
-    self.MaximumRange = MaximumRange
-    self.IsMelee = MinimumRange == 0 and MaximumRange == 0
-    -- Variables
-    self.LastCastTime = 0
-    self.LastDisplayTime = 0
-    self.LastHitTime = 0
-    self.LastAppliedOnPlayerTime = 0
-    self.LastRemovedFromPlayerTime = 0
+    if SpellID >= 999900 then
+      self.SpellID = SpellID
+      self.SpellType = "Player"
+      self.SpellName = "Custom Spell Entry"
+      self.MinimumRange = 0
+      self.MaximumRange = 0
+      self.IsMelee = true
+      -- Variables
+      self.LastCastTime = 0
+      self.LastDisplayTime = 0
+      self.LastHitTime = 0
+      self.LastAppliedOnPlayerTime = 0
+      self.LastRemovedFromPlayerTime = 0
+    else
+      local SpellData = GetSpellInfo(SpellID)
+      self.SpellID = SpellData.spellID
+      self.SpellType = SpellData.spellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
+      self.SpellName = SpellData.name
+      self.MinimumRange = SpellData.minRange
+      self.MaximumRange = SpellData.maxRange
+      self.IsMelee = MinimumRange == 0 and MaximumRange == 0
+      -- Variables
+      self.LastCastTime = 0
+      self.LastDisplayTime = 0
+      self.LastHitTime = 0
+      self.LastAppliedOnPlayerTime = 0
+      self.LastRemovedFromPlayerTime = 0
+    end
   end
 end
 
