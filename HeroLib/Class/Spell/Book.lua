@@ -16,9 +16,6 @@ local select = select
 -- WoW API
 local SpellBookSpellBank = Enum.SpellBookSpellBank
 local FindSpellBookSlotForSpell = C_SpellBook.FindSpellBookSlotForSpell
-local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo
-local HasPetSpells = HasPetSpells
 -- File Locals
 
 
