@@ -1,29 +1,29 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, Cache = ...;
+local addonName, Cache = ...
 -- Lua
 local wipe = wipe
 -- File Locals
 if not HeroCacheDB then
-  _G.HeroCacheDB = {};
-  HeroCacheDB.Enabled = true;
+  _G.HeroCacheDB = {}
+  HeroCacheDB.Enabled = true
 end
 --- ======= GLOBALIZE =======
 -- Addon
-HeroCache = Cache;
+HeroCache = Cache
 
 
 --- ============================ CONTENT ============================
 -- Defines our cached tables.
 -- Temporary
-Cache.APLVar = {};
-Cache.Enemies = { ItemAction = {}, Melee = {}, Ranged = {}, Spell = {}, SpellAction = {} };
-Cache.GUIDInfo = {};
-Cache.MiscInfo = {};
-Cache.SpellInfo = {};
-Cache.ItemInfo = {};
-Cache.UnitInfo = {};
+Cache.APLVar = {}
+Cache.Enemies = { ItemAction = {}, Melee = {}, Ranged = {}, Spell = {}, SpellAction = {} }
+Cache.GUIDInfo = {}
+Cache.MiscInfo = {}
+Cache.SpellInfo = {}
+Cache.ItemInfo = {}
+Cache.UnitInfo = {}
 -- Persistent
 Cache.Persistent = {
   Equipment = {},
@@ -37,25 +37,25 @@ Cache.Persistent = {
   Texture = { Spell = {}, Item = {}, Custom = {} },
   ElvUIPaging = { PagingString, PagingStrings = {}, PagingBars = {} },
   Talents = { Rank }
-};
+}
 
 -- Reset the cache.
-Cache.HasBeenReset = false;
+Cache.HasBeenReset = false
 function Cache.Reset()
   if not Cache.HasBeenReset then
-    wipe(Cache.APLVar);
-    wipe(Cache.Enemies.ItemAction);
-    wipe(Cache.Enemies.Melee);
-    wipe(Cache.Enemies.Ranged);
-    wipe(Cache.Enemies.Spell);
-    wipe(Cache.Enemies.SpellAction);
-    wipe(Cache.GUIDInfo);
-    wipe(Cache.MiscInfo);
-    wipe(Cache.SpellInfo);
-    wipe(Cache.ItemInfo);
-    wipe(Cache.UnitInfo);
+    wipe(Cache.APLVar)
+    wipe(Cache.Enemies.ItemAction)
+    wipe(Cache.Enemies.Melee)
+    wipe(Cache.Enemies.Ranged)
+    wipe(Cache.Enemies.Spell)
+    wipe(Cache.Enemies.SpellAction)
+    wipe(Cache.GUIDInfo)
+    wipe(Cache.MiscInfo)
+    wipe(Cache.SpellInfo)
+    wipe(Cache.ItemInfo)
+    wipe(Cache.UnitInfo)
 
-    Cache.HasBeenReset = true;
+    Cache.HasBeenReset = true
   end
 end
 
@@ -267,7 +267,7 @@ end
 
 -- Public function to assign a value in the cache from a given path.
 -- Always returns the UncachedValue (but cache it for future usage with Cache.Get).
--- Typical usage is : return Cache.Set("SpellInfo", 53, "CostTable", GetSpellPowerCost(53)[1]);
+-- Typical usage is : return Cache.Set("SpellInfo", 53, "CostTable", GetSpellPowerCost(53)[1])
 function Cache.Set(...)
   return HeroCacheDB.Enabled and CacheImpl.Set(...) or select(select('#', ...), ...)
 end
