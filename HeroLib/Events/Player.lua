@@ -15,21 +15,23 @@ local GetTime = GetTime
 local stringfind = string.find
 local stringsub = string.sub
 local wipe = wipe
+-- Enum
+local SpellBookSpellBank = Enum.SpellBookSpellBank
 -- API
 local C_Timer = C_Timer
-local SpellBookSpellBank = Enum.SpellBookSpellBank
-local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
-local GetNumFlyouts, GetFlyoutID = GetNumFlyouts, GetFlyoutID
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = GetSpecializationInfo
-local GetSpellBookItemInfo = C_SpellBook.GetSpellBookItemInfo
-local GetSpellInfo = C_Spell.GetSpellInfo
-local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
-local HasPetSpells = C_SpellBook.HasPetSpells
+local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
+local GetNumFlyouts, GetFlyoutID = GetNumFlyouts, GetFlyoutID
 local IsTalentSpell = IsTalentSpell
 local UnitClass = UnitClass
 local SPELL_FAILED_UNIT_NOT_INFRONT = SPELL_FAILED_UNIT_NOT_INFRONT
+-- C_Spell and C_SpellBook
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
+local GetSpellBookItemInfo = C_SpellBook.GetSpellBookItemInfo
+local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
+local HasPetSpells = C_SpellBook.HasPetSpells
 -- File Locals
 
 
