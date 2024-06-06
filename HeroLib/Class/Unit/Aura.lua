@@ -13,8 +13,7 @@ local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
 local UnitAura = UnitAura -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3, ..., value11
-local GetBuffDataByIndex = C_UnitAuras.GetBuffDataByIndex
-local GetDebuffDataByIndex = C_UnitAuras.GetDebuffDataByIndex
+local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local GetTime = GetTime
 -- File Locals
@@ -31,7 +30,7 @@ do
   local GUID, SpellID, UnitID
   local AuraStack, AuraDuration, AuraExpirationTime, AuraSpellID, Index
 
-  function Unit:AuraInfo(ThisSpell, Filter, Full, IsDebuff)
+  function Unit:AuraInfo(ThisSpell, Filter, Full)
     GUID = self:GUID()
     if not GUID then return end
 
@@ -51,11 +50,10 @@ do
       end
     end
 
-    local CheckFunction = (IsDebuff) and GetDebuffDataByIndex or GetBuffDataByIndex
     UnitID = self:ID()
     Index = 1
     while true do
-      local AuraData = CheckFunction(UnitID, Index, Filter)
+      local AuraData = GetAuraDataByIndex(UnitID, Index, Filter)
       if type(AuraData) ~= "table" then return end
       AuraStack = AuraData.applications
       AuraDuration = AuraData.duration
@@ -68,7 +66,7 @@ do
       -- Returns the info once we match the spell ids.
       if AuraSpellID == SpellID then
         if Full then
-          return CheckFunction(UnitID, Index, Filter)
+          return GetAuraDataByIndex(UnitID, Index, Filter)
         else
           return AuraStack, AuraDuration, AuraExpirationTime, Index
         end
@@ -151,7 +149,7 @@ end
 function Unit:DebuffInfo(ThisSpell, AnyCaster, Full)
   local Filter = AnyCaster and "HARMFUL" or "HARMFUL|PLAYER"
 
-  return self:AuraInfo(ThisSpell, Filter, Full, true)
+  return self:AuraInfo(ThisSpell, Filter, Full)
 end
 
 -- debuff.foo.stack & dot.foo.stack
