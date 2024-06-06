@@ -27,7 +27,6 @@ local wipe = table.wipe
 -- File Locals
 
 
-
 --- ============================ CONTENT ============================
 -- Get the spell ID.
 function Spell:ID()
