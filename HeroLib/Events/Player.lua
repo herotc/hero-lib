@@ -11,7 +11,13 @@ local Target = Unit.Target
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
+local GetTime = GetTime
+local stringfind = string.find
+local stringsub = string.sub
+local wipe = wipe
+-- API
 local C_Timer = C_Timer
+local SpellBookSpellBank = Enum.SpellBookSpellBank
 local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
 local GetNumFlyouts, GetFlyoutID = GetNumFlyouts, GetFlyoutID
 local GetSpecialization = GetSpecialization
@@ -20,13 +26,9 @@ local GetSpellBookItemInfo = C_SpellBook.GetSpellBookItemInfo
 local GetSpellInfo = C_Spell.GetSpellInfo
 local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
 local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
-local GetTime = GetTime
 local HasPetSpells = C_SpellBook.HasPetSpells
 local IsTalentSpell = IsTalentSpell
-local stringfind = string.find
-local stringsub = string.sub
 local UnitClass = UnitClass
-local wipe = wipe
 local SPELL_FAILED_UNIT_NOT_INFRONT = SPELL_FAILED_UNIT_NOT_INFRONT
 -- File Locals
 
@@ -39,11 +41,13 @@ local function BookScan(BlankScan)
     local NumPetSpells = HasPetSpells()
     if NumPetSpells then
       local SpellLearned = Cache.Persistent.SpellLearned.Pet
+      local PetSpellBook = SpellBookSpellBank.Pet
       for i = 1, NumPetSpells do
-        local CurrentSpellID = select(7, GetSpellInfo(i, "pet"))
+        local SpellData = GetSpellBookItemInfo(i, PetSpellBook)
+        local CurrentSpellID = SpellData.spellID
         if CurrentSpellID then
           local CurrentSpell = Spell(CurrentSpellID, "Pet")
-          if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown(true) or IsTalentSpell(i, "pet")) then
+          if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown(true) or IsTalentSpell(i, PetSpellBook)) then
             if not BlankScan then
               SpellLearned[CurrentSpell:ID()] = true
             end
@@ -58,16 +62,16 @@ local function BookScan(BlankScan)
 
     for i = 1, GetNumSpellBookSkillLines() do
       local SkillLineInfo = GetSpellBookSkillLineInfo(i)
-      local OffSpec = SkillLineInfo.offSpecID or 0
+      local OffSpec = SkillLineInfo.offSpecID
       local Offset = SkillLineInfo.itemIndexOffset
       local NumSpells = SkillLineInfo.numSpellBookItems
-      -- If the OffSpec ID is set to 0, then it's the Main Spec.
-      if OffSpec == 0 then
+      local PlayerSpellBook = SpellBookSpellBank.Player
+      -- If the OffSpec ID is nil, then it's the Main Spec.
+      if not OffSpec then
         for j = 1, (Offset + NumSpells) do
-          local CurrentSpellInfo = GetSpellInfo(j, "spell")
+          local CurrentSpellInfo = GetSpellBookItemInfo(j, PlayerSpellBook)
           local CurrentSpellID = CurrentSpellInfo.spellID
           if CurrentSpellID then
-          --if CurrentSpellID and GetSpellBookItemInfo(j, "spell") == "SPELL" then
             if not BlankScan then
               SpellLearned[CurrentSpellID] = true
             end
