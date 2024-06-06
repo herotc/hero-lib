@@ -9,7 +9,7 @@ local Cache = HeroCache
 -- Lua
 local error = error
 local GetItemInfo = C_Item.GetItemInfo
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
 local setmetatable = setmetatable
 local stringformat = string.format
 local tableinsert = table.insert
