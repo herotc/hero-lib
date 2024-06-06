@@ -166,9 +166,7 @@ end
 
 -- Check if the spell Is Castable or not.
 function Spell:IsCastable(BypassRecovery)
-  --return self:IsLearned() and self:CooldownUp(BypassRecovery)
-  -- Temporary workaround
-  return self:IsAvailable() and self:CooldownUp(BypassRecovery)
+  return self:IsLearned() and self:CooldownUp(BypassRecovery)
 end
 
 -- Check if the spell Is Castable and Usable or not.
