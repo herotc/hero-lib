@@ -14,7 +14,7 @@ local Item = HL.Item
 -- Lua
 local select = select
 -- WoW API
-local BOOKTYPE_PET, BOOKTYPE_SPELL = BOOKTYPE_PET, BOOKTYPE_SPELL
+local SpellBookSpellBank = Enum.SpellBookSpellBank
 local FindSpellBookSlotForSpell = C_SpellBook.FindSpellBookSlotForSpell
 local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
 local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo
@@ -45,11 +45,5 @@ end
 
 function Spell:BookType()
   local SpellType = self.SpellType
-  if SpellType == "Player" then
-    return "spell"
-  elseif SpellType == "Pet" then
-    return "pet"
-  else
-    error("Incorrect SpellType.")
-  end
+  return SpellBookSpellBank[SpellType]
 end
