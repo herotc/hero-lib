@@ -18,7 +18,6 @@ local GetTime = GetTime
 -- File Locals
 
 
-
 --- ============================ CONTENT ============================
 -- Note: BypassRecovery is a common arg of this module because by default, in order to improve the prediction, we take in account the remaining time of the GCD or the current cast (whichever is higher).
 --       Although sometimes we might want to ignore this and return the "raw" value, which this arg is for.
@@ -42,7 +41,7 @@ end
 function Spell:Cooldown()
   -- Try to get charges information.
   local _, _, _, Duration = self:ChargesInfo()
-  -- If it does not exists, it means it's cooldown information.
+  -- If it does not exist, try it's cooldown information.
   if not Duration then
     _, _, _, Duration = self:CooldownInfo()
   end
