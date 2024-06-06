@@ -48,12 +48,12 @@ HL.Timer = {
 }
 
 function HL.Pulse()
-  if HL.BuildInfo[4] and HL.BuildInfo[4] < 100000 then
+  if HL.BuildInfo[4] and HL.BuildInfo[4] < 110000 then
     OnRetail = false
   end
   if not OnRetail then
     if not PrintedClassicWarning then
-      HL.Print("HeroRotation and HeroLib currently only support retail WoW (Dragonflight). Classic, Wrath of the Lich King, and Hardcore Classic are not supported.")
+      HL.Print("HeroRotation and HeroLib currently only support retail WoW (The War Within). Classic, Wrath of the Lich King, and Hardcore Classic are not supported.")
       PrintedClassicWarning = true
     end
     return
