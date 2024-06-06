@@ -15,7 +15,8 @@ local Item = HL.Item
 local select = select
 -- WoW API
 local BOOKTYPE_PET, BOOKTYPE_SPELL = BOOKTYPE_PET, BOOKTYPE_SPELL
-local GetNumSpellTabs = GetNumSpellTabs
+local FindSpellBookSlotForSpell = C_SpellBook.FindSpellBookSlotForSpell
+local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
 local GetSpellInfo, GetSpellTabInfo = GetSpellInfo, GetSpellTabInfo
 local HasPetSpells = HasPetSpells
 -- File Locals
@@ -23,36 +24,9 @@ local HasPetSpells = HasPetSpells
 
 
 --- ============================ CONTENT ============================
-local function FindBookIndex(SpellID, SpellType)
-  if SpellType == "Player" then
-    -- Player Book
-    for i = 1, GetNumSpellTabs() do
-      local Offset, NumSpells, _, OffSpec = select(3, GetSpellTabInfo(i))
-      -- GetSpellTabInfo has been updated, it now returns the OffSpec ID.
-      -- If the OffSpec ID is set to 0, then it's the Main Spec.
-      if OffSpec == 0 then
-        for j = 1, (Offset + NumSpells) do
-          local CurrentSpellID = select(7, GetSpellInfo(j, BOOKTYPE_SPELL))
-          if CurrentSpellID and CurrentSpellID == SpellID then
-            return j
-          end
-        end
-      end
-    end
-  elseif SpellType == "Pet" then
-    -- Pet Book
-    local NumPetSpells = HasPetSpells()
-    if NumPetSpells then
-      for i = 1, NumPetSpells do
-        local CurrentSpellID = select(7, GetSpellInfo(i, BOOKTYPE_PET))
-        if CurrentSpellID and CurrentSpellID == SpellID then
-          return i
-        end
-      end
-    end
-  else
-    error("Incorrect SpellType.")
-  end
+local function FindBookIndex(SpellID)
+  -- FindSpellBookSlotForSpell(spellIdentifier, includeHidden, includeFlyouts, includeFutureSpells, includeOffSpec)
+  return FindSpellBookSlotForSpell(SpellID, false, true, false, false)
 end
 
 -- Get the spell BookIndex.
@@ -72,9 +46,9 @@ end
 function Spell:BookType()
   local SpellType = self.SpellType
   if SpellType == "Player" then
-    return BOOKTYPE_SPELL
+    return "spell"
   elseif SpellType == "Pet" then
-    return BOOKTYPE_PET
+    return "pet"
   else
     error("Incorrect SpellType.")
   end
