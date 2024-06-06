@@ -148,7 +148,9 @@ do
 
     function MultiSpell:Update()
       for i, Spell in pairs(self.SpellTable) do
-        if Spell:IsLearned() or (i == #self.SpellTable) then
+        -- Temporarily use IsKnown as a workaround
+        --if Spell:IsLearned() or (i == #self.SpellTable) then
+        if Spell:IsKnown() or Spell:IsKnown(true) or (i == #self.SpellTable) then
           Spell.Update = self.Update
           setmetatable(self, {__index = Spell})
           break
