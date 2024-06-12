@@ -162,7 +162,7 @@ function Unit:IsSpellInRange(ThisSpell)
   local GUID = self:GUID()
   if not GUID then return false end
   
-  return IsSpellInRange(self:ID()) == 1
+  return IsSpellInRange(ThisSpell:ID(), self:ID())
 end
 
 -- Get if the unit is in range, distance check through IsActionInRange (works only for targeted actions only)
