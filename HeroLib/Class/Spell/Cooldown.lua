@@ -12,7 +12,7 @@ local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
 -- Lua
-local GetSpellCharges = GetSpellCharges -- currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate
+local GetSpellCharges = C_Spell.GetSpellCharges -- maxCharges, cooldownStartTime, chargeModRate, currentCharges, cooldownDuration
 local GetSpellCooldown = C_Spell.GetSpellCooldown -- isEnabled, startTime, modRate, duration
 local GetTime = GetTime
 -- File Locals
@@ -33,8 +33,9 @@ end
 -- Get the ChargesInfos (from GetSpellCharges).
 function Spell:ChargesInfo()
   local SpellID = self:ID()
+  local SpellInfo = GetSpellCharges(SpellID)
 
-  return GetSpellCharges(SpellID)
+  return SpellInfo.currentCharges, SpellInfo.maxCharges, SpellInfo.cooldownStartTime, SpellInfo.cooldownDuration
 end
 
 -- action.foo.cooldown

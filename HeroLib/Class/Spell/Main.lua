@@ -18,9 +18,9 @@ local GetTime = GetTime
 local GetSpellInfo = C_Spell.GetSpellInfo -- castTime, name, minRange, originalIconID, iconID, maxRange, spellID
 local IsSpellKnown = IsSpellKnown
 local IsPlayerSpell = IsPlayerSpell
-local IsUsableSpell = IsUsableSpell
-local GetSpellCount = GetSpellCount
-local GetSpellPowerCost = GetSpellPowerCost
+local IsSpellUsable = C_Spell.IsSpellUsable
+local GetSpellCastCount = C_Spell.GetSpellCastCount
+local GetSpellPowerCost = C_Spell.GetSpellPowerCost
 local pairs = pairs
 local unpack = unpack
 local wipe = table.wipe
@@ -115,7 +115,7 @@ end
 
 -- Check if the spell Is Usable or not.
 function Spell:IsUsable()
-  return IsUsableSpell(self.SpellID)
+  return IsSpellUsable(self.SpellID)
 end
 
 -- Check if the spell is Usable (by resources) in predicted mode
@@ -160,7 +160,7 @@ function Spell:IsLearned()
 end
 
 function Spell:Count()
-  return GetSpellCount(self:ID())
+  return GetSpellCastCount(self:ID())
 end
 
 -- Check if the spell Is Castable or not.
