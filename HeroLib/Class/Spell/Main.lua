@@ -1,29 +1,39 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroDBC
-local DBC = HeroDBC.DBC
+local DBC                    = HeroDBC.DBC
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetTime = GetTime
-local GetSpellInfo = C_Spell.GetSpellInfo -- castTime, name, minRange, originalIconID, iconID, maxRange, spellID
-local IsSpellKnown = IsSpellKnown
-local IsPlayerSpell = IsPlayerSpell
-local IsSpellUsable = C_Spell.IsSpellUsable
-local GetSpellCastCount = C_Spell.GetSpellCastCount
-local GetSpellPowerCost = C_Spell.GetSpellPowerCost
-local pairs = pairs
-local unpack = unpack
-local wipe = table.wipe
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
+
+-- Lua locals
+local GetTime                = GetTime
+local pairs                  = pairs
+
+-- C_Spell locals
+local GetSpellCastCount      = C_Spell.GetSpellCastCount
+-- Accepts: spellIdentifier; Returns: castCount (number)
+local GetSpellInfo           = C_Spell.GetSpellInfo
+-- Accepts: spellIdentifier; Returns: spellInfo (SpellInfo: castTime, name, minRange, originalIconID, iconID, maxRange, spellID)
+local GetSpellPowerCost      = C_Spell.GetSpellPowerCost
+-- Accepts: spellIdentifier; Returns: powerCosts (table of costs: hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec)
+local IsSpellUsable          = C_Spell.IsSpellUsable
+-- Accepts: spellIdentifier; Returns: isUsable (bool), insufficientPower (bool)
+
+-- Base API locals
+local IsPlayerSpell          = IsPlayerSpell
+-- Accepts: spellIdentifier; Returns: isPlayerSpell (bool)
+local IsSpellKnown           = IsSpellKnown
+-- Accepts: spellIdentifier; Returns: isSpellKnown (bool) (Sometimes false for known spells? Example: Fracture, ID: 263642)
+
 -- File Locals
 
 
