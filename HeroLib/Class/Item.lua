@@ -11,16 +11,29 @@ local Player          = Unit.Player
 local Target          = Unit.Target
 local Spell           = HL.Spell
 local Item            = HL.Item
--- Lua
-local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo -- effectiveILvl, isPreview, baseILvl
-local GetItemCooldown = C_Item.GetItemCooldown -- start, duration, enable, modRate
-local GetItemInfo     = C_Item.GetItemInfo -- itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
-local GetItemLink     = C_Item.GetItemLink -- itemLink
-local IsUsableItem    = C_Item.IsUsableItem -- usable, noMana
+
+-- C_Item locals
+local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
+-- Accepts: itemInfo; Returns: actualItemLevel (number), previewLevel (bool), sparseItemLevel (number)
+local GetItemCooldown = C_Item.GetItemCooldown
+-- Accepts: itemInfo; Returns: startTimeSeconds (number), durationSeconds (number), enableCooldownTimer (bool)
+local GetItemCount    = C_Item.GetItemCount
+-- Accepts: itemInfo, includeBank, includeUses, includeReagentBank; Returns: count (number)
+local GetItemInfo     = C_Item.GetItemInfo
+-- Accepts: itemInfo
+-- Returns: itemName (cstring), itemLink (cstring), itemQuality (ItemQuality), itemLevel (number), itemMinLevel(number), itemType (cstring), itemSubType (cstring), itemStackCound (number),
+-- itemEquipLoc (cstring), itemTexture (fileID), sellPrice (number), classID (number), subclassID (number), bindType (number), expansionID (number), setID (number), isCraftingReagent(bool)
+local GetItemLink     = C_Item.GetItemLink
+--Accepts: itemLocation; Returns: itemLink (string)
+local IsUsableItem    = C_Item.IsUsableItem
+-- Accepts: itemInfo; Returns: usable (bool), noMana (bool)
+
+-- Base API locals
+local GetSpellBaseCooldown = GetSpellBaseCooldown
 local ItemLocation    = ItemLocation
+-- lua locals
 local GetTime         = GetTime
 -- File Locals
-
 
 
 --- ============================ CONTENT ============================
