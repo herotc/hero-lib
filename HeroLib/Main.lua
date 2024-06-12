@@ -3,17 +3,17 @@
 -- Addon
 local addonName, HL = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
+local Cache         = HeroCache
+local Unit          = HL.Unit
+local Player        = Unit.Player
+local Target        = Unit.Target
+local Spell         = HL.Spell
+local Item          = HL.Item
 -- Lua
-local mathmax = math.max
-local mathmin = math.min
+local mathmax       = math.max
+local mathmin       = math.min
 -- File Locals
-local OnRetail = true
+local OnRetail              = true
 local PrintedClassicWarning = false
 
 

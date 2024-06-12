@@ -2,22 +2,20 @@
 --- ======= LOCALIZE =======
 -- Addon
 local addonName, HL = ...
-local Cache = HeroCache
+local Cache         = HeroCache
 -- Lua
-local gmatch = gmatch
-local pairs = pairs
-local print = print
-local stringupper = string.upper
-local tableinsert = table.insert
-local tonumber = tonumber
-local type = type
-local wipe = table.wipe
+local gmatch        = gmatch
+local pairs         = pairs
+local stringupper   = string.upper
+local tableinsert   = table.insert
+local tonumber      = tonumber
+local type          = type
 -- File Locals
-local Utils = {}
+local Utils         = {}
 
 --- ======= GLOBALIZE =======
 -- Addon
-HL.Utils = Utils
+HL.Utils            = Utils
 
 
 --- ============================ CONTENT ============================

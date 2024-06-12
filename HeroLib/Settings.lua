@@ -1,11 +1,11 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL     = ...
 -- File Locals
-local GUI = HL.GUI
-local CreatePanel = GUI.CreatePanel
-local CreateChildPanel = GUI.CreateChildPanel
+local GUI               = HL.GUI
+local CreatePanel       = GUI.CreatePanel
+local CreateChildPanel  = GUI.CreateChildPanel
 local CreatePanelOption = GUI.CreatePanelOption
 
 
