@@ -1,26 +1,32 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetInventoryItemID = GetInventoryItemID
-local GetProfessionInfo = GetProfessionInfo
-local GetProfessions = GetProfessions
-local ItemLocation = ItemLocation
-local select = select
-local wipe = wipe
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
+
+-- Base API locals
+local GetInventoryItemID     = GetInventoryItemID
+-- Accepts: unitID, invSlotId; Returns: itemId (number)
+local GetProfessionInfo      = GetProfessionInfo
+local GetProfessions         = GetProfessions
+-- Accepts: nil; Returns: prof1 (number), prof2 (number), archaeology (number), fishing (number), cooking (number)
+
+-- Lua locals
+local select                 = select
+local wipe                   = wipe
+
 -- File Locals
-local Equipment = {}
-local UseableItems = {}
+local Equipment              = {}
+local UseableItems           = {}
+
 
 --- ============================ CONTENT =============================
 -- Define our tier set tables
@@ -146,8 +152,39 @@ local TierSets = {
     -- Evoker
     [13] = {[1] = 217178, [3] = 217180, [5] = 217176, [7] = 217179, [10] = 217177}
   },
+  ["TWWS1"] = {
+    -- Item Slot IDs: 1 - Head, 3 - Shoulders, 5 - Chest, 7 - Legs, 10 - Hands
+    -- Warrior
+    [1]  = {[1] = 211984, [3] = 211982, [5] = 211987, [7] = 211983, [10] = 211985},
+    -- Paladin
+    [2]  = {[1] = 211993, [3] = 211991, [5] = 211996, [7] = 211992, [10] = 211994},
+    -- Hunter
+    [3]  = {[1] = 212020, [3] = 212018, [5] = 212023, [7] = 212019, [10] = 212021},
+    -- Rogue
+    [4]  = {[1] = 212038, [3] = 212036, [5] = 212041, [7] = 212037, [10] = 212039},
+    -- Priest
+    [5]  = {[1] = 212083, [3] = 212081, [5] = 212086, [7] = 212082, [10] = 212084},
+    -- Death Knight
+    [6]  = {[1] = 212002, [3] = 212000, [5] = 212005, [7] = 212001, [10] = 212003},
+    -- Shaman
+    [7]  = {[1] = 212011, [3] = 212009, [5] = 212014, [7] = 212010, [10] = 212012},
+    -- Mage
+    [8]  = {[1] = 212092, [3] = 212090, [5] = 212095, [7] = 212091, [10] = 212093},
+    -- Warlock
+    [9]  = {[1] = 212074, [3] = 212072, [5] = 212077, [7] = 212073, [10] = 212075},
+    -- Monk
+    [10] = {[1] = 212047, [3] = 212045, [5] = 212050, [7] = 212046, [10] = 212048},
+    -- Druid
+    [11] = {[1] = 212056, [3] = 212054, [5] = 212059, [7] = 212055, [10] = 212057},
+    -- Demon Hunter
+    [12] = {[1] = 212065, [3] = 212063, [5] = 212068, [7] = 212064, [10] = 212066},
+    -- Evoker
+    [13] = {[1] = 212029, [3] = 212027, [5] = 212032, [7] = 212028, [10] = 212030}
+  },
 }
 
+-- Usable items that may not become active until an event or threshold.
+-- Adding an item to this list forces it into the UseableItems table.
 local UsableItemOverride = {
   -- Dragonflight
   [208321] = true, -- Iridal
@@ -212,52 +249,84 @@ do
   -- Global Custom Items
   -- Note: Can still be overriden on a per-module basis by passing in to ExcludedItems
   local GenericItems = {
-    -- Generic items that we always want to exclude
-    -- Dragonflight
-    CruelDreamcarver                = Item(207783, {16, 17}),
-    DraconicCauterizingMagma        = Item(204388, {13, 14}),
-    HeatofPrimalWinter              = Item(201962, {2}),
-    OminousChromaticEssence         = Item(203729, {13, 14}),
-    PrimalRitualShell               = Item(200563, {13, 14}),
-    RingBoundHourglass              = Item(193000, {13, 14}),
-    RubyWhelpShell                  = Item(193757, {13, 14}),
-    ScreamingBlackDragonscale       = Item(202612, {13, 14}),
-    SpringsKeeper                   = Item(209948, {16}),
-    UncannyPocketwatch              = Item(195220, {13, 14}),
-    -- Engineering Epic Quality Wrists
-    ComplicatedCuffs                = Item(198332),
-    DifficultWristProtectors        = Item(198333),
-    NeedlesslyComplexWristguards    = Item(198327),
-    OverengineeredSleeveExtenders   = Item(198322),
+    ----- Generic items that we always want to exclude
+    --- The War Within
+    -- TWW Engineering Epic Quality Wrists
+    [221805] = true,
+    [221806] = true,
+    [221807] = true,
+    [221808] = true,
+    -- TWW Engineering Uncommon Quality Wrists
+    [217155] = true,
+    [217156] = true,
+    [217157] = true,
+    [217158] = true,
+    --- Dragonflight
+    [207783] = true, -- Cruel Dreamcarver
+    [204388] = true, -- Draconic Cauterizing Magma
+    [201962] = true, -- Heat of Primal Winter
+    [203729] = true, -- Ominous Chromatic Essence
+    [200563] = true, -- Primal Ritual Shell
+    [193000] = true, -- Ring-Bound Hourglass
+    [193757] = true, -- Ruby Whelp Shell
+    [202612] = true, -- Screaming Black Dragonscale
+    [209948] = true, -- Spring's Keeper
+    [195220] = true, -- Uncanny Pocketwatch
+    -- DF Engineering Epic Quality Wrists
+    [198322] = true,
+    [198327] = true,
+    [198332] = true,
+    [198333] = true,
   }
+
   local EngItems = {
-    -- Dragonflight Engineering excludes
-    -- Most tinkers are situational at best, so let's exclude every item with a tinker slot
+    ----- Engineering items (only available to a player with Engineering) to exclude
+    ----- Most tinkers are situational at best, so we'll exclude every item with a tinker slot
+    --- The War Within
     -- Epic Quality Goggles
-    BattleReadyGoggles              = Item(198326),
-    LightweightOcularLenses         = Item(198323),
-    OscillatingWildernessOpticals   = Item(198325),
-    PeripheralVisionProjectors      = Item(198324),
+    [221801] = true,
+    [221802] = true,
+    [221803] = true,
+    [221804] = true,
     -- Rare Quality Goggles
-    DeadlineDeadeyes                = Item(198330),
-    MilestoneMagnifiers             = Item(198329),
-    QualityAssuredOptics            = Item(198328),
-    SentrysStabilizedSpecs          = Item(198331),
+    [225642] = true,
+    [225643] = true,
+    [225644] = true,
+    [225645] = true,
     -- Uncommon Quality Goggles
-    ClothGoggles                    = Item(205278),
-    LeatherGoggles                  = Item(205279),
-    MailGoggles                     = Item(205280),
-    PlateGoggles                    = Item(205281),
+    [217151] = true,
+    [217152] = true,
+    [217153] = true,
+    [217154] = true,
+    --- Dragonflight
+    -- Epic Quality Goggles
+    [198323] = true,
+    [198324] = true,
+    [198325] = true,
+    [198326] = true,
+    -- Rare Quality Goggles
+    [198328] = true,
+    [198329] = true,
+    [198330] = true,
+    [198331] = true,
+    -- Uncommon Quality Goggles
+    [205278] = true,
+    [205279] = true,
+    [205280] = true,
+    [205281] = true,
   }
+
   local CustomItems = {
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
   }
+
   local CustomItemSpells = {
     -- Dragonflight
     SkeweringColdDebuff               = Spell(388929),
   }
+
   local RangeOverrides = {
     [207172]                          = 10, -- Belor'relos, the Suncaller
   }
@@ -300,11 +369,7 @@ do
     end
 
     -- Any generic items we always want to exclude from suggestions.
-    for _, GenItem in pairs(GenericItems) do
-      if ItemID == GenItem:ID() then
-        return true
-      end
-    end
+    if GenericItems[ItemID] then return true end
 
     -- Handle Engineering excludes.
     for _, profindex in pairs({GetProfessions()}) do
@@ -316,11 +381,7 @@ do
           return true
         end
         -- Exclude specific Engineering items.
-        for _, EngItem in pairs(EngItems) do
-          if ItemID == EngItem:ID() then
-            return true
-          end
-        end
+        if EngItems[ItemID] then return true end
       end
     end
 
