@@ -251,6 +251,10 @@ do
   local GenericItems = {
     ----- Generic items that we always want to exclude
     --- The War Within
+    [218422] = true, -- Forged Aspirant's Medallion
+    [218716] - true, -- Forged Gladiator's Medallion
+    [218717] = true, -- Forged Gladiator's Sigil of Adaptation
+    [219931] = true, -- Algari Competitor's Medallion
     -- TWW Engineering Epic Quality Wrists
     [221805] = true,
     [221806] = true,
