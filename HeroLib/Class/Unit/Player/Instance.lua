@@ -1,20 +1,25 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetInstanceInfo = GetInstanceInfo -- name, instanceType, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize, lfgID
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- Base API locals
+local GetInstanceInfo        = GetInstanceInfo
+-- Accepts: nil; Returns: name (string), instanceType (string), difficulty (number), difficultyName (string), maxPlayers (number),
+-- playerDifficulty (number), isDynamicInstance (bool), instanceID (number), instanceGroupSize (number), lfgDungeonID (number)
+
+-- lua locals
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================

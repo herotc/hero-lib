@@ -1,24 +1,32 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local UnitInVehicle = UnitInVehicle
-local UnitInParty = UnitInParty
-local UnitInRaid = UnitInRaid
-local IsMounted = IsMounted
-local UnitRace = UnitRace -- race, raceEn, raceId
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- Base API locals
+local IsMounted              = IsMounted
+-- Accepts: nil; Returns: mounted (bool)
+local UnitInParty            = UnitInParty
+-- Accepts: unitID; Returns: inParty (bool)
+local UnitInRaid             = UnitInRaid
+-- Accepts: unitID; Returns: index (number)
+local UnitInVehicle          = UnitInVehicle
+-- Accepts: unitID; Returns: inVehicle (bool)
+local UnitRace               = UnitRace
+-- Accepts: unitID; Returns: localizedRaceName (string), englishRaceName (string), raceID (number)
+
+-- lua locals
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================

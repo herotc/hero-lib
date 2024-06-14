@@ -1,28 +1,39 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local CR_VERSATILITY_DAMAGE_DONE = CR_VERSATILITY_DAMAGE_DONE
-local GetCombatRatingBonus = GetCombatRatingBonus
-local GetCritChance = GetCritChance
-local GetHaste = GetHaste
-local GetMasteryEffect = GetMasteryEffect
-local GetVersatilityBonus = GetVersatilityBonus
-local UnitAttackPower = UnitAttackPower
-local UnitAttackSpeed = UnitAttackSpeed
-local UnitDamage = UnitDamage
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- Base API locals
+local CR_VERSATILITY_DAMAGE_DONE = CR_VERSATILITY_DAMAGE_DONE
+local GetCombatRatingBonus   = GetCombatRatingBonus
+-- Accepts: ratingIndex; Returns: ratingBonus (number)
+local GetCritChance          = GetCritChance
+-- Accepts: nil; Returns: critChance (number)
+local GetHaste               = GetHaste
+-- Accepts: nil; Returns: haste (number)
+local GetMasteryEffect       = GetMasteryEffect
+-- Accepts: nil; Returns: masteryEffect (number), bonusCoefficient (number)
+local GetVersatilityBonus    = GetVersatilityBonus
+-- Accepts: combatRating; Returns: versatilityBonus (number)
+local UnitAttackPower        = UnitAttackPower
+-- Accepts: unitID; Returns: base (number), posBuff (number), negBuff (number)
+local UnitAttackSpeed        = UnitAttackSpeed
+-- Accepts: unitID; Returns: mainSpeed (number), offSpeed (number)
+local UnitDamage             = UnitDamage
+-- Accepts: unitID; Returns: minDamage (number), maxDamage (number), offhandMinDamage (number), offhandMaxDamage (number), posBuff (number), negBuff (number), percent (number)
+
+-- Lua
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================
