@@ -1,23 +1,27 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local unpack = unpack
-local GetTime = GetTime
-local UnitCastingInfo = UnitCastingInfo -- name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
-local UnitChannelInfo = UnitChannelInfo -- name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- Base API locals
+local UnitCastingInfo        = UnitCastingInfo
+-- Accepts: unitID; Returns: name (string), text (string), texture (string), startTimeMS (number), endTimeMS (number), isTradeSkill (bool), castID (GUID), notInterruptible (bool), spellId (number)
+local UnitChannelInfo        = UnitChannelInfo
+-- Accepts: unitID; Returns: name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
+
+-- lua locals
+local GetTime                = GetTime
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================

@@ -1,23 +1,30 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetPowerRegen = GetPowerRegen
-local UnitPower = UnitPower
-local UnitPowerMax = UnitPowerMax
-local UnitPowerType = UnitPowerType
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- Base API locals
+local GetPowerRegen          = GetPowerRegen
+-- Accepts: nil; Returns: basePowerRegen (number), castingPowerRegen (number)
+local UnitPower              = UnitPower
+-- Accepts: unitID, powerType, unmodified; Returns: power (number)
+local UnitPowerMax           = UnitPowerMax
+-- Accepts: unitID, powerType, unmodified; Returns: maxPower (number)
+local UnitPowerType          = UnitPowerType
+-- Accepts: unitID, index; Returns: powerType (Enum.PowerType), powerTypeToken (string), rgbX (number), rgbY (number), rgbZ (number)
+
+-- Lua locals
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================

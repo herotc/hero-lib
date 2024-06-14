@@ -11,24 +11,50 @@ local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
 local Party, Raid = Unit.Party, Unit.Raid
 local Spell = HL.Spell
 local Item = HL.Item
--- Lua
+
+-- Base API locals
 local GetUnitSpeed = GetUnitSpeed
+-- Accepts: unitID; Returns: currentSpeed (number), runSpeed (number), flightSpeed (number), swimSpeed (number)
+local UnitAffectingCombat = UnitAffectingCombat
+-- Accepts: unitID; Returns: affectingCombat (bool)
+local UnitCanAttack = UnitCanAttack
+-- Accepts: unitID, unitID; Returns: canAttack (bool)
+local UnitClassification = UnitClassification
+-- Accepts: unitID; Returns: classifiction (string)
+local UnitExists = UnitExists
+-- Accepts: unitID; Returns: exists (bool)
+local UnitGUID = UnitGUID
+-- Accepts: unitID; Returns: guid (string)
+local UnitHealth = UnitHealth
+-- Accepts: unitID; Returns: health (number)
+local UnitHealthMax = UnitHealthMax
+-- Accepts: unitID; Returns: maxHealth (number)
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+-- Accepts: unitID; Returns: isDeadOrGhost (bool)
+local UnitIsPlayer = UnitIsPlayer
+-- Accepts: unitID; Returns: isPlayer (bool)
+local UnitIsUnit = UnitIsUnit
+-- Accepts: unitID, unitID; Returns: isSame (bool)
+local UnitIsVisible = UnitIsVisible
+-- Accepts: unitID; Returns: visible (bool)
+local UnitLevel = UnitLevel
+-- Accepts: unitID; Returns: level (number)
+local UnitName = UnitName
+-- Accepts: unitID; Returns: name (string), realm (string, if different from player; nil otherwise)
+local UnitThreatSituation = UnitThreatSituation
+-- Accepts: unitID, mobUnit; Returns: status (number)
+-- Statuses:
+-- nil (unitID not on mobUnit's threat table)
+--  0  (unitID has less than 100% threat for mobUnit)
+--  1  (unitID has higher than 100% threat for mobUnit, but is not mobUnit's primary target)
+--  2  (unitID is mobUnit's primary target, but another unit has higher than 100% threat)
+--  3  (unitID is the primary target for mobUnit and no other unit has higher than 100% threat)
+
+-- Lua locals
 local strsplit = strsplit
 local tonumber = tonumber
-local UnitAffectingCombat = UnitAffectingCombat
-local UnitCanAttack = UnitCanAttack
-local UnitClassification = UnitClassification
-local UnitExists = UnitExists
-local UnitGUID = UnitGUID
-local UnitHealth = UnitHealth
-local UnitHealthMax = UnitHealthMax
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitIsPlayer = UnitIsPlayer
-local UnitIsUnit = UnitIsUnit
-local UnitIsVisible = UnitIsVisible
-local UnitLevel = UnitLevel
-local UnitName = UnitName
-local UnitThreatSituation = UnitThreatSituation
+
+
 -- File Locals
 
 

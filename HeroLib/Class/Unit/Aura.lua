@@ -1,31 +1,39 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local UnitAura = UnitAura -- name, icon, count, dispelType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellID, canApplyAura, isBossAura, casterIsPlayer, nameplateShowAll, timeMod, value1, value2, value3, ..., value11
-local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
-local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
-local GetTime = GetTime
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
 
+-- C_UnitAuras locals
+local GetAuraDataByIndex     = C_UnitAuras.GetAuraDataByIndex
+-- Accepts: unitToken, index, filter
+-- Returns: aura (AuraData: spellId, isBossAura, duration, expirationTime, isFromPlayerOrPet, points (table), icon, nameplateShowPersonal, nameplateShowAll,
+-- auraInstanceID, timeMod, isRaid, isHarmful, canApplyAura, name, isHelpful, applications, isNameplateOnly, sourceUnit, isStealable)
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
+-- Accepts: spellID
+-- Returns: aura (AuraData: spellId, isBossAura, duration, expirationTime, isFromPlayerOrPet, points (table), icon, nameplateShowPersonal, nameplateShowAll,
+-- auraInstanceID, timeMod, isRaid, isHarmful, canApplyAura, name, isHelpful, applications, isNameplateOnly, sourceUnit, isStealable)
+
+-- lua locals
+local GetTime                = GetTime
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================
 -- Note: BypassRecovery is a common arg of this module because by default, in order to improve the prediction, we take in account the remaining time of the GCD or the current cast (whichever is higher).
 --       Although sometimes we might want to ignore this and return the "raw" value, which this arg is for.
 
--- Get the AuraInfo (from UnitAura).
--- Only returns Stack, Duration, ExpirationTime, Index by default. Except if the Full argument is truthy then it is the UnitAura call that is returned.
+-- Get the AuraInfo (from GetAuraDataByIndex).
+-- Only returns Stack, Duration, ExpirationTime, Index by default. Except if the Full argument is truthy then it is the full call that is returned.
 do
   local GUID, SpellID, UnitID
   local AuraStack, AuraDuration, AuraExpirationTime, AuraSpellID, Index
@@ -70,7 +78,6 @@ do
         else
           return AuraStack, AuraDuration, AuraExpirationTime, Index
         end
-        --return Full and UnitAura(UnitID, Index, Filter) or AuraStack, AuraDuration, AuraExpirationTime, Index
       end
 
       Index = Index + 1

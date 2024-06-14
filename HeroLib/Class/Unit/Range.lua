@@ -1,30 +1,42 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroDBC
-local DBC = HeroDBC.DBC
+local DBC                    = HeroDBC.DBC
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player, Pet, Target = Unit.Player, Unit.Pet, Unit.Target
-local Focus, MouseOver = Unit.Focus, Unit.MouseOver
+local Cache, Utils           = HeroCache, HL.Utils
+local Unit                   = HL.Unit
+local Player, Pet, Target    = Unit.Player, Unit.Pet, Unit.Target
+local Focus, MouseOver       = Unit.Focus, Unit.MouseOver
 local Arena, Boss, Nameplate = Unit.Arena, Unit.Boss, Unit.Nameplate
-local Party, Raid = Unit.Party, Unit.Raid
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local mathrandom = math.random
-local pairs = pairs
-local tablesort = table.sort
-local type = type
-local unpack = unpack
--- WoW API
-local InCombatLockdown = InCombatLockdown
-local IsActionInRange = IsActionInRange
-local IsItemInRange = C_Item.IsItemInRange
-local IsSpellInRange = C_Spell.IsSpellInRange
--- File Locals
+local Party, Raid            = Unit.Party, Unit.Raid
+local Spell                  = HL.Spell
+local Item                   = HL.Item
+
+-- C_Item locals
+local IsItemInRange          = C_Item.IsItemInRange
+-- Accepts: itemInfo, targetToken; Returns: result (bool)
+
+-- C_Spell locals
+local IsSpellInRange         = C_Spell.IsSpellInRange
+-- Accepts: spellIdentifier, targetUnit; Returns: inRange (bool)
+
+-- Base API locals
+local InCombatLockdown       = InCombatLockdown
+-- Accepts: nil; Returns: inLockdown (bool)
+local IsActionInRange        = IsActionInRange
+-- Accepts: actionSlot; Returns: inRange (bool)
+
+-- Lua locals
+local mathrandom             = math.random
+local pairs                  = pairs
+local tablesort              = table.sort
+local type                   = type
+local unpack                 = unpack
+
+-- File locals
+
 
 -- IsInRangeTable generated manually by FilterItemRange
 local RangeTableByType = {
