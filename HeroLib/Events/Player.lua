@@ -1,37 +1,56 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL         = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetTime = GetTime
-local stringfind = string.find
-local stringsub = string.sub
-local wipe = wipe
--- Enum
-local SpellBookSpellBank = Enum.SpellBookSpellBank
--- API
-local C_Timer = C_Timer
-local GetSpecialization = GetSpecialization
-local GetSpecializationInfo = GetSpecializationInfo
-local GetFlyoutInfo, GetFlyoutSlotInfo = GetFlyoutInfo, GetFlyoutSlotInfo
-local GetNumFlyouts, GetFlyoutID = GetNumFlyouts, GetFlyoutID
-local IsTalentSpell = IsTalentSpell
-local UnitClass = UnitClass
+local Cache                 = HeroCache
+local Unit                  = HL.Unit
+local Player                = Unit.Player
+local Pet                   = Unit.Pet
+local Target                = Unit.Target
+local Spell                 = HL.Spell
+local Item                  = HL.Item
+
+-- Enum locals
+local SpellBookSpellBank    = Enum.SpellBookSpellBank
+
+-- Constant locals
 local SPELL_FAILED_UNIT_NOT_INFRONT = SPELL_FAILED_UNIT_NOT_INFRONT
--- C_Spell and C_SpellBook
-local GetSpellInfo = C_Spell.GetSpellInfo
+
+-- Base API locals
+local C_Timer               = C_Timer
+local GetSpecialization     = GetSpecialization
+-- Accepts: isInspect, isPet, specGroup; Returns: currentSpec (number)
+local GetSpecializationInfo = GetSpecializationInfo
+-- Accepts: specIndex, isInspect, isPet, inspectTarget, sex
+-- Returns: id (number), name (string), description (string) icon (fileID), role (string), primaryStat (number)
+local GetFlyoutInfo         = GetFlyoutInfo
+-- Accepts: flyoutID; Returns: name (string), description (string) numSlots (number), isKnown (bool)
+local GetFlyoutSlotInfo     = GetFlyoutSlotInfo
+-- Accepts: flyoutID, slot; Returns: flyoutSpellID (number), overrideSpellID (number), isKnown (bool), spellName (string), slotSpecID (number)
+local GetNumFlyouts         = GetNumFlyouts
+-- Accepts: nil; Returns: count (number)
+local GetFlyoutID           = GetFlyoutID
+-- Accepts: index; Returns: id (number)
+local UnitClass             = UnitClass
+-- Accepts: unitID; Returns: className (string), classFilename (string), classId (number)
+
+-- C_Spell locals
+local GetSpellInfo          = C_Spell.GetSpellInfo
+local IsClassTalentSpell    = C_Spell.IsClassTalentSpell
+
+-- C_SpellBook locals
 local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellBookItemInfo = C_SpellBook.GetSpellBookItemInfo
+local GetSpellBookItemInfo      = C_SpellBook.GetSpellBookItemInfo
 local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
-local HasPetSpells = C_SpellBook.HasPetSpells
+local HasPetSpells              = C_SpellBook.HasPetSpells
+
+-- Lua locals
+local GetTime               = GetTime
+local stringfind            = string.find
+local stringsub             = string.sub
+local wipe                  = wipe
+
 -- File Locals
 
 
@@ -49,7 +68,7 @@ local function BookScan(BlankScan)
         local CurrentSpellID = SpellData.spellID
         if CurrentSpellID then
           local CurrentSpell = Spell(CurrentSpellID, "Pet")
-          if CurrentSpell:IsAvailable(true) and (CurrentSpell:IsKnown(true) or IsTalentSpell(i, PetSpellBook)) then
+          if CurrentSpell:IsAvailable(true) then
             if not BlankScan then
               SpellLearned[CurrentSpell:ID()] = true
             end

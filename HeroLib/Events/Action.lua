@@ -1,42 +1,62 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL     = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local GetActionInfo = GetActionInfo -- type, globalID, subType
-local GetActionText = GetActionText -- text
-local GetActionTexture = GetActionTexture -- texture
-local GetBindingKey = GetBindingKey
+local Cache, Utils      = HeroCache, HL.Utils
+local Unit              = HL.Unit
+local Player            = Unit.Player
+local Pet               = Unit.Pet
+local Target            = Unit.Target
+local Spell             = HL.Spell
+local Item              = HL.Item
+
+-- Base API locals
+local GetActionInfo     = GetActionInfo
+-- Accepts: slot; Returns: actionType (string), id (mixed: ID for spells/items, names for equipment sets), subType (string)
+local GetActionText     = GetActionText
+-- Accepts: slot; Returns: text (string)
+local GetActionTexture  = GetActionTexture
+-- Accepts: slot; Returns: texture (string)
+local GetBindingKey     = GetBindingKey
+-- Accepts: command; Returns: key1 (string), key2 (string), ...
 local GetBonusBarOffset = GetBonusBarOffset
-local HasAction = HasAction
-local mathceil = math.ceil
-local mathfloor = math.floor
-local tableinsert = table.insert
-local tableremove = table.remove
-local gmatch = gmatch
+-- Accepts: nil; Returns: offset (number)
+local HasAction         = HasAction
+-- Accepts: slot; Returns: hasAction (bool)
+
+-- Lua locals
+local mathceil          = math.ceil
+local tableinsert       = table.insert
+local tableremove       = table.remove
+local gmatch            = gmatch
+
 -- File Locals
-local Actions = {} -- { [ActionSlot] = { Type, ID, SubType, Texture, Text, CommandName, HotKey } }
+local Actions = {}
+-- { [ActionSlot] = { Type, ID, SubType, Texture, Text, CommandName, HotKey } }
 local ActionSlotsBy = {
-  Item = {}, -- { [ItemID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
-  Macro = {},  -- { [MacroID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
-  Spell = {}, -- { [SpellID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
-  Text = {}, -- { [ActionText] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
-  Texture = {}, -- { [TextureID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
+  Item = {},
+  -- { [ItemID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
+  Macro = {},
+  -- { [MacroID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
+  Spell = {},
+  -- { [SpellID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
+  Text = {},
+  -- { [ActionText] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
+  Texture = {},
+  -- { [TextureID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
 }
 local HotKeyWhitelist = {
-  Item = {}, -- { [ItemID] = HotKey }
-  Macro = {},  -- { [MacroID] = HotKey }
-  Spell = {}, -- { [SpellID] = HotKey }
-  Text = {}, -- { [ActionText] = HotKey }
-  Texture = {}, -- { [TextureID] = HotKey }
+  Item = {},
+  -- { [ItemID] = HotKey }
+  Macro = {},
+  -- { [MacroID] = HotKey }
+  Spell = {},
+  -- { [SpellID] = HotKey }
+  Text = {},
+  -- { [ActionText] = HotKey }
+  Texture = {},
+  -- { [TextureID] = HotKey }
 }
 local Action = {
   Actions = Actions,

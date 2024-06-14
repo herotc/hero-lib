@@ -1,32 +1,36 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL    = ...
 -- HeroLib
-local Cache, Utils = HeroCache, HL.Utils
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local CreateFrame = CreateFrame
-local UIParent = UIParent
-local GetTime = GetTime
-local UnitGUID = UnitGUID
-local pairs = pairs
-local tableinsert = table.insert
-local tablesort = table.sort
-local tableremove = table.remove
-local wipe = table.wipe
+local Cache, Utils     = HeroCache, HL.Utils
+local Unit             = HL.Unit
+local Player           = Unit.Player
+local Pet              = Unit.Pet
+local Target           = Unit.Target
+local Spell            = HL.Spell
+local Item             = HL.Item
+
+-- Lua locals
+local CreateFrame      = CreateFrame
+local GetTime          = GetTime
+local UIParent         = UIParent
+local UnitGUID         = UnitGUID
+local pairs            = pairs
+local tableinsert      = table.insert
+local wipe             = table.wipe
+
 -- File Locals
-local Splash = {}
+local Splash           = {}
 local SPLASH_TRACKER_TIMEOUT = 3 -- 3000ms
-local NucleusAbilities = {} -- Every abilities that are used in order to compute splash data. { [SpellID] = { Type, Radius } }
-local FriendTargets = {} -- Track the targets of our friend (player, party, raid, pets, ...) in order to potentially assign the splash to their target (see NucleusAbility type). { [FriendGUID] = FriendTargetGUID }
-local TrackerBuffer = {} -- Buffer of the tracker since splash is coming from multiple events. { [SpellID] = { [SourceGUID] = { FirstTime, FriendTargetGUID, FirstDestGUID, Enemies = { GUID, LastTime, LastSpellID } } } }
-local Tracker = {} -- Track each enemies from where we splash from. { [PrimaryEnemyGUID] = { [Radius] = { [EnemyGUID] = { GUID, LastDamageTime, LastDamageSpellID } } } }
+local NucleusAbilities = {}
+-- Every abilities that are used in order to compute splash data. { [SpellID] = { Type, Radius } }
+local FriendTargets    = {}
+-- Track the targets of our friend (player, party, raid, pets, ...) in order to potentially assign the splash to their target (see NucleusAbility type). { [FriendGUID] = FriendTargetGUID }
+local TrackerBuffer    = {}
+-- Buffer of the tracker since splash is coming from multiple events. { [SpellID] = { [SourceGUID] = { FirstTime, FriendTargetGUID, FirstDestGUID, Enemies = { GUID, LastTime, LastSpellID } } } }
+local Tracker          = {}
+-- Track each enemies from where we splash from. { [PrimaryEnemyGUID] = { [Radius] = { [EnemyGUID] = { GUID, LastDamageTime, LastDamageSpellID } } } }
 
 --- ======= GLOBALIZE =======
 HL.SplashEnemies = Splash

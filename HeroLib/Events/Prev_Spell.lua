@@ -1,27 +1,29 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL      = ...
 -- HeroDBC
-local DBC = HeroDBC.DBC
+local DBC                = HeroDBC.DBC
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local pairs = pairs
-local tableinsert = table.insert
-local mathmax = math.max
-local GetTime = GetTime
+local Cache              = HeroCache
+local Unit               = HL.Unit
+local Player             = Unit.Player
+local Pet                = Unit.Pet
+local Target             = Unit.Target
+local Spell              = HL.Spell
+local Item               = HL.Item
+
+-- Lua locals
+local pairs              = pairs
+local tableinsert        = table.insert
+local mathmax            = math.max
+local GetTime            = GetTime
+
 -- File Locals
-local TriggerGCD = DBC.SpellGCD -- TriggerGCD table until it has been filtered.
-local LastRecord = 15
-local PrevGCDPredicted = 0
-local PrevGCDCastTime = 0
+local TriggerGCD         = DBC.SpellGCD -- TriggerGCD table until it has been filtered
+local LastRecord         = 15
+local PrevGCDPredicted   = 0
+local PrevGCDCastTime    = 0
 local PrevOffGCDCastTime = 0
 local Prev = {
   GCD = {},

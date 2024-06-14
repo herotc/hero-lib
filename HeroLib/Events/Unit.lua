@@ -3,15 +3,17 @@
 -- Addon
 local addonName, HL = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local pairs = pairs
+local Cache         = HeroCache
+local Unit          = HL.Unit
+local Player        = Unit.Player
+local Pet           = Unit.Pet
+local Target        = Unit.Target
+local Spell         = HL.Spell
+local Item          = HL.Item
+
+-- Lua locals
+local pairs         = pairs
+
 -- File Locals
 
 

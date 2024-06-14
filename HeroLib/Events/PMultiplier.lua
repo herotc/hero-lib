@@ -1,21 +1,23 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL  = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local pairs = pairs
-local GetTime = GetTime
+local Cache          = HeroCache
+local Unit           = HL.Unit
+local Player         = Unit.Player
+local Pet            = Unit.Pet
+local Target         = Unit.Target
+local Spell          = HL.Spell
+local Item           = HL.Item
+
+-- Lua locals
+local pairs          = pairs
+local GetTime        = GetTime
+
 -- File Locals
 local ListenedSpells = {}
-local ListenedAuras = {}
+local ListenedAuras  = {}
 
 
 --- ============================ CONTENT ============================

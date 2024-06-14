@@ -1,31 +1,35 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL          = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local MultiSpell = HL.MultiSpell
-local Item = HL.Item
--- Lua
-local pairs = pairs
-local ipairs = ipairs
-local tableinsert = table.insert
-local GetTime = GetTime
+local Cache                  = HeroCache
+local Unit                   = HL.Unit
+local Player                 = Unit.Player
+local Pet                    = Unit.Pet
+local Target                 = Unit.Target
+local Spell                  = HL.Spell
+local MultiSpell             = HL.MultiSpell
+local Item                   = HL.Item
+
+-- Lua locals
+local pairs                  = pairs
+local ipairs                 = ipairs
+local tableinsert            = table.insert
+local GetTime                = GetTime
+
 -- File Locals
-local PlayerSpecs = {}
-local ListenedSpells = {}
-local ListenedItemSpells = {}
+local PlayerSpecs            = {}
+local ListenedSpells         = {}
+local ListenedItemSpells     = {}
 local ListenedSpecItemSpells = {}
+local MultiSpells            = {}
 local Custom = {
   Whitelist = {},
   Blacklist = {}
 }
-local MultiSpells = {}
+
+
 --- ============================ CONTENT ============================
 
 -- Player On Cast Success Listener

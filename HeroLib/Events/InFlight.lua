@@ -3,18 +3,20 @@
 -- Addon
 local addonName, HL = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Target = Unit.Target
-local Spell = HL.Spell
+local Cache         = HeroCache
+local Unit          = HL.Unit
+local Player        = Unit.Player
+local Target        = Unit.Target
+local Spell         = HL.Spell
+
 -- Lua
-local pairs = pairs
-local C_Timer = C_Timer
-local mathmax = math.max
+local pairs         = pairs
+local mathmax       = math.max
+
 -- File Locals
 local TrackedSpells = {}
-local EffectMap = {}
+local EffectMap     = {}
+
 
 --- ============================ CONTENT ============================
 

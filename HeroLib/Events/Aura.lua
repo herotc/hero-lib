@@ -1,21 +1,21 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL     = ...
 -- HeroLib
-local Cache = HeroCache
+local Cache             = HeroCache
 local Unit, UnitGUIDMap = HL.Unit, HL.UnitGUIDMap
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Nameplates = Unit["Nameplate"]
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local pairs = pairs
-local tableinsert = table.insert
-local tableremove = table.remove
-local tablesort = table.sort
+local Player            = Unit.Player
+local Pet               = Unit.Pet
+local Target            = Unit.Target
+local Nameplates        = Unit["Nameplate"]
+local Spell             = HL.Spell
+local Item              = HL.Item
+
+-- Lua locals
+local pairs             = pairs
+local tableinsert       = table.insert
+
 -- File Locals
 local ListenedAuras = {}
 
@@ -288,4 +288,3 @@ do
     return MaxStackUnit
   end
 end
-

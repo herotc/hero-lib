@@ -1,30 +1,35 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL        = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Pet = Unit.Pet
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
+local Cache                = HeroCache
+local Unit                 = HL.Unit
+local Player               = Unit.Player
+local Pet                  = Unit.Pet
+local Target               = Unit.Target
+local Spell                = HL.Spell
+local Item                 = HL.Item
+
+-- Base API locals
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local CreateFrame = CreateFrame
-local pairs = pairs
-local select = select
-local stringfind = string.find
-local stringsub = string.sub
-local tableinsert = table.insert
-local tableremove = table.remove
+-- Accepts: nil; Returns: arg1, arg2, ...
+
+-- Lua locals
+local CreateFrame          = CreateFrame
+local pairs                = pairs
+local select               = select
+local stringfind           = string.find
+local stringsub            = string.sub
+local tableinsert          = table.insert
+local tableremove          = table.remove
+
 -- File Locals
-local EventFrame = CreateFrame("Frame", "HeroLib_EventFrame", UIParent)
-local Handlers = {} -- All Events
-local CombatHandlers = {} -- Combat Log Unfiltered
-local SelfCombatHandlers = {} -- Combat Log Unfiltered with SourceGUID == PlayerGUID filter
-local PetCombatHandlers = {} -- Combat Log Unfiltered with SourceGUID == PetGUID filter
+local EventFrame           = CreateFrame("Frame", "HeroLib_EventFrame", UIParent)
+local Handlers             = {} -- All Events
+local CombatHandlers       = {} -- Combat Log Unfiltered
+local SelfCombatHandlers   = {} -- Combat Log Unfiltered with SourceGUID == PlayerGUID filter
+local PetCombatHandlers    = {} -- Combat Log Unfiltered with SourceGUID == PetGUID filter
 local PrefixCombatHandlers = {}
 local SuffixCombatHandlers = {}
 local CombatPrefixes = {
