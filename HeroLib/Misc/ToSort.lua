@@ -1,24 +1,31 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL = ...
+local addonName, HL   = ...
 -- HeroLib
-local Cache = HeroCache
-local Unit = HL.Unit
-local Player = Unit.Player
-local Target = Unit.Target
-local Spell = HL.Spell
-local Item = HL.Item
--- Lua
-local mathmax = math.max
-local select = select
-local GetTime = GetTime
-local GetInstanceInfo = GetInstanceInfo
-local GetNetStats = GetNetStats -- down, up, lagHome, lagWorld
-local CreateFrame = CreateFrame
-local UIParent = UIParent
--- File Locals
+local Cache           = HeroCache
+local Unit            = HL.Unit
+local Player          = Unit.Player
+local Target          = Unit.Target
+local Spell           = HL.Spell
+local Item            = HL.Item
 
+-- Base API locals
+local GetInstanceInfo = GetInstanceInfo
+-- Accepts: nil
+-- Returns: name (string), instancetype (string), difficultyID (number), difficultyName (string), maxPlayers (number)
+-- dynamicDifficulty (number), isDynamicInstance (bool), instanceID (number), instanceGroupSize (number), LfgDungeonID (number)
+local GetNetStats     = GetNetStats
+-- Accepts: nil; Returns: bandwidthIn (number), bandwidthOut (number), latencyHome (number), latencyWorld (number)
+
+-- Lua locals
+local CreateFrame     = CreateFrame
+local GetTime         = GetTime
+local UIParent        = UIParent
+local mathmax         = math.max
+local select          = select
+
+-- File Locals
 
 
 --- ============================ CONTENT ============================
@@ -127,4 +134,3 @@ do
     return Latency + HL.RecoveryTimer()
   end
 end
-
