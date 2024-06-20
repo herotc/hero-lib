@@ -35,6 +35,9 @@ local GetFlyoutID           = GetFlyoutID
 local UnitClass             = UnitClass
 -- Accepts: unitID; Returns: className (string), classFilename (string), classId (number)
 
+-- C_ClassTalents locals
+local GetActiveConfigID     = C_ClassTalents.GetActiveConfigID
+
 -- C_Spell locals
 local GetSpellInfo          = C_Spell.GetSpellInfo
 local IsClassTalentSpell    = C_Spell.IsClassTalentSpell
@@ -44,6 +47,14 @@ local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
 local GetSpellBookItemInfo      = C_SpellBook.GetSpellBookItemInfo
 local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
 local HasPetSpells              = C_SpellBook.HasPetSpells
+
+-- C_Traits locals
+local GetConfigInfo             = C_Traits.GetConfigInfo
+local GetDefinitionInfo         = C_Traits.GetDefinitionInfo
+local GetEntryInfo              = C_Traits.GetEntryInfo
+local GetNodeInfo               = C_Traits.GetNodeInfo
+local GetSubTreeInfo            = C_Traits.GetSubTreeInfo
+local GetTreeNodes              = C_Traits.GetTreeNodes
 
 -- Lua locals
 local GetTime               = GetTime
@@ -195,26 +206,29 @@ HL:RegisterForEvent(
     if Event == "PLAYER_SPECIALIZATION_CHANGED" or Event == "PLAYER_TALENT_UPDATE" or Event == "TRAIT_CONFIG_UPDATED" then
       UpdateTalents = function()
         wipe(Cache.Persistent.Talents)
-        local TalentConfigID = C_ClassTalents.GetActiveConfigID()
+        local TalentConfigID = GetActiveConfigID()
         local TalentConfigInfo
         if TalentConfigID then
-          TalentConfigInfo = C_Traits.GetConfigInfo(TalentConfigID)
+          TalentConfigInfo = GetConfigInfo(TalentConfigID)
         end
         if TalentConfigID ~= nil and TalentConfigInfo ~= nil then
           local TalentTreeIDs = TalentConfigInfo["treeIDs"]
           for i = 1, #TalentTreeIDs do
-            for _, NodeID in pairs(C_Traits.GetTreeNodes(TalentTreeIDs[i])) do
-              local NodeInfo = C_Traits.GetNodeInfo(TalentConfigID, NodeID)
+            for _, NodeID in pairs(GetTreeNodes(TalentTreeIDs[i])) do
+              local NodeInfo = GetNodeInfo(TalentConfigID, NodeID)
               local ActiveTalent = NodeInfo.activeEntry
               local TalentRank = NodeInfo.activeRank
               if (ActiveTalent and TalentRank > 0) then
                 local TalentEntryID = ActiveTalent.entryID
-                local TalentEntryInfo = C_Traits.GetEntryInfo(TalentConfigID, TalentEntryID)
-                local DefinitionID = TalentEntryInfo["definitionID"]
-                local DefinitionInfo = C_Traits.GetDefinitionInfo(DefinitionID)
-                local SpellID = DefinitionInfo["spellID"]
-                local SpellName = GetSpellInfo(SpellID)
-                Cache.Persistent.Talents[SpellID] = (Cache.Persistent.Talents[SpellID]) and (Cache.Persistent.Talents[SpellID] + TalentRank) or TalentRank
+                local TalentEntryInfo = GetEntryInfo(TalentConfigID, TalentEntryID)
+                if TalentEntryInfo["definitionID"] then
+                  local DefinitionID = TalentEntryInfo["definitionID"]
+                  local DefinitionInfo = GetDefinitionInfo(DefinitionID)
+                  local SpellID = DefinitionInfo["spellID"]
+                  local SpellName = GetSpellInfo(SpellID)
+                  Cache.Persistent.Talents[SpellID] = (Cache.Persistent.Talents[SpellID]) and (Cache.Persistent.Talents[SpellID] + TalentRank) or TalentRank
+                end
+                -- TODO: Handle nodes in the Hero Talent trees. 
               end
             end
           end
