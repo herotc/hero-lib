@@ -40,7 +40,6 @@ local GetActiveConfigID     = C_ClassTalents.GetActiveConfigID
 
 -- C_Spell locals
 local GetSpellInfo          = C_Spell.GetSpellInfo
-local IsClassTalentSpell    = C_Spell.IsClassTalentSpell
 
 -- C_SpellBook locals
 local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
@@ -53,7 +52,6 @@ local GetConfigInfo             = C_Traits.GetConfigInfo
 local GetDefinitionInfo         = C_Traits.GetDefinitionInfo
 local GetEntryInfo              = C_Traits.GetEntryInfo
 local GetNodeInfo               = C_Traits.GetNodeInfo
-local GetSubTreeInfo            = C_Traits.GetSubTreeInfo
 local GetTreeNodes              = C_Traits.GetTreeNodes
 
 -- Lua locals
@@ -203,7 +201,7 @@ HL:RegisterForEvent(
       UpdateOverrides()
     end
 
-    if Event == "PLAYER_SPECIALIZATION_CHANGED" or Event == "PLAYER_TALENT_UPDATE" or Event == "TRAIT_CONFIG_UPDATED" then
+    if Event == "PLAYER_SPECIALIZATION_CHANGED" or Event == "PLAYER_TALENT_UPDATE" or Event == "TRAIT_CONFIG_UPDATED" or Event == "TRAIT_SUB_TREE_CHANGED" then
       UpdateTalents = function()
         wipe(Cache.Persistent.Talents)
         local TalentConfigID = GetActiveConfigID()
@@ -221,14 +219,16 @@ HL:RegisterForEvent(
               if (ActiveTalent and TalentRank > 0) then
                 local TalentEntryID = ActiveTalent.entryID
                 local TalentEntryInfo = GetEntryInfo(TalentConfigID, TalentEntryID)
-                if TalentEntryInfo["definitionID"] then
+                -- There are entries for SubTree (Hero Talents) items, as of TWW.
+                -- These are separate from the TalentEntryID of the nodes within the SubTree.
+                -- Nodes and entries for SubTree talents are already processed through this code, so we can safely ignore the SubTree entries without a definitionID.
+                if TalentEntryInfo and TalentEntryInfo["definitionID"] then
                   local DefinitionID = TalentEntryInfo["definitionID"]
                   local DefinitionInfo = GetDefinitionInfo(DefinitionID)
                   local SpellID = DefinitionInfo["spellID"]
                   local SpellName = GetSpellInfo(SpellID)
                   Cache.Persistent.Talents[SpellID] = (Cache.Persistent.Talents[SpellID]) and (Cache.Persistent.Talents[SpellID] + TalentRank) or TalentRank
                 end
-                -- TODO: Handle nodes in the Hero Talent trees. 
               end
             end
           end
@@ -239,7 +239,7 @@ HL:RegisterForEvent(
       UpdateTalents()
     end
   end,
-  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "TRAIT_CONFIG_UPDATED"
+  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "TRAIT_CONFIG_UPDATED", "TRAIT_SUB_TREE_CHANGED"
 )
 
 -- Player Unit Cache
