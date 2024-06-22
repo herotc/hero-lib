@@ -29,6 +29,7 @@ local IsActionInRange        = IsActionInRange
 -- Accepts: actionSlot; Returns: inRange (bool)
 
 -- Lua locals
+local mathmax                = math.max
 local mathrandom             = math.random
 local pairs                  = pairs
 local tablesort              = table.sort
@@ -91,7 +92,6 @@ end
 -- Supported hostile ranges (will take a lower one if you specify a different one): 5 - 6.5 - 7 - 8 - 10 - 15 - 20 - 25 - 30 - 35 - 38 - 40 - 45 - 50 - 55 - 60 - 70 - 80 - 90 - 100
 function Unit:IsInRange(Distance)
   assert(type(Distance) == "number", "Distance must be a number.")
-  if Distance == 4.5 then Distance = 5 end
   assert(Distance >= 5 and Distance <= 100, "Distance must be between 5 and 100.")
 
   local GUID = self:GUID()
@@ -151,8 +151,10 @@ function Unit:IsInMeleeRange(Distance)
 
   -- At this moment we cannot check multiple melee range (5, 8, 10), only the 5yds one from the item.
   -- So we use the ranged item while substracting 1.5y, which is the player hitbox radius.
+  -- Make sure subtracting 1.5y won't put us under 5y.
+  Distance = mathmax(Distance - 1.5, 5)
   if (Distance ~= 5) then
-    return self:IsInRange(Distance - 1.5)
+    return self:IsInRange(Distance)
   end
 
   local GUID = self:GUID()
