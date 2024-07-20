@@ -30,7 +30,9 @@ Cache.Persistent = {
   TierSets = {},
   Player = {
     Class = { UnitClass("player") },
-    Spec = {}
+    Spec = {},
+    HeroTree = {},
+    HeroTreeID = {},
   },
   BookIndex = { Pet = {}, Player = {} },
   SpellLearned = { Pet = {}, Player = {} },

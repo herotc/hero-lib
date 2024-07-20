@@ -60,6 +60,16 @@ function Player:IsRace(ThisRace)
   return ThisRace and self:Race() == ThisRace or false
 end
 
+-- Return the character's Hero Talent spec by name
+function Player:HeroTree()
+  return Cache.Persistent.Player.HeroTree
+end
+
+-- Return the character's Hero Talent spec by ID
+function Player:HeroTreeID()
+  return Cache.Persistent.Player.HeroTreeID
+end
+
 do
   -- Get if the player is on a combat mount or not.
   local CombatMountBuff = {

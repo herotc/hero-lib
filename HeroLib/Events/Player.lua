@@ -52,6 +52,7 @@ local GetConfigInfo             = C_Traits.GetConfigInfo
 local GetDefinitionInfo         = C_Traits.GetDefinitionInfo
 local GetEntryInfo              = C_Traits.GetEntryInfo
 local GetNodeInfo               = C_Traits.GetNodeInfo
+local GetSubTreeInfo            = C_Traits.GetSubTreeInfo
 local GetTreeNodes              = C_Traits.GetTreeNodes
 
 -- Lua locals
@@ -215,7 +216,16 @@ HL:RegisterForEvent(
             for _, NodeID in pairs(GetTreeNodes(TalentTreeIDs[i])) do
               local NodeInfo = GetNodeInfo(TalentConfigID, NodeID)
               local ActiveTalent = NodeInfo.activeEntry
+              local SubTreeID = NodeInfo.subTreeID
               local TalentRank = NodeInfo.activeRank
+              if SubTreeID then
+                local SubTreeInfo = GetSubTreeInfo(TalentConfigID, SubTreeID)
+                if SubTreeInfo and SubTreeInfo.isActive then
+                  local SubTreeName = SubTreeInfo.name
+                  Cache.Persistent.Player.HeroTree = SubTreeName
+                  Cache.Persistent.Player.HeroTreeID = SubTreeID
+                end
+              end
               if (ActiveTalent and TalentRank > 0) then
                 local TalentEntryID = ActiveTalent.entryID
                 local TalentEntryInfo = GetEntryInfo(TalentConfigID, TalentEntryID)
