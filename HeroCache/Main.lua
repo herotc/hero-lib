@@ -31,8 +31,9 @@ Cache.Persistent = {
   Player = {
     Class = { UnitClass("player") },
     Spec = {},
-    HeroTree = {},
-    HeroTreeID = {},
+    HeroTrees = {},
+    ActiveHeroTree = {},
+    ActiveHeroTreeID = {},
   },
   BookIndex = { Pet = {}, Player = {} },
   SpellLearned = { Pet = {}, Player = {} },

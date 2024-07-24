@@ -59,6 +59,7 @@ local GetTreeNodes              = C_Traits.GetTreeNodes
 local GetTime               = GetTime
 local stringfind            = string.find
 local stringsub             = string.sub
+local tinsert               = table.insert
 local wipe                  = wipe
 
 -- File Locals
@@ -220,10 +221,13 @@ HL:RegisterForEvent(
               local TalentRank = NodeInfo.activeRank
               if SubTreeID then
                 local SubTreeInfo = GetSubTreeInfo(TalentConfigID, SubTreeID)
-                if SubTreeInfo and SubTreeInfo.isActive then
+                if SubTreeInfo then
                   local SubTreeName = SubTreeInfo.name
-                  Cache.Persistent.Player.HeroTree = SubTreeName
-                  Cache.Persistent.Player.HeroTreeID = SubTreeID
+                  Cache.Persistent.Player.HeroTrees[SubTreeID] = SubTreeName
+                  if SubTreeInfo.isActive then
+                    Cache.Persistent.Player.ActiveHeroTree = SubTreeName
+                    Cache.Persistent.Player.ActiveHeroTreeID = SubTreeID
+                  end
                 end
               end
               if (ActiveTalent and TalentRank > 0) then

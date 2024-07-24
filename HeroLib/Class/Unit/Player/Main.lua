@@ -62,12 +62,17 @@ end
 
 -- Return the character's Hero Talent spec by name
 function Player:HeroTree()
-  return Cache.Persistent.Player.HeroTree
+  return Cache.Persistent.Player.ActiveHeroTree
 end
 
 -- Return the character's Hero Talent spec by ID
 function Player:HeroTreeID()
-  return Cache.Persistent.Player.HeroTreeID
+  return Cache.Persistent.Player.ActiveHeroTreeID
+end
+
+-- Return a list of possible Hero Talent specs
+function Player:ListHeroTrees()
+  return Cache.Persistent.Player.HeroTrees
 end
 
 do
