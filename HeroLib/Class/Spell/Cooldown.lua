@@ -40,6 +40,10 @@ end
 function Spell:ChargesInfo()
   local SpellID = self:ID()
   local SpellInfo = GetSpellCharges(SpellID)
+  -- Non-charged spells now return nil, so let's return default values to avoid a nil error.
+  if not SpellInfo then
+    return 1, 1, 0, 0
+  end
 
   return SpellInfo.currentCharges, SpellInfo.maxCharges, SpellInfo.cooldownStartTime, SpellInfo.cooldownDuration
 end
