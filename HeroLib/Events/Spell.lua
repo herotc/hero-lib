@@ -29,7 +29,6 @@ local Custom = {
   Blacklist = {}
 }
 
-
 --- ============================ CONTENT ============================
 
 -- Player On Cast Success Listener
@@ -130,7 +129,9 @@ function Player:RegisterListenedSpells(SpecID)
     tableinsert(PlayerSpecs, Spec)
     ListenedSpells[Spec] = {}
     for _, Spell in pairs(Spells) do
-      ListenedSpells[Spec][Spell:ID()] = Spell
+      if Spell:ID() then
+        ListenedSpells[Spec][Spell:ID()] = Spell
+      end
     end
   end
   -- Add Spells based on the Whitelist
