@@ -200,6 +200,14 @@ function Player:GetOnUseItems()
   return UseableItems
 end
 
+-- Retrieve the current player's trinket items
+function Player:GetTrinketItems()
+  local Equip = Player:GetEquipment()
+  local Trinket1 = Equip[13] and Item(Equip[13]) or Item(0)
+  local Trinket2 = Equip[14] and Item(Equip[14]) or Item(0)
+  return Trinket1, Trinket2
+end
+
 -- Save the current player's equipment.
 function Player:UpdateEquipment()
   wipe(Equipment)
