@@ -188,6 +188,15 @@ HL:RegisterForEvent(
 
     -- Update Equipment
     Player:UpdateEquipment()
+    local Equip = Player:GetEquipment()
+    for i=1,16 do
+      if slot ~= 4 and not Equip[slot] then
+        C_Timer.After(2, function()
+            Player:UpdateEquipment()
+          end
+        )
+      end
+    end
 
     -- Load / Refresh Core Overrides
     if Event == "PLAYER_SPECIALIZATION_CHANGED" then
