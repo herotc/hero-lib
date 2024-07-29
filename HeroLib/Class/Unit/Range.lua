@@ -179,6 +179,16 @@ function Unit:IsSpellInRange(ThisSpell)
   return IsSpellInRange(ThisSpell:ID(), self:ID())
 end
 
+-- Get if the unit is in range, distance check through IsItemInRange (works only for targeted items only)
+function Unit:IsItemInRange(Item)
+  local GUID = self:GUID()
+  if not GUID then return false end
+
+  -- If in combat and target is friendly or an enemy player, return false.
+  if InCombatLockdown() and (self:IsAPlayer() or not Player:CanAttack(self)) then return false end
+  return IsItemInRange(Item:ID(), self:ID())
+end
+
 -- Get if the unit is in range, distance check through IsActionInRange (works only for targeted actions only)
 function Unit:IsActionInRange(ActionSlot)
   return IsActionInRange(ActionSlot, self:ID())
