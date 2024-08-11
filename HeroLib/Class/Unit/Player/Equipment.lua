@@ -226,7 +226,7 @@ function Player:UpdateEquipment()
       else
         ItemObject = Item(ItemID)
       end
-      if ItemObject:IsUsable() or UsableItemOverride[ItemID] then
+      if ItemObject:OnUseSpell() or UsableItemOverride[ItemID] then
         table.insert(UseableItems, ItemObject)
       end
     end
@@ -402,13 +402,16 @@ do
   end
 
   -- Return the trinket item of the first usable trinket that is not blacklisted or excluded
-  function Player:GetUseableItems(ExcludedItems, slotID)
+  function Player:GetUseableItems(ExcludedItems, slotID, excludeTrinkets)
     for _, Item in ipairs(UseableItems) do
       local ItemID = Item:ID()
       local IsExcluded = false
 
       -- Did we specify a slotID? If so, mark as excluded if this trinket isn't in that slot
       if slotID and Equipment[slotID] ~= ItemID then
+        IsExcluded = true
+      -- Exclude trinket items if excludeTrinkets is true
+      elseif excludeTrinkets and (Equipment[13] == ItemID or Equipment[14] == ItemID) then
         IsExcluded = true
       -- Check if the trinket is ready, unless it's blacklisted
       elseif Item:IsReady() and not Player:IsItemBlacklisted(Item) then
