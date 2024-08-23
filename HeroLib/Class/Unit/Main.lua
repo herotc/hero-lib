@@ -266,7 +266,7 @@ local DummyUnits = {
   [174487] = true, -- Training Dummy
   [174488] = true, -- Raider's Training Dummy
   [174491] = true, -- Tanking Dummy
-  -- DargonFlight Valdrakken
+  -- DragonFlight Valdrakken
   [198594] = true, -- Cleave Training Dummy
   [194648] = true, -- Training Dummy
   [189632] = true, -- Animated Duelist
@@ -275,8 +275,17 @@ local DummyUnits = {
   [197833] = true, -- PvP Training Dummy
   [189617] = true, -- Boulderfist
   [194649] = true, -- Normal Tank Dummy
-  -- DargonFlight Iskaara
+  -- DragonFlight Iskaara
   [193563] = true, -- Training Dummy
+  -- TWW Dornogal
+  [219250] = true, -- PvP Training Dummy
+  [225976] = true, -- Normal Tanking Dummy
+  [225977] = true, -- Dungeoneer's Training Dummy (tanking)
+  [225978] = true, -- Crystalmaw (raid tanking dummy)
+  [225982] = true, -- Cleave Training Dummy
+  [225983] = true, -- Dungeoneer's Training Dummy
+  [225984] = true, -- Training Dummy
+  [225985] = true, -- Kelpfist (raid training dummy)
   -- Other
   [65310] = true, -- Turnip Punching Bag (toy)
   [66374] = true, -- Anatomical Dummy (toy)
