@@ -208,6 +208,38 @@ function Player:GetTrinketItems()
   return Trinket1, Trinket2
 end
 
+-- Retrieve the current player's trinket data
+function Player:GetTrinketData()
+  local Equip = Player:GetEquipment()
+  local Trinket1 = Equip[13] and Item(Equip[13]) or Item(0)
+  local Trinket2 = Equip[14] and Item(Equip[14]) or Item(0)
+  local Trinket1Spell = Trinket1:OnUseSpell()
+  local Trinket2Spell = Trinket2:OnUseSpell()
+  local Trinket1Range = (Trinket1Spell and Trinket1Spell.MaximumRange > 0 and Trinket1Spell.MaximumRange <= 100) and Trinket1Spell.MaximumRange or 100
+  local Trinket2Range = (Trinket2Spell and Trinket2Spell.MaximumRange > 0 and Trinket2Spell.MaximumRange <= 100) and Trinket2Spell.MaximumRange or 100
+  local Trinket1CastTime = Trinket1Spell and Trinket1Spell:CastTime() or 0
+  local Trinket2CastTime = Trinket2Spell and Trinket2Spell:CastTime() or 0
+  local T1 = {
+    Object = Trinket1,
+    ID = Trinket1:ID(),
+    Spell = Trinket1Spell,
+    Range = Trinket1Range,
+    CastTime = Trinket1CastTime,
+    Cooldown = Trinket1:Cooldown(),
+    Blacklisted = Player:IsItemBlacklisted(Trinket1)
+  }
+  local T2 = {
+    Object = Trinket2,
+    ID = Trinket2:ID(),
+    Spell = Trinket2Spell,
+    Range = Trinket2Range,
+    CastTime = Trinket2CastTime,
+    Cooldown = Trinket2:Cooldown(),
+    Blacklisted = Player:IsItemBlacklisted(Trinket2)
+  }
+  return T1, T2
+end
+
 -- Save the current player's equipment.
 function Player:UpdateEquipment()
   wipe(Equipment)
