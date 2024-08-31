@@ -291,6 +291,7 @@ do
   local GenericItems = {
     ----- Generic items that we always want to exclude
     --- The War Within
+    [215133] = true, -- Binding of Binding
     [218422] = true, -- Forged Aspirant's Medallion
     [218716] = true, -- Forged Gladiator's Medallion
     [218717] = true, -- Forged Gladiator's Sigil of Adaptation
