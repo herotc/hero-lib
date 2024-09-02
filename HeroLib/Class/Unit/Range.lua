@@ -17,6 +17,8 @@ local Item                   = HL.Item
 -- C_Item locals
 local IsItemInRange          = C_Item.IsItemInRange
 -- Accepts: itemInfo, targetToken; Returns: result (bool)
+local IsUsableItem           = C_Item.IsUsableItem
+-- Accepts: itemInfo; Returns: usable (bool), noMana (bool)
 
 -- C_Spell locals
 local IsSpellInRange         = C_Spell.IsSpellInRange
@@ -83,6 +85,45 @@ do
       Friendly.ItemRange[k] = v[mathrandom(1, #v)]
     end
   end
+end
+
+-- Debug function for manually fixing the DBC ItemRange table
+function HL:CheckRangeTable()
+  local Types = { "Melee", "Ranged" }
+  local OverallFailures = 0
+  for _, Type in pairs(Types) do
+    local DBCTable = DBC.ItemRange[Type]
+    local TableTypes = { "Hostile", "Friendly" }
+    for _, TableType in pairs(TableTypes) do
+      for _,v in pairs(DBCTable[TableType].RangeIndex) do
+        local Failures = 0
+        for _,v2 in pairs(DBCTable[TableType].ItemRange[v]) do
+          local MaxRange = 0
+          local HasOnUseSpell = HL.Item(v2):OnUseSpell()
+          if Type == "Ranged" then
+            MaxRange = HasOnUseSpell and HL.Item(v2):OnUseSpell().MaximumRange or 0
+          end
+          if (Type == "Ranged" and MaxRange ~= v) or not HasOnUseSpell then
+            HL.Print("---------")
+            HL.Print("Table Type: "..tostring(Type))
+            HL.Print("Range Being Checked: "..tostring(v))
+            HL.Print("Item with Bad Range: "..tostring(v2))
+            HL.Print("Actual Item Range: "..tostring(MaxRange))
+            Failures = Failures + 1
+            OverallFailures = OverallFailures + 1
+          end
+        end
+        if Failures > 0 then
+          HL.Print("----------------")
+          HL.Print("Table Type: "..tostring(Type))
+          HL.Print("Total Items in Range "..tostring(v)..": "..tostring(#DBCTable[TableType].ItemRange[v]))
+          HL.Print("Total Failures: "..tostring(Failures))
+        end
+      end
+    end
+  end
+  HL.Print("----------------")
+  HL.Print("Overall Failures: "..tostring(OverallFailures))
 end
 
 --- ============================ CONTENT ============================
