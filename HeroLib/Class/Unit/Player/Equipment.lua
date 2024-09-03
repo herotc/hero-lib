@@ -183,6 +183,16 @@ local TierSets = {
   },
 }
 
+local GladiatorBadges = {
+  -- DF Badges
+  201807, -- Crimson
+  205708, -- Obsidian
+  209343, -- Verdant
+  216279, -- Draconic
+  -- TWW Badges
+  218713, -- Forged
+}
+
 -- Usable items that may not become active until an event or threshold.
 -- Adding an item to this list forces it into the UseableItems table.
 local UsableItemOverride = {
@@ -506,4 +516,15 @@ function Player:HasTier(Tier, Pieces)
   else
     return Cache.Persistent.TierSets[Tier][Pieces.."pc"]
   end
+end
+
+-- Check if a Gladiator's Badge is equipped
+function Player:GladiatorsBadgeIsEquipped()
+  local Trinket1, Trinket2 = Player:GetTrinketItems()
+  for _, v in pairs(GladiatorBadges) do
+    if Trinket1:ID() == v or Trinket2:ID() == v then
+      return true
+    end
+  end
+  return false
 end
