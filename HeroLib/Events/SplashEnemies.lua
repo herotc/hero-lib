@@ -144,9 +144,16 @@ do
     -- Stop processing if the event is not corresponding to the type of the NucleusAbility.
     if Event ~= "SPELL_DAMAGE" and NucleusAbility.Type ~= "PeriodicDamage" then return end
 
+    -- Table of spells to override valid SourceGUID check.
+    local OverrideSpells = {
+      192231, -- Liquid Magma Totem
+      383061, -- Liquid Magma Totem
+    }
+    local OverrideSourceGUID = Utils.ValueIsInTable(OverrideSpells, SpellID)
+
     -- Check if the SourceGUID is valid.
     local FriendTargetGUID = FriendTargets[SourceGUID]
-    if not FriendTargetGUID then return end
+    if not FriendTargetGUID and not OverrideSourceGUID then return end
 
     -- Retrieve the buffer or create it.
     local Buffer = TrackerBuffer[SpellID][SourceGUID]
@@ -155,7 +162,8 @@ do
       if Event ~= "SPELL_DAMAGE" and Event ~= "SPELL_PERIODIC_DAMAGE" then return end
 
       -- HL.Print("[SplashEnemies] Creating buffer for SpellID '" .. SpellID .. "' from SourceGUID '" .. SourceGUID .. "'.")
-      Buffer = { FirstTime = GetTime(), FriendTargetGUID = FriendTargetGUID, FirstDestGUID = DestGUID, Enemies = { { GUID = DestGUID, LastTime = GetTime(), LastSpellID = SpellID } } }
+      local ValidFriendTarget = (OverrideSourceGUID) and DestGUID or FriendTargetGUID
+      Buffer = { FirstTime = GetTime(), FriendTargetGUID = ValidFriendTarget, FirstDestGUID = DestGUID, Enemies = { { GUID = DestGUID, LastTime = GetTime(), LastSpellID = SpellID } } }
       TrackerBuffer[SpellID][SourceGUID] = Buffer
 
       -- Stop here since we already process the enemy on buffer creation
@@ -544,7 +552,9 @@ function Splash.RegisterNucleusAbilities()
   -- Elemental
   RegisterNucleusAbility("DirectDamage", 188443, 10)              -- Chain Lightning
   RegisterNucleusAbility("DirectDamage", 77478, 8)                -- Earthquake
-  RegisterNucleusAbility("DirectDamage", 192231, 8)               -- Liquid Magma Totem
+  RegisterNucleusAbility("DirectDamage", 192231, 9)               -- Liquid Magma Totem
+  RegisterNucleusAbility("DirectDamage", 383061, 9)               -- Liquid Magma Totem 2
+  RegisterNucleusAbility("DirectDamage", 452201, 8)               -- Tempest
   -- Enhancement
   RegisterNucleusAbility("DirectDamage", 187874, 8)               -- Crash Lightning
   RegisterNucleusAbility("DirectDamage", 197214, 11)              -- Sundering
