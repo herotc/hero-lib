@@ -375,11 +375,15 @@ do
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
+    -- The War Within
+    ConcoctionKissofDeath           = Item(215174, {13, 14}),
   }
 
   local CustomItemSpells = {
     -- Dragonflight
-    SkeweringColdDebuff               = Spell(388929),
+    SkeweringColdDebuff             = Spell(388929),
+    -- The War Within
+    ConcoctionKissofDeathBuff       = Spell(435493),
   }
 
   local RangeOverrides = {
@@ -421,6 +425,11 @@ do
 
     if ItemID == CustomItems.TreemouthsFesteringSplinter:ID() then
       return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
+    end
+
+    -- The War Within items being excluded with custom checks.
+    if ItemID == CustomItems.ConcoctionKissofDeath:ID() then
+      return Player:BuffUp(CustomItemSpells.ConcoctionKissofDeathBuff)
     end
 
     -- Any generic items we always want to exclude from suggestions.
