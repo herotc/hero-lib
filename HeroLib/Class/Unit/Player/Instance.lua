@@ -16,6 +16,8 @@ local Item                   = HL.Item
 local GetInstanceInfo        = GetInstanceInfo
 -- Accepts: nil; Returns: name (string), instanceType (string), difficulty (number), difficultyName (string), maxPlayers (number),
 -- playerDifficulty (number), isDynamicInstance (bool), instanceID (number), instanceGroupSize (number), lfgDungeonID (number)
+local IsDelveInProgress      = C_PartyInfo.IsDelveInProgress
+-- Accepts: nil; Returns: isDelveComplete (bool)
 
 -- lua locals
 
@@ -42,19 +44,24 @@ function Player:InstanceDifficulty()
   return Difficulty
 end
 
--- Get wether the player is in an instanced pvp area.
+-- Get whether the player is in an instanced pvp area.
 function Player:IsInInstancedPvP()
   local InstanceType = self:InstanceType()
 
   return (InstanceType == "arena" or InstanceType == "pvp") or false
 end
 
--- Get wether the player is in a raid area.
+-- Get whether the player is in a raid area.
 function Player:IsInRaidArea()
   return self:InstanceType() == "raid" or false
 end
 
--- Get wether the player is in a dungeon area.
+-- Get whether the player is in a dungeon area.
 function Player:IsInDungeonArea()
   return self:InstanceType() == "party" or false
+end
+
+-- Get whether the player is in a delve.
+function Player:IsInDelve()
+  return IsDelveInProgress()
 end
