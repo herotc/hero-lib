@@ -46,6 +46,11 @@ do
     },
   }
   local SpecialBlacklistData = {
+    --- The War Within
+    ----- Dungeons -----
+    --- Mythic+ Affix ---
+    -- Orb of Ascendance need to be interrupted/CC'd, but aren't actual targets.
+    [229296] = true,
     --- Dragonflight
     ----- Demon Hunter Condemned Demons -----
     -- If we want to include for the DH, we can - function() return Cache.Persistent.Player.Class[3] ~= 12 end
