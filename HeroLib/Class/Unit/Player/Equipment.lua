@@ -236,6 +236,7 @@ function Player:GetTrinketData()
   local T1 = {
     Object = Trinket1,
     ID = Trinket1:ID(),
+    Level = Trinket1:Level(),
     Spell = Trinket1Spell,
     SpellID = Trinket1SpellID,
     Range = Trinket1Range,
@@ -247,6 +248,7 @@ function Player:GetTrinketData()
   local T2 = {
     Object = Trinket2,
     ID = Trinket2:ID(),
+    Level = Trinket2:Level(),
     Spell = Trinket2Spell,
     SpellID = Trinket2SpellID,
     Range = Trinket2Range,
