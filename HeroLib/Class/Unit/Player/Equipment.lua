@@ -383,6 +383,8 @@ do
   }
 
   local CustomItems = {
+    -- Shadowlands
+    BottledFlayedwingToxin          = Item(178742, {13, 14}),
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
@@ -391,6 +393,8 @@ do
   }
 
   local CustomItemSpells = {
+    -- Shadowlands
+    FlayedwingToxinBuff             = Spell(345545),
     -- Dragonflight
     SkeweringColdDebuff             = Spell(388929),
     -- The War Within
@@ -428,6 +432,11 @@ do
 
     -- Exclude all tabards and shirts
     if ItemSlot == 19 or ItemSlot == 4 then return true end
+
+    -- Shadowlands items being excluded with custom checks.
+    if ItemID == CustomItems.BottledFlayedwingToxin:ID() then
+      return Player:BuffUp(CustomItemSpells.FlayedwingToxinBuff)
+    end
 
     -- Dragonflight items being excluded with custom checks.
     if ItemID == CustomItems.GlobeofJaggedIce:ID() then
