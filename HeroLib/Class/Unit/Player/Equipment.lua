@@ -390,6 +390,7 @@ do
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
     -- The War Within
     ConcoctionKissofDeath           = Item(215174, {13, 14}),
+    KahetiEmblem                    = Item(225651, {13, 14}),
   }
 
   local CustomItemSpells = {
@@ -399,6 +400,7 @@ do
     SkeweringColdDebuff             = Spell(388929),
     -- The War Within
     ConcoctionKissofDeathBuff       = Spell(435493),
+    KahetiEmblemBuff                = Spell(455464),
   }
 
   local RangeOverrides = {
@@ -450,6 +452,10 @@ do
     -- The War Within items being excluded with custom checks.
     if ItemID == CustomItems.ConcoctionKissofDeath:ID() then
       return Player:BuffUp(CustomItemSpells.ConcoctionKissofDeathBuff)
+    end
+
+    if ItemID == CustomItems.KahetiEmblem:ID() then
+      return Player:BuffStack(CustomItemSpells.KahetiEmblemBuff) < 4 and not (Player:BuffUp(CustomItemSpells.KahetiEmblemBuff) and Player:BuffRemains(CustomItemSpells.KahetiEmblemBuff) < 3) or Player:BuffDown(CustomItemSpells.KahetiEmblemBuff)
     end
 
     -- Any generic items we always want to exclude from suggestions.
