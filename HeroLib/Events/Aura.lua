@@ -113,7 +113,7 @@ do
   end
 
   HL:RegisterForEvent(function(_, UnitID) ScanAurasOnUnit(Nameplates[UnitID]) end, "NAME_PLATE_UNIT_ADDED")
-  HL:RegisterForEvent(function() ScanAurasOnUnit(Target) end, "PLAYER_TARGET_CHANGED")
+  HL:RegisterForEvent(function() ScanAurasOnUnit(Target) end, "PLAYER_TARGET_CHANGED", "PLAYER_SOFT_ENEMY_CHANGED")
 end
 
 do
