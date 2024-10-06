@@ -79,7 +79,7 @@ function Player:CheckDelveQuestProgress()
   local QuestIDs = { 83758, 83759, 85648, 85649, 83766, 85664, 83769, 83767, 83768, 85667, 83771, 83770, 85666 }
   for _, Quest in ipairs(QuestIDs) do
     local QuestTitle = GetTitleForQuestID(Quest)
-    if not QuestTitle then
+    while not QuestTitle do
       QuestTitle = GetTitleForQuestID(Quest)
     end
     local QuestComplete = IsQuestFlaggedCompleted(Quest)
