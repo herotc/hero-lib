@@ -237,10 +237,10 @@ function Player:GetTrinketData(OnUseExcludes)
   local T2Excluded = false
   if OnUseExcludes then
     for _, Item in pairs(OnUseExcludes) do
-      if Item and Trinket1:ID() == Item:ID() then
+      if Item and Trinket1:ID() == Item then
         T1Excluded = true
       end
-      if Item and Trinket2:ID() == Item:ID() then
+      if Item and Trinket2:ID() == Item then
         T2Excluded = true
       end
     end
