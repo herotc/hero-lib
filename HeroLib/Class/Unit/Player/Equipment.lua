@@ -255,7 +255,7 @@ function Player:GetTrinketData(OnUseExcludes)
     Usable = Trinket1Usable,
     CastTime = Trinket1CastTime,
     Cooldown = Trinket1:Cooldown(),
-    Blacklisted = Player:IsItemBlacklisted(Trinket1) or T1Excluded
+    Excluded = T1Excluded
   }
   local T2 = {
     Object = Trinket2,
@@ -267,7 +267,7 @@ function Player:GetTrinketData(OnUseExcludes)
     Usable = Trinket2Usable,
     CastTime = Trinket2CastTime,
     Cooldown = Trinket2:Cooldown(),
-    Blacklisted = Player:IsItemBlacklisted(Trinket2) or T2Excluded
+    Excluded = T2Excluded
   }
   return T1, T2
 end
