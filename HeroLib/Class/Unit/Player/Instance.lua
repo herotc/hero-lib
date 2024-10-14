@@ -79,11 +79,13 @@ function Player:CheckDelveQuestProgress()
   local QuestIDs = { 83758, 83759, 85648, 85649, 83766, 85664, 83769, 83767, 83768, 85667, 83771, 83770, 85666 }
   for _, Quest in ipairs(QuestIDs) do
     local QuestTitle = GetTitleForQuestID(Quest)
-    if not QuestTitle then
+    local TitleFailures = 0
+    while not QuestTitle and TitleFailures < 5 do
+      TitleFailures = TitleFailures + 1
       QuestTitle = GetTitleForQuestID(Quest)
     end
     local QuestComplete = IsQuestFlaggedCompleted(Quest)
     local CompleteText = QuestComplete and "|cff00ff00Yes|r" or "|cffff0000No|r"
-    HL.Print(QuestTitle.." ("..Quest.."): "..CompleteText)
+    HL.Print(tostring(QuestTitle).." ("..Quest.."): "..CompleteText)
   end
 end

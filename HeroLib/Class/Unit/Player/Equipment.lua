@@ -219,7 +219,7 @@ function Player:GetTrinketItems()
 end
 
 -- Retrieve the current player's trinket data
-function Player:GetTrinketData()
+function Player:GetTrinketData(OnUseExcludes)
   local Equip = Player:GetEquipment()
   local Trinket1 = Equip[13] and Item(Equip[13]) or Item(0)
   local Trinket2 = Equip[14] and Item(Equip[14]) or Item(0)
@@ -233,6 +233,18 @@ function Player:GetTrinketData()
   local Trinket2CastTime = Trinket2Spell and Trinket2Spell:CastTime() or 0
   local Trinket1Usable = Trinket1:IsUsable()
   local Trinket2Usable = Trinket2:IsUsable()
+  local T1Excluded = false
+  local T2Excluded = false
+  if OnUseExcludes then
+    for _, Item in pairs(OnUseExcludes) do
+      if Item and Trinket1:ID() == Item then
+        T1Excluded = true
+      end
+      if Item and Trinket2:ID() == Item then
+        T2Excluded = true
+      end
+    end
+  end
   local T1 = {
     Object = Trinket1,
     ID = Trinket1:ID(),
@@ -243,7 +255,7 @@ function Player:GetTrinketData()
     Usable = Trinket1Usable,
     CastTime = Trinket1CastTime,
     Cooldown = Trinket1:Cooldown(),
-    Blacklisted = Player:IsItemBlacklisted(Trinket1)
+    Blacklisted = Player:IsItemBlacklisted(Trinket1) or T1Excluded
   }
   local T2 = {
     Object = Trinket2,
@@ -255,7 +267,7 @@ function Player:GetTrinketData()
     Usable = Trinket2Usable,
     CastTime = Trinket2CastTime,
     Cooldown = Trinket2:Cooldown(),
-    Blacklisted = Player:IsItemBlacklisted(Trinket2)
+    Blacklisted = Player:IsItemBlacklisted(Trinket2) or T2Excluded
   }
   return T1, T2
 end
@@ -391,6 +403,7 @@ do
     -- The War Within
     ConcoctionKissofDeath           = Item(215174, {13, 14}),
     KahetiEmblem                    = Item(225651, {13, 14}),
+    SwarmlordsAuthority             = Item(212450, {13, 14}),
   }
 
   local CustomItemSpells = {
@@ -456,6 +469,10 @@ do
 
     if ItemID == CustomItems.KahetiEmblem:ID() then
       return Player:BuffStack(CustomItemSpells.KahetiEmblemBuff) < 4 and not (Player:BuffUp(CustomItemSpells.KahetiEmblemBuff) and Player:BuffRemains(CustomItemSpells.KahetiEmblemBuff) < 3) or Player:BuffDown(CustomItemSpells.KahetiEmblemBuff)
+    end
+
+    if ItemID == CustomItems.SwarmlordsAuthority:ID() then
+      return not (Player:IsTankingAoE(8) or Player:IsTanking(Target))
     end
 
     -- Any generic items we always want to exclude from suggestions.
