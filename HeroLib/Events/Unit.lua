@@ -27,7 +27,7 @@ do
 end
 
 -- Player Target Updated
-HL:RegisterForEvent(function() Target:Cache() end, "PLAYER_TARGET_CHANGED")
+HL:RegisterForEvent(function() Target:Cache() end, "PLAYER_TARGET_CHANGED", "PLAYER_SOFT_ENEMY_CHANGED")
 
 -- Player Focus Target Updated
 do
