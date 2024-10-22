@@ -339,18 +339,26 @@ end
 
 do
   local EnemyAbsorbSpells = {
-    ---- Vault of the Incarnates
+    ----- Dragonflight Raids -----
+    --- Vault of the Incarnates
     -- Raszageth
     Spell(382530), -- Surging Ruiner Shield (Surge)
     Spell(388691), -- Stormsurge Shield
-    ---- Aberrus
+    --- Aberrus
     -- Assault of the Zaqari
     Spell(397383), -- Molten Barrier (Mystics)
+    ----- The War Within Raids -----
+    --- Nerub-ar Palace
+    -- Silken Court
+    Spell(450980), -- Shatter Existence (Takazj)
+    Spell(451277), -- Spike Storm (Anub'arash)
+    -- Queen Ansurek
+    Spell(445013), -- Dark Barrier (Summoned Acolyte)
+    Spell(447207), -- Predation (Queen Ansurek)
   }
 
   function Unit:EnemyAbsorb()
-    for i = 1, #EnemyAbsorbSpells do
-      local AbsorbSpell = EnemyAbsorbSpells[i]
+    for _, AbsorbSpell in pairs(EnemyAbsorbSpells) do
       if self:BuffUp(AbsorbSpell, true) then
         return true
       end
