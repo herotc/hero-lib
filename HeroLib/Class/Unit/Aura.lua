@@ -355,7 +355,7 @@ do
     -- Queen Ansurek
     Spell(445013), -- Dark Barrier (Summoned Acolyte)
     Spell(447207), -- Predation (Queen Ansurek)
-    ----- The War Within S1 M+ Dungeons -----
+    ----- The War Within Dungeons -----
     --- Cinderbrew Meadery
     -- I'pa
     Spell(440147), -- Fill 'Er Up
@@ -370,6 +370,16 @@ do
     --- The Stonevault
     -- Skarmorak
     Spell(423228), -- Fortified Shell
+    ----- Older Dungeons in TWW S1 M+ Rotation -----
+    --- Mists of Tirna Scithe
+    -- Tred'ova
+    Spell(322527), -- Gorging Shield
+    --- The Necrotic Wake
+    -- Nalthor the Rimebinder
+    Spell(321368), -- Icebound Aegis (Normal/Heroic?)
+    Spell(321754), -- Icebound Aegis (Mythic/M+?)
+    -- Trash
+    Spell(343470), -- Boneshatter Shield (Skeletal Marauder)
   }
 
   function Unit:EnemyAbsorb()
