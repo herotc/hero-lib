@@ -355,6 +355,21 @@ do
     -- Queen Ansurek
     Spell(445013), -- Dark Barrier (Summoned Acolyte)
     Spell(447207), -- Predation (Queen Ansurek)
+    ----- The War Within S1 M+ Dungeons -----
+    --- Cinderbrew Meadery
+    -- I'pa
+    Spell(440147), -- Fill 'Er Up
+    --- Priory of the Sacred Flame
+    -- Captain Dailcry
+    Spell(447443), -- Savage Mauling (Shield placed on Ember)
+    -- Prioress Murrpray
+    Spell(423588), -- Barrier of Light
+    --- The Rookery
+    -- Voidstone Monstrosity
+    Spell(445262), -- Void Shell
+    --- The Stonevault
+    -- Skarmorak
+    Spell(423228), -- Fortified Shell
   }
 
   function Unit:EnemyAbsorb()
