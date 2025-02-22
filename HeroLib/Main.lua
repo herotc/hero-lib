@@ -58,7 +58,7 @@ function HL.Pulse()
     end
     return
   end
-  if GetTime(true) > HL.Timer.Pulse and OnRetail then
+  if GetTime() > HL.Timer.Pulse and OnRetail then
     -- Put a 10ms min and 50ms max limiter to save FPS (depending on World Latency).
     -- And add the Reduce CPU Load offset (default 50ms) in case it's enabled.
     --HL.Timer.PulseOffset = mathmax(10, mathmin(50, HL.Latency()))/1000 + (HL.GUISettings.General.ReduceCPULoad and HL.GUISettings.General.ReduceCPULoadOffset or 0)
