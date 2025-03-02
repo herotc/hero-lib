@@ -64,7 +64,7 @@ do
 
   -- mana.regen
   function Player:ManaRegen()
-    return GetPowerRegen(self.UnitID)
+    return GetPowerRegen()
   end
 
   -- Mana regen in a cast
@@ -171,7 +171,7 @@ do
 
   -- focus.regen
   function Player:FocusRegen()
-    return GetPowerRegen(self.UnitID)
+    return GetPowerRegen()
   end
 
   -- focus.pct
@@ -275,7 +275,7 @@ do
 
   -- energy.regen
   function Player:EnergyRegen()
-    return GetPowerRegen(self.UnitID)
+    return GetPowerRegen()
   end
 
   -- energy.pct
@@ -368,7 +368,7 @@ do
   end
 
   function Player:ChargedComboPoints()
-    local chargedCps = UnitPowerCharged(self.UnitID, ComboPointsPowerType, true)
+    local chargedCps = UnitPowerCharged(self.UnitID)
     return (chargedCps and #chargedCps) or 0
   end
 
