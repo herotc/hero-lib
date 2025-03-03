@@ -139,11 +139,11 @@ do
       local SpellData = GetSpellInfo(SpellID)
       if not SpellData then return end
       self.SpellID = SpellData.spellID
-      self.SpellType = SpellData.spellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
+      self.SpellType = SpellType or "Player" -- For Pet, put "Pet". Default is "Player". Related to HeroCache.Persistent.SpellLearned.
       self.SpellName = SpellData.name
       self.MinimumRange = SpellData.minRange
       self.MaximumRange = SpellData.maxRange
-      self.IsMelee = MinimumRange == 0 and MaximumRange == 0
+      self.IsMelee = self.MinimumRange == 0 and self.MaximumRange == 0
       -- Variables
       self.LastCastTime = 0
       self.LastDisplayTime = 0
@@ -189,8 +189,9 @@ end
 --- ======= ITEM =======
 do
   local ItemSlotTable = {
-    -- Source: http://wowwiki.wikia.com/wiki/ItemEquipLoc
+    -- Source: https://warcraft.wiki.gg/wiki/Enum.InventoryType
     [""] = nil, -- "" value is the value of ItemEquipLoc if not equippable
+    ["INVTYPE_NON_EQUIP_IGNORE"] = nil,
     ["INVTYPE_AMMO"] = { 0 },
     ["INVTYPE_HEAD"] = { 1 },
     ["INVTYPE_NECK"] = { 2 },
@@ -219,6 +220,12 @@ do
     ["INVTYPE_TABARD"] = { 19 },
     ["INVTYPE_BAG"] = { 20, 21, 22, 23 },
     ["INVTYPE_QUIVER"] = { 20, 21, 22, 23 },
+    ["INVTYPE_PROFESSION_TOOL"] = { 20, 23 },
+    ["INVTYPE_PROFESSION_GEAR"] = { 21, 22, 24, 25 },
+    ["INVTYPE_EQUIPABLESPELL_OFFENSIVE"] = nil,
+    ["INVTYPE_EQUIPABLESPELL_UTILITY"] = nil,
+    ["INVTYPE_EQUIPABLESPELL_DEFENSIVE"] = nil,
+    ["INVTYPE_EQUIPABLESPELL_WEAPON"] = nil,
   }
 
   local Item = Class()
@@ -237,7 +244,7 @@ do
     self.ItemMinLevel = ItemMinLevel
     self.ItemSlotIDs = ItemSlotIDs or ItemSlotTable[ItemEquipLoc]
     self.ItemUseSpell = DBC.ItemSpell[ItemID] and HL.Spell(DBC.ItemSpell[ItemID]) or nil
-    
+
     -- Variables
     self.LastDisplayTime = 0
     self.LastHitTime = 0
