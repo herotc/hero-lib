@@ -104,3 +104,11 @@ function Spell:InFlight(Aura)
 
   return TrackedSpell.Inflight
 end
+
+-- Returns count of projectiles in flight to targets
+function Spell:InFlightCount()
+  local TrackedSpell = TrackedSpells[self:ID()]
+  if not TrackedSpell then error("You forgot to register " .. self:Name() .. " for InFlight tracking.") end
+
+  return TrackedSpell.Count
+end
