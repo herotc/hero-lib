@@ -492,7 +492,7 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 44457, 10)               -- Living Bomb
   RegisterNucleusAbility("GroundDirectDamage", 2120, 8)           -- Flamestrike
   RegisterNucleusAbility("DirectDamage", 257542, 8)               -- Phoenix Flames
-  --RegisterNucleusAbility("TO_INVESTIGATE", 12654, 8)            -- AoE Ignite
+  RegisterNucleusAbility("PeriodicDamage", 12654, 8)              -- Ignite
   -- Frost
   RegisterNucleusAbility("GroundDirectDamage", 84721, 8)          -- Frozen Orb
   RegisterNucleusAbility("GroundDirectDamage", 190357, 8)         -- Blizzard
