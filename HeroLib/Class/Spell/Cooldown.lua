@@ -37,15 +37,16 @@ function Spell:CooldownInfo()
 end
 
 -- Get the ChargesInfos (from GetSpellCharges).
+-- API Documentation: https://warcraft.wiki.gg/wiki/API_C_Spell.GetSpellCharges
 function Spell:ChargesInfo()
   local SpellID = self:ID()
   local SpellInfo = GetSpellCharges(SpellID)
   -- Non-charged spells now return nil, so let's return default values to avoid a nil error.
   if not SpellInfo then
-    return 1, 1, 0, 0
+    return 1, 1, 0, 0, 1
   end
 
-  return SpellInfo.currentCharges, SpellInfo.maxCharges, SpellInfo.cooldownStartTime, SpellInfo.cooldownDuration
+  return SpellInfo.currentCharges, SpellInfo.maxCharges, SpellInfo.cooldownStartTime, SpellInfo.cooldownDuration, SpellInfo.chargeModRate
 end
 
 -- action.foo.cooldown
