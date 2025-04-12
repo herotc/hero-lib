@@ -25,6 +25,8 @@ local GetSpellInfo           = C_Spell.GetSpellInfo
 -- Accepts: spellIdentifier; Returns: spellInfo (SpellInfo: castTime, name, minRange, originalIconID, iconID, maxRange, spellID)
 local GetSpellPowerCost      = C_Spell.GetSpellPowerCost
 -- Accepts: spellIdentifier; Returns: powerCosts (table of costs: hasRequiredAura, type, name, cost, minCost, requiredAuraID, costPercent, costPerSec)
+local GetSpellOverride       = C_Spell.GetOverrideSpell
+-- Accepts: spellIdentifier [, spec [, onlyKnown [, ignoreOverrideSpellID]]]; Returns: overrideSpellID (number)
 local IsSpellUsable          = C_Spell.IsSpellUsable
 -- Accepts: spellIdentifier; Returns: isUsable (bool), insufficientPower (bool)
 
@@ -372,5 +374,24 @@ end
 -- action.foo.in_flight
 function Spell:IsInFlight()
   return GetTime() < self.LastHitTime
+end
+
+-- Get the override spell ID for the current spell (for talents that replace abilities)
+-- API Documentation: https://warcraft.wiki.gg/wiki/API_C_Spell.GetOverrideSpell
+function Spell:GetOverrideSpell(SpecOverride, OnlyKnown, IgnoreOverrideSpellID)
+  return GetSpellOverride(self:ID(), SpecOverride or 0, OnlyKnown, IgnoreOverrideSpellID or 0)
+end
+
+-- Get the override spell as a Spell object
+function Spell:OverrideSpell(SpecOverride, OnlyKnown, IgnoreOverrideSpellID)
+  local OverrideID = self:GetOverrideSpell(SpecOverride, OnlyKnown, IgnoreOverrideSpellID)
+  
+  -- If there's no override or the override is the same spell, return self
+  if not OverrideID or OverrideID == self:ID() then
+    return self
+  end
+  
+  -- Otherwise create and return a new Spell object for the override
+  return Spell(OverrideID, self:Type())
 end
 
