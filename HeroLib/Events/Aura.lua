@@ -19,6 +19,7 @@ local tableinsert       = table.insert
 -- File Locals
 local ListenedAuras = {}
 
+-- API Documentation: https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT
 
 --- ============================ CONTENT ============================
 -- Register a spell to watch the aura status across multiple target units
@@ -41,16 +42,17 @@ end
 
 -- AddAuraToUnit
 HL:RegisterForSelfCombatEvent(
-  function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
-    local Aura = ListenedAuras[SpellID]
+  function()
+    local _, _, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo()
+    local Aura = ListenedAuras[spellID]
     if not Aura then return end
 
     local AuraUnits = Aura.Units
-    if not AuraUnits[DestGUID] then
-      AuraUnits[DestGUID] = true
-      -- HL.Print("AddAuraToUnit " .. SpellID .. " " .. DestGUID)
+    if not AuraUnits[destGUID] then
+      AuraUnits[destGUID] = true
+      -- HL.Print("AddAuraToUnit " .. spellID .. " " .. destGUID)
     else
-      -- HL.Print("AddAuraToUnit Refresh " .. SpellID .. " " .. DestGUID)
+      -- HL.Print("AddAuraToUnit Refresh " .. spellID .. " " .. destGUID)
       -- Refresh
     end
   end,
@@ -59,14 +61,15 @@ HL:RegisterForSelfCombatEvent(
 
 -- RemoveAuraFromUnit
 HL:RegisterForSelfCombatEvent(
-  function(_, _, _, _, _, _, _, DestGUID, _, _, _, SpellID)
-    local Aura = ListenedAuras[SpellID]
+  function()
+    local _, _, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo()
+    local Aura = ListenedAuras[spellID]
     if not Aura then return end
 
     local AuraUnits = Aura.Units
-    if AuraUnits[DestGUID] then
-      AuraUnits[DestGUID] = nil
-      -- HL.Print("RemoveAuraFromUnit " .. Aura.Spell:Name() .. " " .. DestGUID)
+    if AuraUnits[destGUID] then
+      AuraUnits[destGUID] = nil
+      -- HL.Print("RemoveAuraFromUnit " .. Aura.Spell:Name() .. " " .. destGUID)
     end
   end,
   "SPELL_AURA_REMOVED"
@@ -74,12 +77,13 @@ HL:RegisterForSelfCombatEvent(
 
 -- RemoveAurasFromUnit
 HL:RegisterForCombatEvent(
-  function(_, _, _, _, _, _, _, DestGUID)
+  function()
+    local _, _, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo()
     for _, Aura in pairs(ListenedAuras) do
       local AuraUnits = Aura.Units
-      if AuraUnits[DestGUID] then
-        AuraUnits[DestGUID] = nil
-        -- HL.Print("RemoveAurasFromUnit " .. Aura.Spell:Name() .. " " .. DestGUID)
+      if AuraUnits[destGUID] then
+        AuraUnits[destGUID] = nil
+        -- HL.Print("RemoveAurasFromUnit " .. Aura.Spell:Name() .. " " .. destGUID)
       end
     end
   end,
