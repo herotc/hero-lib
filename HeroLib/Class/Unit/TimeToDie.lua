@@ -45,7 +45,6 @@ local TTD = {
   -- TODO: Improve IterableUnits creation
   Units = {}, -- Used to track units
   ExistingUnits = {}, -- Used to track GUIDs of currently existing units (to be compared with tracked units)
-  Throttle = 0
 }
 HL.TTD = TTD
 
@@ -82,7 +81,8 @@ function HL.TTDRefresh()
           local Values = UnitTable[1]
           local Time = CurrentTime - UnitTable[2]
           -- Check if the % HP changed since the last check (or if there were none)
-          if not Values or HealthPercentage ~= Values[2] then
+          local lastHealth = Values[1] and Values[1][2]
+          if HealthPercentage ~= lastHealth then
             local Value
             local LastIndex = #TTDCache
             -- Check if we can re-use a table from the cache
@@ -98,7 +98,7 @@ function HL.TTDRefresh()
             local n = #Values
             -- Delete values that are no longer valid
             while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-              TTDCache[#Cache + 1] = Values[n]
+              TTDCache[#TTDCache + 1] = Values[n]
               Values[n] = nil
               n = n - 1
             end
