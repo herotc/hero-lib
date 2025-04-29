@@ -514,16 +514,22 @@ function Splash.RegisterNucleusAbilities()
 
   -- Paladin
   -- Commons
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 81297, 8) -- Consecration
   -- Holy
   -- Protection
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 204301, 8) -- Blessed Hammer (Usable? Spirals outward from caster)
-  RegisterNucleusAbility("DirectDamage", 53600, 6)       -- Shield of the Righteous
+  RegisterNucleusAbility("GroundDirectDamage", 81297, 8)       -- Consecration
+  RegisterNucleusAbility("DirectDamage", 53600, 6)             -- Shield of the Righteous
+  RegisterNucleusAbility("DirectDamage", 53595, 8)             -- Hammer of the Righteous
+  RegisterNucleusAbility("DirectDamage", 433717, 5)            -- Hammer and Anvil
   -- Retribution
+  RegisterNucleusAbility("PeriodicDamage", 26573, 10)       -- Consecration
+  RegisterNucleusAbility("PeriodicDamage", 198137, 8)       -- Divine Hammer
   RegisterNucleusAbility("DirectDamage", 53385, 8)          -- Divine Storm
-  RegisterNucleusAbility("GroundDirectDamage", 81297, 8)    -- Consecration
   RegisterNucleusAbility("GroundDirectDamage", 343721, 8)   -- Final Reckoning
-  RegisterNucleusAbility("DirectDamage", 385816, 8)         -- Incandescence
+  RegisterNucleusAbility("DirectDamage", 383469, 12)        -- Radiant Decree
+  RegisterNucleusAbility("DirectDamage", 255937, 14)        -- Wake of Ashes
+  RegisterNucleusAbility("DirectDamage", 405350, 14)        -- Wake of Ashes
+  RegisterNucleusAbility("DirectDamage", 405345, 14)        -- Wake of Ashes
+  RegisterNucleusAbility("DirectDamage", 407478, 8)         -- Searing Light
 
   -- Priest
   -- Discipline
@@ -580,12 +586,18 @@ function Splash.RegisterNucleusAbilities()
 
   -- Warrior
   -- Commons
+  RegisterNucleusAbility("DirectDamage", 50622, 8)                -- Bladestorm
+  RegisterNucleusAbility("DirectDamage", 227847, 8)               -- Bladestorm (variant)
+  RegisterNucleusAbility("DirectDamage", 118000, 8)               -- Dragon Roar
+  RegisterNucleusAbility("GroundDirectDamage", 52174, 8)          -- Heroic Leap
   RegisterNucleusAbility("GroundDirectDamage", 156287, 8)         -- Ravager
-  RegisterNucleusAbility("DirectDamage", 396719, 8)               -- Thunder Clap
+  RegisterNucleusAbility("DirectDamage", 46968, 10)               -- Shockwave
+  RegisterNucleusAbility("GroundDirectDamage", 307871, 5)         -- Spear of Bastion
+  RegisterNucleusAbility("DirectDamage", 6343, 8)                 -- Thunder Clap
+  RegisterNucleusAbility("DirectDamage", 435222, 8)               -- Thunder Blast
   RegisterNucleusAbility("DirectDamage", 384318, 12)              -- Thunderous Roar
   RegisterNucleusAbility("DirectDamage", 199658, 8)               -- Whirlwind
   -- Arms
-  RegisterNucleusAbility("DirectDamage", 50622, 8)                -- Bladestorm
   RegisterNucleusAbility("DirectDamage", 845, 8)                  -- Cleave
   RegisterNucleusAbility("DirectDamage", 262161, 8)               -- Warbreaker
   RegisterNucleusAbility("DirectDamage", 1680, 8)                 -- Whirlwind
@@ -594,7 +606,7 @@ function Splash.RegisterNucleusAbilities()
   RegisterNucleusAbility("DirectDamage", 385062, 12)              -- Odyn's Fury also (offhand?)
   -- Protection
   RegisterNucleusAbility("DirectDamage", 6572, 8)                 -- Revenge
-  RegisterNucleusAbility("DirectDamage", 6343, 8)                 -- Thunder Clap
+  RegisterNucleusAbility("GroundDirectDamage", 385954, 10)        -- Shield Charge
 end
 
 -- Unregister every NucleusAbilities.
