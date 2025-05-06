@@ -17,10 +17,13 @@ local GetPowerRegen          = GetPowerRegen
 -- Accepts: nil; Returns: basePowerRegen (number), castingPowerRegen (number)
 local UnitPower              = UnitPower
 -- Accepts: unitID, powerType, unmodified; Returns: power (number)
+-- https://warcraft.wiki.gg/wiki/API_UnitPower
 local UnitPowerMax           = UnitPowerMax
 -- Accepts: unitID, powerType, unmodified; Returns: maxPower (number)
+-- https://warcraft.wiki.gg/wiki/API_UnitPowerMax
 local UnitPowerType          = UnitPowerType
 -- Accepts: unitID, index; Returns: powerType (Enum.PowerType), powerTypeToken (string), rgbX (number), rgbY (number), rgbZ (number)
+-- https://warcraft.wiki.gg/wiki/API_UnitPowerType
 
 -- Lua locals
 
@@ -51,9 +54,13 @@ end
 
 -- power.regen
 function Unit:PowerRegen()
-  local UnitID = self:ID()
-
-  return GetPowerRegen(UnitID)
+  -- GetPowerRegen() returns the player's power regeneration and takes no arguments.
+  -- Returns basePowerRegen, castingPowerRegen.
+  -- https://warcraft.wiki.gg/wiki/API_GetPowerRegen
+  if GetPowerRegen then
+    return GetPowerRegen()
+  end
+  return 0, 0 -- Default values if API is not available
 end
 
 -- power.pct
