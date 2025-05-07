@@ -97,8 +97,8 @@ function HL.TTDRefresh()
             tableinsert(Values, 1, Value)
             local n = #Values
             -- Delete values that are no longer valid
-            while (n > HistoryCount) or (Time - Values[n][1] > HistoryTime) do
-              TTDCache[#Cache + 1] = Values[n]
+            while n > 0 and ((n > HistoryCount) or (Time - Values[n][1] > HistoryTime)) do
+              TTDCache[#TTDCache + 1] = Values[n]
               Values[n] = nil
               n = n - 1
             end
@@ -155,7 +155,9 @@ function Unit:TimeToX(Percentage, MinSamples)
         Ey = Ey + y
       end
       -- Invariant to find matrix inverse
-      local Invariant = 1 / (Ex2 * n - Ex * Ex)
+      local denominator = Ex2 * n - Ex * Ex
+      if denominator == 0 then return 8888 end
+      local Invariant = 1 / denominator
       -- Solve for a and b
       a = (-Ex * Exy * Invariant) + (Ex2 * Ey * Invariant)
       b = (n * Exy * Invariant) - (Ex * Ey * Invariant)
