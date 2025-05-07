@@ -57,10 +57,7 @@ function Unit:PowerRegen()
   -- GetPowerRegen() returns the player's power regeneration and takes no arguments.
   -- Returns basePowerRegen, castingPowerRegen.
   -- https://warcraft.wiki.gg/wiki/API_GetPowerRegen
-  if GetPowerRegen then
-    return GetPowerRegen()
-  end
-  return 0, 0 -- Default values if API is not available
+  return GetPowerRegen()
 end
 
 -- power.pct
