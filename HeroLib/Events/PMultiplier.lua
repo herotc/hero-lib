@@ -82,7 +82,11 @@ local function ComputePMultiplier(ListenedSpell)
       local ThisSpell = Buff[1]
       local Modifier = Buff[2]
 
-      if Player:BuffUp(ThisSpell) or ThisSpell:TimeSinceLastRemovedOnPlayer() < 0.1 then
+      -- Safely get the Spell object if ThisSpell is an ID or already an object
+      local spellObject = type(ThisSpell) == "table" and ThisSpell or (type(ThisSpell) == "number" and Spell(ThisSpell) or nil)
+
+      -- Ensure ThisSpell is valid for Player:BuffUp and spellObject is valid for method calls
+      if (type(ThisSpell) == "table" or type(ThisSpell) == "number") and Player:BuffUp(ThisSpell) or (spellObject and spellObject:TimeSinceLastRemovedOnPlayer() < 0.1) then
         local ModifierType = type(Modifier)
 
         if ModifierType == "number" then
