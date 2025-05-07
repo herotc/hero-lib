@@ -145,7 +145,7 @@ function Item:IsEquipped()
   local ItemInfo = Cache.ItemInfo[ItemID]
   if not ItemInfo then
     ItemInfo = {}
-    Cache.SpellInfo[ItemID] = ItemInfo
+    Cache.ItemInfo[ItemID] = ItemInfo
   end
 
   if ItemInfo.IsEquipped == nil then
@@ -195,7 +195,7 @@ do
     local ItemInfo = Cache.ItemInfo[ItemID]
     if not ItemInfo then
       ItemInfo = {}
-      Cache.SpellInfo[ItemID] = ItemInfo
+      Cache.ItemInfo[ItemID] = ItemInfo
     end
 
     local Cooldown = ItemInfo.Cooldown
