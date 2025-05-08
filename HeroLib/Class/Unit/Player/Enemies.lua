@@ -74,7 +74,7 @@ do
         if #Radiuses >= 2 then tablesort(Radiuses, Utils.SortASC) end
         -- Take the closest range from the Radius and filter from it
         for _, ThisUnit in pairs(Enemies[Radiuses[1]]) do
-          if ThisUnit:IsInRange(Radius) then tableinsert(EnemiesTable, Unit) end
+          if ThisUnit:IsInRange(Radius) then tableinsert(EnemiesTable, ThisUnit) end
         end
 
         return EnemiesTable
