@@ -146,6 +146,17 @@ function Unit:Class()
   return UnitClass(self.UnitID)
 end
 
+-- Check if any boss exists in the boss frames
+function HL.AnyBossExists()
+  for _, ThisUnit in pairs(Boss) do
+    if ThisUnit:Exists() then
+      return true
+    end
+  end
+
+  return false
+end
+
 -- Get if the unit (or a given NPC ID) is in the Boss list.
 function Unit:IsInBossList(NPCID)
   local ThisNPCID = NPCID or self:NPCID()
