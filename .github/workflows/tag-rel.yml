@@ -40,7 +40,7 @@ jobs:
       # Upload the zip to the GitHub release
       - name: Upload Zip
         id: upload-zip
-        uses: actions/upload-release-asset@v1
+        uses: shogo82148/actions-upload-release-asset@v1.6.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -49,6 +49,9 @@ jobs:
           asset_name: HeroLib-${{ steps.vars.outputs.tag }}.zip
           asset_content_type: application/zip
       # Use the BigWigs packager for Wago output
-      # Uncomment these lines once we're set up for Wago
-      #- name: Package and Release
-      #  uses: BigWigsMods/packager@v1
+      - name: Create Package
+        uses: BigWigsMods/packager@master
+        env:
+            WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+        with:
+            args: -g retail -a 96E71aGg -n "${{ env.tag }}"

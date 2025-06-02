@@ -5,6 +5,9 @@
 ## Version: 11.1.5.04
 ## Notes: Core Library used by HeroTC Addons. Can be used by others 3rd-Party Addons.
 
+## X-Curse-Project-ID: 271528
+## X-Wago-ID: 96E71aGg
+
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## Dependencies: HeroDBC, HeroCache
