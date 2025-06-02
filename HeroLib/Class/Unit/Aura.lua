@@ -22,11 +22,13 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 -- Returns: aura (AuraData: spellId, isBossAura, duration, expirationTime, isFromPlayerOrPet, points (table), icon, nameplateShowPersonal, nameplateShowAll,
 -- auraInstanceID, timeMod, isRaid, isHarmful, canApplyAura, name, isHelpful, applications, isNameplateOnly, sourceUnit, isStealable)
 
+-- Other API locals
+local UnitGetTotalAbsorbs     = UnitGetTotalAbsorbs
+
 -- lua locals
-local GetTime                = GetTime
+local GetTime                 = GetTime
 
 -- File Locals
-
 
 --- ============================ CONTENT ============================
 -- Note: BypassRecovery is a common arg of this module because by default, in order to improve the prediction, we take in account the remaining time of the GCD or the current cast (whichever is higher).
@@ -211,6 +213,14 @@ function Unit:DebuffTicksRemain(ThisSpell, AnyCaster, BypassRecovery)
   return math.ceil(Remains / ThisSpell:TickTime())
 end
 
+-- Check for unit absorbs.
+function Unit:TotalDamageAbsorb()
+  return UnitGetTotalAbsorbs(self:ID())
+end
+
+function Unit:ActiveDamageAbsorb()
+  return self:TotalDamageAbsorb() > 0
+end
 
 do
   local BloodlustSpells = {
@@ -334,60 +344,5 @@ do
   -- buff.bloodlust.down
   function Unit:BloodlustExhaustDown(BypassRecovery)
     return not self:BloodlustExhaustUp(BypassRecovery)
-  end
-end
-
-do
-  local EnemyAbsorbSpells = {
-    ----- Dragonflight Raids -----
-    --- Vault of the Incarnates
-    -- Raszageth
-    Spell(382530), -- Surging Ruiner Shield (Surge)
-    Spell(388691), -- Stormsurge Shield
-    --- Aberrus
-    -- Assault of the Zaqari
-    Spell(397383), -- Molten Barrier (Mystics)
-    ----- The War Within Raids -----
-    --- Nerub-ar Palace
-    -- Silken Court
-    Spell(450980), -- Shatter Existence (Takazj)
-    Spell(451277), -- Spike Storm (Anub'arash)
-    -- Queen Ansurek
-    Spell(445013), -- Dark Barrier (Summoned Acolyte)
-    Spell(447207), -- Predation (Queen Ansurek)
-    ----- The War Within Dungeons -----
-    --- Cinderbrew Meadery
-    -- I'pa
-    Spell(440147), -- Fill 'Er Up
-    --- Priory of the Sacred Flame
-    -- Captain Dailcry
-    Spell(447443), -- Savage Mauling (Shield placed on Ember)
-    -- Prioress Murrpray
-    Spell(423588), -- Barrier of Light
-    --- The Rookery
-    -- Voidstone Monstrosity
-    Spell(445262), -- Void Shell
-    --- The Stonevault
-    -- Skarmorak
-    Spell(423228), -- Fortified Shell
-    ----- Older Dungeons in TWW S1 M+ Rotation -----
-    --- Mists of Tirna Scithe
-    -- Tred'ova
-    Spell(322527), -- Gorging Shield
-    --- The Necrotic Wake
-    -- Nalthor the Rimebinder
-    Spell(321368), -- Icebound Aegis (Normal/Heroic?)
-    Spell(321754), -- Icebound Aegis (Mythic/M+?)
-    -- Trash
-    Spell(343470), -- Boneshatter Shield (Skeletal Marauder)
-  }
-
-  function Unit:EnemyAbsorb()
-    for _, AbsorbSpell in pairs(EnemyAbsorbSpells) do
-      if self:BuffUp(AbsorbSpell, true) then
-        return true
-      end
-    end
-    return false
   end
 end
