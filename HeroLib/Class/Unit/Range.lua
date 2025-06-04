@@ -89,26 +89,42 @@ end
 
 -- Debug function for manually fixing the DBC ItemRange table
 function HL:CheckRangeTable()
+  if not Target:Exists() or not Player:CanAttack(Target) or not Target:IsInRange(5) then
+    HL.Print("You must have a hostile target (dummies are ok) selected and be within 5 yards of it to use this function.")
+    return
+  end
   local Types = { "Melee", "Ranged" }
   local OverallFailures = 0
   for _, Type in pairs(Types) do
     local DBCTable = DBC.ItemRange[Type]
-    local TableTypes = { "Hostile", "Friendly" }
+    --local TableTypes = { "Hostile", "Friendly" }
+    local TableTypes = { "Hostile" }
     for _, TableType in pairs(TableTypes) do
       for _,v in pairs(DBCTable[TableType].RangeIndex) do
         local Failures = 0
         for _,v2 in pairs(DBCTable[TableType].ItemRange[v]) do
           local MaxRange = 0
           local HasOnUseSpell = HL.Item(v2):OnUseSpell()
+          local InRangeCheck = IsItemInRange(v2, Target:ID())
+          if Type == "Melee" and not InRangeCheck then
+            HL.Print("---------")
+            HL.Print("Table Type: "..tostring(TableType).."-"..tostring(Type))
+            HL.Print("Range Being Checked: "..tostring(v))
+            HL.Print("Item with Bad Range Check: "..tostring(v2))
+            HL.Print("IsItemInRange: "..tostring(InRangeCheck))
+            Failures = Failures + 1
+            OverallFailures = OverallFailures + 1
+          end
           if Type == "Ranged" then
             MaxRange = HasOnUseSpell and HL.Item(v2):OnUseSpell().MaximumRange or 0
           end
-          if (Type == "Ranged" and MaxRange ~= v) or not HasOnUseSpell then
+          if (Type == "Ranged" and MaxRange ~= v) or not HasOnUseSpell or not InRangeCheck then
             HL.Print("---------")
-            HL.Print("Table Type: "..tostring(Type))
+            HL.Print("Table Type: "..tostring(TableType).."-"..tostring(Type))
             HL.Print("Range Being Checked: "..tostring(v))
             HL.Print("Item with Bad Range: "..tostring(v2))
             HL.Print("Actual Item Range: "..tostring(MaxRange))
+            HL.Print("IsItemInRange: "..tostring(InRangeCheck))
             Failures = Failures + 1
             OverallFailures = OverallFailures + 1
           end
