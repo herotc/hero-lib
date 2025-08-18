@@ -264,7 +264,10 @@ do
     ----- Generic items that we always want to exclude
     --- The War Within
     -- 11.2 Belt
-    [245964] = true,
+    [242664] = true, -- Cloth DISC
+    [245964] = true, -- Leather DISC
+    [245965] = true, -- Mail DISC
+    [245966] = true, -- Plate DISC
     -- TWW Generic Items
     [215133] = true, -- Binding of Binding
     [218422] = true, -- Forged Aspirant's Medallion
