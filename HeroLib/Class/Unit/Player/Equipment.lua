@@ -283,6 +283,7 @@ do
     [235226] = true, -- Inventor's Ingenious Trifocals
     [237494] = true, -- Hallowed Tome
     [237495] = true, -- Baleful Excerpt
+    [243365] = true, -- Maw of the Void
     -- TWW Engineering Epic Quality Wrists
     [221805] = true,
     [221806] = true,
