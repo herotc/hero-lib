@@ -529,7 +529,8 @@ function Splash.RegisterNucleusAbilities()
   -- Discipline
   -- Holy
   -- Shadow
-  RegisterNucleusAbility("DirectDamage", 205386, 8)               -- Shadow Crash
+  RegisterNucleusAbility("DirectDamage", 205386, 8)               -- Shadow Crash (Area)
+  RegisterNucleusAbility("DirectDamage", 465522, 8)               -- Shadow Crash (Target)
   RegisterNucleusAbility("DirectDamage", 228360, 10)              -- Void Eruption 1
   RegisterNucleusAbility("DirectDamage", 228361, 10)              -- Void Eruption 2
   RegisterNucleusAbility("DirectDamage", 394979, 10)              -- Mind Sear (Void Lasher)
