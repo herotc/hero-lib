@@ -173,6 +173,70 @@ HL:RegisterForEvent(
 )
 
 -- Player Inspector
+local function UpdateTalents()
+  wipe(Cache.Persistent.Talents)
+  wipe(Cache.Persistent.Player.HeroTrees)
+  local TalentConfigID = GetActiveConfigID()
+  if not TalentConfigID then
+    C_Timer.After(2, UpdateTalents)
+    return
+  end
+
+  local TalentConfigInfo = GetConfigInfo(TalentConfigID)
+  if not TalentConfigInfo then
+    C_Timer.After(2, UpdateTalents)
+    return
+  end
+
+  local CachePlayer = Cache.Persistent.Player
+  local CacheHeroTrees = CachePlayer.HeroTrees
+  local CacheTalents = Cache.Persistent.Talents
+  local TalentTreeIDs = TalentConfigInfo["treeIDs"]
+  for i = 1, #TalentTreeIDs do
+    local TreeNodes = GetTreeNodes(TalentTreeIDs[i])
+    for j = 1, #TreeNodes do
+      local NodeID = TreeNodes[j]
+      local NodeInfo = GetNodeInfo(TalentConfigID, NodeID)
+      local ActiveTalent = NodeInfo.activeEntry
+      local SubTreeID = NodeInfo.subTreeID
+      local TalentRank = NodeInfo.activeRank
+      if SubTreeID then
+        local SubTreeInfo = GetSubTreeInfo(TalentConfigID, SubTreeID)
+        if SubTreeInfo then
+          local SubTreeName = SubTreeInfo.name
+          CacheHeroTrees[SubTreeID] = SubTreeName
+          if SubTreeInfo.isActive then
+            CachePlayer.ActiveHeroTree = SubTreeName
+            CachePlayer.ActiveHeroTreeID = SubTreeID
+          end
+        end
+      end
+      if ActiveTalent and TalentRank and TalentRank > 0 then
+        local TalentEntryID = ActiveTalent.entryID
+        local TalentEntryInfo = GetEntryInfo(TalentConfigID, TalentEntryID)
+        -- There are entries for SubTree (Hero Talents) items, as of TWW.
+        -- These are separate from the TalentEntryID of the nodes within the SubTree.
+        -- Nodes and entries for SubTree talents are already processed through this code, so we can safely ignore the SubTree entries without a definitionID.
+        if TalentEntryInfo and TalentEntryInfo["definitionID"] then
+          local DefinitionID = TalentEntryInfo["definitionID"]
+          local DefinitionInfo = GetDefinitionInfo(DefinitionID)
+          local SpellID = DefinitionInfo["spellID"]
+          if SpellID then
+            CacheTalents[SpellID] = (CacheTalents[SpellID] or 0) + TalentRank
+          end
+        end
+      end
+    end
+  end
+end
+
+local UpdateTalentEvents = {
+  ["PLAYER_SPECIALIZATION_CHANGED"] = true,
+  ["PLAYER_TALENT_UPDATE"] = true,
+  ["TRAIT_CONFIG_UPDATED"] = true,
+  ["TRAIT_SUB_TREE_CHANGED"] = true,
+}
+
 HL:RegisterForEvent(
   function(Event, Arg1)
     -- Prevent execute if not initiated by the player
@@ -214,55 +278,7 @@ HL:RegisterForEvent(
       UpdateOverrides()
     end
 
-    if Event == "PLAYER_SPECIALIZATION_CHANGED" or Event == "PLAYER_TALENT_UPDATE" or Event == "TRAIT_CONFIG_UPDATED" or Event == "TRAIT_SUB_TREE_CHANGED" then
-      UpdateTalents = function()
-        wipe(Cache.Persistent.Talents)
-        local TalentConfigID = GetActiveConfigID()
-        local TalentConfigInfo
-        if TalentConfigID then
-          TalentConfigInfo = GetConfigInfo(TalentConfigID)
-        end
-        if TalentConfigID ~= nil and TalentConfigInfo ~= nil then
-          local TalentTreeIDs = TalentConfigInfo["treeIDs"]
-          for i = 1, #TalentTreeIDs do
-            for _, NodeID in pairs(GetTreeNodes(TalentTreeIDs[i])) do
-              local NodeInfo = GetNodeInfo(TalentConfigID, NodeID)
-              local ActiveTalent = NodeInfo.activeEntry
-              local SubTreeID = NodeInfo.subTreeID
-              local TalentRank = NodeInfo.activeRank
-              if SubTreeID then
-                local SubTreeInfo = GetSubTreeInfo(TalentConfigID, SubTreeID)
-                if SubTreeInfo then
-                  local SubTreeName = SubTreeInfo.name
-                  Cache.Persistent.Player.HeroTrees[SubTreeID] = SubTreeName
-                  if SubTreeInfo.isActive then
-                    Cache.Persistent.Player.ActiveHeroTree = SubTreeName
-                    Cache.Persistent.Player.ActiveHeroTreeID = SubTreeID
-                  end
-                end
-              end
-              if ActiveTalent and TalentRank and TalentRank > 0 then
-                local TalentEntryID = ActiveTalent.entryID
-                local TalentEntryInfo = GetEntryInfo(TalentConfigID, TalentEntryID)
-                -- There are entries for SubTree (Hero Talents) items, as of TWW.
-                -- These are separate from the TalentEntryID of the nodes within the SubTree.
-                -- Nodes and entries for SubTree talents are already processed through this code, so we can safely ignore the SubTree entries without a definitionID.
-                if TalentEntryInfo and TalentEntryInfo["definitionID"] then
-                  local DefinitionID = TalentEntryInfo["definitionID"]
-                  local DefinitionInfo = GetDefinitionInfo(DefinitionID)
-                  local SpellID = DefinitionInfo["spellID"]
-                  if SpellID then
-                    local SpellName = GetSpellInfo(SpellID)
-                    Cache.Persistent.Talents[SpellID] = (Cache.Persistent.Talents[SpellID]) and (Cache.Persistent.Talents[SpellID] + TalentRank) or TalentRank
-                  end
-                end
-              end
-            end
-          end
-        else
-          C_Timer.After(2, UpdateTalents)
-        end
-      end
+    if UpdateTalentEvents[Event] then
       UpdateTalents()
     end
   end,
