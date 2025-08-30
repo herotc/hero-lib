@@ -563,21 +563,16 @@ function Splash.RegisterNucleusAbilities()
 
   -- Warlock
   -- Afflication
-  RegisterNucleusAbility("DirectDamage", 27285, 10)               -- Seed Explosion
-  RegisterNucleusAbility("DirectDamage", 386997, 10)              -- Soul Rot
-  RegisterNucleusAbility("DirectDamage", 386931, 10)              -- Vile Taint
+  RegisterNucleusAbility("DirectDamage", 27285, 10)               -- Seed of Corruption (Explosion)
+  RegisterNucleusAbility("DirectDamage", 386997, 8)               -- Soul Rot
   -- Demonology
   RegisterNucleusAbility("DirectDamage", 89753, 8)                -- Felstorm (Felguard)
-  RegisterNucleusAbility("GroundDirectDamage", 386609, 8)         -- Guillotine's Fel Explosion
   RegisterNucleusAbility("DirectDamage", 86040, 8)                -- Hand of Gul'dan
   RegisterNucleusAbility("DirectDamage", 196278, 8)               -- Implosion
   -- Destruction
   RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
-  RegisterNucleusAbility("DirectDamage", 387547, 8)               -- Cry Havoc
-  --RegisterNucleusAbility("GroundMultipleDirectDamage", 42223, 8)  -- Rain of Fire
-  RegisterNucleusAbility("GroundDirectDamage", 42223, 8)          -- Rain of Fire (temp, since Destruction has very few AoEs)
-  RegisterNucleusAbility("GroundDirectDamage", 22703, 10)         -- Summon Infernal
-  RegisterNucleusAbility("DirectDamage", 20153, 12)               -- Infernal/Blasphemy AoE Immolation pulse (not working... minion vs pet issue?)
+  RegisterNucleusAbility("GroundDirectDamage", 42223, 8)          -- Rain of Fire (ideally should be GroundMultipleDirectDamage)
+  RegisterNucleusAbility("GroundDirectDamage", 22703, 10)         -- Summon Infernal (Infernal Awakening)
 
   -- Warrior
   -- Commons
