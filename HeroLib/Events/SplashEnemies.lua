@@ -564,19 +564,17 @@ function Splash.RegisterNucleusAbilities()
   -- Warlock
   -- Affliction
   RegisterNucleusAbility("DirectDamage", 27285, 10)               -- Seed of Corruption (Explosion)
-  RegisterNucleusAbility("DirectDamage", 386997, 10)              -- Soul Rot
-  RegisterNucleusAbility("DirectDamage", 386931, 10)              -- Vile Taint (DoT ticks)
-  RegisterNucleusAbility("DirectDamage", 205246, 10)              -- Phantom Singularity (ticks)
+  RegisterNucleusAbility("DirectDamage", 386997, 8)               -- Soul Rot
   -- Demonology
   RegisterNucleusAbility("DirectDamage", 89753, 8)                -- Felstorm (Felguard damage)
   RegisterNucleusAbility("DirectDamage", 196278, 8)               -- Implosion (damage)
-  RegisterNucleusAbility("DirectDamage", 105174, 8)               -- Hand of Gul'dan (impact AoE)
+  RegisterNucleusAbility("DirectDamage", 86040, 8)                -- Hand of Gul'dan (damage AoE)
   -- Destruction
   RegisterNucleusAbility("GroundDirectDamage", 152108, 8)         -- Cataclysm
-  RegisterNucleusAbility("DirectDamage", 196448, 10)              -- Channel Demonfire (volley damage)
+  RegisterNucleusAbility("DirectDamage", 196448, 8)               -- Channel Demonfire (volley damage)
   RegisterNucleusAbility("GroundDirectDamage", 42223, 8)          -- Rain of Fire
   RegisterNucleusAbility("GroundDirectDamage", 22703, 10)         -- Infernal Awakening (summon impact)
-  RegisterNucleusAbility("DirectDamage", 20153, 8)                -- Immolation (Infernal aura pulses)
+  RegisterNucleusAbility("DirectDamage", 20153, 12)               -- Immolation (Infernal aura pulses)
 
   -- Warrior
   -- Commons
