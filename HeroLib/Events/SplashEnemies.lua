@@ -488,14 +488,14 @@ function Splash.RegisterNucleusAbilities()
   -- Fire
   RegisterNucleusAbility("DirectDamage", 157981, 8)               -- Blast Wave
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 153561, 8) -- Meteor
-  RegisterNucleusAbility("DirectDamage", 31661, 8)                -- Dragon's Breath
+  RegisterNucleusAbility("DirectDamage", 31661, 12)                -- Dragon's Breath
   RegisterNucleusAbility("DirectDamage", 44457, 10)               -- Living Bomb
   RegisterNucleusAbility("GroundDirectDamage", 2120, 8)           -- Flamestrike
   RegisterNucleusAbility("DirectDamage", 257542, 8)               -- Phoenix Flames
   RegisterNucleusAbility("PeriodicDamage", 12654, 8)              -- Ignite
   -- Frost
   RegisterNucleusAbility("GroundDirectDamage", 84721, 8)          -- Frozen Orb
-  RegisterNucleusAbility("GroundDirectDamage", 190357, 8)         -- Blizzard
+  RegisterNucleusAbility("GroundDirectDamage", 190357, 12)         -- Blizzard
   RegisterNucleusAbility("DirectDamage", 153596, 6)               -- Comet Storm
   RegisterNucleusAbility("DirectDamage", 120, 12)                 -- Cone of Cold
   RegisterNucleusAbility("DirectDamage", 228600, 8)               -- Glacial Spike
