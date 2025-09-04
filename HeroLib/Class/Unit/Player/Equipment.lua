@@ -352,6 +352,7 @@ do
   local CustomItems = {
     -- Shadowlands
     BottledFlayedwingToxin          = Item(178742, {13, 14}),
+    SoleahsSecretTechnique          = Item(190958, {13, 14}),
     -- Dragonflight
     GlobeofJaggedIce                = Item(193732, {13, 14}),
     TreemouthsFesteringSplinter     = Item(193652, {13, 14}),
@@ -368,6 +369,8 @@ do
   local CustomItemSpells = {
     -- Shadowlands
     FlayedwingToxinBuff             = Spell(345545),
+    SoleahsBuff1                    = Spell(368512),
+    SoleahsBuff2                    = Spell(368510),
     -- Dragonflight
     SkeweringColdDebuff             = Spell(388929),
     -- The War Within
@@ -411,6 +414,10 @@ do
     -- Shadowlands items being excluded with custom checks.
     if ItemID == CustomItems.BottledFlayedwingToxin:ID() then
       return Player:BuffUp(CustomItemSpells.FlayedwingToxinBuff)
+    end
+
+    if ItemID == CustomItems.SoleahsSecretTechnique:ID() then
+      return Player:BuffUp(CustomItemSpells.SoleahsBuff1) or Player:BuffUp(CustomItemSpells.SoleahsBuff2)
     end
 
     -- Dragonflight items being excluded with custom checks.
