@@ -483,8 +483,13 @@ function Splash.RegisterNucleusAbilities()
 
   -- Mage
   -- Arcane
-  RegisterNucleusAbility("DirectDamage", 1449, 10)                -- Arcane Explosion
-  RegisterNucleusAbility("DirectDamage", 44425, 10)               -- Arcane Barrage
+  RegisterNucleusAbility("DirectDamage", 1449, 10)         -- Arcane Explosion
+  RegisterNucleusAbility("DirectDamage", 44425, 10)        -- Arcane Barrage
+  RegisterNucleusAbility("DirectDamage", 157980, 8)        -- Supernova
+  RegisterNucleusAbility("DirectDamage", 210833, 8)        -- Touch of the Magi (Explosion)
+  RegisterNucleusAbility("DirectDamage", 365350, 8)        -- Arcane Surge
+  RegisterNucleusAbility("DirectDamage", 342232, 8)        -- Arcane Echo
+  RegisterNucleusAbility("DirectDamage", 453925, 8)        -- Magi's Spark
   -- Fire
   RegisterNucleusAbility("DirectDamage", 157981, 8)               -- Blast Wave
   --RegisterNucleusAbility("GroundMultipleDirectDamage", 153561, 8) -- Meteor
