@@ -1,66 +1,66 @@
 --- ============================ HEADER ============================
 --- ======= LOCALIZE =======
 -- Addon
-local addonName, HL         = ...
+local addonName, HL                 = ...
 -- HeroLib
-local Cache                 = HeroCache
-local Unit                  = HL.Unit
-local Player                = Unit.Player
-local Pet                   = Unit.Pet
-local Target                = Unit.Target
-local Spell                 = HL.Spell
-local Item                  = HL.Item
+local Cache                         = HeroCache
+local Unit                          = HL.Unit
+local Player                        = Unit.Player
+local Pet                           = Unit.Pet
+local Target                        = Unit.Target
+local Spell                         = HL.Spell
+local Item                          = HL.Item
 
 -- Enum locals
-local SpellBookSpellBank    = Enum.SpellBookSpellBank
+local SpellBookSpellBank            = Enum.SpellBookSpellBank
 
 -- Constant locals
 local SPELL_FAILED_UNIT_NOT_INFRONT = SPELL_FAILED_UNIT_NOT_INFRONT
 
 -- Base API locals
-local C_Timer               = C_Timer
-local GetSpecialization     = GetSpecialization
+local C_Timer                       = C_Timer
+local GetSpecialization             = GetSpecialization
 -- Accepts: isInspect, isPet, specGroup; Returns: currentSpec (number)
-local GetSpecializationInfo = GetSpecializationInfo
+local GetSpecializationInfo         = GetSpecializationInfo
 -- Accepts: specIndex, isInspect, isPet, inspectTarget, sex
 -- Returns: id (number), name (string), description (string) icon (fileID), role (string), primaryStat (number)
-local GetFlyoutInfo         = GetFlyoutInfo
+local GetFlyoutInfo                 = GetFlyoutInfo
 -- Accepts: flyoutID; Returns: name (string), description (string) numSlots (number), isKnown (bool)
-local GetFlyoutSlotInfo     = GetFlyoutSlotInfo
+local GetFlyoutSlotInfo             = GetFlyoutSlotInfo
 -- Accepts: flyoutID, slot; Returns: flyoutSpellID (number), overrideSpellID (number), isKnown (bool), spellName (string), slotSpecID (number)
-local GetNumFlyouts         = GetNumFlyouts
+local GetNumFlyouts                 = GetNumFlyouts
 -- Accepts: nil; Returns: count (number)
-local GetFlyoutID           = GetFlyoutID
+local GetFlyoutID                   = GetFlyoutID
 -- Accepts: index; Returns: id (number)
-local UnitClass             = UnitClass
+local UnitClass                     = UnitClass
 -- Accepts: unitID; Returns: className (string), classFilename (string), classId (number)
 
 -- C_ClassTalents locals
-local GetActiveConfigID     = C_ClassTalents.GetActiveConfigID
+local GetActiveConfigID             = C_ClassTalents.GetActiveConfigID
 
 -- C_Spell locals
-local GetSpellInfo          = C_Spell.GetSpellInfo
+local GetSpellInfo                  = C_Spell.GetSpellInfo
 
 -- C_SpellBook locals
-local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellBookItemInfo      = C_SpellBook.GetSpellBookItemInfo
-local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
-local HasPetSpells              = C_SpellBook.HasPetSpells
+local GetNumSpellBookSkillLines     = C_SpellBook.GetNumSpellBookSkillLines
+local GetSpellBookItemInfo          = C_SpellBook.GetSpellBookItemInfo
+local GetSpellBookSkillLineInfo     = C_SpellBook.GetSpellBookSkillLineInfo
+local HasPetSpells                  = C_SpellBook.HasPetSpells
 
 -- C_Traits locals
-local GetConfigInfo             = C_Traits.GetConfigInfo
-local GetDefinitionInfo         = C_Traits.GetDefinitionInfo
-local GetEntryInfo              = C_Traits.GetEntryInfo
-local GetNodeInfo               = C_Traits.GetNodeInfo
-local GetSubTreeInfo            = C_Traits.GetSubTreeInfo
-local GetTreeNodes              = C_Traits.GetTreeNodes
+local GetConfigInfo                 = C_Traits.GetConfigInfo
+local GetDefinitionInfo             = C_Traits.GetDefinitionInfo
+local GetEntryInfo                  = C_Traits.GetEntryInfo
+local GetNodeInfo                   = C_Traits.GetNodeInfo
+local GetSubTreeInfo                = C_Traits.GetSubTreeInfo
+local GetTreeNodes                  = C_Traits.GetTreeNodes
 
 -- Lua locals
-local GetTime               = GetTime
-local stringfind            = string.find
-local stringsub             = string.sub
-local tinsert               = table.insert
-local wipe                  = wipe
+local GetTime                       = GetTime
+local stringfind                    = string.find
+local stringsub                     = string.sub
+local tinsert                       = table.insert
+local wipe                          = wipe
 
 -- File Locals
 
@@ -100,7 +100,7 @@ local function BookScan(BlankScan)
       local PlayerSpellBook = SpellBookSpellBank.Player
       -- If the OffSpec ID is nil, then it's the Main Spec.
       if not OffSpec then
-        for j = 1, (Offset + NumSpells) do
+        for j = Offset + 1, Offset + NumSpells do
           local CurrentSpellInfo = GetSpellBookItemInfo(j, PlayerSpellBook)
           local CurrentSpellID = CurrentSpellInfo.spellID
           if CurrentSpellID then
@@ -131,7 +131,7 @@ local function BookScan(BlankScan)
 end
 
 -- Avoid creating garbage for pcall calls
-local function BlankBookScan ()
+local function BlankBookScan()
   BookScan(true)
 end
 
@@ -217,12 +217,14 @@ local function UpdateTalents()
         -- There are entries for SubTree (Hero Talents) items, as of TWW.
         -- These are separate from the TalentEntryID of the nodes within the SubTree.
         -- Nodes and entries for SubTree talents are already processed through this code, so we can safely ignore the SubTree entries without a definitionID.
-        if TalentEntryInfo and TalentEntryInfo["definitionID"] then
+        if TalentEntryInfo then
           local DefinitionID = TalentEntryInfo["definitionID"]
-          local DefinitionInfo = GetDefinitionInfo(DefinitionID)
-          local SpellID = DefinitionInfo["spellID"]
-          if SpellID then
-            CacheTalents[SpellID] = (CacheTalents[SpellID] or 0) + TalentRank
+          if DefinitionID then
+            local DefinitionInfo = GetDefinitionInfo(DefinitionID)
+            local SpellID = DefinitionInfo["spellID"]
+            if SpellID then
+              CacheTalents[SpellID] = (CacheTalents[SpellID] or 0) + TalentRank
+            end
           end
         end
       end
@@ -255,11 +257,11 @@ HL:RegisterForEvent(
     -- Update Equipment
     Player:UpdateEquipment()
     local Equip = Player:GetEquipment()
-    for i=1,16 do
+    for i = 1, 16 do
       if i ~= 4 and not Equip[i] then
         C_Timer.After(2, function()
-            Player:UpdateEquipment()
-          end
+          Player:UpdateEquipment()
+        end
         )
       end
     end
@@ -282,7 +284,8 @@ HL:RegisterForEvent(
       UpdateTalents()
     end
   end,
-  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "TRAIT_CONFIG_UPDATED", "TRAIT_SUB_TREE_CHANGED"
+  "PLAYER_LOGIN", "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE",
+  "PLAYER_EQUIPMENT_CHANGED", "TRAIT_CONFIG_UPDATED", "TRAIT_SUB_TREE_CHANGED"
 )
 
 -- Player Unit Cache
@@ -313,7 +316,8 @@ HL:RegisterForEvent(
       BookScan()
     end
   end,
-  "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH"
+  "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "SKILL_LINES_CHANGED", "PLAYER_GUILD_UPDATE", "PLAYER_SPECIALIZATION_CHANGED",
+  "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH"
 )
 
 -- Not Facing Unit Blacklist
