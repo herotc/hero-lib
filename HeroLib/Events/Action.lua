@@ -32,9 +32,9 @@ local tableremove       = table.remove
 local gmatch            = gmatch
 
 -- File Locals
-local Actions = {}
+local Actions           = {}
 -- { [ActionSlot] = { Type, ID, SubType, Texture, Text, CommandName, HotKey } }
-local ActionSlotsBy = {
+local ActionSlotsBy     = {
   Item = {},
   -- { [ItemID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
   Macro = {},
@@ -46,7 +46,7 @@ local ActionSlotsBy = {
   Texture = {},
   -- { [TextureID] = { [1] = ActionSlot, [2] = ActionSlot, [3] = ... } }
 }
-local HotKeyWhitelist = {
+local HotKeyWhitelist   = {
   Item = {},
   -- { [ItemID] = HotKey }
   Macro = {},
@@ -58,14 +58,14 @@ local HotKeyWhitelist = {
   Texture = {},
   -- { [TextureID] = HotKey }
 }
-local Action = {
+local Action            = {
   Actions = Actions,
   ActionSlotsBy = ActionSlotsBy,
   HotKeyWhitelist = HotKeyWhitelist,
 }
 
 --- ======= GLOBALIZE =======
-HL.Action = Action
+HL.Action               = Action
 
 
 --- ============================ CONTENT ============================
@@ -94,39 +94,39 @@ local ButtonByAddOn = {
   },
   Blizzard = {
     -- Note: These are ordered by the bars as shown in-game.
-    [1]  = { "ActionButton",              "ACTIONBUTTON%i" },          -- Edit Mode Bar 1
-    [6]  = { "MultiBarBottomLeftButton",  "MULTIACTIONBAR1BUTTON%i" }, -- Edit Mode Bar 2
+    [1]  = { "ActionButton", "ACTIONBUTTON%i" },                       -- Edit Mode Bar 1
+    [6]  = { "MultiBarBottomLeftButton", "MULTIACTIONBAR1BUTTON%i" },  -- Edit Mode Bar 2
     [5]  = { "MultiBarBottomRightButton", "MULTIACTIONBAR2BUTTON%i" }, -- Edit Mode Bar 3
-    [3]  = { "MultiBarRightButton",       "MULTIACTIONBAR3BUTTON%i" }, -- Edit Mode Bar 4
-    [4]  = { "MultiBarLeftButton",        "MULTIACTIONBAR4BUTTON%i" }, -- Edit Mode Bar 5
-    [2]  = { "MultiBar5Button",           "MULTIACTIONBAR5BUTTON%i" }, -- Edit Mode Bar 6
-    [7]  = { "MultiBar6Button",           "MULTIACTIONBAR6BUTTON%i" }, -- Edit Mode Bar 7
-    [8]  = { "MultiBar7Button",           "MULTIACTIONBAR7BUTTON%i" }, -- Edit Mode Bar 8
-    [9]  = { "MultiBar8Button",           "MULTIACTIONBAR8BUTTON%i" }, -- Unknown... this might be the Skyriding bar?
-    [10] = { "MultiBar9Button",           "MULTIACTIONBAR9BUTTON%i" }, -- Unknown... might also be the Skyriding bar?
+    [3]  = { "MultiBarRightButton", "MULTIACTIONBAR3BUTTON%i" },       -- Edit Mode Bar 4
+    [4]  = { "MultiBarLeftButton", "MULTIACTIONBAR4BUTTON%i" },        -- Edit Mode Bar 5
+    [2]  = { "MultiBar5Button", "MULTIACTIONBAR5BUTTON%i" },           -- Edit Mode Bar 6
+    [7]  = { "MultiBar6Button", "MULTIACTIONBAR6BUTTON%i" },           -- Edit Mode Bar 7
+    [8]  = { "MultiBar7Button", "MULTIACTIONBAR7BUTTON%i" },           -- Edit Mode Bar 8
+    [9]  = { "MultiBar8Button", "MULTIACTIONBAR8BUTTON%i" },           -- Unknown... this might be the Skyriding bar?
+    [10] = { "MultiBar9Button", "MULTIACTIONBAR9BUTTON%i" },           -- Unknown... might also be the Skyriding bar?
   },
   Dominos = {
-    [1]  = { "ActionButton",              "ACTIONBUTTON%i"                         },
-    [2]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
-    [3]  = { "MultiBarRightButton",       "MULTIACTIONBAR3BUTTON%i"                },
-    [4]  = { "MultiBarLeftButton",        "MULTIACTIONBAR4BUTTON%i"                },
-    [5]  = { "MultiBarBottomRightButton", "MULTIACTIONBAR2BUTTON%i"                },
-    [6]  = { "MultiBarBottomLeftButton",  "MULTIACTIONBAR1BUTTON%i"                },
-    [7]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
-    [8]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
-    [9]  = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
-    [10] = { "DominosActionButton",       "CLICK DominosActionButton%i:HOTKEY" },
+    [1]  = { "ActionButton", "ACTIONBUTTON%i" },
+    [2]  = { "DominosActionButton", "CLICK DominosActionButton%i:HOTKEY" },
+    [3]  = { "MultiBarRightButton", "MULTIACTIONBAR3BUTTON%i" },
+    [4]  = { "MultiBarLeftButton", "MULTIACTIONBAR4BUTTON%i" },
+    [5]  = { "MultiBarBottomRightButton", "MULTIACTIONBAR2BUTTON%i" },
+    [6]  = { "MultiBarBottomLeftButton", "MULTIACTIONBAR1BUTTON%i" },
+    [7]  = { "DominosActionButton", "CLICK DominosActionButton%i:HOTKEY" },
+    [8]  = { "DominosActionButton", "CLICK DominosActionButton%i:HOTKEY" },
+    [9]  = { "DominosActionButton", "CLICK DominosActionButton%i:HOTKEY" },
+    [10] = { "DominosActionButton", "CLICK DominosActionButton%i:HOTKEY" },
   },
   ElvUI = {
-    [1]  = { "ElvUI_Bar1Button",  "ACTIONBUTTON%i" },
-    [2]  = { "ElvUI_Bar2Button",  "ELVUIBAR2BUTTON%i" },
-    [3]  = { "ElvUI_Bar3Button",  "MULTIACTIONBAR3BUTTON%i" },
-    [4]  = { "ElvUI_Bar4Button",  "MULTIACTIONBAR4BUTTON%i" },
-    [5]  = { "ElvUI_Bar5Button",  "MULTIACTIONBAR2BUTTON%i" },
-    [6]  = { "ElvUI_Bar6Button",  "MULTIACTIONBAR1BUTTON%i" },
-    [7]  = { "ElvUI_Bar7Button",  "ELVUIBAR7BUTTON%i" },
-    [8]  = { "ElvUI_Bar8Button",  "ELVUIBAR8BUTTON%i" },
-    [9]  = { "ElvUI_Bar9Button",  "ELVUIBAR9BUTTON%i" },
+    [1]  = { "ElvUI_Bar1Button", "ACTIONBUTTON%i" },
+    [2]  = { "ElvUI_Bar2Button", "ELVUIBAR2BUTTON%i" },
+    [3]  = { "ElvUI_Bar3Button", "MULTIACTIONBAR3BUTTON%i" },
+    [4]  = { "ElvUI_Bar4Button", "MULTIACTIONBAR4BUTTON%i" },
+    [5]  = { "ElvUI_Bar5Button", "MULTIACTIONBAR2BUTTON%i" },
+    [6]  = { "ElvUI_Bar6Button", "MULTIACTIONBAR1BUTTON%i" },
+    [7]  = { "ElvUI_Bar7Button", "ELVUIBAR7BUTTON%i" },
+    [8]  = { "ElvUI_Bar8Button", "ELVUIBAR8BUTTON%i" },
+    [9]  = { "ElvUI_Bar9Button", "ELVUIBAR9BUTTON%i" },
     [10] = { "ElvUI_Bar10Button", "ELVUIBAR10BUTTON%i" },
   },
 } -- { [AddOn] = { [BarIndex] = { [1] = ButtonBaseName, [2] = CommandNameFormat } } }
@@ -212,17 +212,17 @@ end
 
 local function UpdateElvUIPaging(class)
   for i = 1, 10 do
-    local BarNum = "bar"..i
+    local BarNum = "bar" .. i
     local PagingString = _G.ElvUI[1].ActionBars.db[BarNum].paging[class]
     if PagingString == "" or not PagingString then
       Cache.Persistent.ElvUIPaging.PagingStrings[i] = nil
-      for k,v in pairs(Cache.Persistent.ElvUIPaging.PagingBars) do
+      for k, v in pairs(Cache.Persistent.ElvUIPaging.PagingBars) do
         if v == i then Cache.Persistent.ElvUIPaging.PagingBars[k] = nil end
       end
     end
     if PagingString and PagingString ~= "" and Cache.Persistent.ElvUIPaging.PagingStrings[i] ~= PagingString then
-      for match1 in (PagingString..";"):gmatch("(.-)"..";") do
-        for match2 in (match1.." "):gmatch("(%d+)".." ") do
+      for match1 in (PagingString .. ";"):gmatch("(.-)" .. ";") do
+        for match2 in (match1 .. " "):gmatch("(%d+)" .. " ") do
           if match2 then
             Cache.Persistent.ElvUIPaging.PagingStrings[i] = PagingString
             Cache.Persistent.ElvUIPaging.PagingBars[tonumber(match2)] = i
@@ -252,7 +252,8 @@ local function GetCommandNameFromActionSlot(ActionSlot, Blizzard)
     -- ElvUI
     if _G.ElvUI[1].ActionBars.db then
       UpdateElvUIPaging(Cache.Persistent.Player.Class[2])
-      if Cache.Persistent.ElvUIPaging.PagingBars[BarIndex] then BarIndex = Cache.Persistent.ElvUIPaging.PagingBars[BarIndex] end
+      if Cache.Persistent.ElvUIPaging.PagingBars[BarIndex] then BarIndex = Cache.Persistent.ElvUIPaging.PagingBars
+        [BarIndex] end
     end
     CommandNameFormat = ButtonByAddOn.ElvUI[BarIndex][2]
   else
@@ -375,7 +376,8 @@ HL:RegisterForEvent(
       UpdateAction(i)
     end
   end,
-  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "UPDATE_BINDINGS", "LEARNED_SPELL_IN_TAB", "SPELL_UPDATE_ICON", "UPDATE_SHAPESHIFT_FORM", "ACTIONBAR_UPDATE_USABLE"
+  "ZONE_CHANGED_NEW_AREA", "PLAYER_SPECIALIZATION_CHANGED", "PLAYER_TALENT_UPDATE", "UPDATE_BINDINGS",
+  "LEARNED_SPELL_IN_TAB", "SPELL_UPDATE_ICON", "UPDATE_SHAPESHIFT_FORM", "ACTIONBAR_UPDATE_USABLE"
 )
 
 local function FindAction(Type, Identifier)
@@ -386,7 +388,7 @@ local function FindAction(Type, Identifier)
   local ActionSlot
   local BonusBarOffset = GetBonusBarOffset()
   if (BonusBarOffset > 0 and (Cache.Persistent.Player.Class[1] == "Rogue" or Cache.Persistent.Player.Class[1] == "Druid")) then
-    for k,v in pairs(ActionSlots) do
+    for k, v in pairs(ActionSlots) do
       local low = (1 + (NUM_ACTIONBAR_PAGES + BonusBarOffset - 1) * NUM_ACTIONBAR_BUTTONS)
       local high = ((NUM_ACTIONBAR_PAGES + BonusBarOffset) * NUM_ACTIONBAR_BUTTONS)
       if v >= low and v <= high then
@@ -394,11 +396,11 @@ local function FindAction(Type, Identifier)
       end
     end
     -- Just in case the above couldn't find a slot, return the first slot in the array, unless it's on bar1.
-    if not ActionSlot then 
+    if not ActionSlot then
       if #ActionSlots == 1 then
         ActionSlot = ActionSlots[1]
       else
-        for k,v in pairs(ActionSlots) do
+        for k, v in pairs(ActionSlots) do
           if v > 12 then
             ActionSlot = ActionSlots[k]
             break
@@ -504,7 +506,7 @@ function Unit:IsItemInActionRange(ThisItem)
     return false
   end
 
-  return self:IsActionInRange(Action.Slot)
+  return self:IsActionInRange(ThisAction.Slot)
 end
 
 function Unit:IsSpellInActionRange(ThisSpell)
