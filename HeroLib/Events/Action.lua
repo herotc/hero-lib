@@ -504,7 +504,7 @@ function Unit:IsItemInActionRange(ThisItem)
     return false
   end
 
-  return self:IsActionInRange(Action.Slot)
+  return self:IsActionInRange(ThisAction.Slot)
 end
 
 function Unit:IsSpellInActionRange(ThisSpell)
