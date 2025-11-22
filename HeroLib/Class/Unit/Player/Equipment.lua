@@ -504,41 +504,7 @@ end
 
 -- Check if a tier set bonus is equipped
 function Player:HasTier(Tier, Pieces)
-  local DFS4Translate = {
-    -- Warrior
-    [1] = { [71] = 29, [72] = 30, [73] = 31 },
-    -- Paladin
-    [2] = { [66] = 29, [70] = 31 },
-    -- Hunter
-    [3] = { [253] = 31, [254] = 31, [255] = 29 },
-    -- Rogue
-    [4] = { [259] = 31, [260] = 31, [261] = 31 },
-    -- Priest
-    [5] = { [258] = 30 },
-    -- Death Knight
-    [6] = { [250] = 30, [251] = 30, [252] = 31 },
-    -- Shaman
-    [7] = { [262] = 31, [263] = 31 },
-    -- Mage
-    [8] = { [62] = 31, [63] = 30, [64] = 31 },
-    -- Warlock
-    [9] = { [265] = 31, [266] = 31, [267] = 29 },
-    -- Monk
-    [10] = { [268] = 31, [269] = 29 },
-    -- Druid
-    [11] = { [102] = 29, [103] = 31, [104] = 30 },
-    -- Demon Hunter
-    [12] = { [577] = 31, [581] = 31 },
-    -- Evoker
-    [13] = { [1467] = 30, [1473] = 31 }
-  }
-  local Class = Cache.Persistent.Player.Class[3]
-  local Spec = Cache.Persistent.Player.Spec[1]
-  if DFS4Translate[Class][Spec] and DFS4Translate[Class][Spec] == Tier then
-    return Cache.Persistent.TierSets[Tier][Pieces.."pc"] or Cache.Persistent.TierSets["DFS4"][Pieces.."pc"]
-  else
-    return Cache.Persistent.TierSets[Tier][Pieces.."pc"]
-  end
+  return Cache.Persistent.TierSets[Tier][Pieces.."pc"]
 end
 
 -- Check if a Gladiator's Badge is equipped
