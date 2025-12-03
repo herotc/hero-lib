@@ -167,21 +167,11 @@ local function GetButtonInfo(ActionSlot, Blizzard)
     -- Dominos
     ButtonBaseName = ButtonByAddOn.Dominos[BarIndex][1]
 
-    if BarIndex == 1 then
-      -- Bar 1: ActionButton
-      ButtonSlot = ActionSlot
-    elseif BarIndex >= 3 and BarIndex <= 6 then
+    if BarIndex >= 3 and BarIndex <= 6 then
       -- Bar 3 to 6: MultiBarXXXButton
       ButtonSlot = BarSlot
     else
-      -- Bar 2 and 7 to 10: DominosActionButton
-      if BarIndex == 2 then
-        -- Bar 2: First slot is 1 instead of 13
-        ButtonSlot = ActionSlot - 12
-      else
-        -- Bar 7 to 10: First slot is 13 instead of 73
-        ButtonSlot = ActionSlot - 60
-      end
+      ButtonSlot = ActionSlot
     end
   elseif _G.ElvUI and _G.ElvUI[1].ActionBars then
     -- ElvUI
