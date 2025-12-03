@@ -1,8 +1,8 @@
-## Interface: 110205
+## Interface: 110207
 
 ## Title: Hero|cFFA330C9Lib|r
 ## Author: HeroTC, Aethys
-## Version: 11.2.5.02
+## Version: 11.2.7.01
 ## Notes: Core Library used by HeroTC Addons. Can be used by others 3rd-Party Addons.
 
 ## X-Curse-Project-ID: 271528
